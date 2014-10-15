@@ -1,0 +1,14 @@
+.idea/
+
+node_modules/
+
+typings/
+.tscache/
+
+example/**/*.js
+example/**/*.js.map
+lib/**/*.js
+lib/**/*.js.map
+test/**/*.js
+test/**/*.js.map
+

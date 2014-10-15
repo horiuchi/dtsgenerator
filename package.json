@@ -1,0 +1,44 @@
+{
+  "name": "dtsgenerator",
+  "version": "0.0.1",
+  "description": "TypeScript d.ts file generator for JSON Schema file",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp default",
+    "test": "gulp test"
+  },
+  "keywords": [
+    "TypeScript",
+    "JSON Schema"
+  ],
+  "author": "horiuchi",
+  "license": "MIT",
+  "homepage": "https://github.com/horiuchi/dtsgenerator",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:horiuchi/dtsgenerator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/horiuchi/dtsgenerator/issues"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "del": "^0.1.3",
+    "espower-loader": "^0.9.1",
+    "gulp": "^3.8.8",
+    "gulp-load-plugins": "^0.7.0",
+    "gulp-run-sequence": "^0.3.2",
+    "gulp-sourcemaps": "^1.2.4",
+    "gulp-tsd": "0.0.3",
+    "gulp-typescript": "^2.0.0",
+    "intelli-espower-loader": "^0.4.0",
+    "mocha": "^1.21.5",
+    "power-assert": "^0.9.1",
+    "source-map-support": "^0.2.7",
+    "typescript": "^1.1.0-1"
+  }
+}

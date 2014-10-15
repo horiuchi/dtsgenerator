@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-04/hyper-schema",
+  "title": "News",
+  "definitions": {
+    "Date": {
+      "example": "2012-01-01T12:00:00Z",
+      "format": "date-time",
+      "type": "string"
+    },
+    "id": {
+      "description": "unique id of news article",
+      "example": "1",
+      "type": "integer"
+    },
+    "title": {
+      "description": "article's title",
+      "example": "Lexus Golf Activities in Full Swing at U.S.",
+      "type": "string"
+    },
+    "time": {
+      "description": "article's date",
+      "example": "June 09, 2014",
+      "type": "string"
+    },
+    "detail": {
+      "description": "article's detail text ( is linefeed character.)",
+      "example": " line1.\nline2.",
+      "type": "string"
+    },
+    "imageUrl": {
+      "description": "article's image url",
+      "example": "http://pressroom.lexus.com/images/Lexus_logo_bug_2013_thumb_20140604144404730.jpg",
+      "format": "uri",
+      "type": "string"
+    },
+    "detailUrl": {
+      "description": "article's page url for hs",
+      "example": "http://bento.uievolution.co.jp/static/news/201406140001.html",
+      "format": "uri",
+      "type": "string"
+    },
+    "createdAt": {
+      "description": "when news was created",
+      "$ref": "#/definitions/Date"
+    },
+    "updatedAt": {
+      "description": "when news was updated",
+      "$ref": "#/definitions/Date"
+    }
+  },
+  "description": "FIXME",
+  "links": [
+    {
+      "description": "List existing news articles.",
+      "href": "/v1/api/newsdata/list",
+      "method": "GET",
+      "methodName": "news.list",
+      "rel": "instances",
+      "title": "List"
+    }
+  ],
+  "properties": {
+    "id": {
+      "$ref": "#/definitions/id"
+    },
+    "title": {
+      "$ref": "#/definitions/title"
+    },
+    "time": {
+      "$ref": "#/definitions/time"
+    },
+    "detail": {
+      "$ref": "#/definitions/detail"
+    },
+    "imageUrl": {
+      "$ref": "#/definitions/imageUrl"
+    },
+    "detailUrl": {
+      "$ref": "#/definitions/detailUrl"
+    },
+    "createdAt": {
+      "$ref": "#/definitions/createdAt"
+    },
+    "updatedAt": {
+      "$ref": "#/definitions/updatedAt"
+    }
+  },
+  "required": [
+    "title",
+    "time",
+    "detail"
+  ],
+  "type": "object",
+  "id": "schema/news"
+}
+
