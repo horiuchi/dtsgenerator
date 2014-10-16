@@ -3,7 +3,7 @@ import model = require("model");
 class Process {
 
 	indentChar = " ";
-	indentStep = 4;
+	indentStep = 2;
 
 	indent = 0;
 

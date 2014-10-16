@@ -21,6 +21,7 @@ export function toTSType(type: string, debugSource?: any): string {
 }
 
 export function capitalizeName(s: string): string {
+  if (!s) return s;
   s = s.trim();
   return s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, function(_, m) {
     return m.toUpperCase();
@@ -36,5 +37,17 @@ export function searchPath(obj: any, paths: string[]): any {
     obj = obj[p];
   }
   return obj;
+}
+
+export function mergeSchema(a: any, b: any): any {
+  Object.keys(b).forEach((key) => {
+    if (a[key]) {
+      console.error(a);
+      console.error(b);
+      throw new Error("invalid schema: duplicate property in allOf.");
+    }
+    a[key] = b[key];
+  });
+  return a;
 }
 

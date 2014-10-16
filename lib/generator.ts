@@ -13,7 +13,6 @@ class Generator {
     if (header) {
       process.outputLine(header);
     }
-    process.output("declare ");
     this.walk(process, this.env);
     return process.toDefinition();
   }
@@ -25,6 +24,9 @@ class Generator {
         var g: Generator = val;
         g.doProcess(process);
       } else {
+        if (process.indent === 0) {
+          process.output("declare ");
+        }
         process.output("module ").output(key).outputLine(" {");
         process.increaseIndent();
         this.walk(process, val);
@@ -78,9 +80,8 @@ class Generator {
   }
 
 
-  private get typename(): string {
-    var names = this.typenames;
-    var name = names[names.length - 1];
+  private getTypename(id: string): string {
+    var name = id.split("/").slice(-1)[0];
     return utils.capitalizeName(name);
   }
 
@@ -89,7 +90,7 @@ class Generator {
     var id = splited[0];
     var path = splited[1];
 
-    if (path[0] !== '/') {
+    if (path[0] && path[0] !== '/') {
       throw new Error("$ref path must be absolute path: " + path);
     }
     var schema = id ? Generator.map[id].schema : this.schema;
@@ -113,7 +114,7 @@ class Generator {
   }
 
   private parseTypeModel(process: Process, type: model.IJsonSchema) {
-    var name = this.typename;
+    var name = this.getTypename(this._id);
     process.output("export interface I").output(name).outputLine(" {");
     process.increaseIndent();
 
@@ -132,7 +133,7 @@ class Generator {
   }
 
   private parseTypeCollection(process: Process, type: model.IJsonSchema) {
-    var name = this.typename;
+    var name = this.getTypename(this._id);
     process.output("export interface I").output(name).output(" extends Array<");
     if (type.items.$ref) {
       this.parseTypePropertyNamedType(process, "I" + type.items.$ref, type.items, false);
@@ -144,13 +145,49 @@ class Generator {
   }
 
   private parseTypeProperty(process: Process, name: string, property: model.IJsonSchema, terminate = true): void {
+    if (property.allOf) {
+      var schema: any = {};
+      property.allOf.forEach((p) => {
+        if (p.$ref) {
+          p = this.searchRef(p.$ref);
+        }
+        utils.mergeSchema(schema, p);
+      });
+      this.parseTypeProperty(process, name, schema, terminate);
+      return;
+    }
+    // TODO I hope to use union type for 'anyOf' support.
+    if (property.anyOf) {
+      delete property.anyOf;
+      property.type = 'any';
+    }
+    if (property.enum) {
+      property.format = property.enum.toString();
+      property.type = "any";
+    }
+    ['oneOf', 'not'].forEach((keyword) => {
+      var schema: any = property;
+      if (schema[keyword]) {
+        console.error(property);
+        throw new Error("unsupported property: " + keyword);
+      }
+    });
+
     if (name) {
-      process.outputKey(name).output(": ");
+      process.outputKey(name);
+      // if (property.required && property.required.indexOf(name) < 0) {
+      //   process.output("?");
+      // }
+      process.output(": ");
     }
     if (property.$ref) {
       var ref = this.searchRef(property.$ref);
       if (ref) {
-        this.parseTypeProperty(process, null, ref, terminate);
+        if (ref.id) {
+          this.parseTypePropertyNamedType(process, "I" + this.getTypename(ref.id), ref, terminate);
+        } else {
+          this.parseTypeProperty(process, null, ref, terminate);
+        }
       } else {
         this.parseTypePropertyNamedType(process, "I" + property.$ref, property, terminate);
       }

@@ -8,7 +8,7 @@ import _model = require("./model");
 import generator = require("./generator");
 
 generator.add(
-  require("../schema/news.json")
+  require("../schema/schema.json")
 );
 
 var dts = generator.generate();

@@ -90,5 +90,8 @@ export interface IJsonSchema {
 			type_value: string;
 		}[];
 	};
+  allOf: IJsonSchema[];
+  anyOf: any;
+  oneOf: any;
 }
 
