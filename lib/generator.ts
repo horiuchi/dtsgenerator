@@ -92,6 +92,9 @@ class Generator {
     var id = splited[0];
     var path = splited[1];
 
+    if (id && !Generator.map[id]) {
+      throw new Error("$ref target is not found: " + id);
+    }
     if (path[0] && path[0] !== '/') {
       throw new Error("$ref path must be absolute path: " + path);
     }
