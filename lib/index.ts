@@ -1,16 +1,26 @@
 /// <reference path="../typings/tsd.d.ts" />
+
+import _model = require("./model");
+_model;
+import _generator = require("./generator");
+
 try {
+  // optional
   require('source-map-support').install();
 } catch (e) {
 }
 
-import _model = require("./model");
-import generator = require("./generator");
+function dtsgenerator(schemas: _model.IJsonSchema[]): string {
+  schemas.forEach((schema) => {
+    _generator.add(schema);
+  });
+  return _generator.generate();
+}
 
-generator.add(
-  require("../schema/schema.json")
-);
+module dtsgenerator {
+  export import model = _model;
+  export import generator = _generator;
+}
 
-var dts = generator.generate();
-console.log(dts);
+export = dtsgenerator;
 

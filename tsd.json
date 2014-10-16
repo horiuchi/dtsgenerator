@@ -7,6 +7,12 @@
   "installed": {
     "node/node.d.ts": {
       "commit": "8abb240eea37beed10de955c59023d1cbd9c829f"
+    },
+    "commander/commander.d.ts": {
+      "commit": "5fe6713e8b2a05652a11bd26932ca0345fbb65ed"
+    },
+    "mkdirp/mkdirp.d.ts": {
+      "commit": "5fe6713e8b2a05652a11bd26932ca0345fbb65ed"
     }
   }
 }

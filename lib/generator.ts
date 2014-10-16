@@ -36,15 +36,13 @@ class Generator {
     });
   }
 
-  static add(...schemas: model.IJsonSchema[]): void {
-    schemas.forEach((schema) => {
-      if (typeof schema === "string") {
-        schema = JSON.parse(<any>schema);
-      }
-      var g = new Generator(schema);
-      this.map[g.id] = g;
-      this.setEnv(g.typenames, g);
-    });
+  static add(schema: model.IJsonSchema): void {
+    if (typeof schema === "string") {
+      schema = JSON.parse(<any>schema);
+    }
+    var g = new Generator(schema);
+    this.map[g.id] = g;
+    this.setEnv(g.typenames, g);
   }
   private static setEnv(paths: string[], g: Generator): void {
     var obj = this.env;
@@ -63,6 +61,7 @@ class Generator {
 
   constructor(private schema: model.IJsonSchema) {
     if (!schema.id) {
+      console.error(schema);
       throw new Error("id is not found.");
     }
     this._id = schema.id;
