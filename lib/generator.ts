@@ -122,9 +122,13 @@ class Generator {
       process.outputLine("[name: string]: any; // any");
     }
 
-    Object.keys(type.properties || {}).forEach(propertyName=> {
-      process.outputJSDoc(type.properties[propertyName].description);
-      this.parseTypeProperty(process, propertyName, type.properties[propertyName]);
+    Object.keys(type.properties || {}).forEach((propertyName) => {
+      var property = type.properties[propertyName];
+      process.outputJSDoc(property.description);
+      if (type.required && type.required.indexOf(propertyName) < 0) {
+        propertyName = propertyName + "?";
+      }
+      this.parseTypeProperty(process, propertyName, property);
     });
 
     process.decreaseIndent();
@@ -173,11 +177,7 @@ class Generator {
     });
 
     if (name) {
-      process.outputKey(name);
-      // if (property.required && property.required.indexOf(name) < 0) {
-      //   process.output("?");
-      // }
-      process.output(": ");
+      process.outputKey(name).output(": ");
     }
     if (property.$ref) {
       var ref = this.searchRef(property.$ref);
@@ -201,8 +201,12 @@ class Generator {
       if (property.properties) {
         process.increaseIndent();
         process.outputLine("{");
-        Object.keys(property.properties).forEach(propertyName => {
-          this.parseTypeProperty(process, propertyName, property.properties[propertyName]);
+        Object.keys(property.properties).forEach((propertyName) => {
+          var nextProperty = property.properties[propertyName];
+          if (property.required && property.required.indexOf(propertyName) < 0) {
+            propertyName = propertyName + "?";
+          }
+          this.parseTypeProperty(process, propertyName, nextProperty);
         });
         process.decreaseIndent();
         process.output("}");
