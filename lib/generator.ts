@@ -65,6 +65,9 @@ class Generator {
       throw new Error("id is not found.");
     }
     this._id = schema.id;
+    if (this._id[0] !== "/") {
+      this._id = "/" + this._id;
+    }
   }
 
   public get id(): string {

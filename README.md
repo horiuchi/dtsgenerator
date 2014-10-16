@@ -1,5 +1,6 @@
 #dtsgenerator
 
+[![NPM version](https://badge.fury.io/js/dtsgenerator.svg)](http://badge.fury.io/js/dtsgenerator)
 
 TypeScript d.ts file generator for JSON Schema file
 
