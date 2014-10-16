@@ -48,6 +48,9 @@ class Generator {
     var obj = this.env;
     var name = paths.splice(paths.length - 1);
     paths.forEach((path, i) => {
+      if (!path) {
+        return;
+      }
       if (!obj[path]) {
         obj[path] = {};
       }
