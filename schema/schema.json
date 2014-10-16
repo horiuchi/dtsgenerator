@@ -1,5 +1,5 @@
 {
-    "id": "IJsonSchema",
+    "id": "JsonSchema",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "description": "Core schema meta-schema",
     "definitions": {
@@ -35,6 +35,10 @@
             "type": "string",
             "format": "uri"
         },
+        "$ref": {
+            "type": "string",
+            "format": "uri"
+        },
         "title": {
             "type": "string"
         },
@@ -43,6 +47,9 @@
         },
         "default": {
             "type": "any"
+        },
+        "format": {
+            "type": "string"
         },
         "multipleOf": {
             "type": "number",
