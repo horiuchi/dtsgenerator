@@ -11,8 +11,6 @@ generator.add(
   require("../schema/news.json")
 );
 
-generator.results.forEach((result) => {
-  console.log(result.id);
-  console.log(result.result);
-});
+var dts = generator.generate();
+console.log(dts);
 

@@ -5,26 +5,59 @@ import Process = require("./process");
 
 
 class Generator {
-  private static env: Generator[] = [];
+  private static env: any = {};
   private static map: { [id: string]: Generator } = {};
 
-  static get results() {
-    return Generator.env;
+  static generate(header?: string): string {
+    var process = new Process();
+    if (header) {
+      process.outputLine(header);
+    }
+    process.output("declare ");
+    this.walk(process, this.env);
+    return process.toDefinition();
   }
+  private static walk(process: Process, env: any): void {
+    var keys = Object.keys(env).sort();
+    keys.forEach((key) => {
+      var val = env[key];
+      if (val instanceof Generator) {
+        var g: Generator = val;
+        g.doProcess(process);
+      } else {
+        process.output("module ").output(key).outputLine(" {");
+        process.increaseIndent();
+        this.walk(process, val);
+        process.decreaseIndent();
+        process.outputLine("}");
+      }
+    });
+  }
+
   static add(...schemas: model.IJsonSchema[]): void {
     schemas.forEach((schema) => {
       if (typeof schema === "string") {
         schema = JSON.parse(<any>schema);
       }
-      var result = new Generator(schema);
-      Generator.env.push(result);
-      Generator.map[result.id] = result;
+      var g = new Generator(schema);
+      this.map[g.id] = g;
+      this.setEnv(g.typenames, g);
     });
+  }
+  private static setEnv(paths: string[], g: Generator): void {
+    var obj = this.env;
+    var name = paths.splice(paths.length - 1);
+    paths.forEach((path, i) => {
+      if (!obj[path]) {
+        obj[path] = {};
+      }
+      obj = obj[path];
+    });
+    obj[name] = g;
   }
 
 
   private _id = "";
-  private dts = "";
 
   constructor(private schema: model.IJsonSchema) {
     if (!schema.id) {
@@ -33,55 +66,35 @@ class Generator {
     this._id = schema.id;
   }
 
-  get id(): string {
+  public get id(): string {
     return this._id;
   }
-  get result(): string {
-    if (!this.dts) {
-      var process = new Process();
-      this.parseType(process, this.schema);
-      this.dts = process.toDefinition();
-    }
-    return this.dts;
-  }
-
-
-  private get typenames(): string[] {
+  public get typenames(): string[] {
     return this._id.split("/");
   }
+
+  public doProcess(process: Process): void {
+    this.parseType(process, this.schema);
+  }
+
+
   private get typename(): string {
     var names = this.typenames;
     var name = names[names.length - 1];
-    return this.capitalize(name);
-  }
-  private capitalize(s: string): string {
-    s = s.trim();
-    return s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, function(_, m) {
-      return m.toUpperCase();
-    });
+    return utils.capitalizeName(name);
   }
 
   private searchRef(ref: string): model.IJsonSchema {
     var splited = ref.split('#', 2);
     var id = splited[0];
     var path = splited[1];
-    var schema = id ? Generator.map[id].schema : this.schema;
-    return this.search(schema, path);
-  }
-  private search(schema: model.IJsonSchema, path: string): model.IJsonSchema {
+
     if (path[0] !== '/') {
       throw new Error("$ref path must be absolute path: " + path);
     }
-    var result: any = schema;
-    var paths = path.split('/');
-    for (var i = 1, len = paths.length; i < len; ++i) {
-      var p = paths[i];
-      if (!result[p]) {
-        return null;
-      }
-      result = result[p];
-    }
-    return result;
+    var schema = id ? Generator.map[id].schema : this.schema;
+    var paths = path.split('/').slice(1);
+    return utils.searchPath(schema, paths);
   }
 
 
@@ -92,25 +105,10 @@ class Generator {
     }
 
     process.outputJSDoc(type.description);
-    var names = this.typenames;
-    for (var i = 0, len = names.length; i < len - 1; i++) {
-      if (i === 0) {
-        process.output("declare ");
-      }
-      var name = names[i];
-      process.output("module ").output(name).outputLine(" {");
-      process.increaseIndent();
-    }
-
     if (type.type === "array") {
       this.parseTypeCollection(process, type);
     } else {
       this.parseTypeModel(process, type);
-    }
-
-    for (var i = 0, len = names.length; i < len - 1; i++) {
-      process.decreaseIndent();
-      process.outputLine("}");
     }
   }
 
