@@ -28,17 +28,6 @@ export function capitalizeName(s: string): string {
   });
 }
 
-export function searchPath(obj: any, paths: string[]): any {
-  for (var i = 0, len = paths.length; i < len; ++i) {
-    var p = paths[i];
-    if (!obj[p]) {
-      return null;
-    }
-    obj = obj[p];
-  }
-  return obj;
-}
-
 export function mergeSchema(a: any, b: any): any {
   Object.keys(b).forEach((key) => {
     if (a[key]) {

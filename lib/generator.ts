@@ -1,3 +1,6 @@
+/// <referece path="../typings/tsd.d.ts" />
+
+import pointer = require('json-pointer');
 import model = require("./model");
 import utils = require("./utils");
 
@@ -42,15 +45,12 @@ class Generator {
     }
     var g = new Generator(schema);
     this.map[g.id] = g;
-    this.setEnv(g.typenames, g);
+    this.setEnv(pointer.parse(g.id), g);
   }
   private static setEnv(paths: string[], g: Generator): void {
     var obj = this.env;
     var name = paths.splice(paths.length - 1);
     paths.forEach((path, i) => {
-      if (!path) {
-        return;
-      }
       if (!obj[path]) {
         obj[path] = {};
       }
@@ -76,9 +76,6 @@ class Generator {
   public get id(): string {
     return this._id;
   }
-  public get typenames(): string[] {
-    return this._id.split("/");
-  }
 
   public doProcess(process: Process): void {
     this.parseType(process, this.schema);
@@ -102,8 +99,7 @@ class Generator {
       throw new Error("$ref path must be absolute path: " + path);
     }
     var schema = id ? Generator.map[id].schema : this.schema;
-    var paths = path.split('/').slice(1);
-    return utils.searchPath(schema, paths);
+    return pointer.get(schema, path);
   }
 
 
