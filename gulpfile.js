@@ -37,16 +37,14 @@ gulp.task('compile', function() {
   var tsResult = gulp.src([paths.tsc.src])
                   .pipe(plugins.sourcemaps.init())
                   .pipe(plugins.typescript(tsProject));
-  tsResult.js
+  return tsResult.js
     .pipe(plugins.sourcemaps.write())
     .pipe(gulp.dest(paths.tsc.dest));
 });
 gulp.task('compile-test', function() {
   var tsResult = gulp.src([paths.tsc.test.src])
-                  .pipe(plugins.sourcemaps.init())
                   .pipe(plugins.typescript(tsTestProject));
-  tsResult.js
-    .pipe(plugins.sourcemaps.write())
+  return tsResult.js
     .pipe(gulp.dest(paths.tsc.test.dest));
 });
 
@@ -59,7 +57,7 @@ gulp.task('tsd', function(cb) {
 
 
 gulp.task('test', ['compile', 'compile-test'], function() {
-  gulp.src(paths.mocha.src, {read: false})
+  return gulp.src(paths.mocha.src, {read: false})
     .pipe(plugins.mocha({reporter: 'tap'}));
 });
 

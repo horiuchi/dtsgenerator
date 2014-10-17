@@ -16,6 +16,12 @@
     },
     "json-pointer/json-pointer.d.ts": {
       "commit": "5fe6713e8b2a05652a11bd26932ca0345fbb65ed"
+    },
+    "mocha/mocha.d.ts": {
+      "commit": "4dd796bb15c51e5bc0efd74605fbc9de46773ca5"
+    },
+    "assert/assert.d.ts": {
+      "commit": "4dd796bb15c51e5bc0efd74605fbc9de46773ca5"
     }
   }
 }
