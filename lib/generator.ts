@@ -208,9 +208,9 @@ class Generator {
       return;
     }
     if (property.type === "object") {
+      process.outputLine("{");
+      process.increaseIndent();
       if (property.properties) {
-        process.increaseIndent();
-        process.outputLine("{");
         Object.keys(property.properties).forEach((propertyName) => {
           var nextProperty = property.properties[propertyName];
           if (property.required && property.required.indexOf(propertyName) < 0) {
@@ -218,22 +218,15 @@ class Generator {
           }
           this.parseTypeProperty(process, propertyName, nextProperty);
         });
-        process.decreaseIndent();
-        process.output("}");
-        if (terminate) {
-          process.outputLine(";");
-        }
       } else if (property.additionalProperties) {
-        process.outputLine("{");
-        process.increaseIndent();
         process.output("[name:string]: ");
         this.parseTypeProperty(process, null, property.additionalProperties, false);
         process.outputLine(";");
-        process.decreaseIndent();
-        process.output("}");
-        if (terminate) {
-          process.outputLine(";");
-        }
+      }
+      process.decreaseIndent();
+      process.output("}");
+      if (terminate) {
+        process.outputLine(";");
       }
 
     } else if (property.type === "array") {

@@ -1,6 +1,7 @@
 export function toTSType(type: string, debugSource?: any): string {
 	switch (type) {
 		case "any":
+		case "null":
 			return "any";
 		case "string":
 			return "string";
