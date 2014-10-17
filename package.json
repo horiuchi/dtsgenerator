@@ -10,6 +10,9 @@
     "build": "gulp default",
     "test": "gulp test"
   },
+  "directories": {
+    "test": "test/"
+  },
   "keywords": [
     "TypeScript",
     "JSON Schema"
@@ -38,6 +41,7 @@
     "espower-loader": "^0.9.1",
     "gulp": "^3.8.8",
     "gulp-load-plugins": "^0.7.0",
+    "gulp-mocha": "^1.1.1",
     "gulp-run-sequence": "^0.3.2",
     "gulp-sourcemaps": "^1.2.4",
     "gulp-tsd": "0.0.3",
