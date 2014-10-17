@@ -59,6 +59,11 @@ class Generator {
     obj[name] = g;
   }
 
+  static clear(): void {
+    this.env = {};
+    this.map = {};
+  }
+
 
   private _id = "";
 

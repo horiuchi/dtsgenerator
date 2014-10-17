@@ -11,6 +11,7 @@ try {
 }
 
 function dtsgenerator(schemas: _model.IJsonSchema[]): string {
+  _generator.clear();
   schemas.forEach((schema) => {
     _generator.add(schema);
   });
