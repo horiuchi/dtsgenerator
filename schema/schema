@@ -168,9 +168,7 @@
         "exclusiveMaximum": [ "maximum" ],
         "exclusiveMinimum": [ "minimum" ]
     },
-    "required": [
-      "type"
-    ],
+    "required": [],
     "default": {
         "type": "any"
     }

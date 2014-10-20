@@ -4,7 +4,7 @@ import assert = require("power-assert");
 
 import dtsgenerator = require("../lib/index");
 
-describe("simple schema test", () => {
+describe("error schema test", () => {
 
   it("no id schema", () => {
     var schema: dtsgenerator.model.IJsonSchema = {

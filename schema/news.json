@@ -48,7 +48,7 @@
       "$ref": "#/definitions/Date"
     }
   },
-  "description": "FIXME",
+  "description": "News data API",
   "links": [
     {
       "description": "List existing news articles.",
