@@ -20,6 +20,12 @@ var paths = {
   },
   mocha: {
     src: ['test/**/*.js']
+  },
+  istanbul: {
+    src: ['lib/**/*.js', 'index.js']
+  },
+  coveralls: {
+    src: ['coverage/**/lcov.info']
   }
 };
 var tsProject = plugins.typescript.createProject({
@@ -58,18 +64,19 @@ gulp.task('tsd', function(cb) {
 
 
 gulp.task('exec-test', ['compile', 'compile-test'], function(cb) {
-  gulp.src(['lib/**/*.js', 'index.js'])
+  gulp.src(paths.istanbul.src)
     .pipe(plugins.istanbul())
     .on('finish', function() {
       gulp.src(paths.mocha.src, {read: false})
         .pipe(plugins.mocha({reporter: 'tap'}))
+        .on('error', cb)
         .pipe(plugins.istanbul.writeReports())
         .on('end', cb);
     });
 });
 
 gulp.task('coveralls', ['exec-test'], function() {
-  return gulp.src('coverage/**/lcov.info')
+  return gulp.src(paths.coveralls.src)
     .pipe(plugins.coveralls());
 });
 
