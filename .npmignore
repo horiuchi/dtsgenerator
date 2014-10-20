@@ -11,6 +11,7 @@ typings/
 
 # codes
 test/
+coverage/
 schema/
 
 # misc
