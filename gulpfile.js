@@ -33,7 +33,7 @@ var tsTestProject = plugins.typescript.createProject({
 });
 
 
-gulp.task('compile', function() {
+gulp.task('compile', ['tsd'], function() {
   var tsResult = gulp.src([paths.tsc.src])
                   .pipe(plugins.sourcemaps.init())
                   .pipe(plugins.typescript(tsProject));
