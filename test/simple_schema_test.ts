@@ -190,6 +190,73 @@ describe("simple schema test", () => {
 '}\n';
     assert.equal(expected, result, result);
   });
+  it("root array schema", () => {
+    var schema: dtsgenerator.model.IJsonSchema = {
+      id: 'test/root/root_array',
+      type: 'array',
+      items: {
+        type: 'string'
+      }
+    };
+    var result = dtsgenerator([schema]);
+
+    var expected =
+'declare module test {\n' +
+'  module root {\n' +
+'    export interface IRootArray extends Array<string> {\n' +
+'    }\n' +
+'  }\n' +
+'}\n';
+    assert.equal(expected, result, result);
+  });
+  it("root any schema", () => {
+    var schema: dtsgenerator.model.IJsonSchema = {
+      id: 'test/root/root_any',
+      type: 'any',
+      description: 'This is any type schema'
+    };
+    var result = dtsgenerator([schema]);
+
+    var expected =
+'declare module test {\n' +
+'  module root {\n' +
+'    /**\n' +
+'     * This is any type schema\n' +
+'     */\n' +
+'    export interface IRootAny {\n' +
+'      [name: string]: any; // any\n' +
+'    }\n' +
+'  }\n' +
+'}\n';
+    assert.equal(expected, result, result);
+  });
+  it("include $ref schema", () => {
+    var schema: dtsgenerator.model.IJsonSchema = {
+      id: 'test/ref/include_ref',
+      type: 'object',
+      definitions: {
+        name: {
+          type: 'string'
+        }
+      },
+      properties: {
+        'sub-name': {
+          $ref: '#/definitions/name'
+        }
+      }
+    };
+    var result = dtsgenerator([schema]);
+
+    var expected =
+'declare module test {\n' +
+'  module ref {\n' +
+'    export interface IIncludeRef {\n' +
+'      "sub-name": string;\n' +
+'    }\n' +
+'  }\n' +
+'}\n';
+    assert.equal(expected, result, result);
+  });
 
 });
 

@@ -45,4 +45,3 @@ export interface IJsonSchema {
   oneOf?: IJsonSchema[];
   not?: IJsonSchema;
 }
-

@@ -49,7 +49,7 @@ class Generator {
   }
   private static setEnv(paths: string[], g: Generator): void {
     var obj = this.env;
-    var name = paths.splice(paths.length - 1);
+    var name: string = paths.splice(paths.length - 1)[0];
     paths.forEach((path, i) => {
       if (!obj[path]) {
         obj[path] = {};
