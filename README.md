@@ -1,6 +1,7 @@
 #dtsgenerator
 
 [![NPM version](https://badge.fury.io/js/dtsgenerator.svg)](http://badge.fury.io/js/dtsgenerator)
+[![Build Status](https://travis-ci.org/horiuchi/dtsgenerator.svg?branch=master)](https://travis-ci.org/horiuchi/dtsgenerator)
 
 TypeScript d.ts file generator for JSON Schema file
 
