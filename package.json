@@ -1,6 +1,6 @@
 {
   "name": "dtsgenerator",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "TypeScript d.ts file generator for JSON Schema file",
   "main": "index.js",
   "bin": {
@@ -9,6 +9,9 @@
   "scripts": {
     "build": "gulp default",
     "test": "gulp test"
+  },
+  "directories": {
+    "test": "test/"
   },
   "keywords": [
     "TypeScript",
@@ -30,6 +33,7 @@
   "dependencies": {
     "asyncblock": "^2.1.22",
     "commander": "^2.3.0",
+    "json-pointer": "^0.2.2",
     "mkdirp": "^0.5.0"
   },
   "devDependencies": {
@@ -37,6 +41,7 @@
     "espower-loader": "^0.9.1",
     "gulp": "^3.8.8",
     "gulp-load-plugins": "^0.7.0",
+    "gulp-mocha": "^1.1.1",
     "gulp-run-sequence": "^0.3.2",
     "gulp-sourcemaps": "^1.2.4",
     "gulp-tsd": "0.0.3",
@@ -48,4 +53,3 @@
     "typescript": "^1.1.0-1"
   }
 }
-

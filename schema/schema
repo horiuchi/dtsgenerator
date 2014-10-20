@@ -16,7 +16,7 @@
             "allOf": [ { "$ref": "#/definitions/positiveInteger" }, { "default": 0 } ]
         },
         "simpleTypes": {
-            "enum": [ "array", "boolean", "integer", "null", "number", "object", "string" ]
+            "enum": [ "any", "array", "boolean", "integer", "null", "number", "object", "string" ]
         },
         "stringArray": {
             "type": "array",
@@ -168,6 +168,9 @@
         "exclusiveMaximum": [ "maximum" ],
         "exclusiveMinimum": [ "minimum" ]
     },
+    "required": [
+      "type"
+    ],
     "default": {
         "type": "any"
     }

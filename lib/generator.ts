@@ -1,3 +1,6 @@
+/// <referece path="../typings/tsd.d.ts" />
+
+import pointer = require('json-pointer');
 import model = require("./model");
 import utils = require("./utils");
 
@@ -42,21 +45,23 @@ class Generator {
     }
     var g = new Generator(schema);
     this.map[g.id] = g;
-    this.setEnv(g.typenames, g);
+    this.setEnv(pointer.parse(g.id), g);
   }
   private static setEnv(paths: string[], g: Generator): void {
     var obj = this.env;
     var name = paths.splice(paths.length - 1);
     paths.forEach((path, i) => {
-      if (!path) {
-        return;
-      }
       if (!obj[path]) {
         obj[path] = {};
       }
       obj = obj[path];
     });
     obj[name] = g;
+  }
+
+  static clear(): void {
+    this.env = {};
+    this.map = {};
   }
 
 
@@ -75,9 +80,6 @@ class Generator {
 
   public get id(): string {
     return this._id;
-  }
-  public get typenames(): string[] {
-    return this._id.split("/");
   }
 
   public doProcess(process: Process): void {
@@ -102,8 +104,7 @@ class Generator {
       throw new Error("$ref path must be absolute path: " + path);
     }
     var schema = id ? Generator.map[id].schema : this.schema;
-    var paths = path.split('/').slice(1);
-    return utils.searchPath(schema, paths);
+    return pointer.get(schema, path);
   }
 
 
@@ -207,9 +208,9 @@ class Generator {
       return;
     }
     if (property.type === "object") {
+      process.outputLine("{");
+      process.increaseIndent();
       if (property.properties) {
-        process.increaseIndent();
-        process.outputLine("{");
         Object.keys(property.properties).forEach((propertyName) => {
           var nextProperty = property.properties[propertyName];
           if (property.required && property.required.indexOf(propertyName) < 0) {
@@ -217,22 +218,15 @@ class Generator {
           }
           this.parseTypeProperty(process, propertyName, nextProperty);
         });
-        process.decreaseIndent();
-        process.output("}");
-        if (terminate) {
-          process.outputLine(";");
-        }
       } else if (property.additionalProperties) {
-        process.outputLine("{");
-        process.increaseIndent();
         process.output("[name:string]: ");
         this.parseTypeProperty(process, null, property.additionalProperties, false);
         process.outputLine(";");
-        process.decreaseIndent();
-        process.output("}");
-        if (terminate) {
-          process.outputLine(";");
-        }
+      }
+      process.decreaseIndent();
+      process.output("}");
+      if (terminate) {
+        process.outputLine(";");
       }
 
     } else if (property.type === "array") {
