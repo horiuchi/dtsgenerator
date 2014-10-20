@@ -91,10 +91,10 @@ gulp.task('clean-build', function(cb) {
   runSequence('clean', 'build', cb);
 });
 gulp.task('test', function(cb) {
-  runSequence('clean', 'exec-test', cb);
+  runSequence('clean','tsd', 'exec-test', cb);
 });
 gulp.task('test-cov', function(cb) {
-  runSequence('clean', 'exec-test', 'coveralls', cb);
+  runSequence('clean', 'tsd', 'exec-test', 'coveralls', cb);
 });
 gulp.task('default', ['clean-build'], function() {});
 
