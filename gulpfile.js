@@ -2,6 +2,7 @@
 
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
+var runSequence = require('run-sequence');
 var del = require('del');
 // for power-assert
 require('intelli-espower-loader');
@@ -56,7 +57,7 @@ gulp.task('tsd', function(cb) {
 });
 
 
-gulp.task('test', ['compile', 'compile-test'], function() {
+gulp.task('mocha', ['compile', 'compile-test'], function() {
   return gulp.src(paths.mocha.src, {read: false})
     .pipe(plugins.mocha({reporter: 'tap'}));
 });
@@ -67,16 +68,19 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('watch', function() {
-  gulp.watch([paths.tsc.src], ['test']);
-  gulp.watch([paths.tsc.test.src], ['test']);
+  gulp.watch([paths.tsc.src], ['mocha']);
+  gulp.watch([paths.tsc.test.src], ['mocha']);
 });
 
 
 gulp.task('build', function(cb) {
-  plugins.runSequence('tsd', 'compile', cb);
+  runSequence('tsd', 'compile', cb);
 });
 gulp.task('clean-build', function(cb) {
-  plugins.runSequence('clean', 'build', cb);
+  runSequence('clean', 'build', cb);
+});
+gulp.task('test', function(cb) {
+  runSequence('clean-build', 'compile-test', 'mocha', cb);
 });
 gulp.task('default', ['clean-build'], function() {});
 
