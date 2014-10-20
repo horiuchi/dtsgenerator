@@ -63,6 +63,7 @@ gulp.task('exec-test', ['compile', 'compile-test'], function(cb) {
     .on('finish', function() {
       gulp.src(paths.mocha.src, {read: false})
         .pipe(plugins.mocha({reporter: 'tap'}))
+        .on('error', cb)
         .pipe(plugins.istanbul.writeReports())
         .on('end', cb);
     });
