@@ -3,6 +3,7 @@
 node_modules/
 
 typings/
+coverage/
 .tscache/
 
 example/**/*.js
