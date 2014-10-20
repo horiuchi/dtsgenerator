@@ -39,7 +39,7 @@ export interface IJsonSchema {
     [name:string]: any;
   };
   enum?: string[];
-  type: any;
+  type?: any;
   allOf?: IJsonSchema[];
   anyOf?: IJsonSchema[];
   oneOf?: IJsonSchema[];
