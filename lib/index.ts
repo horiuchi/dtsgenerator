@@ -1,7 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import _model = require("./model");
-_model;
 import _generator = require("./generator");
 
 try {
@@ -20,7 +19,7 @@ function dtsgenerator(schemas: _model.IJsonSchema[]): string {
 
 module dtsgenerator {
   export import model = _model;
-  export import generator = _generator;
+  export var generator = _generator;
 }
 
 export = dtsgenerator;

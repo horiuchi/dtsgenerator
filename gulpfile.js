@@ -1,11 +1,10 @@
 "use strict";
 
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var plugins = require('gulp-load-plugins')();
 var runSequence = require('run-sequence');
 var del = require('del');
-// for power-assert
-require('intelli-espower-loader');
 
 
 var paths = {
@@ -14,12 +13,17 @@ var paths = {
     dest: 'lib/',
     test: {
       src: 'test/**/*.ts',
-      dest: 'test/'
+      dest: 'test/',
+      powered: 'test-powered/'
     },
-    clean: ['lib/**/*.js*', 'test/**/*.js*']
+    clean: [
+      'lib/**/*.js*',
+      'test/**/*.js*',
+      'test-powered/**/*.js*',
+    ]
   },
   mocha: {
-    src: ['test/**/*.js']
+    src: ['test-powered/**/*.js']
   },
   istanbul: {
     src: ['lib/**/*.js', 'index.js']
@@ -44,9 +48,15 @@ gulp.task('compile', function() {
   var tsResult = gulp.src([paths.tsc.src])
                   .pipe(plugins.sourcemaps.init())
                   .pipe(plugins.typescript(tsProject));
-  return tsResult.js
-    .pipe(plugins.sourcemaps.write())
+
+  tsResult.removeAllListeners('error');
+  tsResult.on('error', function(err) {
+    result.emit('error', new gutil.PluginError('gulp-typescript', err.toString()));
+  });
+  var result = tsResult.js
+    .pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest(paths.tsc.dest));
+  return result;
 });
 gulp.task('compile-test', function() {
   var tsResult = gulp.src([paths.tsc.test.src])
@@ -63,14 +73,21 @@ gulp.task('tsd', function(cb) {
 });
 
 
-gulp.task('exec-test', ['compile', 'compile-test'], function(cb) {
+gulp.task('power-assert', function() {
+  return gulp.src(paths.tsc.test.dest + '**/*.js')
+    .pipe(plugins.sourcemaps.init())
+    .pipe(plugins.espower())
+    .pipe(plugins.sourcemaps.write('.'))
+    .pipe(gulp.dest(paths.tsc.test.powered));
+});
+gulp.task('exec-test', ['compile', 'compile-test', 'power-assert'], function(cb) {
   gulp.src(paths.istanbul.src)
     .pipe(plugins.istanbul())
     .on('finish', function() {
       gulp.src(paths.mocha.src, {read: false})
         .pipe(plugins.mocha({reporter: 'tap'}))
         .on('error', cb)
-        .pipe(plugins.istanbul.writeReports())
+        .pipe(plugins.istanbul.writeReports({reporters: [ 'lcov', 'json', 'text', 'text-summary' ]}))
         .on('end', cb);
     });
 });

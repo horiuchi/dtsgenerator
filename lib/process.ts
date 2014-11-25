@@ -61,7 +61,7 @@ class Process {
 					this.output("boolean");
 					break;
 				default :
-					console.log(parameter);
+					console.error(parameter);
 					throw new Error("unknown type");
 			}
 

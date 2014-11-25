@@ -4,6 +4,8 @@ import assert = require("power-assert");
 
 import dtsgenerator = require("../lib/index");
 
+console.error = function() {}
+
 describe("error schema test", () => {
 
   it("no id schema", () => {
