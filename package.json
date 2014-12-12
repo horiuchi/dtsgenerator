@@ -18,7 +18,10 @@
     "JSON Schema"
   ],
   "author": "horiuchi",
-  "license": "MIT",
+  "license": {
+    "type": "MIT",
+    "url": "http://horiuchi.mit-license.org/"
+  },
   "homepage": "https://github.com/horiuchi/dtsgenerator",
   "repository": {
     "type": "git",
