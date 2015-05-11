@@ -109,6 +109,13 @@ class Generator {
 
 
   private parseType(process: Process, type: model.IJsonSchema): void {
+
+    if (type.type.constructor.name === 'Array') {
+      if(type.type.length === 1) {
+        type.type = type.type[0];
+      }
+    }
+
     if (type.type !== "object" && type.type !== "any" && type.type !== "array") {
       console.error(type);
       throw new Error("unknown type: " + type.type);
@@ -190,15 +197,22 @@ class Generator {
       process.outputKey(name).output(": ");
     }
     if (property.$ref) {
-      var ref = this.searchRef(property.$ref);
-      if (ref) {
-        if (ref.id) {
-          this.parseTypePropertyNamedType(process, "I" + this.getTypename(ref.id), ref, terminate);
+      if(process.checkCircular(property.$ref)) {
+        var ref = this.searchRef(property.$ref);
+        process.pushReference(property.$ref);
+        if (ref) {
+          if (ref.id) {
+            this.parseTypePropertyNamedType(process, "I" + this.getTypename(ref.id), ref, terminate);
+          } else {
+            this.parseTypeProperty(process, null, ref, terminate);
+          }
         } else {
-          this.parseTypeProperty(process, null, ref, terminate);
+          this.parseTypePropertyNamedType(process, "I" + property.$ref, property, terminate);
         }
-      } else {
-        this.parseTypePropertyNamedType(process, "I" + property.$ref, property, terminate);
+        process.popReference();
+      }else{
+        // TODO Make other definitions for "$ref" properties.
+        process.output('any');
       }
       return;
     }
@@ -207,7 +221,7 @@ class Generator {
       this.parseTypePropertyNamedType(process, tsType, property, terminate);
       return;
     }
-    if (property.type === "object") {
+    if (utils.typeOf(property.type) === "object") {
       process.outputLine("{");
       process.increaseIndent();
       if (property.properties) {
@@ -229,7 +243,7 @@ class Generator {
         process.outputLine(";");
       }
 
-    } else if (property.type === "array") {
+    } else if (utils.typeOf(property.type) === "array") {
       this.parseTypeProperty(process, null, property.items, false);
       process.output("[]");
       if (terminate) {
