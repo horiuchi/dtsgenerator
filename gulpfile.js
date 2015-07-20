@@ -29,7 +29,7 @@ var paths = {
     src: ['lib/**/*.js', 'index.js']
   },
   coveralls: {
-    src: ['coverage/**/lcov.info']
+    src: ['coverage/lcov.info']
   }
 };
 var tsProject = plugins.typescript.createProject({
@@ -73,16 +73,17 @@ gulp.task('tsd', function(cb) {
 });
 
 
-gulp.task('power-assert', ['compile-test'], function() {
+gulp.task('power-assert', function() {
   return gulp.src(paths.tsc.test.dest + '**/*.js')
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.espower())
     .pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest(paths.tsc.test.powered));
 });
-gulp.task('exec-test', ['compile', 'compile-test', 'power-assert'], function(cb) {
+gulp.task('exec-test', function(cb) {
   gulp.src(paths.istanbul.src)
     .pipe(plugins.istanbul())
+    .pipe(plugins.istanbul.hookRequire())
     .on('finish', function() {
       gulp.src(paths.mocha.src, {read: false})
         .pipe(plugins.mocha({reporter: 'tap'}))
@@ -115,10 +116,10 @@ gulp.task('clean-build', function(cb) {
   runSequence('clean', 'build', cb);
 });
 gulp.task('test', function(cb) {
-  runSequence('clean','tsd', 'exec-test', cb);
+  runSequence('clean','tsd', 'compile', 'compile-test', 'power-assert', 'exec-test', cb);
 });
 gulp.task('test-cov', function(cb) {
-  runSequence('clean', 'tsd', 'exec-test', 'coveralls', cb);
+  runSequence('test', 'coveralls', cb);
 });
 gulp.task('default', ['clean-build'], function() {});
 
