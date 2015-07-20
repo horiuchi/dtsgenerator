@@ -73,7 +73,7 @@ gulp.task('tsd', function(cb) {
 });
 
 
-gulp.task('power-assert', function() {
+gulp.task('power-assert', ['compile-test'], function() {
   return gulp.src(paths.tsc.test.dest + '**/*.js')
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.espower())
