@@ -110,13 +110,13 @@ gulp.task('watch', function() {
 
 
 gulp.task('build', function(cb) {
-  runSequence('tsd', 'compile', cb);
+  runSequence('compile', cb);
 });
 gulp.task('clean-build', function(cb) {
   runSequence('clean', 'build', cb);
 });
 gulp.task('test', function(cb) {
-  runSequence('clean','tsd', 'compile', 'compile-test', 'power-assert', 'exec-test', cb);
+  runSequence('clean', 'compile', 'compile-test', 'power-assert', 'exec-test', cb);
 });
 gulp.task('test-cov', function(cb) {
   runSequence('test', 'coveralls', cb);
