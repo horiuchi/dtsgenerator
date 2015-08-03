@@ -15,7 +15,7 @@ TypeScript d.ts file generator for JSON Schema file
 ```
 $ dtsgen --help
 
-  Usage: dtsgen [options] <file ...>
+  Usage: dtsgen [options] <file ... | file patterns using node-glob>
 
   Options:
 
@@ -28,3 +28,4 @@ $ dtsgen --help
 ## Example
 
     dtsgen --out types.d.ts schema1.json schema2.json
+    dtsgen --out types.d.ts schema/**/*.schema.json

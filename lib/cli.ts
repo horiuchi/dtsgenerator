@@ -15,7 +15,7 @@ var pkg = require("../package.json");
 // <hoge> is reuired, [hoge] is optional
 program
   .version(pkg.version)
-  .usage('[options] <file ...>')
+  .usage('[options] <file ... | file patterns using node-glob>')
   .option("-o, --out [file]", "output d.ts filename")
   .parse(process.argv);
 
