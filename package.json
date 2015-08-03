@@ -42,6 +42,7 @@
   "devDependencies": {
     "coveralls": "^2.11.3",
     "del": "^1.2.0",
+    "glob": "^5.0.14",
     "gulp": "^3.8.10",
     "gulp-coveralls": "^0.1.4",
     "gulp-espower": "^0.10.0",
