@@ -5,6 +5,7 @@ import path = require("path");
 import program = require("commander");
 import mkdirp = require("mkdirp");
 var asyncblock = require("asyncblock");
+var glob = require('glob');
 
 import dtsgenerator = require("./index");
 
@@ -14,7 +15,7 @@ var pkg = require("../package.json");
 // <hoge> is reuired, [hoge] is optional
 program
   .version(pkg.version)
-  .usage('[options] <file ...>')
+  .usage('[options] <file ... | file patterns using node-glob>')
   .option("-o, --out [file]", "output d.ts filename")
   .parse(process.argv);
 
@@ -34,7 +35,10 @@ if (opts.args.length === 0) {
 function processGenerate(): void {
   asyncblock((flow: any) => {
     opts.args.forEach((arg) => {
-      fs.readFile(arg, { encoding: 'utf-8' }, flow.add(arg));
+      var files = glob.sync(arg);
+      files.forEach((file: any) => {
+        fs.readFile(file, {encoding: 'utf-8'}, flow.add(file));
+      });
     });
     var contents = flow.wait();
     var schemas: dtsgenerator.model.IJsonSchema[] = Object.keys(contents).map((key) => contents[key]);

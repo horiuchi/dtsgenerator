@@ -36,6 +36,7 @@
   "dependencies": {
     "asyncblock": "^2.1.23",
     "commander": "^2.5.0",
+    "glob": "^5.0.14",
     "json-pointer": "^0.3.0",
     "mkdirp": "^0.5.0"
   },
