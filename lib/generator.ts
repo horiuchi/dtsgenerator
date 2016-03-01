@@ -135,7 +135,7 @@ class Generator {
     Object.keys(type.properties || {}).forEach((propertyName) => {
       var property = type.properties[propertyName];
       process.outputJSDoc(property.description);
-      if (type.required && type.required.indexOf(propertyName) < 0) {
+      if (type.required && typeof(property.required)!=="boolean" && type.required.indexOf(propertyName) < 0) {
         propertyName = propertyName + "?";
       }
       this.parseTypeProperty(process, propertyName, property);
@@ -158,6 +158,8 @@ class Generator {
   }
 
   private parseTypeProperty(process: Process, name: string, property: model.IJsonSchema, terminate = true): void {
+    if (!property)
+      return;
     if (property.allOf) {
       var schema: any = {};
       property.allOf.forEach((p) => {
@@ -213,7 +215,7 @@ class Generator {
       if (property.properties) {
         Object.keys(property.properties).forEach((propertyName) => {
           var nextProperty = property.properties[propertyName];
-          if (property.required && property.required.indexOf(propertyName) < 0) {
+          if (property.required && typeof(property.required)!=="boolean" && property.required.indexOf(propertyName) < 0) {
             propertyName = propertyName + "?";
           }
           this.parseTypeProperty(process, propertyName, nextProperty);
@@ -260,4 +262,3 @@ class Generator {
 }
 
 export = Generator;
-
