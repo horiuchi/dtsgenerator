@@ -1,0 +1,15 @@
+{
+    "id": "/ApiMetadata",
+    "$schema": "http://json-schema.org/draft-03/schema",
+    "type": "object",
+    "description": "Metadata of a record",
+    "properties":   {
+        "serverOperation" : {
+            "type" : "string",
+            "enum" : ["I","U","D"],
+            "javaEnumNames" : ["INSERT","UPDATE","DELETE"]
+        },
+        "test" : {"$ref" : "/ApiBaseObject#" }
+    }
+}
+

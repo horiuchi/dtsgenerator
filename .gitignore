@@ -1,4 +1,5 @@
-.idea/
+*.un~
+*.swp
 
 node_modules/
 
