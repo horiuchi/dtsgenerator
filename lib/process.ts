@@ -1,4 +1,4 @@
-import model = require("model");
+import model = require("./model");
 
 class Process {
 
