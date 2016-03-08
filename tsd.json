@@ -22,6 +22,9 @@
     },
     "assert/assert.d.ts": {
       "commit": "4dd796bb15c51e5bc0efd74605fbc9de46773ca5"
+    },
+    "asyncblock/asyncblock.d.ts": {
+      "commit": "9f0f926a12026287b5a4a229e5672c01e7549313"
     }
   }
 }
