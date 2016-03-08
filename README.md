@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/horiuchi/dtsgenerator.svg?branch=master)](https://travis-ci.org/horiuchi/dtsgenerator)
 [![Coverage Status](https://img.shields.io/coveralls/horiuchi/dtsgenerator.svg)](https://coveralls.io/r/horiuchi/dtsgenerator?branch=coveralls)
 
-TypeScript d.ts file generator for JSON Schema file
+TypeScript d.ts file generator from JSON Schema files
 
 # Install
 
@@ -27,5 +27,5 @@ $ dtsgen --help
 
 ## Example
 
-    dtsgen --out types.d.ts schema1.json schema2.json
-    dtsgen --out types.d.ts schema/**/*.schema.json
+    $ dtsgen --out types.d.ts schema/**/*.schema.json
+    $ cat schema1.json | dtsgen
