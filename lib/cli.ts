@@ -4,7 +4,7 @@ import fs = require("fs");
 import path = require("path");
 import program = require("commander");
 import mkdirp = require("mkdirp");
-var asyncblock = require("asyncblock");
+import asyncblock = require("asyncblock");
 var glob = require('glob');
 
 import dtsgenerator = require("./index");
@@ -20,36 +20,59 @@ program
   .parse(process.argv);
 
 interface ICommandOptions {
-  out?: string;
   args: string[];
+  out?: string;
 }
 var opts: ICommandOptions = <any>program;
 
 if (opts.args.length === 0) {
-  program.help();
+  readSchemasFromStdin(processGenerate);
 } else {
-  processGenerate();
+  readSchemasFromFiles(processGenerate);
 }
 
+function readSchemasFromStdin(callback: (err: any, schemas: dtsgenerator.model.IJsonSchema[]) => void): void {
+  var data = '';
+  process.stdin.setEncoding('utf-8');
 
-function processGenerate(): void {
-  asyncblock((flow: any) => {
+  process.stdin.on('readable', () => {
+    var chunk: string;
+    while (chunk = process.stdin.read()) {
+      data += chunk;
+    }
+  });
+  process.stdin.on('end', () => {
+    var schemas = JSON.parse(data);
+    if (!Array.isArray(schemas)) {
+      schemas = [schemas];
+    }
+    callback(null, schemas);
+  });
+}
+
+function readSchemasFromFiles(callback: (err: any, schemas: dtsgenerator.model.IJsonSchema[]) => void): void {
+  asyncblock((flow: asyncblock.IFlow) => {
+    flow.errorCallback = (err: any) => {
+      callback(err, null);
+    };
     opts.args.forEach((arg) => {
       var files = glob.sync(arg);
       files.forEach((file: any) => {
         fs.readFile(file, {encoding: 'utf-8'}, flow.add(file));
       });
     });
-    var contents = flow.wait();
-    var schemas: dtsgenerator.model.IJsonSchema[] = Object.keys(contents).map((key) => contents[key]);
-    var result = dtsgenerator(schemas);
-
-    if (opts.out) {
-      flow.sync(mkdirp(path.dirname(opts.out), flow.callback()));
-      flow.sync(fs.writeFile(opts.out, result, { encoding: 'utf-8' }, flow.callback()));
-    } else {
-      console.log(result);
-    }
+    var contents = flow.wait<any>();
+    callback(null, Object.keys(contents).map((key) => contents[key]));
   });
+}
+
+function processGenerate(err: any, schemas: dtsgenerator.model.IJsonSchema[]): void {
+  var result = dtsgenerator(schemas);
+  if (opts.out) {
+    mkdirp.sync(path.dirname(opts.out));
+    fs.writeFileSync(opts.out, result, { encoding: 'utf-8' });
+  } else {
+    console.log(result);
+  }
 }
 

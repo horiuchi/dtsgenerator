@@ -104,8 +104,8 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('watch', function() {
-  gulp.watch([paths.tsc.src], ['exec-test']);
-  gulp.watch([paths.tsc.test.src], ['exec-test']);
+  gulp.watch([paths.tsc.src], ['test']);
+  gulp.watch([paths.tsc.test.src], ['test']);
 });
 
 
@@ -116,10 +116,10 @@ gulp.task('clean-build', function(cb) {
   runSequence('clean', 'build', cb);
 });
 gulp.task('test', function(cb) {
-  runSequence('clean', 'compile', 'compile-test', 'power-assert', 'exec-test', cb);
+  runSequence('compile', 'compile-test', 'power-assert', 'exec-test', cb);
 });
 gulp.task('test-cov', function(cb) {
-  runSequence('test', 'coveralls', cb);
+  runSequence('clean', 'test', 'coveralls', cb);
 });
 gulp.task('default', ['clean-build'], function() {});
 
