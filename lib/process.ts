@@ -10,6 +10,8 @@ class Process {
 	_results = "";
 	_alreadlyIndentThisLine = false;
 
+    referenceStack: string[] = [];
+
 	output(str: string): Process {
 		this.doIndent();
 		this._results += str;
@@ -109,6 +111,24 @@ class Process {
 	toDefinition(): string {
 		return this._results;
 	}
+
+    pushReference(referenceName: string): Process {
+        this.referenceStack.push(referenceName);
+        return this;
+    }
+
+    popReference(): string {
+        if(this.referenceStack.length) {
+            return this.referenceStack.pop();
+        }else{
+            return null;
+        }
+    }
+
+    checkCircular(referenceName: string): boolean {
+        return !this.referenceStack.some((name) => name === referenceName);
+    }
+
 }
 
 export = Process;

@@ -1,5 +1,5 @@
-export function toTSType(type: string, debugSource?: any): string {
-	switch (type) {
+export function toTSType(type: any, debugSource?: any): string {
+	switch (typeOf(type)) {
 		case "any":
 		case "null":
 			return "any";
@@ -39,5 +39,17 @@ export function mergeSchema(a: any, b: any): any {
     a[key] = b[key];
   });
   return a;
+}
+
+export function typeOf (type: any): string {
+  if(Array.isArray(type)) {
+    if(type.length === 1) {
+      return type[0];
+    }else{
+      return <string>type;
+    }
+  }else{
+    return <string>type;
+  }
 }
 
