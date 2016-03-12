@@ -67,6 +67,9 @@ function readSchemasFromFiles(callback: (err: any, schemas: dtsgenerator.model.I
 }
 
 function processGenerate(err: any, schemas: dtsgenerator.model.IJsonSchema[]): void {
+  if (err) {
+    throw err;
+  }
   var result = dtsgenerator(schemas);
   if (opts.out) {
     mkdirp.sync(path.dirname(opts.out));
