@@ -99,8 +99,8 @@ gulp.task('coveralls', ['exec-test'], function() {
 });
 
 
-gulp.task('clean', function(cb) {
-  del(paths.tsc.clean, cb);
+gulp.task('clean', function() {
+  return del(paths.tsc.clean);
 });
 
 gulp.task('watch', function() {
