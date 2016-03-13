@@ -1,6 +1,6 @@
 {
   "name": "dtsgenerator",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "TypeScript d.ts file generator for JSON Schema file",
   "main": "index.js",
   "bin": {
