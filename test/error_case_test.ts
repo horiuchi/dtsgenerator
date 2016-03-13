@@ -19,17 +19,6 @@ describe("error schema test", () => {
       assert.equal("id is not found.", e.message);
     }
   });
-  it("no type schema", () => {
-    var schema: any = {
-      id: '/test/no_type'
-    };
-    try {
-      dtsgenerator([schema]);
-      assert.fail();
-    } catch (e) {
-      assert.equal("unknown type: undefined", e.message);
-    }
-  });
   it("unkown type schema", () => {
     var schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/unkown_type',

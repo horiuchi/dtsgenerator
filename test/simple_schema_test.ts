@@ -40,6 +40,19 @@ describe("simple schema test", () => {
 '}\n';
     assert.equal(expected, result, result);
   });
+  it("no type schema", () => {
+    var schema: any = {
+      id: '/test/no_type'
+    };
+    var result = dtsgenerator([schema]);
+
+    var expected =
+'declare module test {\n' +
+'  export interface INoType {\n' +
+'  }\n' +
+'}\n';
+    assert.equal(expected, result, result);
+  });
   it("include array schema", () => {
     var schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/inc_array',

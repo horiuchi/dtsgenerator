@@ -109,6 +109,9 @@ class Generator {
 
 
   private parseType(process: Process, type: model.IJsonSchema): void {
+    if (type.type === undefined) {
+      type.type = 'object';
+    }
     if (type.type !== "object" && type.type !== "any" && type.type !== "array") {
       console.error(type);
       throw new Error("unknown type: " + type.type);
