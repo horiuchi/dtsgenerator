@@ -149,7 +149,8 @@ class Generator {
     var name = this.getTypename(this._id);
     process.output("export interface I").output(name).output(" extends Array<");
     if (type.items.$ref) {
-      this.parseTypePropertyNamedType(process, "I" + type.items.$ref, type.items, false);
+      var itemsRef = this.searchRef(type.items.$ref);
+      this.parseTypePropertyNamedType(process, "I" + this.getTypename(itemsRef.id), type.items, false);
     } else {
       this.parseTypeProperty(process, null, type.items, false);
     }
