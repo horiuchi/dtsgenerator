@@ -1,10 +1,7 @@
-/// <reference path="../typings/tsd.d.ts" />
-/// <reference path="./expected_file/news.d.ts" />
-
 import assert = require("power-assert");
 import fs = require("fs");
 
-import dtsgenerator = require("../lib/index");
+import dtsgenerator = require("../src/index");
 
 describe("file schema test", () => {
 

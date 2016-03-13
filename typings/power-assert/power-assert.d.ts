@@ -1,13 +1,15 @@
-// Type definitions for assert and power-assert
-// Project: https://github.com/Jxck/assert
+// Type definitions for power-assert
 // Project: https://github.com/twada/power-assert
 // Definitions by: vvakame <https://github.com/vvakame>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
 // copy from assert external module in node.d.ts
 
+/// <reference path="../empower/empower.d.ts" />
+/// <reference path="../power-assert-formatter/power-assert-formatter.d.ts" />
+
 declare function assert(value:any, message?:string):void;
-declare module assert {
+declare namespace assert {
     export class AssertionError implements Error {
         name:string;
         message:string;
@@ -35,6 +37,10 @@ declare module assert {
 
     export function notStrictEqual(actual:any, expected:any, message?:string):void;
 
+    export function deepStrictEqual(actual:any, expected:any, message?:string):void;
+
+    export function notDeepStrictEqual(actual:any, expected:any, message?:string):void;
+
     export var throws:{
         (block:Function, message?:string): void;
         (block:Function, error:Function, message?:string): void;
@@ -50,12 +56,14 @@ declare module assert {
     };
 
     export function ifError(value:any):void;
-}
 
-// duplicate to node.d.ts
-// declare module "assert" {
-//     export = assert;
-// }
+    export interface Options {
+        assertion?: empower.Options;
+        output?: powerAssertFormatter.Options;
+    }
+
+    export function customize(options:Options):typeof assert;
+}
 
 declare module "power-assert" {
     export = assert;

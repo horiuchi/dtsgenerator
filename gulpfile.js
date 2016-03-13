@@ -3,89 +3,45 @@
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var plugins = require('gulp-load-plugins')();
-var runSequence = require('run-sequence');
 var del = require('del');
+var runSequence = require('run-sequence');
 
 
-var paths = {
-  tsc: {
-    src: 'lib/**/*.ts',
-    dest: 'lib/',
-    test: {
-      src: 'test/**/*.ts',
-      dest: 'test/',
-      powered: 'test-powered/'
-    },
-    clean: [
-      'lib/**/*.js*',
-      'test/**/*.js*',
-      'test-powered/**/*.js*',
-    ]
-  },
-  mocha: {
-    src: ['test-powered/**/*.js']
-  },
-  istanbul: {
-    src: ['lib/**/*.js', 'index.js']
-  },
-  coveralls: {
-    src: ['coverage/lcov.info']
-  }
-};
-var tsProject = plugins.typescript.createProject({
-  target: 'ES5',
-  module: 'commonjs',
-  noImplicitAny: true,
+var tsProject = plugins.typescript.createProject('tsconfig.json', function() {
+  typescript: require('typescript')
 });
-var tsTestProject = plugins.typescript.createProject({
-  target: 'ES5',
-  module: 'commonjs',
-  noImplicitAny: true,
+gulp.task('compile-ts', function() {
+  return tsProject.src()
+    .pipe(plugins.typescript(tsProject))
+    .js
+    .pipe(gulp.dest('.'));
 });
 
-
-gulp.task('compile', function() {
-  var tsResult = gulp.src([paths.tsc.src])
-                  .pipe(plugins.sourcemaps.init())
-                  .pipe(plugins.typescript(tsProject));
-
-  tsResult.removeAllListeners('error');
-  tsResult.on('error', function(err) {
-    result.emit('error', new gutil.PluginError('gulp-typescript', err.toString()));
-  });
-  var result = tsResult.js
-    .pipe(plugins.sourcemaps.write('.'))
-    .pipe(gulp.dest(paths.tsc.dest));
-  return result;
-});
-gulp.task('compile-test', function() {
-  var tsResult = gulp.src([paths.tsc.test.src])
-                  .pipe(plugins.typescript(tsTestProject));
-  return tsResult.js
-    .pipe(gulp.dest(paths.tsc.test.dest));
-});
-
-gulp.task('tsd', function(cb) {
-  plugins.tsd({
-    command: 'reinstall',
-    config: './tsd.json'
-  }, cb);
+gulp.task('tslint', function() {
+  return tsProject.src()
+    .pipe(plugins.tslint())
+    .pipe(plugins.tslint.report(plugins.tslintStylish, {
+      emitError: false,
+      sort: true,
+      bell: false,
+      fullPath: true
+    }));
 });
 
 
 gulp.task('power-assert', function() {
-  return gulp.src(paths.tsc.test.dest + '**/*.js')
+  return gulp.src('test/**/*.js')
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.espower())
     .pipe(plugins.sourcemaps.write('.'))
-    .pipe(gulp.dest(paths.tsc.test.powered));
+    .pipe(gulp.dest('test-powered/'));
 });
 gulp.task('exec-test', function(cb) {
-  gulp.src(paths.istanbul.src)
+  gulp.src('src/**/*.js')
     .pipe(plugins.istanbul())
     .pipe(plugins.istanbul.hookRequire())
     .on('finish', function() {
-      gulp.src(paths.mocha.src, {read: false})
+      gulp.src('test-powered/**/*.js', {read: false})
         .pipe(plugins.mocha({reporter: 'tap'}))
         .on('error', cb)
         .pipe(plugins.istanbul.writeReports({reporters: [ 'lcov', 'json', 'text', 'text-summary' ]}))
@@ -94,21 +50,27 @@ gulp.task('exec-test', function(cb) {
 });
 
 gulp.task('coveralls', ['exec-test'], function() {
-  return gulp.src(paths.coveralls.src)
+  return gulp.src('coverage/lcov.info')
     .pipe(plugins.coveralls());
 });
 
 
 gulp.task('clean', function() {
-  return del(paths.tsc.clean);
+  return del([
+    'src/**/*.js*',
+    'test/**/*.js*',
+    'test-powered/**/*.js*',
+  ]);
 });
 
 gulp.task('watch', function() {
-  gulp.watch([paths.tsc.src], ['test']);
-  gulp.watch([paths.tsc.test.src], ['test']);
+  gulp.watch(['src/**/*.ts', 'test/**/*.ts'], ['test']);
 });
 
 
+gulp.task('compile', function(cb) {
+  runSequence(['compile-ts'], cb);
+});
 gulp.task('build', function(cb) {
   runSequence('compile', cb);
 });
@@ -116,7 +78,7 @@ gulp.task('clean-build', function(cb) {
   runSequence('clean', 'build', cb);
 });
 gulp.task('test', function(cb) {
-  runSequence('compile', 'compile-test', 'power-assert', 'exec-test', cb);
+  runSequence('build', 'power-assert', 'exec-test', cb);
 });
 gulp.task('test-cov', function(cb) {
   runSequence('clean', 'test', 'coveralls', cb);

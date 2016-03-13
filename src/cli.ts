@@ -1,5 +1,3 @@
-/// <reference path="../typings/tsd.d.ts" />
-
 import fs = require("fs");
 import path = require("path");
 import program = require("commander");
@@ -36,9 +34,11 @@ function readSchemasFromStdin(callback: (err: any, schemas: dtsgenerator.model.I
   process.stdin.setEncoding('utf-8');
 
   process.stdin.on('readable', () => {
-    var chunk: string;
+    let chunk: string | Buffer;
     while (chunk = process.stdin.read()) {
-      data += chunk;
+      if (typeof chunk === 'string') {
+        data += chunk;
+      }
     }
   });
   process.stdin.on('end', () => {

@@ -1,0 +1,38 @@
+{
+  "repos": [
+    {
+      "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+      "ref": "master"
+    }
+  ],
+  "path": "typings",
+  "bundle": "typings/bundle.d.ts",
+  "link": {
+    "npm": {
+      "include": true
+    }
+  },
+  "dependencies": {
+    "node/node.d.ts": {
+      "ref": "d22516f9f089de107d7e7d5938566377370631f6"
+    },
+    "mocha/mocha.d.ts": {
+      "ref": "d22516f9f089de107d7e7d5938566377370631f6"
+    },
+    "asyncblock/asyncblock.d.ts": {
+      "ref": "d22516f9f089de107d7e7d5938566377370631f6"
+    },
+    "commander/commander.d.ts": {
+      "ref": "d22516f9f089de107d7e7d5938566377370631f6"
+    },
+    "json-pointer/json-pointer.d.ts": {
+      "ref": "d22516f9f089de107d7e7d5938566377370631f6"
+    },
+    "mkdirp/mkdirp.d.ts": {
+      "ref": "d22516f9f089de107d7e7d5938566377370631f6"
+    },
+    "power-assert/power-assert.d.ts": {
+      "ref": "d22516f9f089de107d7e7d5938566377370631f6"
+    }
+  }
+}

@@ -4,13 +4,10 @@
 node_modules/
 
 coverage/
-.tscache/
 
-example/**/*.js
-example/**/*.js.map
-lib/**/*.js
-lib/**/*.js.map
-test/**/*.js
-test/**/*.js.map
+**/*.js
+**/*.js.map
 test-powered/
+
+!./*.js
 

@@ -1,8 +1,6 @@
-/// <reference path="../typings/tsd.d.ts" />
-
 import assert = require("power-assert");
 
-import dtsgenerator = require("../lib/index");
+import dtsgenerator = require("../src/index");
 
 describe("simple schema test", () => {
 

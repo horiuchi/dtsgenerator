@@ -1,5 +1,3 @@
-/// <reference path="../typings/tsd.d.ts" />
-
 import _model = require("./model");
 import _generator = require("./generator");
 

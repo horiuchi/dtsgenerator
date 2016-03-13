@@ -1,5 +1,3 @@
-/// <referece path="../typings/tsd.d.ts" />
-
 import pointer = require('json-pointer');
 import model = require("./model");
 import utils = require("./utils");
