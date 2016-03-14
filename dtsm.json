@@ -33,6 +33,9 @@
     },
     "power-assert/power-assert.d.ts": {
       "ref": "d22516f9f089de107d7e7d5938566377370631f6"
+    },
+    "glob/glob.d.ts": {
+      "ref": "0cd5f0a1482dc3149f5446b1d885ef6ac7c57720"
     }
   }
 }

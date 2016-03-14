@@ -1,5 +1,5 @@
-import _model = require("./model");
-import _generator = require("./generator");
+import _model = require('./model');
+import _generator = require('./generator');
 
 try {
   // optional
@@ -15,7 +15,7 @@ function dtsgenerator(schemas: _model.IJsonSchema[]): string {
   return _generator.generate();
 }
 
-module dtsgenerator {
+namespace dtsgenerator {
   export import model = _model;
   export var generator = _generator;
 }

@@ -46,6 +46,7 @@
     "gulp-istanbul": "^0.10.3",
     "gulp-load-plugins": "^1.2.0",
     "gulp-mocha": "^2.2.0",
+    "gulp-shell": "^0.5.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-tslint": "^4.3.3",
     "gulp-tslint-stylish": "^1.1.1",

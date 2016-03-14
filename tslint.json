@@ -13,7 +13,7 @@
         "label-position": true,
         "label-undefined": true,
         "no-arg": true,
-        "no-conditional-assignment": true,
+        "no-conditional-assignment": false,
         "no-construct": true,
         "no-duplicate-key": true,
         "no-duplicate-variable": true,

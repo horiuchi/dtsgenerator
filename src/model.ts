@@ -27,16 +27,16 @@ export interface IJsonSchema {
   required?: string[];
   additionalProperties?: any;
   definitions?: {
-    [name:string]: IJsonSchema;
+    [name: string]: IJsonSchema;
   };
   properties?: {
-    [name:string]: IJsonSchema;
+    [name: string]: IJsonSchema;
   };
   patternProperties?: {
-    [name:string]: IJsonSchema;
+    [name: string]: IJsonSchema;
   };
   dependencies?: {
-    [name:string]: any;
+    [name: string]: any;
   };
   enum?: string[];
   type?: any;

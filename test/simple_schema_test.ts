@@ -1,25 +1,25 @@
-import assert = require("power-assert");
+import assert = require('power-assert');
 
-import dtsgenerator = require("../src/index");
+import dtsgenerator = require('../src/index');
 
-describe("simple schema test", () => {
+describe('simple schema test', () => {
 
-  it("no property schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('no property schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/no_prop',
       type: 'object',
     };
-    var result = dtsgenerator([schema]);
+    const result = dtsgenerator([schema]);
 
-    var expected =
-'declare module test {\n' +
+    const expected =
+'declare namespace test {\n' +
 '  export interface INoProp {\n' +
 '  }\n' +
 '}\n';
     assert.equal(expected, result, result);
   });
-  it("one line schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('one line schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/one_line',
       type: 'object',
       properties: {
@@ -28,31 +28,31 @@ describe("simple schema test", () => {
         }
       }
     };
-    var result = dtsgenerator([schema]);
+    const result = dtsgenerator([schema]);
 
-    var expected =
-'declare module test {\n' +
+    const expected =
+'declare namespace test {\n' +
 '  export interface IOneLine {\n' +
 '    name: string;\n' +
 '  }\n' +
 '}\n';
     assert.equal(expected, result, result);
   });
-  it("no type schema", () => {
-    var schema: any = {
+  it('no type schema', () => {
+    const schema: any = {
       id: '/test/no_type'
     };
-    var result = dtsgenerator([schema]);
+    const result = dtsgenerator([schema]);
 
-    var expected =
-'declare module test {\n' +
+    const expected =
+'declare namespace test {\n' +
 '  export interface INoType {\n' +
 '  }\n' +
 '}\n';
     assert.equal(expected, result, result);
   });
-  it("include array schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('include array schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/inc_array',
       type: 'object',
       properties: {
@@ -67,10 +67,10 @@ describe("simple schema test", () => {
         }
       }
     };
-    var result = dtsgenerator([schema]);
+    const result = dtsgenerator([schema]);
 
-    var expected =
-'declare module test {\n' +
+    const expected =
+'declare namespace test {\n' +
 '  export interface IIncArray {\n' +
 '    id: number;\n' +
 '    array: string[];\n' +
@@ -78,8 +78,8 @@ describe("simple schema test", () => {
 '}\n';
     assert.equal(expected, result, result);
   });
-  it("all simple type schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('all simple type schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/all_simple_type',
       type: 'object',
       properties: {
@@ -115,10 +115,10 @@ describe("simple schema test", () => {
         },
       }
     };
-    var result = dtsgenerator([schema]);
+    const result = dtsgenerator([schema]);
 
-    var expected =
-'declare module test {\n' +
+    const expected =
+'declare namespace test {\n' +
 '  export interface IAllSimpleType {\n' +
 '    any: any;\n' +
 '    array: string[][];\n' +
@@ -133,8 +133,8 @@ describe("simple schema test", () => {
 '}\n';
     assert.equal(expected, result, result);
   });
-  it("inner object schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('inner object schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/inner_object',
       type: 'object',
       properties: {
@@ -151,10 +151,10 @@ describe("simple schema test", () => {
         }
       }
     };
-    var result = dtsgenerator([schema]);
+    const result = dtsgenerator([schema]);
 
-    var expected =
-'declare module test {\n' +
+    const expected =
+'declare namespace test {\n' +
 '  export interface IInnerObject {\n' +
 '    title: string;\n' +
 '    options: {\n' +
@@ -166,8 +166,8 @@ describe("simple schema test", () => {
 '}\n';
     assert.equal(expected, result, result);
   });
-  it("object array schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('object array schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/object_array',
       type: 'object',
       properties: {
@@ -188,10 +188,10 @@ describe("simple schema test", () => {
         }
       }
     };
-    var result = dtsgenerator([schema]);
+    const result = dtsgenerator([schema]);
 
-    var expected =
-'declare module test {\n' +
+    const expected =
+'declare namespace test {\n' +
 '  export interface IObjectArray {\n' +
 '    array: {\n' +
 '      name: string;\n' +
@@ -201,36 +201,36 @@ describe("simple schema test", () => {
 '}\n';
     assert.equal(expected, result, result);
   });
-  it("root array schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('root array schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: 'test/root/root_array',
       type: 'array',
       items: {
         type: 'string'
       }
     };
-    var result = dtsgenerator([schema]);
+    const result = dtsgenerator([schema]);
 
-    var expected =
-'declare module test {\n' +
-'  module root {\n' +
+    const expected =
+'declare namespace test {\n' +
+'  namespace root {\n' +
 '    export interface IRootArray extends Array<string> {\n' +
 '    }\n' +
 '  }\n' +
 '}\n';
     assert.equal(expected, result, result);
   });
-  it("root any schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('root any schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: 'test/root/root_any',
       type: 'any',
       description: 'This is any type schema'
     };
-    var result = dtsgenerator([schema]);
+    const result = dtsgenerator([schema]);
 
-    var expected =
-'declare module test {\n' +
-'  module root {\n' +
+    const expected =
+'declare namespace test {\n' +
+'  namespace root {\n' +
 '    /**\n' +
 '     * This is any type schema\n' +
 '     */\n' +
@@ -241,8 +241,8 @@ describe("simple schema test", () => {
 '}\n';
     assert.equal(expected, result, result);
   });
-  it("include $ref schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('include $ref schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: 'test/ref/include_ref',
       type: 'object',
       definitions: {
@@ -256,11 +256,11 @@ describe("simple schema test", () => {
         }
       }
     };
-    var result = dtsgenerator([schema]);
+    const result = dtsgenerator([schema]);
 
-    var expected =
-'declare module test {\n' +
-'  module ref {\n' +
+    const expected =
+'declare namespace test {\n' +
+'  namespace ref {\n' +
 '    export interface IIncludeRef {\n' +
 '      "sub-name": string;\n' +
 '    }\n' +

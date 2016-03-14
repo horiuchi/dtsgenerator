@@ -17,6 +17,10 @@ gulp.task('compile-ts', function() {
     .pipe(gulp.dest('.'));
 });
 
+gulp.task('tsconfig', plugins.shell.task([
+  'tsconfig -u'
+]));
+
 gulp.task('tslint', function() {
   return tsProject.src()
     .pipe(plugins.tslint())
@@ -69,7 +73,7 @@ gulp.task('watch', function() {
 
 
 gulp.task('compile', function(cb) {
-  runSequence(['compile-ts'], cb);
+  runSequence('tsconfig', ['compile-ts', 'tslint'], cb);
 });
 gulp.task('build', function(cb) {
   runSequence('compile', cb);
