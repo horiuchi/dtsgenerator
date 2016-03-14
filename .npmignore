@@ -1,25 +1,25 @@
 .git/
 
-# for WebStorm
-.idea/
-
 # for npm
 node_modules/
 
-# for tsd
+# for dtsm
 typings/
 
 # codes
 test/
 coverage/
 schema/
+**/*.ts
 
 # misc
 .gitignore
 .editorconfig
 .travis.yml
-tsd.json
-Gruntfile.js
+tsconfig.json
+tslint.json
+dtsm.json
+gulpfile.js
 
 test-results.xml
 npm-debug.log

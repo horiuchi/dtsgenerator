@@ -1,26 +1,24 @@
-/// <reference path="../typings/tsd.d.ts" />
+import assert = require('power-assert');
 
-import assert = require("power-assert");
+import dtsgenerator = require('../src/index');
 
-import dtsgenerator = require("../lib/index");
+console.error = function() {};
 
-console.error = function() {}
+describe('error schema test', () => {
 
-describe("error schema test", () => {
-
-  it("no id schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('no id schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       type: 'object',
     };
     try {
       dtsgenerator([schema]);
       assert.fail();
     } catch (e) {
-      assert.equal("id is not found.", e.message);
+      assert.equal('id is not found.', e.message);
     }
   });
-  it("unkown type schema", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('unkown type schema', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/unkown_type',
       type: 'hoge'
     };
@@ -28,11 +26,11 @@ describe("error schema test", () => {
       dtsgenerator([schema]);
       assert.fail();
     } catch (e) {
-      assert.equal("unknown type: hoge", e.message);
+      assert.equal('unknown type: hoge', e.message);
     }
   });
-  it("unkown type property", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('unkown type property', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/unkown_property',
       type: 'object',
       properties: {
@@ -45,12 +43,12 @@ describe("error schema test", () => {
       dtsgenerator([schema]);
       assert.fail();
     } catch (e) {
-      assert.equal("unknown type: fuga", e.message);
+      assert.equal('unknown type: fuga', e.message);
     }
   });
 
-  it("target of $ref is not found", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('target of $ref is not found', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/target_not_found',
       type: 'object',
       properties: {
@@ -63,11 +61,11 @@ describe("error schema test", () => {
       dtsgenerator([schema]);
       assert.fail();
     } catch (e) {
-      assert.equal("$ref target is not found: /notFound/id", e.message);
+      assert.equal('$ref target is not found: /notFound/id', e.message);
     }
   });
-  it("target of $ref is invalid path", () => {
-    var schema: dtsgenerator.model.IJsonSchema = {
+  it('target of $ref is invalid path', () => {
+    const schema: dtsgenerator.model.IJsonSchema = {
       id: '/test/target_not_found',
       type: 'object',
       properties: {
@@ -80,7 +78,7 @@ describe("error schema test", () => {
       dtsgenerator([schema]);
       assert.fail();
     } catch (e) {
-      assert.equal("$ref path must be absolute path: hogefuga", e.message);
+      assert.equal('$ref path must be absolute path: hogefuga', e.message);
     }
   });
 

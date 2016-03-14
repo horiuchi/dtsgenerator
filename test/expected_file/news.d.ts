@@ -1,4 +1,4 @@
-declare module schema {
+declare namespace schema {
   /**
    * News data API
    */
