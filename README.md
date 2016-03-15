@@ -22,6 +22,7 @@ $ dtsgen --help
     -h, --help        output usage information
     -V, --version     output the version number
     -o, --out [file]  output d.ts filename
+    -p, --prefix [type prefix]  set the prefix of interface name. default is nothing.
 
 ```
 
