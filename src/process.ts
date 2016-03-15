@@ -2,113 +2,125 @@ import model = require('./model');
 
 class Process {
 
-  indentChar = ' ';
-  indentStep = 2;
+    public indentChar = ' ';
+    public indentStep = 4;
 
-  indent = 0;
+    private indent = 0;
+    private results = '';
+    private alreadlyIndentThisLine = false;
 
-  results = '';
-  alreadlyIndentThisLine = false;
+    constructor(private typePrefix: string = '') { }
 
-  output(str: string): Process {
-    this.doIndent();
-    this.results += str;
-    return this;
-  }
-
-  outputKey(name: string): Process {
-    if (name.indexOf('-') !== -1 || name.indexOf('.') !== -1) {
-      this.output('\"').output(name).output('\"');
-    } else {
-      this.output(name);
+    output(str: string): Process {
+        this.doIndent();
+        this.results += str;
+        return this;
     }
-    return this;
-  }
 
-  outputLine(str?: string): Process {
-    this.doIndent();
-    if (str) {
-      this.output(str);
+    outputType(type: string, primitive: boolean = false): Process {
+        if (this.typePrefix && !primitive) {
+            this.output(this.typePrefix);
+        }
+        this.output(type);
+        return this;
     }
-    this.output('\n');
-    this.alreadlyIndentThisLine = false;
-    return this;
-  }
 
-  outputJSDoc(description: string, parameters: { [name: string]: model.IJsonSchema; } = {}): Process {
-    if (!description && Object.keys(parameters).length === 0) {
-      return;
+    outputKey(name: string, optional: boolean = false): Process {
+        if (/[^0-9A-Za-z_$]/.test(name) || /^\d/.test(name)) {
+            this.output('\"').output(name).output('\"');
+        } else {
+            this.output(name);
+        }
+        if (optional) {
+            this.output('?');
+        }
+        return this;
     }
-    description = description || '';
 
-    this.outputLine('/**');
-    description.split('\n').forEach(line => {
-      this.output(' * ').outputLine(line);
-    });
-    Object.keys(parameters).forEach(parameterKey => {
-      const parameter = parameters[parameterKey];
-      // TODO type doc
-      this.output(' * @params {');
-      switch (parameter.type) {
-        case 'string':
-        this.output('string');
-        break;
-        case 'integer':
-        case 'number':
-        this.output('number');
-        break;
-        case 'boolean':
-        this.output('boolean');
-        break;
-        default :
-        console.error(parameter);
-        throw new Error('unknown type');
-      }
-
-      this.output('} ').output(parameterKey).output(' ').outputLine(parameter.description);
-    });
-    this.outputLine(' */');
-    return this;
-  }
-
-  doIndent(): Process {
-    if (!this.alreadlyIndentThisLine) {
-      const indent = this.getIndent();
-      this.results += indent;
-      this.alreadlyIndentThisLine = true;
+    outputLine(str?: string): Process {
+        this.doIndent();
+        if (str) {
+            this.output(str);
+        }
+        this.output('\n');
+        this.alreadlyIndentThisLine = false;
+        return this;
     }
-    return this;
-  }
 
-  increaseIndent(): Process {
-    this.indent++;
-    return this;
-  }
+    outputJSDoc(description: string, parameters: { [name: string]: model.IJsonSchema; } = {}): Process {
+        if (!description && Object.keys(parameters).length === 0) {
+            return;
+        }
+        description = description || '';
 
-  decreaseIndent(): Process {
-    this.indent--;
-    return this;
-  }
+        this.outputLine('/**');
+        description.split('\n').forEach(line => {
+            this.output(' * ').outputLine(line);
+        });
+        Object.keys(parameters).forEach(parameterKey => {
+            const parameter = parameters[parameterKey];
+            // TODO type doc
+            this.output(' * @params {');
+            switch (parameter.type) {
+                case 'string':
+                    this.output('string');
+                    break;
+                case 'integer':
+                case 'number':
+                    this.output('number');
+                    break;
+                case 'boolean':
+                    this.output('boolean');
+                    break;
+                default:
+                    console.error(parameter);
+                    throw new Error('unknown type');
+            }
 
-  getIndent(): string {
-    let indent = '';
-    for (let i = 0; i < this.indent; i++) {
-      indent += this.repeatString(this.indentStep, this.indentChar);
+            this.output('} ').output(parameterKey).output(' ').outputLine(parameter.description);
+        });
+        this.outputLine(' */');
+        return this;
     }
-    return indent;
-  }
 
-  repeatString(n: number, s: string): string {
-    let result = '';
-    for (let i = 0; i < n; i++) {
-      result += s;
+    doIndent(): Process {
+        if (!this.alreadlyIndentThisLine) {
+            const indent = this.getIndent();
+            this.results += indent;
+            this.alreadlyIndentThisLine = true;
+        }
+        return this;
     }
-    return result;
-  }
 
-  toDefinition(): string {
-    return this.results;
-  }
+    get indentLevel(): number {
+        return this.indent;
+    }
+
+    increaseIndent(): Process {
+        this.indent++;
+        return this;
+    }
+
+    decreaseIndent(): Process {
+        this.indent--;
+        return this;
+    }
+
+    getIndent(): string {
+        return this.repeatString(this.indent * this.indentStep, this.indentChar);
+    }
+
+    repeatString(n: number, s: string): string {
+        let result = '';
+        for (let i = 0; i < n; i++) {
+            result += s;
+        }
+        return result;
+    }
+
+    toDefinition(): string {
+        return this.results;
+    }
 }
 
 export = Process;
