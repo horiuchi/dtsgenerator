@@ -1,8 +1,7 @@
 import pointer = require('json-pointer');
-import model = require('./model');
 import utils = require('./utils');
 
-import Process = require('./process');
+import Processor = require('./writeProcessor');
 
 
 class Generator {
@@ -10,14 +9,14 @@ class Generator {
     private static map: { [id: string]: Generator } = {};
 
     static generate(prefix?: string, header?: string): string {
-        const process = new Process(prefix);
+        const process = new Processor(prefix);
         if (header) {
             process.outputLine(header);
         }
         this.walk(process, this.env);
         return process.toDefinition();
     }
-    private static walk(process: Process, env: any): void {
+    private static walk(process: Processor, env: any): void {
         const keys = Object.keys(env).sort();
         keys.forEach((key) => {
             const val = env[key];
@@ -36,7 +35,7 @@ class Generator {
         });
     }
 
-    static add(schema: model.IJsonSchema): void {
+    static add(schema: JsonSchema): void {
         if (typeof schema === 'string') {
             schema = JSON.parse(<any>schema);
         }
@@ -64,7 +63,7 @@ class Generator {
 
     private innerId = '';
 
-    constructor(private schema: model.IJsonSchema) {
+    constructor(private schema: JsonSchema) {
         if (!schema.id) {
             console.error(schema);
             throw new Error('id is not found.');
@@ -79,7 +78,7 @@ class Generator {
         return this.innerId;
     }
 
-    public doProcess(process: Process): void {
+    public doProcess(process: Processor): void {
         this.parseType(process, this.schema);
     }
 
@@ -89,7 +88,7 @@ class Generator {
         return utils.capitalizeName(name);
     }
 
-    private searchRef(ref: string): model.IJsonSchema {
+    private searchRef(ref: string): JsonSchema {
         const splited = ref.split('#', 2);
         const id = splited[0];
         const path = splited[1];
@@ -105,7 +104,7 @@ class Generator {
     }
 
 
-    private parseType(process: Process, type: model.IJsonSchema): void {
+    private parseType(process: Processor, type: JsonSchema): void {
         if (type.type === undefined) {
             type.type = 'object';
         }
@@ -122,7 +121,7 @@ class Generator {
         }
     }
 
-    private parseTypeModel(process: Process, type: model.IJsonSchema) {
+    private parseTypeModel(process: Processor, type: JsonSchema) {
         const name = this.getTypename(this.innerId);
         process.output('export interface ').outputType(name).outputLine(' {');
         process.increaseIndent();
@@ -143,7 +142,7 @@ class Generator {
         process.outputLine('}');
     }
 
-    private parseTypeCollection(process: Process, type: model.IJsonSchema) {
+    private parseTypeCollection(process: Processor, type: JsonSchema) {
         const name = this.getTypename(this.innerId);
         process.output('export interface ').outputType(name).output(' extends Array<');
         if (type.items.$ref) {
@@ -156,7 +155,7 @@ class Generator {
         process.outputLine('}');
     }
 
-    private parseTypeProperty(process: Process, name: string, optional: boolean, property: model.IJsonSchema, terminate = true): void {
+    private parseTypeProperty(process: Processor, name: string, optional: boolean, property: JsonSchema, terminate = true): void {
         if (!property)
             return;
         if (property.allOf) {
@@ -241,7 +240,7 @@ class Generator {
         }
     }
 
-    private parseTypePropertyNamedType(process: Process, typeName: string, primitiveType: boolean, property: model.IJsonSchema, terminate = true) {
+    private parseTypePropertyNamedType(process: Processor, typeName: string, primitiveType: boolean, property: JsonSchema, terminate = true) {
         process.outputType(typeName, primitiveType);
         if (terminate) {
             process.output(';');

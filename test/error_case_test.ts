@@ -7,7 +7,7 @@ console.error = function() { };
 describe('error schema test', () => {
 
     it('no id schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             type: 'object',
         };
         try {
@@ -18,7 +18,7 @@ describe('error schema test', () => {
         }
     });
     it('unkown type schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: '/test/unkown_type',
             type: 'hoge'
         };
@@ -30,7 +30,7 @@ describe('error schema test', () => {
         }
     });
     it('unkown type property', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: '/test/unkown_property',
             type: 'object',
             properties: {
@@ -48,7 +48,7 @@ describe('error schema test', () => {
     });
 
     it('target of $ref is not found', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: '/test/target_not_found',
             type: 'object',
             properties: {
@@ -65,7 +65,7 @@ describe('error schema test', () => {
         }
     });
     it('target of $ref is invalid path', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: '/test/target_not_found',
             type: 'object',
             properties: {

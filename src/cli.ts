@@ -31,7 +31,7 @@ if (opts.args.length === 0) {
     readSchemasFromFiles(processGenerate);
 }
 
-function readSchemasFromStdin(callback: (err: any, schemas: dtsgenerator.model.IJsonSchema[]) => void): void {
+function readSchemasFromStdin(callback: (err: any, schemas: JsonSchema[]) => void): void {
     let data = '';
     process.stdin.setEncoding('utf-8');
 
@@ -52,7 +52,7 @@ function readSchemasFromStdin(callback: (err: any, schemas: dtsgenerator.model.I
     });
 }
 
-function readSchemasFromFiles(callback: (err: any, schemas: dtsgenerator.model.IJsonSchema[]) => void): void {
+function readSchemasFromFiles(callback: (err: any, schemas: JsonSchema[]) => void): void {
     asyncblock((flow: asyncblock.IFlow) => {
         flow.errorCallback = (err: any) => {
             callback(err, null);
@@ -68,7 +68,7 @@ function readSchemasFromFiles(callback: (err: any, schemas: dtsgenerator.model.I
     });
 }
 
-function processGenerate(err: any, schemas: dtsgenerator.model.IJsonSchema[]): void {
+function processGenerate(err: any, schemas: JsonSchema[]): void {
     if (err) {
         throw err;
     }
