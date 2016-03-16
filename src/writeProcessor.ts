@@ -1,6 +1,5 @@
-import model = require('./model');
 
-class Process {
+class WriteProcessor {
 
     public indentChar = ' ';
     public indentStep = 4;
@@ -11,13 +10,13 @@ class Process {
 
     constructor(private typePrefix: string = '') { }
 
-    output(str: string): Process {
+    output(str: string): WriteProcessor {
         this.doIndent();
         this.results += str;
         return this;
     }
 
-    outputType(type: string, primitive: boolean = false): Process {
+    outputType(type: string, primitive: boolean = false): WriteProcessor {
         if (this.typePrefix && !primitive) {
             this.output(this.typePrefix);
         }
@@ -25,7 +24,7 @@ class Process {
         return this;
     }
 
-    outputKey(name: string, optional: boolean = false): Process {
+    outputKey(name: string, optional: boolean = false): WriteProcessor {
         if (/[^0-9A-Za-z_$]/.test(name) || /^\d/.test(name)) {
             this.output('\"').output(name).output('\"');
         } else {
@@ -37,7 +36,7 @@ class Process {
         return this;
     }
 
-    outputLine(str?: string): Process {
+    outputLine(str?: string): WriteProcessor {
         this.doIndent();
         if (str) {
             this.output(str);
@@ -47,7 +46,7 @@ class Process {
         return this;
     }
 
-    outputJSDoc(description: string, parameters: { [name: string]: model.IJsonSchema; } = {}): Process {
+    outputJSDoc(description: string, parameters: { [name: string]: JsonSchema; } = {}): WriteProcessor {
         if (!description && Object.keys(parameters).length === 0) {
             return;
         }
@@ -83,7 +82,7 @@ class Process {
         return this;
     }
 
-    doIndent(): Process {
+    doIndent(): WriteProcessor {
         if (!this.alreadlyIndentThisLine) {
             const indent = this.getIndent();
             this.results += indent;
@@ -96,12 +95,12 @@ class Process {
         return this.indent;
     }
 
-    increaseIndent(): Process {
+    increaseIndent(): WriteProcessor {
         this.indent++;
         return this;
     }
 
-    decreaseIndent(): Process {
+    decreaseIndent(): WriteProcessor {
         this.indent--;
         return this;
     }
@@ -123,5 +122,5 @@ class Process {
     }
 }
 
-export = Process;
+export = WriteProcessor;
 

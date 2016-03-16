@@ -1,7 +1,7 @@
 /**
  * Core schema meta-schema
  */
-export interface IJsonSchema {
+declare interface JsonSchema {
     id?: string; // uri
     $schema?: string; // uri
     $ref?: string; // uri
@@ -27,22 +27,22 @@ export interface IJsonSchema {
     required?: string[];
     additionalProperties?: any;
     definitions?: {
-        [name: string]: IJsonSchema;
+        [name: string]: JsonSchema;
     };
     properties?: {
-        [name: string]: IJsonSchema;
+        [name: string]: JsonSchema;
     };
     patternProperties?: {
-        [name: string]: IJsonSchema;
+        [name: string]: JsonSchema;
     };
     dependencies?: {
         [name: string]: any;
     };
     enum?: string[];
     type?: any;
-    allOf?: IJsonSchema[];
-    anyOf?: IJsonSchema[];
-    oneOf?: IJsonSchema[];
-    not?: IJsonSchema;
+    allOf?: JsonSchema[];
+    anyOf?: JsonSchema[];
+    oneOf?: JsonSchema[];
+    not?: JsonSchema;
 }
 

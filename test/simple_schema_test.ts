@@ -5,7 +5,7 @@ import dtsgenerator = require('../src/index');
 describe('simple schema test', () => {
 
     it('no property schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: '/test/no_prop',
             type: 'object',
         };
@@ -19,7 +19,7 @@ describe('simple schema test', () => {
         assert.equal(expected, result, result);
     });
     it('one line schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: '/test/one_line',
             type: 'object',
             properties: {
@@ -52,7 +52,7 @@ describe('simple schema test', () => {
         assert.equal(expected, result, result);
     });
     it('include array schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: '/test/inc_array',
             type: 'object',
             properties: {
@@ -79,7 +79,7 @@ describe('simple schema test', () => {
         assert.equal(expected, result, result);
     });
     it('all simple type schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: '/test/all_simple_type',
             type: 'object',
             properties: {
@@ -134,7 +134,7 @@ describe('simple schema test', () => {
         assert.equal(expected, result, result);
     });
     it('inner object schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: '/test/inner_object',
             type: 'object',
             properties: {
@@ -167,7 +167,7 @@ describe('simple schema test', () => {
         assert.equal(expected, result, result);
     });
     it('object array schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: '/test/object_array',
             type: 'object',
             properties: {
@@ -202,7 +202,7 @@ describe('simple schema test', () => {
         assert.equal(expected, result, result);
     });
     it('root array schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: 'test/root/root_array',
             type: 'array',
             items: {
@@ -221,7 +221,7 @@ describe('simple schema test', () => {
         assert.equal(expected, result, result);
     });
     it('root any schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: 'test/root/root_any',
             type: 'any',
             description: 'This is any type schema'
@@ -242,7 +242,7 @@ describe('simple schema test', () => {
         assert.equal(expected, result, result);
     });
     it('include $ref schema', () => {
-        const schema: dtsgenerator.model.IJsonSchema = {
+        const schema: JsonSchema = {
             id: 'test/ref/include_ref',
             type: 'object',
             definitions: {
