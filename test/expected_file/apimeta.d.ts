@@ -1,13 +1,13 @@
 /**
  * ApiBaseObject of a record
  */
-export interface IApiBaseObject {
+export interface ApiBaseObject {
     first: string;
 }
 /**
  * Metadata of a record
  */
-export interface IApiMetadata {
+export interface ApiMetadata {
     serverOperation: any; // I,U,D
-    test: IApiBaseObject;
+    test: ApiBaseObject;
 }
