@@ -62,17 +62,17 @@ describe('simple schema test', () => {
                 array: {
                     type: 'array',
                     items: {
-                        type: 'string'
+                        type: ['string', 'integer']
                     }
                 }
             }
         };
-        const result = dtsgenerator([schema], 'I');
+        const result = dtsgenerator([schema], 'T');
 
         const expected = `declare namespace test {
-    export interface IIncArray {
+    export interface TIncArray {
         id: number;
-        array: string[];
+        array: (string | number)[];
     }
 }
 `;
@@ -89,10 +89,15 @@ describe('simple schema test', () => {
                 array: {
                     type: 'array',
                     items: {
-                        type: 'array',
-                        items: {
-                            type: 'string'
-                        }
+                        anyOf: [
+                            { type: 'string' },
+                            {
+                                type: 'array',
+                                items: {
+                                    type: 'string'
+                                }
+                            }
+                        ]
                     }
                 },
                 boolean: {
@@ -120,7 +125,7 @@ describe('simple schema test', () => {
         const expected = `declare namespace test {
     export interface IAllSimpleType {
         any: any;
-        array: string[][];
+        array: (string | string[])[];
         boolean: boolean;
         integer: number;
         null: any;

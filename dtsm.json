@@ -36,6 +36,9 @@
     },
     "glob/glob.d.ts": {
       "ref": "0cd5f0a1482dc3149f5446b1d885ef6ac7c57720"
+    },
+    "es6-collections/es6-collections.d.ts": {
+      "ref": "cc3d223a946f661eff871787edeb0fcb8f0db156"
     }
   }
 }

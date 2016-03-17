@@ -8,6 +8,6 @@ export interface ApiBaseObject {
  * Metadata of a record
  */
 export interface ApiMetadata {
-    serverOperation: any; // I,U,D
+    serverOperation: "I" | "U" | "D";
     test: ApiBaseObject;
 }

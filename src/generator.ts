@@ -134,8 +134,8 @@ class Generator {
         Object.keys(type.properties || {}).forEach((propertyName) => {
             const property = type.properties[propertyName];
             process.outputJSDoc(property.description);
-            const optionalProperty = type.required && typeof (property.required) !== 'boolean' && type.required.indexOf(propertyName) < 0;
-            this.parseTypeProperty(process, propertyName, optionalProperty, property);
+            this.parsePropertyName(process, propertyName, type);
+            this.parseTypeProperty(process, property);
         });
 
         process.decreaseIndent();
@@ -149,13 +149,19 @@ class Generator {
             const itemsRef = this.searchRef(type.items.$ref);
             this.parseTypePropertyNamedType(process, this.getTypename(itemsRef.id), false, type.items, false);
         } else {
-            this.parseTypeProperty(process, null, false, type.items, false);
+            this.parseTypeProperty(process, type.items, false);
         }
         process.outputLine('> {');
         process.outputLine('}');
     }
 
-    private parseTypeProperty(process: Processor, name: string, optional: boolean, property: JsonSchema, terminate = true): void {
+    private parsePropertyName(process: Processor, propertyName: string, property: JsonSchema): void {
+        if (propertyName) {
+            const optionalProperty = property.required && typeof property.required !== 'boolean' && property.required.indexOf(propertyName) < 0;
+            process.outputKey(propertyName, optionalProperty).output(': ');
+        }
+    }
+    private parseTypeProperty(process: Processor, property: JsonSchema, terminate = true): void {
         if (!property)
             return;
         if (property.allOf) {
@@ -166,17 +172,8 @@ class Generator {
                 }
                 utils.mergeSchema(schema, p);
             });
-            this.parseTypeProperty(process, name, optional, schema, terminate);
+            this.parseTypeProperty(process, schema, terminate);
             return;
-        }
-        // TODO I hope to use union type for 'anyOf' support.
-        if (property.anyOf) {
-            delete property.anyOf;
-            property.type = 'any';
-        }
-        if (property.enum) {
-            property.format = property.enum.toString();
-            property.type = 'any';
         }
         ['oneOf', 'not'].forEach((keyword) => {
             const schema: any = property;
@@ -185,41 +182,91 @@ class Generator {
                 throw new Error('unsupported property: ' + keyword);
             }
         });
-
-        if (name) {
-            process.outputKey(name, optional).output(': ');
-        }
         if (property.$ref) {
             const ref = this.searchRef(property.$ref);
             if (ref) {
                 if (ref.id) {
                     this.parseTypePropertyNamedType(process, this.getTypename(ref.id), false, ref, terminate);
                 } else {
-                    this.parseTypeProperty(process, null, false, ref, terminate);
+                    this.parseTypeProperty(process, ref, terminate);
                 }
             } else {
                 this.parseTypePropertyNamedType(process, property.$ref, false, property, terminate);
             }
             return;
         }
-        const tsType = utils.toTSType(property.type, property);
+        if (property.anyOf) {
+            const anyOf = property.anyOf;
+            if (!terminate) {
+                process.output('(');
+            }
+            anyOf.forEach((type: JsonSchema, index: number) => {
+                const isLast = index === anyOf.length - 1;
+                if (type.id) {
+                    this.parseTypePropertyNamedType(process, this.getTypename(type.id), false, type, isLast && terminate);
+                } else {
+                    this.parseTypeProperty(process, type, isLast && terminate);
+                }
+                if (!isLast) {
+                  process.output(' | ');
+                }
+            });
+            if (!terminate) {
+                process.output(')');
+            }
+            return;
+        }
+        if (property.enum) {
+            if (!terminate) {
+                process.output('(');
+            }
+            process.output(property.enum.map(s => '"' + s + '"').join(' | '));
+            if (!terminate) {
+                process.output(')');
+            } else {
+                process.outputLine(';');
+            }
+            return;
+        }
+
+        const type = property.type;
+        if (typeof type === 'string') {
+            this.outputTypeName(process, type, property, terminate);
+        } else {
+            const types = utils.reduceTypes(type);
+            if (!terminate) {
+                process.output('(');
+            }
+            types.forEach((t: string, index: number) => {
+                const isLast = index === types.length - 1;
+                this.outputTypeName(process, t, property, terminate);
+                if (!isLast) {
+                  process.output(' | ');
+                }
+            });
+            if (!terminate) {
+                process.output(')');
+            }
+        }
+    }
+    private outputTypeName(process: Processor, type: string, property: JsonSchema, terminate: boolean): void {
+        const tsType = utils.toTSType(type, property);
         if (tsType) {
             this.parseTypePropertyNamedType(process, tsType, true, property, terminate);
             return;
         }
-        if (property.type === 'object') {
+        if (type === 'object') {
             process.outputLine('{');
             process.increaseIndent();
             if (property.properties) {
                 Object.keys(property.properties).forEach((propertyName) => {
                     const nextProperty = property.properties[propertyName];
-                    const optionalProperty = property.required && typeof property.required !== 'boolean' && property.required.indexOf(propertyName) < 0;
-                    this.parseTypeProperty(process, propertyName, optionalProperty, nextProperty);
+                    this.parsePropertyName(process, propertyName, property);
+                    this.parseTypeProperty(process, nextProperty);
                 });
             } else if (property.additionalProperties) {
                 process.output('[name: string]: ');
-                this.parseTypeProperty(process, null, false, property.additionalProperties, false);
-                process.outputLine(';');
+                this.parseTypeProperty(process, property.additionalProperties, true);
             }
             process.decreaseIndent();
             process.output('}');
@@ -227,8 +274,8 @@ class Generator {
                 process.outputLine(';');
             }
 
-        } else if (property.type === 'array') {
-            this.parseTypeProperty(process, null, false, property.items, false);
+        } else if (type === 'array') {
+            this.parseTypeProperty(process, property.items, false);
             process.output('[]');
             if (terminate) {
                 process.outputLine(';');
