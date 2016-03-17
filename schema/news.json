@@ -31,13 +31,13 @@
       "description": "article's image url",
       "example": "http://pressroom.lexus.com/images/Lexus_logo_bug_2013_thumb_20140604144404730.jpg",
       "format": "uri",
-      "type": "string"
+      "type": ["string", "null"]
     },
     "detailUrl": {
       "description": "article's page url for hs",
       "example": "http://bento.uievolution.co.jp/static/news/201406140001.html",
       "format": "uri",
-      "type": "string"
+      "type": ["string", "null"]
     },
     "createdAt": {
       "description": "when news was created",

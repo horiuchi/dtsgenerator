@@ -39,7 +39,7 @@ declare interface JsonSchema {
         [name: string]: any;
     };
     enum?: string[];
-    type?: any;
+    type?: string|string[];
     allOf?: JsonSchema[];
     anyOf?: JsonSchema[];
     oneOf?: JsonSchema[];

@@ -1,7 +1,7 @@
 /**
  * Core schema meta-schema
  */
-export interface IJsonSchema {
+export interface JsonSchema {
     id?: string; // uri
     $schema?: string; // uri
     $ref?: string; // uri
@@ -17,31 +17,31 @@ export interface IJsonSchema {
     maxLength?: number;
     minLength?: number;
     pattern?: string; // regex
-    additionalItems?: any;
-    items?: any;
+    additionalItems?: boolean | JsonSchema;
+    items?: JsonSchema | JsonSchema[];
     maxItems?: number;
     minItems?: number;
     uniqueItems?: boolean;
     maxProperties?: number;
     minProperties?: number;
     required?: string[];
-    additionalProperties?: any;
+    additionalProperties?: boolean | JsonSchema;
     definitions?: {
-        [name: string]: IJsonSchema;
+        [name: string]: JsonSchema;
     };
     properties?: {
-        [name: string]: IJsonSchema;
+        [name: string]: JsonSchema;
     };
     patternProperties?: {
-        [name: string]: IJsonSchema;
+        [name: string]: JsonSchema;
     };
     dependencies?: {
-        [name: string]: any;
+        [name: string]: JsonSchema | string[];
     };
     enum?: string[];
-    type?: any;
-    allOf?: IJsonSchema[];
-    anyOf?: IJsonSchema[];
-    oneOf?: IJsonSchema[];
-    not?: IJsonSchema;
+    type?: ("any" | "array" | "boolean" | "integer" | "null" | "number" | "object" | "string") | ("any" | "array" | "boolean" | "integer" | "null" | "number" | "object" | "string")[];
+    allOf?: JsonSchema[];
+    anyOf?: JsonSchema[];
+    oneOf?: JsonSchema[];
+    not?: JsonSchema;
 }

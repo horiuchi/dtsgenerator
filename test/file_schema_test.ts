@@ -13,7 +13,7 @@ describe('file schema test', () => {
     });
     it('JSON Schemas schema', () => {
         const schema = fs.readFileSync('./schema/schema', { encoding: 'utf-8' });
-        const actual = dtsgenerator([schema], 'I');
+        const actual = dtsgenerator([schema]);
         const expected = fs.readFileSync('./test/expected_file/schema.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
