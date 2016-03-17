@@ -18,12 +18,12 @@ program
     .option('-p, --prefix [type prefix]', 'set the prefix of interface name. default is nothing.')
     .parse(process.argv);
 
-interface ICommandOptions {
+interface CommandOptions {
     args: string[];
     out?: string;
     prefix?: string;
 }
-const opts: ICommandOptions = <any>program;
+const opts = program as CommandOptions;
 
 if (opts.args.length === 0) {
     readSchemasFromStdin(processGenerate);
