@@ -5,7 +5,7 @@ import mkdirp = require('mkdirp');
 import asyncblock = require('asyncblock');
 import glob = require('glob');
 
-import dtsgenerator = require('./index');
+import dtsgenerator from './index';
 
 const pkg = require('../package.json');
 
@@ -72,12 +72,13 @@ function processGenerate(err: any, schemas: JsonSchema[]): void {
     if (err) {
         throw err;
     }
-    const result = dtsgenerator(schemas, opts.prefix);
-    if (opts.out) {
-        mkdirp.sync(path.dirname(opts.out));
-        fs.writeFileSync(opts.out, result, { encoding: 'utf-8' });
-    } else {
-        console.log(result);
-    }
+    dtsgenerator(schemas, opts.prefix).then((result) => {
+        if (opts.out) {
+            mkdirp.sync(path.dirname(opts.out));
+            fs.writeFileSync(opts.out, result, { encoding: 'utf-8' });
+        } else {
+            console.log(result);
+        }
+    });
 }
 

@@ -1,5 +1,11 @@
+import { SchemaId } from './schemaid';
+import { TypeDefenition } from './typeDefenition';
 
-class WriteProcessor {
+export interface ReferenceResolver {
+    (baseSchema: JsonSchema, refId: SchemaId): TypeDefenition;
+}
+
+export class WriteProcessor {
 
     public indentChar = ' ';
     public indentStep = 4;
@@ -8,7 +14,11 @@ class WriteProcessor {
     private results = '';
     private alreadlyIndentThisLine = false;
 
-    constructor(private typePrefix: string = '') { }
+    constructor(private refResolver: ReferenceResolver, private typePrefix: string = '') { }
+
+    get referenceResolve(): ReferenceResolver {
+        return this.refResolver;
+    }
 
     output(str: string): WriteProcessor {
         this.doIndent();
@@ -19,6 +29,10 @@ class WriteProcessor {
     outputType(type: string, primitive: boolean = false): WriteProcessor {
         if (this.typePrefix && !primitive) {
             this.output(this.typePrefix);
+        }
+        type = type.replace(/[^0-9A-Za-z_$.]/g, '_');
+        if (/^\d/.test(type)) {
+          type = '_' + type;
         }
         this.output(type);
         return this;
@@ -121,6 +135,4 @@ class WriteProcessor {
         return this.results;
     }
 }
-
-export = WriteProcessor;
 

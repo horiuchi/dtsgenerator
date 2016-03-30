@@ -1,4 +1,5 @@
-import _generator = require('./generator');
+import 'babel-polyfill';
+import { JsonSchemaParser } from './jsonSchemaParser';
 
 try {
     // optional
@@ -6,17 +7,12 @@ try {
 } catch (e) {
 }
 
-function dtsgenerator(schemas: JsonSchema[], prefix?: string): string {
-    _generator.clear();
+export default function dtsgenerator(schemas: JsonSchema[], prefix?: string): Promise<string> {
+    const parser = new JsonSchemaParser();
+    parser.clear();
     schemas.forEach((schema) => {
-        _generator.add(schema);
+        parser.parseSchema(schema);
     });
-    return _generator.generate(prefix);
+    return parser.generateDts(prefix);
 }
-
-namespace dtsgenerator {
-    export var generator = _generator;
-}
-
-export = dtsgenerator;
 

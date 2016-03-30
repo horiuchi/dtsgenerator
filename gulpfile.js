@@ -14,6 +14,9 @@ gulp.task('compile-ts', function() {
   return tsProject.src()
     .pipe(plugins.typescript(tsProject))
     .js
+    .pipe(plugins.babel({
+        presets: ['es2015']
+    }))
     .pipe(gulp.dest('.'));
 });
 

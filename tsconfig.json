@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
+        "target": "es6",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
@@ -14,9 +14,12 @@
     ],
     "files": [
         "src/cli.ts",
-        "src/generator.ts",
         "src/index.ts",
+        "src/jsonPointer.ts",
         "src/jsonschema.d.ts",
+        "src/jsonSchemaParser.ts",
+        "src/schemaid.ts",
+        "src/typeDefenition.ts",
         "src/utils.ts",
         "src/writeProcessor.ts",
         "test/error_case_test.ts",
@@ -24,6 +27,7 @@
         "test/expected_file/news.d.ts",
         "test/expected_file/schema.d.ts",
         "test/file_schema_test.ts",
+        "test/schemaid_test.ts",
         "test/simple_schema_test.ts",
         "typings/bundle.d.ts"
     ]
