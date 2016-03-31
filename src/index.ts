@@ -9,7 +9,6 @@ try {
 
 export default function dtsgenerator(schemas: JsonSchema[], prefix?: string): Promise<string> {
     const parser = new JsonSchemaParser();
-    parser.clear();
     schemas.forEach((schema) => {
         parser.parseSchema(schema);
     });
