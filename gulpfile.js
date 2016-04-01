@@ -6,6 +6,8 @@ var plugins = require('gulp-load-plugins')();
 var del = require('del');
 var runSequence = require('run-sequence');
 
+require('babel-core/register');
+
 
 var tsProject = plugins.typescript.createProject('tsconfig.json', function() {
   typescript: require('typescript')
@@ -49,7 +51,7 @@ gulp.task('exec-test', function(cb) {
     .pipe(plugins.istanbul.hookRequire())
     .on('finish', function() {
       gulp.src('test-powered/**/*.js', {read: false})
-        .pipe(plugins.mocha({reporter: 'tap'}))
+        .pipe(plugins.mocha({reporter: 'list'}))
         .on('error', cb)
         .pipe(plugins.istanbul.writeReports({reporters: [ 'lcov', 'json', 'text', 'text-summary' ]}))
         .on('end', cb);

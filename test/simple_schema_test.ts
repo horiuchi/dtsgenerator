@@ -1,4 +1,5 @@
-import assert = require('power-assert');
+import * as assert from 'power-assert';
+import 'babel-polyfill';
 
 import dtsgenerator = require('../src/index');
 

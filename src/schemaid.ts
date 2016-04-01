@@ -6,11 +6,14 @@ export class SchemaId {
     private absoluteId: string;
 
     constructor(id: string, parentIds: string[]) {
-        this.baseId = url.parse(id);
         this.absoluteId = id;
         parentIds.forEach((parent: string) => {
             this.absoluteId = url.resolve(parent, this.absoluteId);
         });
+        if (this.absoluteId.indexOf('#') < 0) {
+            this.absoluteId += '#';
+        }
+        this.baseId = url.parse(this.absoluteId);
     }
 
     public getAbsoluteId(): string {
