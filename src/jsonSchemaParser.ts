@@ -13,6 +13,23 @@ export class JsonSchemaParser {
 
     public async generateDts(prefix?: string, header?: string): Promise<string> {
         await this.resolveReference();
+/*
+        console.error('TypeId list:');
+        for (let typeId of this.typeCache.keys()) {
+            console.error('  ' + typeId);
+        }
+        console.error('SchemaId list:');
+        for (let ref of this.schemaReference.keys()) {
+            console.error('  ' + ref);
+        }
+        console.error('Reference:');
+        for (let schema of this.referenceCache.keys()) {
+            console.error('  ' + schema.id);
+            for (let id of this.referenceCache.get(schema).keys()) {
+                console.error('    ' + id.getAbsoluteId());
+            }
+        }
+*/
         const process = new WriteProcessor((baseSchema: JsonSchema, refId: SchemaId): TypeDefenition => {
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
@@ -121,29 +138,33 @@ export class JsonSchemaParser {
         if (typeof schema === 'string') {
             schema = JSON.parse(<string>schema);
         }
-        if (schema.id) {
-            this.addType(new TypeDefenition(schema, []));
-        }
 
         const walk = (obj: any, paths: string[]): void => {
-            if (obj == null || typeof obj !== 'object' || Array.isArray(obj)) {
+            if (obj == null || typeof obj !== 'object') {
+                return;
+            }
+            if (Array.isArray(obj)) {
+                obj.forEach((item: any, index: number) => {
+                    const subPaths = paths.concat('' + index);
+                    walk(item, subPaths);
+                });
                 return;
             }
             Object.keys(obj).forEach((key) => {
                 const sub = obj[key];
-                if (sub) {
+                if (sub != null) {
                     const subPaths = paths.concat(key);
-                    if (typeof sub.id === 'string') {
-                        const type = new TypeDefenition(schema, subPaths);
-                        sub.id = type.id.getAbsoluteId();
-                        this.addType(type);
-                    }
-                    if (typeof sub.$ref === 'string') {
-                        sub.$ref = this.addReference(schema, sub.$ref);
-                    }
                     walk(sub, subPaths);
                 }
             });
+            if (typeof obj.id === 'string') {
+                const type = new TypeDefenition(schema, paths);
+                obj.id = type.id.getAbsoluteId();
+                this.addType(type);
+            }
+            if (typeof obj.$ref === 'string') {
+                obj.$ref = this.addReference(schema, obj.$ref);
+            }
         };
         walk(schema, []);
     }

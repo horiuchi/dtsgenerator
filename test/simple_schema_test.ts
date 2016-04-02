@@ -1,3 +1,5 @@
+require('source-map-support').install();
+
 import * as assert from 'power-assert';
 import 'babel-polyfill';
 
@@ -33,7 +35,7 @@ describe('simple schema test', () => {
 
         const expected = `declare namespace test {
     export interface IOneLine {
-        name: string;
+        name?: string;
     }
 }
 `;
@@ -72,8 +74,8 @@ describe('simple schema test', () => {
 
         const expected = `declare namespace test {
     export interface TIncArray {
-        id: number;
-        array: (string | number)[];
+        id?: number;
+        array?: (string | number)[];
     }
 }
 `;
@@ -119,21 +121,24 @@ describe('simple schema test', () => {
                 string: {
                     type: 'string'
                 },
-            }
+            },
+            required: [
+                'array', 'boolean', 'integer'
+            ]
         };
         const result = await dtsgenerator([schema], 'I');
 
         const expected = `declare namespace test {
     export interface IAllSimpleType {
-        any: any;
+        any?: any;
         array: (string | string[])[];
         boolean: boolean;
         integer: number;
-        null: any;
-        number: number;
-        object: {
+        null?: any;
+        number?: number;
+        object?: {
         };
-        string: string;
+        string?: string;
     }
 }
 `;
@@ -161,11 +166,11 @@ describe('simple schema test', () => {
 
         const expected = `declare namespace test {
     export interface IInnerObject {
-        title: string;
-        options: {
-            A: number;
-            B: number;
-            C: string;
+        title?: string;
+        options?: {
+            A?: number;
+            B?: number;
+            C?: string;
         };
     }
 }
@@ -198,9 +203,9 @@ describe('simple schema test', () => {
 
         const expected = `declare namespace test {
     export interface IObjectArray {
-        array: {
-            name: string;
-            items: string[];
+        array?: {
+            name?: string;
+            items?: string[];
         }[];
     }
 }
@@ -267,7 +272,7 @@ describe('simple schema test', () => {
         const expected = `declare namespace test {
     namespace ref {
         export interface IIncludeRef {
-            "sub-name": string;
+            "sub-name"?: string;
         }
     }
 }

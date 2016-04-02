@@ -5,7 +5,7 @@
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
-        "sourceMap": false
+        "sourceMap": true
     },
     "filesGlob": [
         "src/**/*.ts",

@@ -22,19 +22,19 @@ export function toTSType(type: string, debugSource?: any): string {
 }
 
 export function reduceTypes(types: string[]): string[] {
-  if (types.length < 2) {
-    return types;
-  }
-  const set = new Set<string>(types);
-  set.delete('null');
-  if (set.delete('integer')) {
-    set.add('number');
-  }
-  const result: string[] = [];
-  set.forEach((type: string) => {
-    result.push(type);
-  });
-  return result;
+    if (types.length < 2) {
+        return types;
+    }
+    const set = new Set<string>(types);
+    set.delete('null');
+    if (set.delete('integer')) {
+        set.add('number');
+    }
+    const result: string[] = [];
+    set.forEach((type: string) => {
+        result.push(type);
+    });
+    return result;
 }
 
 export function capitalizeName(str: string): string {

@@ -30,7 +30,7 @@ export class WriteProcessor {
         if (this.typePrefix && !primitive) {
             this.output(this.typePrefix);
         }
-        type = type.replace(/[^0-9A-Za-z_$.]/g, '_');
+        type = type.replace(/[^0-9A-Za-z_$]/g, '_');
         if (/^\d/.test(type)) {
           type = '$' + type;
         }

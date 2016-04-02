@@ -2,12 +2,12 @@
  * ApiBaseObject of a record
  */
 export interface ApiBaseObject {
-    first: string;
+    first?: string;
 }
 /**
  * Metadata of a record
  */
 export interface ApiMetadata {
-    serverOperation: "I" | "U" | "D";
-    test: ApiBaseObject;
+    serverOperation?: "I" | "U" | "D";
+    test?: ApiBaseObject;
 }

@@ -1,5 +1,5 @@
 {
-    "id": "JsonSchema",
+    "id": "http://json-schema.org/draft-04/schema#",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "description": "Core schema meta-schema",
     "definitions": {
@@ -16,7 +16,7 @@
             "allOf": [ { "$ref": "#/definitions/positiveInteger" }, { "default": 0 } ]
         },
         "simpleTypes": {
-            "enum": [ "any", "array", "boolean", "integer", "null", "number", "object", "string" ]
+            "enum": [ "array", "boolean", "integer", "null", "number", "object", "string" ]
         },
         "stringArray": {
             "type": "array",
@@ -35,22 +35,13 @@
             "type": "string",
             "format": "uri"
         },
-        "$ref": {
-            "type": "string",
-            "format": "uri"
-        },
         "title": {
             "type": "string"
         },
         "description": {
             "type": "string"
         },
-        "default": {
-            "type": "any"
-        },
-        "format": {
-            "type": "string"
-        },
+        "default": {},
         "multipleOf": {
             "type": "number",
             "minimum": 0,
@@ -81,18 +72,14 @@
                 { "type": "boolean" },
                 { "$ref": "#" }
             ],
-            "default": {
-                "type": "any"
-            }
+            "default": {}
         },
         "items": {
             "anyOf": [
                 { "$ref": "#" },
                 { "$ref": "#/definitions/schemaArray" }
             ],
-            "default": {
-                "type": "any"
-            }
+            "default": {}
         },
         "maxItems": { "$ref": "#/definitions/positiveInteger" },
         "minItems": { "$ref": "#/definitions/positiveIntegerDefault0" },
@@ -108,30 +95,22 @@
                 { "type": "boolean" },
                 { "$ref": "#" }
             ],
-            "default": {
-                "type": "any"
-            }
+            "default": {}
         },
         "definitions": {
             "type": "object",
             "additionalProperties": { "$ref": "#" },
-            "default": {
-                "type": "any"
-            }
+            "default": {}
         },
         "properties": {
             "type": "object",
             "additionalProperties": { "$ref": "#" },
-            "default": {
-                "type": "any"
-            }
+            "default": {}
         },
         "patternProperties": {
             "type": "object",
             "additionalProperties": { "$ref": "#" },
-            "default": {
-                "type": "any"
-            }
+            "default": {}
         },
         "dependencies": {
             "type": "object",
@@ -144,7 +123,6 @@
         },
         "enum": {
             "type": "array",
-            "items": { "type": "string" },
             "minItems": 1,
             "uniqueItems": true
         },
@@ -168,8 +146,5 @@
         "exclusiveMaximum": [ "maximum" ],
         "exclusiveMinimum": [ "minimum" ]
     },
-    "required": [],
-    "default": {
-        "type": "any"
-    }
+    "default": {}
 }

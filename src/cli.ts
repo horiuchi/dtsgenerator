@@ -80,13 +80,7 @@ function processGenerate(err: any, schemas: JsonSchema[]): void {
             console.log(result);
         }
     }).catch((error: any) => {
-        if (Array.isArray(error)) {
-            for (let e of error) {
-                console.error(e);
-            }
-        } else {
-            console.error(error);
-        }
+        console.error(error);
     });
 }
 

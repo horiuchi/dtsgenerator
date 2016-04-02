@@ -9,16 +9,18 @@ var runSequence = require('run-sequence');
 require('babel-core/register');
 
 
-var tsProject = plugins.typescript.createProject('tsconfig.json', function() {
+var tsProject = plugins.typescript.createProject('tsconfig.json', {
   typescript: require('typescript')
 });
 gulp.task('compile-ts', function() {
   return tsProject.src()
+    .pipe(plugins.sourcemaps.init())
     .pipe(plugins.typescript(tsProject))
     .js
     .pipe(plugins.babel({
         presets: ['es2015']
     }))
+    .pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest('.'));
 });
 

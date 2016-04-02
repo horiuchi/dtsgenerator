@@ -28,7 +28,7 @@ export class SchemaId {
         return this.absoluteId.replace(/#.*$/, '');
     }
     public isJsonPointerHash(): boolean {
-        return /#\//.test(this.absoluteId);
+        return this.absoluteId === '#' || /#\//.test(this.absoluteId);
     }
     public getJsonPointerHash(): string[] {
         const m = /#(\/.*)$/.exec(this.absoluteId);
