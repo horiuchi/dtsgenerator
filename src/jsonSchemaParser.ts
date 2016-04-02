@@ -20,15 +20,18 @@ export class JsonSchemaParser {
             }
             return map.get(refId);
         }, prefix);
+        const env = this.createHierarchicalMap(this.typeCache);
         if (header) {
             process.outputLine(header);
         }
-        const env = this.createHierarchicalMap(this.typeCache);
         this.walk(process, env);
         return process.toDefinition();
     }
     private createHierarchicalMap(types: Map<string, TypeDefenition>): any {
         const map: any = {};
+        if (types.size === 0) {
+            throw new Error('There is no id in the input schema(s)');
+        }
         types.forEach((type: TypeDefenition, uri: string) => {
             const id = new SchemaId(uri, []);
             const names = id.getTypeNames();
@@ -65,7 +68,7 @@ export class JsonSchemaParser {
                 }
                 const fileId = ref.getFileId();
                 if (fileId && !this.schemaReference.has(fileId)) {
-                    if (!ref.isFetchable) {
+                    if (!ref.isFetchable()) {
                         error.push(`$ref target is not found: ${ref.getAbsoluteId()}`);
                         continue;
                     }
@@ -92,7 +95,7 @@ export class JsonSchemaParser {
             }
         }
         if (error.length > 0) {
-            throw error;
+            throw new Error(error.join('\n'));
         }
         return true;
     }
@@ -130,7 +133,7 @@ export class JsonSchemaParser {
                 const sub = obj[key];
                 if (sub) {
                     const subPaths = paths.concat(key);
-                    if (sub.id) {
+                    if (typeof sub.id === 'string') {
                         const type = new TypeDefenition(schema, subPaths);
                         sub.id = type.id.getAbsoluteId();
                         this.addType(type);

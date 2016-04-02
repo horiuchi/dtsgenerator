@@ -32,7 +32,7 @@ export class WriteProcessor {
         }
         type = type.replace(/[^0-9A-Za-z_$.]/g, '_');
         if (/^\d/.test(type)) {
-          type = '_' + type;
+          type = '$' + type;
         }
         this.output(type);
         return this;

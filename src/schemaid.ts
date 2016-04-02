@@ -1,5 +1,7 @@
 import * as url from 'url';
 import { parse } from './jsonPointer';
+import { capitalizeName } from './utils';
+
 
 export class SchemaId {
     private baseId: url.Url;
@@ -37,25 +39,26 @@ export class SchemaId {
     }
 
     public getTypeNames(): string[] {
-        console.error(JSON.stringify(this.baseId));
         const ids: string[] = [];
         if (this.baseId.host) {
             ids.push(decodeURIComponent(this.baseId.host));
         }
-        if (this.baseId.pathname) {
-            this.baseId.pathname.split('/').splice(1).forEach((path: string) => {
-                ids.push(decodeURIComponent(path));
+        const addAllParts = (path: string): void => {
+            const paths = path.split('/');
+            if (paths.length > 1 && paths[0] === '') {
+                paths.shift();
+            }
+            paths.forEach((item: string) => {
+                ids.push(decodeURIComponent(item));
             });
+        };
+        if (this.baseId.pathname) {
+            addAllParts(this.baseId.pathname);
         }
         if (this.baseId.hash && this.baseId.hash.length > 1) {
-            let hashs = this.baseId.hash.substr(1).split('/');
-            if (hashs.length > 1 && hashs[0] === '') {
-                hashs.shift();
-            }
-            hashs.forEach((hash: string) => {
-                ids.push(decodeURIComponent(hash));
-            });
+            addAllParts(this.baseId.hash.substr(1));
         }
+        ids[ids.length - 1] = capitalizeName(ids[ids.length - 1]);
         return ids;
     }
     public getInterfaceName(): string {
