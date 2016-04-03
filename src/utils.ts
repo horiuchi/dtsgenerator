@@ -22,27 +22,28 @@ export function toTSType(type: string, debugSource?: any): string {
 }
 
 export function reduceTypes(types: string[]): string[] {
-  if (types.length < 2) {
-    return types;
-  }
-  const set = new Set<string>(types);
-  set.delete('null');
-  if (set.delete('integer')) {
-    set.add('number');
-  }
-  const result: string[] = [];
-  set.forEach((type: string) => {
-    result.push(type);
-  });
-  return result;
+    if (types.length < 2) {
+        return types;
+    }
+    const set = new Set<string>(types);
+    set.delete('null');
+    if (set.delete('integer')) {
+        set.add('number');
+    }
+    const result: string[] = [];
+    set.forEach((type: string) => {
+        result.push(type);
+    });
+    return result;
 }
 
-export function capitalizeName(s: string): string {
-    if (!s) return s;
-    s = s.trim();
-    return s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, function(_, m) {
+export function capitalizeName(str: string): string {
+    if (!str) return str;
+    str = str.trim();
+    const ss = str.split('$');
+    return ss.map(s => s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, function(_, m) {
         return m.toUpperCase();
-    });
+    })).join('$');
 }
 
 export function mergeSchema(a: any, b: any): any {

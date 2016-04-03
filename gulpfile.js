@@ -6,14 +6,21 @@ var plugins = require('gulp-load-plugins')();
 var del = require('del');
 var runSequence = require('run-sequence');
 
+require('babel-core/register');
 
-var tsProject = plugins.typescript.createProject('tsconfig.json', function() {
+
+var tsProject = plugins.typescript.createProject('tsconfig.json', {
   typescript: require('typescript')
 });
 gulp.task('compile-ts', function() {
   return tsProject.src()
+    .pipe(plugins.sourcemaps.init())
     .pipe(plugins.typescript(tsProject))
     .js
+    .pipe(plugins.babel({
+        presets: ['es2015']
+    }))
+    .pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest('.'));
 });
 
@@ -46,7 +53,7 @@ gulp.task('exec-test', function(cb) {
     .pipe(plugins.istanbul.hookRequire())
     .on('finish', function() {
       gulp.src('test-powered/**/*.js', {read: false})
-        .pipe(plugins.mocha({reporter: 'tap'}))
+        .pipe(plugins.mocha({reporter: 'list'}))
         .on('error', cb)
         .pipe(plugins.istanbul.writeReports({reporters: [ 'lcov', 'json', 'text', 'text-summary' ]}))
         .on('end', cb);

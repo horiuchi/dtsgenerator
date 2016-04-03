@@ -1,24 +1,26 @@
-import assert = require('power-assert');
+require('source-map-support').install();
 
-import dtsgenerator = require('../src/index');
+import * as assert from 'power-assert';
+import dtsgenerator from '../src/';
+
 
 describe('simple schema test', () => {
 
-    it('no property schema', () => {
+    it('no property schema', async () => {
         const schema: JsonSchema = {
             id: '/test/no_prop',
             type: 'object',
         };
-        const result = dtsgenerator([schema]);
+        const result = await dtsgenerator([schema]);
 
         const expected = `declare namespace test {
     export interface NoProp {
     }
 }
 `;
-        assert.equal(expected, result, result);
+        assert.equal(result, expected, result);
     });
-    it('one line schema', () => {
+    it('one line schema', async () => {
         const schema: JsonSchema = {
             id: '/test/one_line',
             type: 'object',
@@ -28,30 +30,30 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema], 'I');
 
         const expected = `declare namespace test {
     export interface IOneLine {
-        name: string;
+        name?: string;
     }
 }
 `;
-        assert.equal(expected, result, result);
+        assert.equal(result, expected, result);
     });
-    it('no type schema', () => {
+    it('no type schema', async () => {
         const schema: any = {
             id: '/test/no_type'
         };
-        const result = dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema], 'I');
 
         const expected = `declare namespace test {
     export interface INoType {
     }
 }
 `;
-        assert.equal(expected, result, result);
+        assert.equal(result, expected, result);
     });
-    it('include array schema', () => {
+    it('include array schema', async () => {
         const schema: JsonSchema = {
             id: '/test/inc_array',
             type: 'object',
@@ -67,18 +69,18 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = dtsgenerator([schema], 'T');
+        const result = await dtsgenerator([schema], 'T');
 
         const expected = `declare namespace test {
     export interface TIncArray {
-        id: number;
-        array: (string | number)[];
+        id?: number;
+        array?: (string | number)[];
     }
 }
 `;
-        assert.equal(expected, result, result);
+        assert.equal(result, expected, result);
     });
-    it('all simple type schema', () => {
+    it('all simple type schema', async () => {
         const schema: JsonSchema = {
             id: '/test/all_simple_type',
             type: 'object',
@@ -118,27 +120,30 @@ describe('simple schema test', () => {
                 string: {
                     type: 'string'
                 },
-            }
+            },
+            required: [
+                'array', 'boolean', 'integer'
+            ]
         };
-        const result = dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema], 'I');
 
         const expected = `declare namespace test {
     export interface IAllSimpleType {
-        any: any;
+        any?: any;
         array: (string | string[])[];
         boolean: boolean;
         integer: number;
-        null: any;
-        number: number;
-        object: {
+        null?: any;
+        number?: number;
+        object?: {
         };
-        string: string;
+        string?: string;
     }
 }
 `;
-        assert.equal(expected, result, result);
+        assert.equal(result, expected, result);
     });
-    it('inner object schema', () => {
+    it('inner object schema', async () => {
         const schema: JsonSchema = {
             id: '/test/inner_object',
             type: 'object',
@@ -156,22 +161,22 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema], 'I');
 
         const expected = `declare namespace test {
     export interface IInnerObject {
-        title: string;
-        options: {
-            A: number;
-            B: number;
-            C: string;
+        title?: string;
+        options?: {
+            A?: number;
+            B?: number;
+            C?: string;
         };
     }
 }
 `;
-        assert.equal(expected, result, result);
+        assert.equal(result, expected, result);
     });
-    it('object array schema', () => {
+    it('object array schema', async () => {
         const schema: JsonSchema = {
             id: '/test/object_array',
             type: 'object',
@@ -193,20 +198,20 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema], 'I');
 
         const expected = `declare namespace test {
     export interface IObjectArray {
-        array: {
-            name: string;
-            items: string[];
+        array?: {
+            name?: string;
+            items?: string[];
         }[];
     }
 }
 `;
-        assert.equal(expected, result, result);
+        assert.equal(result, expected, result);
     });
-    it('root array schema', () => {
+    it('root array schema', async () => {
         const schema: JsonSchema = {
             id: 'test/root/root_array',
             type: 'array',
@@ -214,7 +219,7 @@ describe('simple schema test', () => {
                 type: 'string'
             }
         };
-        const result = dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema], 'I');
 
         const expected = `declare namespace test {
     namespace root {
@@ -223,15 +228,15 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(expected, result, result);
+        assert.equal(result, expected, result);
     });
-    it('root any schema', () => {
+    it('root any schema', async () => {
         const schema: JsonSchema = {
             id: 'test/root/root_any',
             type: 'any',
             description: 'This is any type schema'
         };
-        const result = dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema], 'I');
 
         const expected = `declare namespace test {
     namespace root {
@@ -244,9 +249,9 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(expected, result, result);
+        assert.equal(result, expected, result);
     });
-    it('include $ref schema', () => {
+    it('include $ref schema', async () => {
         const schema: JsonSchema = {
             id: 'test/ref/include_ref',
             type: 'object',
@@ -261,17 +266,17 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema], 'I');
 
         const expected = `declare namespace test {
     namespace ref {
         export interface IIncludeRef {
-            "sub-name": string;
+            "sub-name"?: string;
         }
     }
 }
 `;
-        assert.equal(expected, result, result);
+        assert.equal(result, expected, result);
     });
 
 });
