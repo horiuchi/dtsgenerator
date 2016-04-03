@@ -159,7 +159,7 @@ export class JsonSchemaParser {
             });
             if (typeof obj.id === 'string') {
                 const type = new TypeDefenition(schema, paths);
-                obj.id = type.id.getAbsoluteId();
+                obj.id = type.schemaId.getAbsoluteId();
                 this.addType(type);
             }
             if (typeof obj.$ref === 'string') {

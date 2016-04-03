@@ -4,8 +4,9 @@ import { SchemaId } from './schemaid';
 import { WriteProcessor } from './writeProcessor';
 
 export class TypeDefenition {
-    id: SchemaId;
-    target: JsonSchema;
+    private id: SchemaId;
+    private target: JsonSchema;
+    private isInnerType = false;
 
     constructor(private schema: JsonSchema, private path: string[]) {
         this.target = JsonPointer.get(schema, path);
@@ -51,7 +52,23 @@ export class TypeDefenition {
     }
     private getTypename(id: SchemaId | string): string[] {
         let sid = (id instanceof SchemaId) ? id : new SchemaId(id, []);
-        return sid.getTypeNames();
+        const result = sid.getTypeNames();
+        const myId = this.schemaId;
+        if (myId) {
+            const baseType = myId.getTypeNames();
+            const isSameLength = result.length === baseType.length;
+            for (let name of baseType) {
+                if (result[0] === name) {
+                    result.shift();
+                } else {
+                    break;
+                }
+            }
+            if (result.length === 0) {
+                return !this.isInnerType && isSameLength ? ['this'] : [sid.getInterfaceName()];
+            }
+        }
+        return result;
     }
 
     private generateType(process: WriteProcessor, type: JsonSchema): void {
@@ -206,16 +223,19 @@ export class TypeDefenition {
         if (type === 'object') {
             process.outputLine('{');
             process.increaseIndent();
+            this.isInnerType = true;
+            if (property.additionalProperties) {
+                process.output('[name: string]: ');
+                this.generateTypeProperty(process, property.additionalProperties, true);
+            }
             if (property.properties) {
                 Object.keys(property.properties).forEach((propertyName) => {
                     const nextProperty = property.properties[propertyName];
                     this.generatePropertyName(process, propertyName, property);
                     this.generateTypeProperty(process, nextProperty);
                 });
-            } else if (property.additionalProperties) {
-                process.output('[name: string]: ');
-                this.generateTypeProperty(process, property.additionalProperties, true);
             }
+            this.isInnerType = false;
             process.decreaseIndent();
             process.output('}');
             if (terminate) {

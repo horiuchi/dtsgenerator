@@ -27,6 +27,10 @@ export class WriteProcessor {
     }
 
     outputType(type: string, primitive: boolean = false): WriteProcessor {
+        if (type === 'this') {
+            this.output(type);
+            return this;
+        }
         if (this.typePrefix && !primitive) {
             this.output(this.typePrefix);
         }
