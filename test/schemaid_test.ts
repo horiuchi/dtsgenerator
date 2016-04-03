@@ -1,8 +1,6 @@
 require('source-map-support').install();
 
 import * as assert from 'power-assert';
-import 'babel-polyfill';
-
 import { SchemaId } from '../src/schemaid';
 
 

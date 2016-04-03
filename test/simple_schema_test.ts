@@ -1,9 +1,8 @@
 require('source-map-support').install();
 
 import * as assert from 'power-assert';
-import 'babel-polyfill';
-
 import dtsgenerator from '../src/';
+
 
 describe('simple schema test', () => {
 

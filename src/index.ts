@@ -1,4 +1,7 @@
-import 'babel-polyfill';
+declare var global: any;
+if (!global._babelPolyfill) {
+    require('babel-polyfill');
+}
 import { JsonSchemaParser } from './jsonSchemaParser';
 
 try {
