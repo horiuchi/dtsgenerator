@@ -91,7 +91,7 @@ export class JsonSchemaParser {
                     }
                     try {
                         const fetchedSchema = await this.fetchRemoteSchema(fileId);
-                        this.parseSchema(fetchedSchema);
+                        this.parseSchema(fetchedSchema, fileId);
                     } catch (e) {
                         error.push(`fail to fetch the $ref target: ${ref.getAbsoluteId()}, ${e}`);
                         continue;
@@ -134,11 +134,14 @@ export class JsonSchemaParser {
         });
     }
 
-    public parseSchema(schema: JsonSchema): void {
+    public parseSchema(schema: JsonSchema, url?: string): void {
         if (typeof schema === 'string') {
             schema = JSON.parse(<string>schema);
         }
 
+        if (schema.id == null) {
+            schema.id = url;
+        }
         const walk = (obj: any, paths: string[]): void => {
             if (obj == null || typeof obj !== 'object') {
                 return;

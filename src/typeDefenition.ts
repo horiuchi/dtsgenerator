@@ -130,6 +130,13 @@ export class TypeDefenition {
     private generateTypeProperty(process: WriteProcessor, property: JsonSchema, terminate = true): void {
         if (!property)
             return;
+        ['not'].forEach((keyword) => {
+            const schema: any = property;
+            if (schema[keyword]) {
+                console.error(property);
+                throw new Error('unsupported property: ' + keyword);
+            }
+        });
         if (property.allOf) {
             const schema: any = {};
             property.allOf.forEach((p) => {
@@ -141,13 +148,6 @@ export class TypeDefenition {
             this.generateTypeProperty(process, schema, terminate);
             return;
         }
-        ['oneOf', 'not'].forEach((keyword) => {
-            const schema: any = property;
-            if (schema[keyword]) {
-                console.error(property);
-                throw new Error('unsupported property: ' + keyword);
-            }
-        });
         if (property.$ref) {
             const ref = this.searchRef(process, <any>property.$ref);
             if (ref.id) {
@@ -157,8 +157,8 @@ export class TypeDefenition {
             }
             return;
         }
-        if (property.anyOf) {
-            const anyOf = property.anyOf;
+        const anyOf = property.anyOf || property.oneOf;
+        if (anyOf) {
             if (!terminate) {
                 process.output('(');
             }
