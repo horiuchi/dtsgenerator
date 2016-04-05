@@ -36,7 +36,7 @@
     "commander": "^2.9.0",
     "glob": "^7.0.3",
     "mkdirp": "^0.5.1",
-    "request": "^2.69.0"
+    "request": "^2.70.0"
   },
   "devDependencies": {
     "babel-core": "^6.7.4",
