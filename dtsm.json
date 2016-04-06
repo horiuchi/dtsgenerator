@@ -36,6 +36,9 @@
     },
     "request/request.d.ts": {
       "ref": "80057d687aefa736511e434cd2a6c0e9a6bb02bc"
+    },
+    "debug/debug.d.ts": {
+      "ref": "45530e67e7f846a3024880de42e4464d290e7aef"
     }
   }
 }

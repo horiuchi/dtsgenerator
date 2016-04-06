@@ -10,3 +10,4 @@
 /// <reference path="minimatch/minimatch.d.ts" />
 /// <reference path="request/request.d.ts" />
 /// <reference path="form-data/form-data.d.ts" />
+/// <reference path="debug/debug.d.ts" />
