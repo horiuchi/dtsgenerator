@@ -51,7 +51,7 @@ export class TypeDefenition {
         return type;
     }
     private getTypename(id: SchemaId | string): string[] {
-        let sid = (id instanceof SchemaId) ? id : new SchemaId(id, []);
+        let sid = (id instanceof SchemaId) ? id : new SchemaId(id);
         const result = sid.getTypeNames();
         const myId = this.schemaId;
         if (myId) {

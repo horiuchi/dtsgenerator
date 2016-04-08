@@ -7,11 +7,13 @@ export class SchemaId {
     private baseId: url.Url;
     private absoluteId: string;
 
-    constructor(id: string, parentIds: string[]) {
+    constructor(id: string, parentIds?: string[]) {
         this.absoluteId = id;
-        parentIds.forEach((parent: string) => {
-            this.absoluteId = url.resolve(parent, this.absoluteId);
-        });
+        if (parentIds) {
+            parentIds.forEach((parent: string) => {
+                this.absoluteId = url.resolve(parent, this.absoluteId);
+            });
+        }
         if (this.absoluteId.indexOf('#') < 0) {
             this.absoluteId += '#';
         }

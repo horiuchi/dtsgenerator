@@ -1,9 +1,12 @@
+import * as Debug from 'debug';
 import * as http from 'http';
 import * as request from 'request';
 import * as JsonPointer from './jsonPointer';
 import { SchemaId } from './schemaid';
 import { TypeDefenition } from './typeDefenition';
 import { WriteProcessor } from './writeProcessor';
+
+const debug = Debug('dtsgen');
 
 
 export class JsonSchemaParser {
@@ -12,30 +15,35 @@ export class JsonSchemaParser {
     private referenceCache = new Map<JsonSchema, Map<SchemaId, TypeDefenition>>();
 
     public async generateDts(prefix?: string, header?: string): Promise<string> {
+        debug(`generate d.ts: prefix=[${prefix}].`);
         await this.resolveReference();
-/*
-        console.error('TypeId list:');
+
+        debug('TypeId list:');
         for (let typeId of this.typeCache.keys()) {
-            console.error('  ' + typeId);
+            debug('  ' + typeId);
         }
-        console.error('SchemaId list:');
+        debug('SchemaId list:');
         for (let ref of this.schemaReference.keys()) {
-            console.error('  ' + ref);
+            debug('  ' + ref);
         }
-        console.error('Reference:');
+        debug('Reference list:');
         for (let schema of this.referenceCache.keys()) {
-            console.error('  ' + schema.id);
+            debug('  ' + schema.id);
             for (let id of this.referenceCache.get(schema).keys()) {
-                console.error('    ' + id.getAbsoluteId());
+                debug('    ' + id.getAbsoluteId());
             }
         }
-*/
+
         const process = new WriteProcessor((baseSchema: JsonSchema, refId: SchemaId): TypeDefenition => {
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
                 return undefined;
             }
-            return map.get(refId);
+            const result = map.get(refId);
+            if (result == null && refId.getFileId() === '' && refId.isJsonPointerHash()) {
+                return JsonPointer.get(baseSchema, refId.getJsonPointerHash());
+            }
+            return result;
         }, prefix);
         const env = this.createHierarchicalMap(this.typeCache);
         if (header) {
@@ -50,7 +58,7 @@ export class JsonSchemaParser {
             throw new Error('There is no id in the input schema(s)');
         }
         types.forEach((type: TypeDefenition, uri: string) => {
-            const id = new SchemaId(uri, []);
+            const id = new SchemaId(uri);
             const names = id.getTypeNames();
             JsonPointer.set(map, names, type);
         });
@@ -76,6 +84,7 @@ export class JsonSchemaParser {
     }
 
     public async resolveReference(): Promise<boolean> {
+        debug(`resolve reference: reference schema count=${this.referenceCache.size}.`);
         const error: string[] = [];
         for (let schema of this.referenceCache.keys()) {
             const map = this.referenceCache.get(schema);
@@ -90,6 +99,7 @@ export class JsonSchemaParser {
                         continue;
                     }
                     try {
+                        debug(`fetch remote schema: id=[${fileId}].`);
                         const fetchedSchema = await this.fetchRemoteSchema(fileId);
                         this.parseSchema(fetchedSchema, fileId);
                     } catch (e) {
@@ -99,6 +109,7 @@ export class JsonSchemaParser {
                 }
                 if (ref.isJsonPointerHash()) {
                     const pointer = ref.getJsonPointerHash();
+                debug(`resolve reference: ref=[${ref.getAbsoluteId()}]`);
                     const targetSchema = fileId ? this.schemaReference.get(fileId).rootSchema : schema;
                     map.set(ref, new TypeDefenition(targetSchema, pointer));
                 } else {
@@ -138,6 +149,7 @@ export class JsonSchemaParser {
         if (typeof schema === 'string') {
             schema = JSON.parse(<string>schema);
         }
+        debug(`parse schema: schemaId=[${schema.id}], url=[${url}].`);
 
         if (schema.id == null) {
             schema.id = url;
@@ -164,9 +176,11 @@ export class JsonSchemaParser {
                 const type = new TypeDefenition(schema, paths);
                 obj.id = type.schemaId.getAbsoluteId();
                 this.addType(type);
+                debug(`parse schema: id property found, id=[${obj.id}], paths=[${JSON.stringify(paths)}].`);
             }
             if (typeof obj.$ref === 'string') {
                 obj.$ref = this.addReference(schema, obj.$ref);
+                debug(`parse schema: $ref property found, $ref=[${obj.$ref.getAbsoluteId()}], paths=[${JSON.stringify(paths)}].`);
             }
         };
         walk(schema, []);
@@ -193,6 +207,7 @@ export class JsonSchemaParser {
     }
 
     public clear(): void {
+        debug('clear data cache.');
         this.typeCache.clear();
         this.schemaReference.clear();
         this.referenceCache.clear();
