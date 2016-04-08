@@ -34,6 +34,7 @@
     "asyncblock": "^2.2.8",
     "babel-polyfill": "^6.7.4",
     "commander": "^2.9.0",
+    "debug": "^2.2.0",
     "glob": "^7.0.3",
     "mkdirp": "^0.5.1",
     "request": "^2.70.0"

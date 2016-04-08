@@ -66,7 +66,7 @@ export class WriteProcessor {
 
     outputJSDoc(description: string, parameters: { [name: string]: JsonSchema; } = {}): WriteProcessor {
         if (!description && Object.keys(parameters).length === 0) {
-            return;
+            return this;
         }
         description = description || '';
 

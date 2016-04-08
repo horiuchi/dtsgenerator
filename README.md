@@ -30,3 +30,9 @@ $ dtsgen --help
 
     $ dtsgen --out types.d.ts schema/**/*.schema.json
     $ cat schema1.json | dtsgen
+
+## Debug
+
+Output debug message by [debug](https://www.npmjs.com/package/debug) library.
+
+    $ DEBUG=dtsgen dtsgen schema/news.json

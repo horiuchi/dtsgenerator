@@ -22,6 +22,7 @@ describe('schema id parser test', () => {
         test(new SchemaId('https://example.com:3000/path/to/schema/file', []),
              'https://example.com:3000/path/to/schema/file#', true, 'https://example.com:3000/path/to/schema/file', false, [],
              ['example.com:3000', 'path', 'to', 'schema', 'File']);
+        test(new SchemaId('#/definitions/positiveInteger', []), '#/definitions/positiveInteger', false, '', true, ['definitions', 'positiveInteger'], ['definitions', 'PositiveInteger']);
     });
     it('JSON Schema usage pattern', () => {
         test(new SchemaId('http://x.y.z/rootschema.json#', []), 'http://x.y.z/rootschema.json#', true, 'http://x.y.z/rootschema.json', false, [], ['x.y.z', 'RootschemaJson']);
