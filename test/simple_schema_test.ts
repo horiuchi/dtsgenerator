@@ -7,7 +7,7 @@ import dtsgenerator from '../src/';
 describe('simple schema test', () => {
 
     it('no property schema', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: '/test/no_prop',
             type: 'object',
         };
@@ -21,7 +21,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('one line schema', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: '/test/one_line',
             type: 'object',
             properties: {
@@ -54,7 +54,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('include array schema', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: '/test/inc_array',
             type: 'object',
             properties: {
@@ -81,7 +81,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('all simple type schema', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: '/test/all_simple_type',
             type: 'object',
             properties: {
@@ -144,7 +144,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('inner object schema', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: '/test/inner_object',
             type: 'object',
             properties: {
@@ -177,7 +177,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('object array schema', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: '/test/object_array',
             type: 'object',
             properties: {
@@ -212,7 +212,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('root array schema', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: 'test/root/root_array',
             type: 'array',
             items: {
@@ -231,7 +231,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('root any schema', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: 'test/root/root_any',
             type: 'any',
             description: 'This is any type schema'
@@ -252,7 +252,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('include $ref schema', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: 'test/ref/include_ref',
             type: 'object',
             definitions: {

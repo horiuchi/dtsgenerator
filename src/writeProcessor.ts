@@ -2,7 +2,7 @@ import { SchemaId } from './schemaid';
 import { TypeDefenition } from './typeDefenition';
 
 export interface ReferenceResolver {
-    (baseSchema: JsonSchema, refId: SchemaId): TypeDefenition;
+    (baseSchema: Schema, refId: SchemaId): TypeDefenition;
 }
 
 export class WriteProcessor {
@@ -64,7 +64,7 @@ export class WriteProcessor {
         return this;
     }
 
-    outputJSDoc(description: string, parameters: { [name: string]: JsonSchema; } = {}): WriteProcessor {
+    outputJSDoc(description: string, parameters: { [name: string]: Schema; } = {}): WriteProcessor {
         if (!description && Object.keys(parameters).length === 0) {
             return this;
         }

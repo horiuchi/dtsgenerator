@@ -12,7 +12,7 @@ const debug = Debug('dtsgen');
 export class JsonSchemaParser {
     private typeCache = new Map<string, TypeDefenition>();
     private schemaReference = new Map<string, TypeDefenition>();
-    private referenceCache = new Map<JsonSchema, Map<SchemaId, TypeDefenition>>();
+    private referenceCache = new Map<Schema, Map<SchemaId, TypeDefenition>>();
 
     public async generateDts(prefix?: string, header?: string): Promise<string> {
         debug(`generate d.ts: prefix=[${prefix}].`);
@@ -34,7 +34,8 @@ export class JsonSchemaParser {
             }
         }
 
-        const process = new WriteProcessor((baseSchema: JsonSchema, refId: SchemaId): TypeDefenition => {
+        const process = new WriteProcessor((baseSchema: Schema, refId: SchemaId): TypeDefenition => {
+            debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, refId=${refId.getAbsoluteId()}`);
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
                 return undefined;
@@ -127,8 +128,8 @@ export class JsonSchemaParser {
         }
         return true;
     }
-    private fetchRemoteSchema(fileId: string): Promise<JsonSchema> {
-        return new Promise<JsonSchema>((resolve: (schema: JsonSchema) => void, reject: (err: any) => void) => {
+    private fetchRemoteSchema(fileId: string): Promise<Schema> {
+        return new Promise<Schema>((resolve: (schema: Schema) => void, reject: (err: any) => void) => {
             request.get(fileId, (err: any, response: http.IncomingMessage, body: any) => {
                 if (err) {
                     return reject(err);
@@ -145,7 +146,7 @@ export class JsonSchemaParser {
         });
     }
 
-    public parseSchema(schema: JsonSchema, url?: string): void {
+    public parseSchema(schema: Schema, url?: string): void {
         if (typeof schema === 'string') {
             schema = JSON.parse(<string>schema);
         }
@@ -195,7 +196,7 @@ export class JsonSchemaParser {
             }
         }
     }
-    private addReference(schema: JsonSchema, ref: string): SchemaId {
+    private addReference(schema: Schema, ref: string): SchemaId {
         let map = this.referenceCache.get(schema);
         if (map == null) {
             map = new Map<SchemaId, TypeDefenition>();

@@ -1,7 +1,7 @@
 /**
  * Core schema meta-schema
  */
-declare interface JsonSchema {
+declare interface Schema {
     id?: string; // uri
     $schema?: string; // uri
     $ref?: string; // uri
@@ -27,22 +27,22 @@ declare interface JsonSchema {
     required?: string[];
     additionalProperties?: any;
     definitions?: {
-        [name: string]: JsonSchema;
+        [name: string]: Schema;
     };
     properties?: {
-        [name: string]: JsonSchema;
+        [name: string]: Schema;
     };
     patternProperties?: {
-        [name: string]: JsonSchema;
+        [name: string]: Schema;
     };
     dependencies?: {
         [name: string]: any;
     };
     enum?: string[];
     type?: string|string[];
-    allOf?: JsonSchema[];
-    anyOf?: JsonSchema[];
-    oneOf?: JsonSchema[];
-    not?: JsonSchema;
+    allOf?: Schema[];
+    anyOf?: Schema[];
+    oneOf?: Schema[];
+    not?: Schema;
 }
 
