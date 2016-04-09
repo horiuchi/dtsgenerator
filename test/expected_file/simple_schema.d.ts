@@ -7,6 +7,9 @@ declare namespace json_schema_org {
         longitude?: number;
     }
     export interface SimpleExample extends Array<{
+        /**
+         * The unique identifier for a product
+         */
         id: number;
         name: string;
         price: number;
@@ -16,6 +19,9 @@ declare namespace json_schema_org {
             width: number;
             height: number;
         };
+        /**
+         * Coordinates of the warehouse with the product
+         */
         warehouseLocation?: Geo;
     }> {
     }

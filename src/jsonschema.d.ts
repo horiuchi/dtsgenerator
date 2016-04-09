@@ -1,7 +1,7 @@
 /**
  * Core schema meta-schema
  */
-declare interface JsonSchema {
+declare interface Schema {
     id?: string; // uri
     $schema?: string; // uri
     $ref?: string; // uri
@@ -17,32 +17,32 @@ declare interface JsonSchema {
     maxLength?: number;
     minLength?: number;
     pattern?: string; // regex
-    additionalItems?: any;
-    items?: any;
+    additionalItems?: boolean | this;
+    // items?: this | this[];
+    items?: this;
     maxItems?: number;
     minItems?: number;
     uniqueItems?: boolean;
     maxProperties?: number;
     minProperties?: number;
     required?: string[];
-    additionalProperties?: any;
+    additionalProperties?: boolean | this;
     definitions?: {
-        [name: string]: JsonSchema;
+        [name: string]: Schema;
     };
     properties?: {
-        [name: string]: JsonSchema;
+        [name: string]: Schema;
     };
     patternProperties?: {
-        [name: string]: JsonSchema;
+        [name: string]: Schema;
     };
     dependencies?: {
-        [name: string]: any;
+        [name: string]: Schema | string[];
     };
-    enum?: string[];
-    type?: string|string[];
-    allOf?: JsonSchema[];
-    anyOf?: JsonSchema[];
-    oneOf?: JsonSchema[];
-    not?: JsonSchema;
+    enum?: any[];
+    type?: ("array" | "boolean" | "integer" | "null" | "number" | "object" | "string") | ("array" | "boolean" | "integer" | "null" | "number" | "object" | "string")[];
+    allOf?: this[];
+    anyOf?: this[];
+    oneOf?: this[];
+    not?: this;
 }
-

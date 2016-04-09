@@ -10,7 +10,7 @@ try {
 } catch (e) {
 }
 
-export default function dtsgenerator(schemas: JsonSchema[], prefix?: string): Promise<string> {
+export default function dtsgenerator(schemas: Schema[], prefix?: string): Promise<string> {
     const parser = new JsonSchemaParser();
     schemas.forEach((schema) => {
         parser.parseSchema(schema);

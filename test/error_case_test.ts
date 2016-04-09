@@ -7,7 +7,7 @@ import dtsgenerator from '../src/';
 describe('error schema test', () => {
 
     it('no id schema', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             type: 'object',
         };
         try {
@@ -18,7 +18,7 @@ describe('error schema test', () => {
         }
     });
     it('unkown type schema', async () => {
-        const schema: JsonSchema = {
+        const schema: any = {
             id: '/test/unkown_type',
             type: 'hoge'
         };
@@ -30,7 +30,7 @@ describe('error schema test', () => {
         }
     });
     it('unkown type property', async () => {
-        const schema: JsonSchema = {
+        const schema: any = {
             id: '/test/unkown_property',
             type: 'object',
             properties: {
@@ -48,7 +48,7 @@ describe('error schema test', () => {
     });
 
     it('target of $ref is not found', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: '/test/target_not_found',
             type: 'object',
             properties: {
@@ -65,7 +65,7 @@ describe('error schema test', () => {
         }
     });
     it('target of $ref is invalid path', async () => {
-        const schema: JsonSchema = {
+        const schema: Schema = {
             id: '/test/target_not_found',
             type: 'object',
             properties: {
