@@ -40,15 +40,16 @@ export class TypeDefenition {
     }
 
 
-    private searchRef(process: WriteProcessor, ref: SchemaId): TypeDefenition {
-        if (!(ref instanceof SchemaId)) {
+    private searchRef(process: WriteProcessor, ref: SchemaId | string): TypeDefenition {
+        if (ref instanceof SchemaId) {
+            const type = process.referenceResolve(this.schema, ref);
+            if (type == null) {
+                throw new Error('Target reference is not found: ' + ref.getAbsoluteId());
+            }
+            return type;
+        } else {
             throw new Error('Invalid ref id: ' + ref);
         }
-        const type = process.referenceResolve(this.schema, ref);
-        if (type == null) {
-            throw new Error('Target reference is not found: ' + ref.getAbsoluteId());
-        }
-        return type;
     }
     private getTypename(id: SchemaId | string): string[] {
         let sid = (id instanceof SchemaId) ? id : new SchemaId(id);
@@ -96,14 +97,7 @@ export class TypeDefenition {
             // TODO this is not permitted property access by dot.
             process.outputLine('[name: string]: any; // any');
         }
-
-        Object.keys(type.properties || {}).forEach((propertyName) => {
-            const property = type.properties[propertyName];
-            process.outputJSDoc(property.description);
-            this.generatePropertyName(process, propertyName, type);
-            this.generateTypeProperty(process, property);
-        });
-
+        this.generateProperties(process, type);
         process.decreaseIndent();
         process.outputLine('}');
     }
@@ -121,6 +115,20 @@ export class TypeDefenition {
         process.outputLine('}');
     }
 
+    private generateProperties(process: WriteProcessor, type: Schema): void {
+        if (type.additionalProperties) {
+            process.output('[name: string]: ');
+            this.generateTypeProperty(process, type.additionalProperties, true);
+        }
+        if (type.properties) {
+            Object.keys(type.properties).forEach((propertyName) => {
+                const property = type.properties[propertyName];
+                process.outputJSDoc(property.description);
+                this.generatePropertyName(process, propertyName, type);
+                this.generateTypeProperty(process, property);
+            });
+        }
+    }
     private generatePropertyName(process: WriteProcessor, propertyName: string, property: Schema): void {
         if (propertyName) {
             const optionalProperty = !property.required || property.required.indexOf(propertyName) < 0;
@@ -224,17 +232,7 @@ export class TypeDefenition {
             process.outputLine('{');
             process.increaseIndent();
             this.isInnerType = true;
-            if (property.additionalProperties) {
-                process.output('[name: string]: ');
-                this.generateTypeProperty(process, property.additionalProperties, true);
-            }
-            if (property.properties) {
-                Object.keys(property.properties).forEach((propertyName) => {
-                    const nextProperty = property.properties[propertyName];
-                    this.generatePropertyName(process, propertyName, property);
-                    this.generateTypeProperty(process, nextProperty);
-                });
-            }
+            this.generateProperties(process, property);
             this.isInnerType = false;
             process.decreaseIndent();
             process.output('}');
@@ -255,7 +253,7 @@ export class TypeDefenition {
         }
     }
 
-    private generateTypePropertyNamedType(process: WriteProcessor, typeName: string | string[], primitiveType: boolean, property: Schema, terminate = true) {
+    private generateTypePropertyNamedType(process: WriteProcessor, typeName: string | string[], primitiveType: boolean, property: Schema, terminate = true): void {
         if (Array.isArray(typeName)) {
             typeName.forEach((type: string, index: number) => {
                 const isLast = index === typeName.length - 1;
@@ -269,14 +267,29 @@ export class TypeDefenition {
         }
         if (terminate) {
             process.output(';');
-            if (property.format) {
-                process.output(' // ').output(property.format);
-            }
+            this.generateOptionalInformation(process, property, terminate);
             process.outputLine();
         } else {
-            if (property.format) {
-                process.output(' /* ').output(property.format).output(' */ ');
-            }
+            this.generateOptionalInformation(process, property, terminate);
+        }
+    }
+    private generateOptionalInformation(process: WriteProcessor, property: Schema, terminate = true): void {
+        if (!property.format && !property.pattern) {
+            return;
+        }
+        if (terminate) {
+            process.output(' //');
+        } else {
+            process.output(' /*');
+        }
+        if (property.format) {
+            process.output(' ').output(property.format);
+        }
+        if (property.pattern) {
+            process.output(' ').output(property.pattern);
+        }
+        if (!terminate) {
+            process.output(' */ ');
         }
     }
 }

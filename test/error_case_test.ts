@@ -18,7 +18,7 @@ describe('error schema test', () => {
         }
     });
     it('unkown type schema', async () => {
-        const schema: Schema = {
+        const schema: any = {
             id: '/test/unkown_type',
             type: 'hoge'
         };
@@ -30,7 +30,7 @@ describe('error schema test', () => {
         }
     });
     it('unkown type property', async () => {
-        const schema: Schema = {
+        const schema: any = {
             id: '/test/unkown_property',
             type: 'object',
             properties: {

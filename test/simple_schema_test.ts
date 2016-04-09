@@ -85,9 +85,6 @@ describe('simple schema test', () => {
             id: '/test/all_simple_type',
             type: 'object',
             properties: {
-                any: {
-                    type: 'any'
-                },
                 array: {
                     type: 'array',
                     items: {
@@ -129,7 +126,6 @@ describe('simple schema test', () => {
 
         const expected = `declare namespace test {
     export interface IAllSimpleType {
-        any?: any;
         array: (string | string[])[];
         boolean: boolean;
         integer: number;
@@ -233,8 +229,8 @@ describe('simple schema test', () => {
     it('root any schema', async () => {
         const schema: Schema = {
             id: 'test/root/root_any',
-            type: 'any',
-            description: 'This is any type schema'
+            description: 'This is any type schema',
+            additionalProperties: true
         };
         const result = await dtsgenerator([schema], 'I');
 
@@ -244,7 +240,7 @@ describe('simple schema test', () => {
          * This is any type schema
          */
         export interface IRootAny {
-            [name: string]: any; // any
+            [name: string]: any;
         }
     }
 }

@@ -17,15 +17,16 @@ declare interface Schema {
     maxLength?: number;
     minLength?: number;
     pattern?: string; // regex
-    additionalItems?: any;
-    items?: any;
+    additionalItems?: boolean | this;
+    // items?: this | this[];
+    items?: this;
     maxItems?: number;
     minItems?: number;
     uniqueItems?: boolean;
     maxProperties?: number;
     minProperties?: number;
     required?: string[];
-    additionalProperties?: any;
+    additionalProperties?: boolean | this;
     definitions?: {
         [name: string]: Schema;
     };
@@ -36,13 +37,12 @@ declare interface Schema {
         [name: string]: Schema;
     };
     dependencies?: {
-        [name: string]: any;
+        [name: string]: Schema | string[];
     };
-    enum?: string[];
-    type?: string|string[];
-    allOf?: Schema[];
-    anyOf?: Schema[];
-    oneOf?: Schema[];
-    not?: Schema;
+    enum?: any[];
+    type?: ("array" | "boolean" | "integer" | "null" | "number" | "object" | "string") | ("array" | "boolean" | "integer" | "null" | "number" | "object" | "string")[];
+    allOf?: this[];
+    anyOf?: this[];
+    oneOf?: this[];
+    not?: this;
 }
-
