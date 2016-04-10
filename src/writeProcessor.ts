@@ -1,8 +1,7 @@
-import { SchemaId } from './schemaid';
 import { TypeDefenition } from './typeDefenition';
 
 export interface ReferenceResolver {
-    (baseSchema: Schema, refId: SchemaId): TypeDefenition;
+    (baseSchema: Schema, ref: string): TypeDefenition;
 }
 
 export class WriteProcessor {

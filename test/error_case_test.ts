@@ -78,7 +78,7 @@ describe('error schema test', () => {
             await dtsgenerator([schema], 'I');
             assert.fail();
         } catch (e) {
-            assert.equal('$ref target is not found: #hogefuga', e.message);
+            assert.equal('$ref target is not found: /test/target_not_found#hogefuga', e.message);
         }
     });
 

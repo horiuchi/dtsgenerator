@@ -12,7 +12,7 @@ const debug = Debug('dtsgen');
 export class JsonSchemaParser {
     private typeCache = new Map<string, TypeDefenition>();
     private schemaReference = new Map<string, TypeDefenition>();
-    private referenceCache = new Map<Schema, Map<SchemaId, TypeDefenition>>();
+    private referenceCache = new Map<Schema, Map<string, TypeDefenition>>();
 
     public async generateDts(prefix?: string, header?: string): Promise<string> {
         debug(`generate d.ts: prefix=[${prefix}].`);
@@ -30,19 +30,24 @@ export class JsonSchemaParser {
         for (let schema of this.referenceCache.keys()) {
             debug('  ' + schema.id);
             for (let id of this.referenceCache.get(schema).keys()) {
-                debug('    ' + id.getAbsoluteId());
+                debug('    ' + id);
             }
         }
 
-        const process = new WriteProcessor((baseSchema: Schema, refId: SchemaId): TypeDefenition => {
-            debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, refId=${refId.getAbsoluteId()}`);
+        const process = new WriteProcessor((baseSchema: Schema, ref: string): TypeDefenition => {
+            debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
                 return undefined;
             }
-            const result = map.get(refId);
-            if (result == null && refId.getFileId() === '' && refId.isJsonPointerHash()) {
-                return JsonPointer.get(baseSchema, refId.getJsonPointerHash());
+            const refId = new SchemaId(ref);
+            const result = map.get(refId.getAbsoluteId());
+            if (result == null) {
+                if (refId.isJsonPointerHash()) {
+                    const fileId = refId.getFileId();
+                    const schema = fileId ? this.schemaReference.get(fileId) : baseSchema;
+                    return JsonPointer.get(schema, refId.getJsonPointerHash());
+                }
             }
             return result;
         }, prefix);
@@ -93,10 +98,11 @@ export class JsonSchemaParser {
                 if (type != null) {
                     continue;
                 }
-                const fileId = ref.getFileId();
+                const refId = new SchemaId(ref);
+                const fileId = refId.getFileId();
                 if (fileId && !this.schemaReference.has(fileId)) {
-                    if (!ref.isFetchable()) {
-                        error.push(`$ref target is not found: ${ref.getAbsoluteId()}`);
+                    if (!refId.isFetchable()) {
+                        error.push(`$ref target is not found: ${ref}`);
                         continue;
                     }
                     try {
@@ -104,19 +110,19 @@ export class JsonSchemaParser {
                         const fetchedSchema = await this.fetchRemoteSchema(fileId);
                         this.parseSchema(fetchedSchema, fileId);
                     } catch (e) {
-                        error.push(`fail to fetch the $ref target: ${ref.getAbsoluteId()}, ${e}`);
+                        error.push(`fail to fetch the $ref target: ${ref}, ${e}`);
                         continue;
                     }
                 }
-                if (ref.isJsonPointerHash()) {
-                    const pointer = ref.getJsonPointerHash();
-                debug(`resolve reference: ref=[${ref.getAbsoluteId()}]`);
+                debug(`resolve reference: ref=[${ref}]`);
+                if (refId.isJsonPointerHash()) {
+                    const pointer = refId.getJsonPointerHash();
                     const targetSchema = fileId ? this.schemaReference.get(fileId).rootSchema : schema;
                     map.set(ref, new TypeDefenition(targetSchema, pointer));
                 } else {
-                    const target = this.typeCache.get(ref.getAbsoluteId());
+                    const target = this.typeCache.get(ref);
                     if (target == null) {
-                        error.push(`$ref target is not found: ${ref.getAbsoluteId()}`);
+                        error.push(`$ref target is not found: ${ref}`);
                         continue;
                     }
                     map.set(ref, target);
@@ -181,7 +187,7 @@ export class JsonSchemaParser {
             }
             if (typeof obj.$ref === 'string') {
                 obj.$ref = this.addReference(schema, obj.$ref);
-                debug(`parse schema: $ref property found, $ref=[${obj.$ref.getAbsoluteId()}], paths=[${JSON.stringify(paths)}].`);
+                debug(`parse schema: $ref property found, $ref=[${obj.$ref}], paths=[${JSON.stringify(paths)}].`);
             }
         };
         walk(schema, []);
@@ -190,21 +196,22 @@ export class JsonSchemaParser {
         const id = g.schemaId;
         if (id) {
             this.typeCache.set(id.getAbsoluteId(), g);
+            debug(`add type: id=${id.getAbsoluteId()}`);
             const fileId = id.getFileId();
             if (!this.schemaReference.has(fileId)) {
                 this.schemaReference.set(fileId, g);
             }
         }
     }
-    private addReference(schema: Schema, ref: string): SchemaId {
+    private addReference(schema: Schema, ref: string): string {
         let map = this.referenceCache.get(schema);
         if (map == null) {
-            map = new Map<SchemaId, TypeDefenition>();
+            map = new Map<string, TypeDefenition>();
             this.referenceCache.set(schema, map);
         }
-        const id = new SchemaId(ref, []);
-        map.set(id, null);
-        return id;
+        const refId = new SchemaId(ref, [schema.id]);
+        map.set(refId.getAbsoluteId(), null);
+        return refId.getAbsoluteId();
     }
 
     public clear(): void {
