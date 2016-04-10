@@ -40,16 +40,12 @@ export class TypeDefenition {
     }
 
 
-    private searchRef(process: WriteProcessor, ref: SchemaId | string): TypeDefenition {
-        if (ref instanceof SchemaId) {
-            const type = process.referenceResolve(this.schema, ref);
-            if (type == null) {
-                throw new Error('Target reference is not found: ' + ref.getAbsoluteId());
-            }
-            return type;
-        } else {
-            throw new Error('Invalid ref id: ' + ref);
+    private searchRef(process: WriteProcessor, ref: string): TypeDefenition {
+        const type = process.referenceResolve(this.schema, ref);
+        if (type == null) {
+            throw new Error('Target reference is not found: ' + ref);
         }
+        return type;
     }
     private getTypename(id: SchemaId | string): string[] {
         let sid = (id instanceof SchemaId) ? id : new SchemaId(id);
@@ -149,7 +145,7 @@ export class TypeDefenition {
             const schema: any = {};
             property.allOf.forEach((p) => {
                 if (p.$ref) {
-                    p = this.searchRef(process, <any>p.$ref).targetSchema;
+                    p = this.searchRef(process, p.$ref).targetSchema;
                 }
                 utils.mergeSchema(schema, p);
             });
@@ -157,7 +153,7 @@ export class TypeDefenition {
             return;
         }
         if (property.$ref) {
-            const ref = this.searchRef(process, <any>property.$ref);
+            const ref = this.searchRef(process, property.$ref);
             if (ref.id) {
                 this.generateTypePropertyNamedType(process, this.getTypename(ref.id), false, ref.targetSchema, terminate);
             } else {

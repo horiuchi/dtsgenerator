@@ -11,7 +11,9 @@ export class SchemaId {
         this.absoluteId = id;
         if (parentIds) {
             parentIds.forEach((parent: string) => {
-                this.absoluteId = url.resolve(parent, this.absoluteId);
+                if (parent) {
+                    this.absoluteId = url.resolve(parent, this.absoluteId);
+                }
             });
         }
         if (this.absoluteId.indexOf('#') < 0) {
