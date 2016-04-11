@@ -69,11 +69,19 @@ export class TypeDefenition {
     }
 
     private generateType(process: WriteProcessor, type: Schema): void {
-        if (type.type === undefined) {
+        const types = type.type;
+        if (types === undefined) {
             type.type = 'object';
+        } else if (Array.isArray(types)) {
+            const reduced = utils.reduceTypes(types);
+            if (reduced.length > 1) {
+                throw new Error('unsupported root type: ' + JSON.stringify(reduced));
+            } else {
+                type.type = reduced[0];
+            }
         }
         if (type.type !== 'object' && type.type !== 'any' && type.type !== 'array') {
-            throw new Error('unknown type: ' + type.type);
+            throw new Error('unsupported root type: ' + JSON.stringify(type.type));
         }
 
         process.outputJSDoc(type.description);

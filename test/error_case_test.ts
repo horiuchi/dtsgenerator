@@ -26,7 +26,7 @@ describe('error schema test', () => {
             await dtsgenerator([schema], 'I');
             assert.fail();
         } catch (e) {
-            assert.equal('unknown type: hoge', e.message);
+            assert.equal('unsupported root type: "hoge"', e.message);
         }
     });
     it('unkown type property', async () => {
