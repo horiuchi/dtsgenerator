@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "/schema/circular",
+  "title": "Circular",
+  "definitions": {
+    "node": {
+      "type": ["object"],
+      "properties": {
+        "name": {
+          "type": ["string"]
+        },
+        "children": {
+          "type": ["array"],
+          "items": {
+            "$ref": "#/definitions/node"
+          }
+        }
+      }
+    }
+  },
+  "description": "Circular Reference Pattern",
+  "properties": {
+    "root": {
+      "$ref": "#/definitions/node"
+    }
+  },
+  "type": ["object"]
+}
+
