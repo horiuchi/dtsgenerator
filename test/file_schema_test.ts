@@ -31,7 +31,7 @@ describe('file schema test', () => {
         const actual = await dtsgenerator([
             fs.readFileSync('./schema/circular.json', { encoding: 'utf-8' })
         ]);
-        const expected = fs.readFileSync('./test/expected_file/simple_schema.d.ts', { encoding: 'utf-8' });
+        const expected = fs.readFileSync('./test/expected_file/circular.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
     it('download related schema', async () => {

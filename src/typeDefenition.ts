@@ -156,11 +156,17 @@ export class TypeDefenition {
             return;
         }
         if (property.$ref) {
-            const ref = this.searchRef(process, property.$ref);
-            if (ref.id) {
-                this.generateTypePropertyNamedType(process, this.getTypename(ref.id), false, ref.targetSchema, terminate);
+            if (!process.checkCircularReference(property.$ref)) {
+                this.generateTypeName(process, 'any', property, terminate);
             } else {
-                this.generateTypeProperty(process, ref.targetSchema, terminate);
+                const ref = this.searchRef(process, property.$ref);
+                process.pushReference(property.$ref);
+                if (ref.id) {
+                    this.generateTypePropertyNamedType(process, this.getTypename(ref.id), false, ref.targetSchema, terminate);
+                } else {
+                    this.generateTypeProperty(process, ref.targetSchema, terminate);
+                }
+                process.popReference();
             }
             return;
         }

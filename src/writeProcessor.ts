@@ -12,20 +12,32 @@ export class WriteProcessor {
     private indent = 0;
     private results = '';
     private alreadlyIndentThisLine = false;
+    private referenceStack: string[] = [];
 
-    constructor(private refResolver: ReferenceResolver, private typePrefix: string = '') { }
+    constructor(private refResolver: ReferenceResolver, private typePrefix: string = '') {}
 
     get referenceResolve(): ReferenceResolver {
         return this.refResolver;
     }
 
-    output(str: string): WriteProcessor {
+    pushReference(referenceName: string): number {
+        return this.referenceStack.push(referenceName);
+    }
+    popReference(): string {
+        return this.referenceStack.pop();
+    }
+    checkCircularReference(referenceName: string): boolean {
+        return this.referenceStack.indexOf(referenceName) < 0;
+    }
+
+
+    output(str: string): this {
         this.doIndent();
         this.results += str;
         return this;
     }
 
-    outputType(type: string, primitive: boolean = false): WriteProcessor {
+    outputType(type: string, primitive: boolean = false): this {
         if (type === 'this') {
             this.output(type);
             return this;
@@ -41,7 +53,7 @@ export class WriteProcessor {
         return this;
     }
 
-    outputKey(name: string, optional: boolean = false): WriteProcessor {
+    outputKey(name: string, optional: boolean = false): this {
         if (/[^0-9A-Za-z_$]/.test(name) || /^\d/.test(name)) {
             this.output('\"').output(name).output('\"');
         } else {
@@ -53,7 +65,7 @@ export class WriteProcessor {
         return this;
     }
 
-    outputLine(str?: string): WriteProcessor {
+    outputLine(str?: string): this {
         this.doIndent();
         if (str) {
             this.output(str);
@@ -63,7 +75,7 @@ export class WriteProcessor {
         return this;
     }
 
-    outputJSDoc(description: string, parameters: { [name: string]: Schema; } = {}): WriteProcessor {
+    outputJSDoc(description: string, parameters: { [name: string]: Schema; } = {}): this {
         if (!description && Object.keys(parameters).length === 0) {
             return this;
         }
@@ -99,7 +111,7 @@ export class WriteProcessor {
         return this;
     }
 
-    doIndent(): WriteProcessor {
+    doIndent(): this {
         if (!this.alreadlyIndentThisLine) {
             const indent = this.getIndent();
             this.results += indent;
@@ -112,12 +124,12 @@ export class WriteProcessor {
         return this.indent;
     }
 
-    increaseIndent(): WriteProcessor {
+    increaseIndent(): this {
         this.indent++;
         return this;
     }
 
-    decreaseIndent(): WriteProcessor {
+    decreaseIndent(): this {
         this.indent--;
         return this;
     }
