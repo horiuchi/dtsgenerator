@@ -27,6 +27,13 @@ describe('file schema test', () => {
         const expected = fs.readFileSync('./test/expected_file/apimeta.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
+    it('circular referenced schema', async () => {
+        const actual = await dtsgenerator([
+            fs.readFileSync('./schema/circular.json', { encoding: 'utf-8' })
+        ]);
+        const expected = fs.readFileSync('./test/expected_file/circular.d.ts', { encoding: 'utf-8' });
+        assert.equal(actual, expected, actual);
+    });
     it('download related schema', async () => {
         const actual = await dtsgenerator([
             fs.readFileSync('./schema/simple_example.json', { encoding: 'utf-8' })

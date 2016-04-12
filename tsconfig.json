@@ -24,6 +24,7 @@
         "src/writeProcessor.ts",
         "test/error_case_test.ts",
         "test/expected_file/apimeta.d.ts",
+        "test/expected_file/circular.d.ts",
         "test/expected_file/news.d.ts",
         "test/expected_file/schema.d.ts",
         "test/expected_file/simple_schema.d.ts",

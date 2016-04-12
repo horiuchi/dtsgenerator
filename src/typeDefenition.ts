@@ -69,11 +69,19 @@ export class TypeDefenition {
     }
 
     private generateType(process: WriteProcessor, type: Schema): void {
-        if (type.type === undefined) {
+        const types = type.type;
+        if (types === undefined) {
             type.type = 'object';
+        } else if (Array.isArray(types)) {
+            const reduced = utils.reduceTypes(types);
+            if (reduced.length > 1) {
+                throw new Error('unsupported root type: ' + JSON.stringify(reduced));
+            } else {
+                type.type = reduced[0];
+            }
         }
         if (type.type !== 'object' && type.type !== 'any' && type.type !== 'array') {
-            throw new Error('unknown type: ' + type.type);
+            throw new Error('unsupported root type: ' + JSON.stringify(type.type));
         }
 
         process.outputJSDoc(type.description);
@@ -101,12 +109,7 @@ export class TypeDefenition {
     private generateTypeCollection(process: WriteProcessor, type: Schema) {
         const name = this.id.getInterfaceName();
         process.output('export interface ').outputType(name).output(' extends Array<');
-        if (type.items.$ref) {
-            const itemsRef = this.searchRef(process, type.items.$ref);
-            this.generateTypePropertyNamedType(process, this.getTypename(itemsRef.id), false, type.items, false);
-        } else {
-            this.generateTypeProperty(process, type.items, false);
-        }
+        this.generateTypeProperty(process, type.items, false);
         process.outputLine('> {');
         process.outputLine('}');
     }
@@ -153,33 +156,23 @@ export class TypeDefenition {
             return;
         }
         if (property.$ref) {
-            const ref = this.searchRef(process, property.$ref);
-            if (ref.id) {
-                this.generateTypePropertyNamedType(process, this.getTypename(ref.id), false, ref.targetSchema, terminate);
+            if (!process.checkCircularReference(property.$ref)) {
+                this.generateTypeName(process, 'any', property, terminate);
             } else {
-                this.generateTypeProperty(process, ref.targetSchema, terminate);
+                const ref = this.searchRef(process, property.$ref);
+                process.pushReference(property.$ref);
+                if (ref.id) {
+                    this.generateTypePropertyNamedType(process, this.getTypename(ref.id), false, ref.targetSchema, terminate);
+                } else {
+                    this.generateTypeProperty(process, ref.targetSchema, terminate);
+                }
+                process.popReference();
             }
             return;
         }
         const anyOf = property.anyOf || property.oneOf;
         if (anyOf) {
-            if (!terminate) {
-                process.output('(');
-            }
-            anyOf.forEach((type: Schema, index: number) => {
-                const isLast = index === anyOf.length - 1;
-                if (type.id) {
-                    this.generateTypePropertyNamedType(process, this.getTypename(type.id), false, type, isLast && terminate);
-                } else {
-                    this.generateTypeProperty(process, type, isLast && terminate);
-                }
-                if (!isLast) {
-                  process.output(' | ');
-                }
-            });
-            if (!terminate) {
-                process.output(')');
-            }
+            this.generateArrayedType(process, anyOf, ' | ', terminate);
             return;
         }
         if (property.enum) {
@@ -215,6 +208,26 @@ export class TypeDefenition {
             if (!terminate && types.length > 1) {
                 process.output(')');
             }
+        }
+    }
+
+    private generateArrayedType(process: WriteProcessor, types: Schema[], separator: string, terminate: boolean): void {
+        if (!terminate) {
+            process.output('(');
+        }
+        types.forEach((type: Schema, index: number) => {
+            const isLast = index === types.length - 1;
+            if (type.id) {
+                this.generateTypePropertyNamedType(process, this.getTypename(type.id), false, type, isLast && terminate);
+            } else {
+                this.generateTypeProperty(process, type, isLast && terminate);
+            }
+            if (!isLast) {
+              process.output(separator);
+            }
+        });
+        if (!terminate) {
+            process.output(')');
         }
     }
 
