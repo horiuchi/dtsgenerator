@@ -109,12 +109,7 @@ export class TypeDefenition {
     private generateTypeCollection(process: WriteProcessor, type: Schema) {
         const name = this.id.getInterfaceName();
         process.output('export interface ').outputType(name).output(' extends Array<');
-        if (type.items.$ref) {
-            const itemsRef = this.searchRef(process, type.items.$ref);
-            this.generateTypePropertyNamedType(process, this.getTypename(itemsRef.id), false, type.items, false);
-        } else {
-            this.generateTypeProperty(process, type.items, false);
-        }
+        this.generateTypeProperty(process, type.items, false);
         process.outputLine('> {');
         process.outputLine('}');
     }
@@ -171,23 +166,7 @@ export class TypeDefenition {
         }
         const anyOf = property.anyOf || property.oneOf;
         if (anyOf) {
-            if (!terminate) {
-                process.output('(');
-            }
-            anyOf.forEach((type: Schema, index: number) => {
-                const isLast = index === anyOf.length - 1;
-                if (type.id) {
-                    this.generateTypePropertyNamedType(process, this.getTypename(type.id), false, type, isLast && terminate);
-                } else {
-                    this.generateTypeProperty(process, type, isLast && terminate);
-                }
-                if (!isLast) {
-                  process.output(' | ');
-                }
-            });
-            if (!terminate) {
-                process.output(')');
-            }
+            this.generateArrayedType(process, anyOf, ' | ', terminate);
             return;
         }
         if (property.enum) {
@@ -223,6 +202,26 @@ export class TypeDefenition {
             if (!terminate && types.length > 1) {
                 process.output(')');
             }
+        }
+    }
+
+    private generateArrayedType(process: WriteProcessor, types: Schema[], separator: string, terminate: boolean): void {
+        if (!terminate) {
+            process.output('(');
+        }
+        types.forEach((type: Schema, index: number) => {
+            const isLast = index === types.length - 1;
+            if (type.id) {
+                this.generateTypePropertyNamedType(process, this.getTypename(type.id), false, type, isLast && terminate);
+            } else {
+                this.generateTypeProperty(process, type, isLast && terminate);
+            }
+            if (!isLast) {
+              process.output(separator);
+            }
+        });
+        if (!terminate) {
+            process.output(')');
         }
     }
 
