@@ -45,7 +45,8 @@ export class JsonSchemaParser {
             if (result == null) {
                 if (refId.isJsonPointerHash()) {
                     const fileId = refId.getFileId();
-                    const schema = fileId ? this.schemaReference.get(fileId) : baseSchema;
+                    const schema = fileId ? this.schemaReference.get(fileId).targetSchema : baseSchema;
+                    debug(`  fileId=${fileId}, schemaId=${schema.id}.`);
                     return JsonPointer.get(schema, refId.getJsonPointerHash());
                 }
             }
