@@ -29,7 +29,7 @@ export class SchemaId {
         return /https?\:\/\//.test(this.absoluteId);
     }
     public getFileId(): string {
-        return this.absoluteId.replace(/#.*$/, '');
+        return this.absoluteId.replace(/#.*$/, '#');
     }
     public isJsonPointerHash(): boolean {
         return this.absoluteId === '#' || /#\//.test(this.absoluteId);
