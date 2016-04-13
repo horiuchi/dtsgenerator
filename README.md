@@ -30,6 +30,7 @@ $ dtsgen --help
 
     $ dtsgen --out types.d.ts schema/**/*.schema.json
     $ cat schema1.json | dtsgen
+    $ curl 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json' | dtsgen -o swaggerSchema.d.ts
 
 ## Debug
 
