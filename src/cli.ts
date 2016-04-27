@@ -2,7 +2,6 @@ import fs = require('fs');
 import path = require('path');
 import program = require('commander');
 import mkdirp = require('mkdirp');
-import asyncblock = require('asyncblock');
 import glob = require('glob');
 
 import dtsgenerator from './index';
@@ -53,18 +52,25 @@ function readSchemasFromStdin(callback: (err: any, schemas: Schema[]) => void): 
 }
 
 function readSchemasFromFiles(callback: (err: any, schemas: Schema[]) => void): void {
-    asyncblock((flow: asyncblock.IFlow) => {
-        flow.errorCallback = (err: any) => {
-            callback(err, null);
-        };
-        opts.args.forEach((arg) => {
-            const files = glob.sync(arg);
-            files.forEach((file: any) => {
-                fs.readFile(file, { encoding: 'utf-8' }, flow.add(file));
+    let promises: Promise<Schema>[] = [];
+    opts.args.forEach((arg) => {
+        const files = glob.sync(arg);
+        promises = promises.concat(files.map((file: string) => {
+            return new Promise((resolve: (res: Schema) => void, reject: (err: any) => void) => {
+                fs.readFile(file, { encoding: 'utf-8' }, (err: any, content: string) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.parse(content));
+                    }
+                });
             });
-        });
-        const contents = flow.wait<any>();
-        callback(null, Object.keys(contents).map((key) => contents[key]));
+        }));
+    });
+    Promise.all(promises).then((schemas: Schema[]) => {
+        callback(null, schemas);
+    }).catch((err: any) => {
+        callback(err, []);
     });
 }
 
