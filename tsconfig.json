@@ -19,7 +19,7 @@
         "src/jsonschema.d.ts",
         "src/jsonSchemaParser.ts",
         "src/schemaid.ts",
-        "src/typeDefenition.ts",
+        "src/typeDefinition.ts",
         "src/utils.ts",
         "src/writeProcessor.ts",
         "test/error_case_test.ts",
@@ -32,5 +32,8 @@
         "test/schemaid_test.ts",
         "test/simple_schema_test.ts",
         "typings/bundle.d.ts"
-    ]
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
 }

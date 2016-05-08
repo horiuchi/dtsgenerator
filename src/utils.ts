@@ -1,15 +1,13 @@
 export function toTSType(type: string, debugSource?: any): string {
     switch (type) {
+        case 'integer':
+            return 'number';
+        case 'number':
         case 'any':
         case 'null':
-            return 'any';
         case 'string':
-            return 'string';
-        case 'integer':
-        case 'number':
-            return 'number';
         case 'boolean':
-            return 'boolean';
+            return type;
         case 'object':
         case 'array':
             return null;
@@ -58,4 +56,3 @@ export function mergeSchema(a: any, b: any): any {
     });
     return a;
 }
-

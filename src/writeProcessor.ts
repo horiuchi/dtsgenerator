@@ -1,7 +1,7 @@
-import { TypeDefenition } from './typeDefenition';
+import { TypeDefinition } from './typeDefinition';
 
 export interface ReferenceResolver {
-    (baseSchema: Schema, ref: string): TypeDefenition;
+    (baseSchema: Schema, ref: string): TypeDefinition;
 }
 
 export class WriteProcessor {
@@ -150,4 +150,3 @@ export class WriteProcessor {
         return this.results;
     }
 }
-
