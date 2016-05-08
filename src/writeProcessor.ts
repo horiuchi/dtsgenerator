@@ -1,4 +1,5 @@
 import { TypeDefinition } from './typeDefinition';
+import { toTSType } from './utils';
 
 export interface ReferenceResolver {
     (baseSchema: json_schema_org.Schema, ref: string): TypeDefinition;
@@ -7,7 +8,7 @@ export interface ReferenceResolver {
 export class WriteProcessor {
 
     public indentChar = ' ';
-    public indentStep = 4;
+    public indentStep = 2;
 
     private indent = 0;
     private results = '';

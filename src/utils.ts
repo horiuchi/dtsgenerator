@@ -1,3 +1,6 @@
+import * as Debug from 'debug';
+const debug = Debug('dtsgen');
+
 export function toTSType(type: string, debugSource?: any): string {
     switch (type) {
         case 'integer':
@@ -36,6 +39,7 @@ export function reduceTypes(types: json_schema_org.SimpleTypes[]): json_schema_o
 }
 
 export function capitalizeName(str: string): string {
+    // debug(`capitalizeName: ${str}`);
     if (!str) return str;
     str = str.trim();
     const ss = str.split('$');
@@ -54,4 +58,22 @@ export function mergeSchema(a: any, b: any): any {
         a[key] = b[key];
     });
     return a;
+}
+
+export function strMapToJson(strMap: Map<string>): string {
+    return JSON.stringify(strMapToObj(strMap));
+}
+
+export function strMapToObj(strMap: Map<string>): Object {
+    let obj = Object.create(null);
+    for (let [k,v] of strMap) {
+        obj[k] = v;
+    }
+    return obj;
+}
+
+export function nameFromPath(path: string): string {
+  // debug(`nameFromPath: ${path}`);
+  if(!path) return '';
+  return capitalizeName(path.split('/').pop().replace(/[^\w]/g, ''));
 }
