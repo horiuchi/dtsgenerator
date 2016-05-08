@@ -1,11 +1,10 @@
 declare namespace schema {
-    /**
-     * Circular Reference Pattern
-     */
-    export interface Circular {
-        root?: {
-            name?: string;
-            children?: any[];
-        };
-    }
+  export interface Node {
+    name?: string;
+    children?: Node[];
+  }
+  // Circular Reference Pattern
+  export interface Circular {
+    root?: Node;
+  }
 }

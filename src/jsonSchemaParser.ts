@@ -5,6 +5,7 @@ import * as JsonPointer from './jsonPointer';
 import { SchemaId } from './schemaid';
 import { TypeDefinition } from './typeDefinition';
 import { WriteProcessor } from './writeProcessor';
+import { strMapToObj, nameFromPath } from './utils';
 
 const debug = Debug('dtsgen');
 
@@ -35,7 +36,7 @@ export class JsonSchemaParser {
         }
 
         const process = new WriteProcessor((baseSchema: Schema, ref: string): TypeDefinition => {
-            debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
+            // debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
                 return undefined;
@@ -53,9 +54,11 @@ export class JsonSchemaParser {
             return result;
         }, prefix);
         const env = this.createHierarchicalMap(this.typeCache);
+        // debug(`env: ${JSON.stringify(Object.keys(env))}`);
         if (header) {
             process.outputLine(header);
         }
+        // throw new Exception();
         this.walk(process, env);
         return process.toDefinition();
     }
@@ -71,27 +74,60 @@ export class JsonSchemaParser {
         });
         return map;
     }
-    private walk(process: WriteProcessor, env: any): void {
+    private walk(process: WriteProcessor, env: any, path: string[] = []): void {
         const keys = Object.keys(env).sort();
+        debug(`walk: ${JSON.stringify(keys)}`);
         keys.forEach((key) => {
+            let path_k = path.concat(key);
             const val = env[key];
+            debug(`walking: ${key}, ${JSON.stringify(path_k)}`);
             if (val instanceof TypeDefinition) {
+                this.walkRefs(process, path_k);
                 val.doProcess(process);
+                // process.outputLine('');
             } else {
                 if (process.indentLevel === 0) {
                     process.output('declare ');
                 }
                 process.output('namespace ').outputType(key, true).outputLine(' {');
                 process.increaseIndent();
-                this.walk(process, val);
+                this.walk(process, val, path_k);
                 process.decreaseIndent();
                 process.outputLine('}');
             }
         });
     }
 
+    private walkRefs(process: WriteProcessor, path: string[]) {
+        // debug(`walkRefs: ${JSON.stringify(path)}`);
+        for (let schema of this.referenceCache.keys()) {
+            let { host, pathname } = new SchemaId(schema.id).baseId;
+            let offlinePath = pathname.split('/');
+            let onlinePath = pathname.split('/');
+            onlinePath[0] = host;
+            // debug(`schema: ${schema.id}, ${JSON.stringify(onlinePath)}, ${JSON.stringify(offlinePath)}`);
+            let r_eq = (a,b) => JSON.stringify(a) == JSON.stringify(b);
+            if (!r_eq(path, offlinePath) && !r_eq(path, offlinePath.slice(1)) && !r_eq(path, onlinePath)) {
+              continue;
+            }
+            let refMap = this.referenceCache.get(schema);
+            let refs = strMapToObj(refMap);
+            for (let id of refMap.keys()) {
+                // debug(`leaf: ${id}, ${schema.id}`);
+                let v = refMap.get(id);
+                if(id.startsWith(schema.id + '/definitions')) {
+                  // debug(`leaf: ${id}`);
+                  let resolved = v.searchRef(process, id);
+                  let target = resolved.target;
+                  let refName = nameFromPath(id);
+                  resolved.generateType(process, target, refName);
+                }
+            }
+        }
+    }
+
     public async resolveReference(): Promise<boolean> {
-        debug(`resolve reference: reference schema count=${this.referenceCache.size}.`);
+        // debug(`resolve reference: reference schema count=${this.referenceCache.size}.`);
         const error: string[] = [];
         for (let schema of this.referenceCache.keys()) {
             const map = this.referenceCache.get(schema);
@@ -119,9 +155,14 @@ export class JsonSchemaParser {
                 if (refId.isJsonPointerHash()) {
                     const pointer = refId.getJsonPointerHash();
                     const targetSchema = fileId ? this.schemaReference.get(fileId).rootSchema : schema;
-                    map.set(ref, new TypeDefinition(targetSchema, pointer));
+                    // debug(`ref pointer=[${pointer}] targetSchema=[${JSON.stringify(targetSchema)}]`);
+                    // map.set(ref, new TypeDefinition(targetSchema, pointer));
+                    let resolvedType = new TypeDefinition(targetSchema, pointer);
+                    // debug(`ref resolvedType=[${JSON.stringify(resolvedType)}]`);
+                    map.set(ref, resolvedType);
                 } else {
                     const target = this.typeCache.get(ref);
+                    debug(`ref target=[${target}]`);
                     if (target == null) {
                         error.push(`$ref target is not found: ${ref}`);
                         continue;
@@ -157,7 +198,7 @@ export class JsonSchemaParser {
         if (typeof schema === 'string') {
             schema = JSON.parse(<string>schema);
         }
-        debug(`parse schema: schemaId=[${schema.id}], url=[${url}].`);
+        // debug(`parse schema: schemaId=[${schema.id}], url=[${url}].`);
 
         if (schema.id == null) {
             schema.id = url;
@@ -184,11 +225,11 @@ export class JsonSchemaParser {
                 const type = new TypeDefinition(schema, paths);
                 obj.id = type.schemaId.getAbsoluteId();
                 this.addType(type);
-                debug(`parse schema: id property found, id=[${obj.id}], paths=[${JSON.stringify(paths)}].`);
+                // debug(`parse schema: id property found, id=[${obj.id}].`);
             }
             if (typeof obj.$ref === 'string') {
                 obj.$ref = this.addReference(schema, obj.$ref);
-                debug(`parse schema: $ref property found, $ref=[${obj.$ref}], paths=[${JSON.stringify(paths)}].`);
+                // debug(`parse schema: $ref property found, $ref=[${obj.$ref}].`);
             }
         };
         walk(schema, []);
@@ -197,7 +238,7 @@ export class JsonSchemaParser {
         const id = g.schemaId;
         if (id) {
             this.typeCache.set(id.getAbsoluteId(), g);
-            debug(`add type: id=${id.getAbsoluteId()}`);
+            // debug(`add type: id=${id.getAbsoluteId()}, g=${JSON.stringify(g)}`);
             const fileId = id.getFileId();
             if (!this.schemaReference.has(fileId)) {
                 this.schemaReference.set(fileId, g);
@@ -211,6 +252,7 @@ export class JsonSchemaParser {
             this.referenceCache.set(schema, map);
         }
         const refId = new SchemaId(ref, [schema.id]);
+        // debug(`add ref: id=${refId.getAbsoluteId()}, ref=${ref}`);
         map.set(refId.getAbsoluteId(), null);
         return refId.getAbsoluteId();
     }

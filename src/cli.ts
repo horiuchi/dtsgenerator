@@ -89,4 +89,3 @@ function processGenerate(err: any, schemas: Schema[]): void {
         console.error(error);
     });
 }
-

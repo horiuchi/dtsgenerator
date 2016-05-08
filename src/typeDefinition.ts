@@ -2,6 +2,9 @@ import * as JsonPointer from './jsonPointer';
 import * as utils from './utils';
 import { SchemaId } from './schemaid';
 import { WriteProcessor } from './writeProcessor';
+import * as Debug from 'debug';
+const debug = Debug('dtsgen');
+import { nameFromPath } from './utils';
 
 export class TypeDefinition {
     private id: SchemaId;
@@ -36,17 +39,23 @@ export class TypeDefinition {
     }
 
     public doProcess(process: WriteProcessor): void {
-        this.generateType(process, this.schema);
+        // const name = this.id.getInterfaceName();
+        const name = nameFromPath(this.schema.id);
+        // debug(`name: ${name}`);
+        this.generateType(process, this.schema, name);
     }
 
-
+    // get the TypeDefinition for a $ref
     private searchRef(process: WriteProcessor, ref: string): TypeDefinition {
+        // debug(`searchRef: ${ref}`);
         const type = process.referenceResolve(this.schema, ref);
         if (type == null) {
             throw new Error('Target reference is not found: ' + ref);
         }
         return type;
     }
+
+    // get the type names (as a string[]) for a schema id
     private getTypename(id: SchemaId | string): string[] {
         let sid = (id instanceof SchemaId) ? id : new SchemaId(id);
         const result = sid.getTypeNames();
@@ -68,9 +77,13 @@ export class TypeDefinition {
         return result;
     }
 
-    private generateType(process: WriteProcessor, type: Schema): void {
-        const types = type.type;
-        if (types === undefined) {
+    // output the type for a schema value
+    private generateType(process: WriteProcessor, type: Schema, name: string): void {
+        let types = type.type;// || type.$ref ? this.searchRef(process, type.$ref).targetSchema.type : null;
+        if (!types && type.$ref) {
+            types = this.searchRef(process, type.$ref).targetSchema.type;
+        }
+        if (!types) {
             type.type = 'object';
         } else if (Array.isArray(types)) {
             const reduced = utils.reduceTypes(types);
@@ -80,40 +93,63 @@ export class TypeDefinition {
                 type.type = reduced[0];
             }
         }
-        if (type.type !== 'object' && type.type !== 'any' && type.type !== 'array') {
-            throw new Error('unsupported root type: ' + JSON.stringify(type.type));
-        }
-
-        process.outputJSDoc(type.description);
-        if (type.type === 'array') {
-            this.generateTypeCollection(process, type);
+        process.outputJSDoc(type);
+        // if (types !== 'object' && types !== 'any' && types !== 'array') {
+        const SCALARS = ['integer', 'number', 'null', 'string', 'boolean'];
+        if (SCALARS.includes(types) || (types == 'any' && !type.properties && !type.patternProperties && !type.additionalProperties)) {
+            // throw new Error('unsupported root type: ' + JSON.stringify(types));
+            this.generateTypeScalar(process, type, name);
+        } else if (type.$ref) {
+            this.generateTypeExtender(process, type, name);
+        } else if (types === 'array') {
+            this.generateTypeCollection(process, type, name);
         } else {
-            this.generateTypeModel(process, type);
+            this.generateTypeModel(process, type, name);
         }
     }
 
-    private generateTypeModel(process: WriteProcessor, type: Schema) {
-        const name = this.id.getInterfaceName();
-        process.output('export interface ').outputType(name).outputLine(' {');
-        process.increaseIndent();
-
-        if (type.type === 'any') {
-            // TODO this is not permitted property access by dot.
-            process.outputLine('[name: string]: any; // any');
-        }
-        this.generateProperties(process, type);
-        process.decreaseIndent();
-        process.outputLine('}');
+    // output the type for a schema scalar
+    private generateTypeScalar(process: WriteProcessor, type: Schema, name: string) {
+        debug(`generateTypeScalar: ${name}, ${JSON.stringify(type)}`);
+        process.output('export type ').outputType(name).output(' = ');
+        this.generateTypeProperty(process, type, false);
+        process.outputLine(';');
     }
 
-    private generateTypeCollection(process: WriteProcessor, type: Schema) {
-        const name = this.id.getInterfaceName();
+    // output the type for a schema array/object that just extends an existing reference
+    private generateTypeExtender(process: WriteProcessor, type: Schema, name: string) {
+        // debug(`generateTypeExtender: ${name}, ${JSON.stringify(type)}`);
+        let kind = nameFromPath(type.$ref);
+        process.output('export interface ').outputType(name).output(` extends ${kind}{};`);
+    }
+
+    // output the type for a schema object
+    private generateTypeModel(process: WriteProcessor, type: Schema, name: string) {
+        // debug(`generateTypeModel: ${JSON.stringify(type)}`);
+        if(type.properties || type.additionalProperties) {
+          process.output('export interface ').outputType(name).outputLine(' {');
+          process.increaseIndent();
+          if (type.type === 'any') {
+              // TODO this is not permitted property access by dot.
+              process.outputLine('[name: string]: any; // any');
+          }
+          this.generateProperties(process, type);
+          process.decreaseIndent();
+          process.outputLine('}');
+        } else {
+          process.output('export interface ').outputType(name).outputLine(' {}');
+        }
+    }
+
+    // output the type for a schema array
+    private generateTypeCollection(process: WriteProcessor, type: Schema, name: string) {
+        // debug(`generateTypeCollection: ${JSON.stringify(type)}`);
         process.output('export interface ').outputType(name).output(' extends Array<');
         this.generateTypeProperty(process, type.items, false);
-        process.outputLine('> {');
-        process.outputLine('}');
+        process.outputLine('> {}');
     }
 
+    // output name + type for all k/v pairs in a schema object
     private generateProperties(process: WriteProcessor, type: Schema): void {
         if (type.additionalProperties) {
             process.output('[name: string]: ');
@@ -122,18 +158,22 @@ export class TypeDefinition {
         if (type.properties) {
             Object.keys(type.properties).forEach((propertyName) => {
                 const property = type.properties[propertyName];
-                process.outputJSDoc(property.description);
+                process.outputJSDoc(property);
                 this.generatePropertyName(process, propertyName, type);
                 this.generateTypeProperty(process, property);
             });
         }
     }
+
+    // output name for a k/v pair in a schema object
     private generatePropertyName(process: WriteProcessor, propertyName: string, property: Schema): void {
         if (propertyName) {
             const optionalProperty = !property.required || property.required.indexOf(propertyName) < 0;
             process.outputKey(propertyName, optionalProperty).output(': ');
         }
     }
+
+    // output type for a k/v pair in a schema object
     private generateTypeProperty(process: WriteProcessor, property: Schema, terminate = true): void {
         if (!property)
             return;
@@ -156,17 +196,12 @@ export class TypeDefinition {
             return;
         }
         if (property.$ref) {
-            if (!process.checkCircularReference(property.$ref)) {
-                this.generateTypeName(process, 'any', property, terminate);
+            let refName = nameFromPath(property.$ref);
+            // debug(`$ref: ${property.$ref}, ${refName}`);
+            if(terminate) {
+              this.generateTypePropertyNamedType(process, refName, property, terminate);
             } else {
-                const ref = this.searchRef(process, property.$ref);
-                process.pushReference(property.$ref);
-                if (ref.id) {
-                    this.generateTypePropertyNamedType(process, this.getTypename(ref.id), false, ref.targetSchema, terminate);
-                } else {
-                    this.generateTypeProperty(process, ref.targetSchema, terminate);
-                }
-                process.popReference();
+              process.outputType(refName, terminate);
             }
             return;
         }
@@ -211,6 +246,7 @@ export class TypeDefinition {
         }
     }
 
+    // output an array type as demanded by anyOf/oneOf
     private generateArrayedType(process: WriteProcessor, types: Schema[], separator: string, terminate: boolean): void {
         if (!terminate) {
             process.output('(');
@@ -231,22 +267,29 @@ export class TypeDefinition {
         }
     }
 
+    // output a named type
     private generateTypeName(process: WriteProcessor, type: string, property: Schema, terminate: boolean): void {
+        // debug(`generateTypeName; type: ${type}}`);
         const tsType = utils.toTSType(type, property);
+        // debug(`tsType: ${tsType}`);
         if (tsType) {
             this.generateTypePropertyNamedType(process, tsType, true, property, terminate);
             return;
         }
         if (type === 'object') {
-            process.outputLine('{');
-            process.increaseIndent();
-            this.isInnerType = true;
-            this.generateProperties(process, property);
-            this.isInnerType = false;
-            process.decreaseIndent();
-            process.output('}');
+            if(property.properties || property.additionalProperties) {
+              process.outputLine('{');
+              process.increaseIndent();
+              this.isInnerType = true;
+              this.generateProperties(process, property);
+              this.isInnerType = false;
+              process.decreaseIndent();
+              process.output('}');
+            } else {
+              process.output('{}');
+            }
             if (terminate) {
-                process.outputLine(';');
+              process.outputLine(';');
             }
 
         } else if (type === 'array') {
@@ -262,7 +305,9 @@ export class TypeDefinition {
         }
     }
 
+    // output a TypeScript type name
     private generateTypePropertyNamedType(process: WriteProcessor, typeName: string | string[], primitiveType: boolean, property: Schema, terminate = true): void {
+      // debug(`generateTypePropertyNamedType; typeName: ${JSON.stringify(typeName)}`);
         if (Array.isArray(typeName)) {
             typeName.forEach((type: string, index: number) => {
                 const isLast = index === typeName.length - 1;
@@ -282,6 +327,8 @@ export class TypeDefinition {
             this.generateOptionalInformation(process, property, terminate);
         }
     }
+
+    // output metadata (format/pattern) comments for a schema value
     private generateOptionalInformation(process: WriteProcessor, property: Schema, terminate = true): void {
         if (!property.format && !property.pattern) {
             return;

@@ -1,4 +1,5 @@
 import { TypeDefinition } from './typeDefinition';
+import { toTSType } from './utils';
 
 export interface ReferenceResolver {
     (baseSchema: Schema, ref: string): TypeDefinition;
@@ -7,7 +8,7 @@ export interface ReferenceResolver {
 export class WriteProcessor {
 
     public indentChar = ' ';
-    public indentStep = 4;
+    public indentStep = 2;
 
     private indent = 0;
     private results = '';
@@ -75,39 +76,39 @@ export class WriteProcessor {
         return this;
     }
 
-    outputJSDoc(description: string, parameters: { [name: string]: Schema; } = {}): this {
-        if (!description && Object.keys(parameters).length === 0) {
+    outputJSDoc(spec: Object, parameters: { [name: string]: Schema; } = {}): this {
+        let { description, example } = spec;
+        if (!description && !example && Object.keys(parameters).length === 0) {
             return this;
         }
-        description = description || '';
-
-        this.outputLine('/**');
-        description.split('\n').forEach(line => {
-            this.output(' * ').outputLine(line);
-        });
+        // this.outputLine('');
+        // this.outputLine('/**');
+        if(description) {
+          description.split('\n').forEach(line => {
+              // this.output(' * ').outputLine(line);
+              this.output('// ').outputLine(line);
+          });
+        }
+        if(example) {
+          let split = example.split('\n');
+          if(split.length == 1) {
+            // this.outputLine(` * example: ${example}`);
+            this.outputLine(`// example: ${example}`);
+          } else {
+            // this.outputLine(' * example:');
+            this.outputLine('// example:');
+            split.forEach(line => {
+              // this.output(' *   ').outputLine(line);
+              this.output('//   ').outputLine(line);
+            });
+          }
+        }
         Object.keys(parameters).forEach(parameterKey => {
             const parameter = parameters[parameterKey];
-            // TODO type doc
-            this.output(' * @params {');
-            switch (parameter.type) {
-                case 'string':
-                    this.output('string');
-                    break;
-                case 'integer':
-                case 'number':
-                    this.output('number');
-                    break;
-                case 'boolean':
-                    this.output('boolean');
-                    break;
-                default:
-                    console.error(parameter);
-                    throw new Error('unknown type');
-            }
-
-            this.output('} ').output(parameterKey).output(' ').outputLine(parameter.description);
+            // this.outputLine(` * @params {${toTSType(parameter.type)}} ${parameterKey} ${parameter.description}`);
+            this.outputLine(`// @params {${toTSType(parameter.type)}} ${parameterKey} ${parameter.description}`);
         });
-        this.outputLine(' */');
+        // this.outputLine(' */');
         return this;
     }
 
