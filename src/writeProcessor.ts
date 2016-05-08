@@ -142,4 +142,3 @@ export class WriteProcessor {
         return this.results;
     }
 }
-

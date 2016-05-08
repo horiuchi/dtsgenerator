@@ -222,4 +222,3 @@ export class JsonSchemaParser {
         this.referenceCache.clear();
     }
 }
-
