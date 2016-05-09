@@ -3,7 +3,7 @@ import * as utils from './utils';
 import { SchemaId } from './schemaid';
 import { WriteProcessor } from './writeProcessor';
 
-export class TypeDefenition {
+export class TypeDefinition {
     private id: SchemaId;
     private target: Schema;
     private isInnerType = false;
@@ -40,7 +40,7 @@ export class TypeDefenition {
     }
 
 
-    private searchRef(process: WriteProcessor, ref: string): TypeDefenition {
+    private searchRef(process: WriteProcessor, ref: string): TypeDefinition {
         const type = process.referenceResolve(this.schema, ref);
         if (type == null) {
             throw new Error('Target reference is not found: ' + ref);

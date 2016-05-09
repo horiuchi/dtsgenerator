@@ -3,16 +3,16 @@ import * as http from 'http';
 import * as request from 'request';
 import * as JsonPointer from './jsonPointer';
 import { SchemaId } from './schemaid';
-import { TypeDefenition } from './typeDefenition';
+import { TypeDefinition } from './typeDefinition';
 import { WriteProcessor } from './writeProcessor';
 
 const debug = Debug('dtsgen');
 
 
 export class JsonSchemaParser {
-    private typeCache = new Map<string, TypeDefenition>();
-    private schemaReference = new Map<string, TypeDefenition>();
-    private referenceCache = new Map<Schema, Map<string, TypeDefenition>>();
+    private typeCache = new Map<string, TypeDefinition>();
+    private schemaReference = new Map<string, TypeDefinition>();
+    private referenceCache = new Map<Schema, Map<string, TypeDefinition>>();
 
     public async generateDts(prefix?: string, header?: string): Promise<string> {
         debug(`generate d.ts: prefix=[${prefix}].`);
@@ -34,7 +34,7 @@ export class JsonSchemaParser {
             }
         }
 
-        const process = new WriteProcessor((baseSchema: Schema, ref: string): TypeDefenition => {
+        const process = new WriteProcessor((baseSchema: Schema, ref: string): TypeDefinition => {
             debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
@@ -59,12 +59,12 @@ export class JsonSchemaParser {
         this.walk(process, env);
         return process.toDefinition();
     }
-    private createHierarchicalMap(types: Map<string, TypeDefenition>): any {
+    private createHierarchicalMap(types: Map<string, TypeDefinition>): any {
         const map: any = {};
         if (types.size === 0) {
             throw new Error('There is no id in the input schema(s)');
         }
-        types.forEach((type: TypeDefenition, uri: string) => {
+        types.forEach((type: TypeDefinition, uri: string) => {
             const id = new SchemaId(uri);
             const names = id.getTypeNames();
             JsonPointer.set(map, names, type);
@@ -75,7 +75,7 @@ export class JsonSchemaParser {
         const keys = Object.keys(env).sort();
         keys.forEach((key) => {
             const val = env[key];
-            if (val instanceof TypeDefenition) {
+            if (val instanceof TypeDefinition) {
                 val.doProcess(process);
             } else {
                 if (process.indentLevel === 0) {
@@ -119,7 +119,7 @@ export class JsonSchemaParser {
                 if (refId.isJsonPointerHash()) {
                     const pointer = refId.getJsonPointerHash();
                     const targetSchema = fileId ? this.schemaReference.get(fileId).rootSchema : schema;
-                    map.set(ref, new TypeDefenition(targetSchema, pointer));
+                    map.set(ref, new TypeDefinition(targetSchema, pointer));
                 } else {
                     const target = this.typeCache.get(ref);
                     if (target == null) {
@@ -181,7 +181,7 @@ export class JsonSchemaParser {
                 }
             });
             if (typeof obj.id === 'string') {
-                const type = new TypeDefenition(schema, paths);
+                const type = new TypeDefinition(schema, paths);
                 obj.id = type.schemaId.getAbsoluteId();
                 this.addType(type);
                 debug(`parse schema: id property found, id=[${obj.id}], paths=[${JSON.stringify(paths)}].`);
@@ -193,7 +193,7 @@ export class JsonSchemaParser {
         };
         walk(schema, []);
     }
-    private addType(g: TypeDefenition): void {
+    private addType(g: TypeDefinition): void {
         const id = g.schemaId;
         if (id) {
             this.typeCache.set(id.getAbsoluteId(), g);
@@ -207,7 +207,7 @@ export class JsonSchemaParser {
     private addReference(schema: Schema, ref: string): string {
         let map = this.referenceCache.get(schema);
         if (map == null) {
-            map = new Map<string, TypeDefenition>();
+            map = new Map<string, TypeDefinition>();
             this.referenceCache.set(schema, map);
         }
         const refId = new SchemaId(ref, [schema.id]);
