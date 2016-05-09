@@ -8,7 +8,7 @@ export interface ReferenceResolver {
 export class WriteProcessor {
 
     public indentChar = ' ';
-    public indentStep = 2;
+    public indentStep = 4;
 
     private indent = 0;
     private results = '';
@@ -76,39 +76,39 @@ export class WriteProcessor {
         return this;
     }
 
-    outputJSDoc(spec: Object, parameters: { [name: string]: Schema; } = {}): this {
+    outputJSDoc(spec: Object, parameters: { [name: string]: Schema; } = {}, mline = false): this {
         let { description, example } = spec;
         if (!description && !example && Object.keys(parameters).length === 0) {
             return this;
         }
         // this.outputLine('');
-        // this.outputLine('/**');
+        let start = mline ? ' * ' : '// ';
+        if(mline) {
+            this.outputLine('/**');
+        }
         if(description) {
           description.split('\n').forEach(line => {
-              // this.output(' * ').outputLine(line);
-              this.output('// ').outputLine(line);
+              this.output(start).outputLine(line);
           });
         }
         if(example) {
-          let split = example.split('\n');
-          if(split.length == 1) {
-            // this.outputLine(` * example: ${example}`);
-            this.outputLine(`// example: ${example}`);
-          } else {
-            // this.outputLine(' * example:');
-            this.outputLine('// example:');
-            split.forEach(line => {
-              // this.output(' *   ').outputLine(line);
-              this.output('//   ').outputLine(line);
-            });
-          }
+            let split = example.split('\n');
+            if(split.length == 1) {
+                this.outputLine(start + ` * example: ${example}`);
+            } else {
+                this.outputLine(start + 'example:');
+                split.forEach(line => {
+                    this.output(start + '  ').outputLine(line);
+                });
+            }
         }
         Object.keys(parameters).forEach(parameterKey => {
             const parameter = parameters[parameterKey];
-            // this.outputLine(` * @params {${toTSType(parameter.type)}} ${parameterKey} ${parameter.description}`);
-            this.outputLine(`// @params {${toTSType(parameter.type)}} ${parameterKey} ${parameter.description}`);
+            this.outputLine(start + `@params {${toTSType(parameter.type)}} ${parameterKey} ${parameter.description}`);
         });
-        // this.outputLine(' */');
+        if(mline) {
+            this.outputLine(' */');
+        }
         return this;
     }
 
