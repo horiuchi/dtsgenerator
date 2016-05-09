@@ -8,7 +8,7 @@ export interface ReferenceResolver {
 export class WriteProcessor {
 
     public indentChar = ' ';
-    public indentStep = 2;
+    public indentStep = 4;
 
     private indent = 0;
     private results = '';

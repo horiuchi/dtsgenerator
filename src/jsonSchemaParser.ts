@@ -54,7 +54,6 @@ export class JsonSchemaParser {
             return result;
         }, prefix);
         const env = this.createHierarchicalMap(this.typeCache);
-        // debug(`env: ${JSON.stringify(Object.keys(env))}`);
         if (header) {
             process.outputLine(header);
         }
@@ -76,11 +75,9 @@ export class JsonSchemaParser {
     }
     private walk(process: WriteProcessor, env: any, path: string[] = []): void {
         const keys = Object.keys(env).sort();
-        debug(`walk: ${JSON.stringify(keys)}`);
         keys.forEach((key) => {
             let path_k = path.concat(key);
             const val = env[key];
-            debug(`walking: ${key}, ${JSON.stringify(path_k)}`);
             if (val instanceof TypeDefinition) {
                 this.walkRefs(process, path_k);
                 val.doProcess(process);
@@ -99,13 +96,11 @@ export class JsonSchemaParser {
     }
 
     private walkRefs(process: WriteProcessor, path: string[]) {
-        // debug(`walkRefs: ${JSON.stringify(path)}`);
         for (let schema of this.referenceCache.keys()) {
             let { host, pathname } = new SchemaId(schema.id).baseId;
             let offlinePath = pathname.split('/');
             let onlinePath = pathname.split('/');
             onlinePath[0] = host;
-            // debug(`schema: ${schema.id}, ${JSON.stringify(onlinePath)}, ${JSON.stringify(offlinePath)}`);
             let r_eq = (a,b) => JSON.stringify(a) == JSON.stringify(b);
             if (!r_eq(path, offlinePath) && !r_eq(path, offlinePath.slice(1)) && !r_eq(path, onlinePath)) {
               continue;
@@ -113,10 +108,8 @@ export class JsonSchemaParser {
             let refMap = this.referenceCache.get(schema);
             let refs = strMapToObj(refMap);
             for (let id of refMap.keys()) {
-                // debug(`leaf: ${id}, ${schema.id}`);
                 let v = refMap.get(id);
                 if(id.startsWith(schema.id + '/definitions')) {
-                  // debug(`leaf: ${id}`);
                   let resolved = v.searchRef(process, id);
                   let target = resolved.target;
                   let refName = nameFromPath(id);
@@ -155,10 +148,7 @@ export class JsonSchemaParser {
                 if (refId.isJsonPointerHash()) {
                     const pointer = refId.getJsonPointerHash();
                     const targetSchema = fileId ? this.schemaReference.get(fileId).rootSchema : schema;
-                    // debug(`ref pointer=[${pointer}] targetSchema=[${JSON.stringify(targetSchema)}]`);
-                    // map.set(ref, new TypeDefinition(targetSchema, pointer));
                     let resolvedType = new TypeDefinition(targetSchema, pointer);
-                    // debug(`ref resolvedType=[${JSON.stringify(resolvedType)}]`);
                     map.set(ref, resolvedType);
                 } else {
                     const target = this.typeCache.get(ref);
@@ -198,7 +188,6 @@ export class JsonSchemaParser {
         if (typeof schema === 'string') {
             schema = JSON.parse(<string>schema);
         }
-        // debug(`parse schema: schemaId=[${schema.id}], url=[${url}].`);
 
         if (schema.id == null) {
             schema.id = url;
@@ -225,11 +214,9 @@ export class JsonSchemaParser {
                 const type = new TypeDefinition(schema, paths);
                 obj.id = type.schemaId.getAbsoluteId();
                 this.addType(type);
-                // debug(`parse schema: id property found, id=[${obj.id}].`);
             }
             if (typeof obj.$ref === 'string') {
                 obj.$ref = this.addReference(schema, obj.$ref);
-                // debug(`parse schema: $ref property found, $ref=[${obj.$ref}].`);
             }
         };
         walk(schema, []);
