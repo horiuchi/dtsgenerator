@@ -36,7 +36,7 @@ export class JsonSchemaParser {
         }
 
         const process = new WriteProcessor((baseSchema: Schema, ref: string): TypeDefinition => {
-            // debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
+            debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
                 return undefined;
@@ -157,6 +157,7 @@ export class JsonSchemaParser {
                     const targetSchema = fileId ? this.schemaReference.get(fileId).rootSchema : schema;
                     // debug(`ref pointer=[${pointer}] targetSchema=[${JSON.stringify(targetSchema)}]`);
                     // map.set(ref, new TypeDefinition(targetSchema, pointer));
+                    // Is this change what killed local refs?
                     let resolvedType = new TypeDefinition(targetSchema, pointer);
                     // debug(`ref resolvedType=[${JSON.stringify(resolvedType)}]`);
                     map.set(ref, resolvedType);
