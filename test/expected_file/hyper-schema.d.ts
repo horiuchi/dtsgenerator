@@ -19,7 +19,7 @@ declare namespace json_schema_org {
             // Schema describing the data to submit along with the request
             schema?: HyperSchema;
         }
-        export interface HyperSchema extends json_schema_org.draft_04.Schema.{}
+        export interface HyperSchema extends Schema{}
         export type PositiveInteger = number;
         export type PositiveIntegerDefault0 = number;
         export interface SchemaArray extends Array<Schema> {}
