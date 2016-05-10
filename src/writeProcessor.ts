@@ -6,6 +6,7 @@ export interface ReferenceResolver {
 }
 
 export class WriteProcessor {
+    public path: string[] = []; // helps allowing JsonSchemaParser to communicate the current namespace to TypeDefinition
 
     public indentChar = ' ';
     public indentStep = 4;
@@ -38,19 +39,25 @@ export class WriteProcessor {
         return this;
     }
 
+    // converts string to snake_case
+    convertToType(type: string, primitive: boolean = false): string {
+      let str = ''
+      if (type === 'this') {
+          return type;
+      }
+      if (this.typePrefix && !primitive) {
+          str += this.typePrefix;
+      }
+      type = type.replace(/[^0-9A-Za-z_$]+/g, '_').replace(/(^_)|(_$)/g, '');
+      if (/^\d/.test(type)) {
+        type = '$' + type;
+      }
+      str += type;
+      return str;
+    }
+
     outputType(type: string, primitive: boolean = false): this {
-        if (type === 'this') {
-            this.output(type);
-            return this;
-        }
-        if (this.typePrefix && !primitive) {
-            this.output(this.typePrefix);
-        }
-        type = type.replace(/[^0-9A-Za-z_$]/g, '_');
-        if (/^\d/.test(type)) {
-          type = '$' + type;
-        }
-        this.output(type);
+        this.output(this.convertToType(type, primitive));
         return this;
     }
 
