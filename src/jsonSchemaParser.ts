@@ -6,6 +6,7 @@ import { SchemaId } from './schemaid';
 import { TypeDefinition } from './typeDefinition';
 import { WriteProcessor } from './writeProcessor';
 import { strMapToObj, nameFromPath } from './utils';
+let _ = require('lodash-fp');
 
 const debug = Debug('dtsgen');
 
@@ -36,7 +37,7 @@ export class JsonSchemaParser {
         }
 
         const process = new WriteProcessor((baseSchema: Schema, ref: string): TypeDefinition => {
-            debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
+            // debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
                 return undefined;
@@ -77,6 +78,7 @@ export class JsonSchemaParser {
         const keys = Object.keys(env).sort();
         keys.forEach((key) => {
             let path_k = path.concat(key);
+            process.path = path_k;
             const val = env[key];
             if (val instanceof TypeDefinition) {
                 this.walkRefs(process, path_k);
@@ -101,8 +103,7 @@ export class JsonSchemaParser {
             let offlinePath = pathname.split('/');
             let onlinePath = pathname.split('/');
             onlinePath[0] = host;
-            let r_eq = (a,b) => JSON.stringify(a) == JSON.stringify(b);
-            if (!r_eq(path, offlinePath) && !r_eq(path, offlinePath.slice(1)) && !r_eq(path, onlinePath)) {
+            if (!_.eq(path, offlinePath) && !_.eq(path, offlinePath.slice(1)) && !_.eq(path, onlinePath)) {
               continue;
             }
             let refMap = this.referenceCache.get(schema);

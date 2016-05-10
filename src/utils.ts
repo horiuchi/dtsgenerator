@@ -73,8 +73,15 @@ export function strMapToObj(strMap: Map<string>): Object {
     return obj;
 }
 
-export function nameFromPath(path: string): string {
+// converts string to TitleCase
+export function titleCase(str: string): string {
+  // debug('titleCase', str);
+  return capitalizeName(str.replace(/[^\w]+(\w)/g, s => s.toUpperCase()).replace(/[^0-9A-Za-z_$]/g, ''));
+}
+
+export function nameFromPath(path: string, fixCase: boolean = true): string {
   // debug(`nameFromPath: ${path}`);
   if(!path) return '';
-  return capitalizeName(path.split('/').pop().replace(/[^\w]/g, ''));
+  let name = path.split('/').pop();
+  return fixCase ? titleCase(name) : name;
 }

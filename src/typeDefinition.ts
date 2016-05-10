@@ -4,7 +4,7 @@ import { SchemaId } from './schemaid';
 import { WriteProcessor } from './writeProcessor';
 import * as Debug from 'debug';
 const debug = Debug('dtsgen');
-import { nameFromPath } from './utils';
+import { nameFromPath, titleCase } from './utils';
 let _ = require('lodash-fp');
 
 export class TypeDefinition {
@@ -99,26 +99,30 @@ export class TypeDefinition {
         if (SCALARS.includes(types) || (types == 'any' && !type.properties && !type.patternProperties && !type.additionalProperties)) {
             // throw new Error('unsupported root type: ' + JSON.stringify(types));
             this.generateTypeScalar(process, type, name);
-        } else if (ref && types == 'object') {
+        } else if (ref) {
             this.generateTypeExtender(process, type, name, ref);
-        } else if (types === 'array') {
+        } else if (types == 'array') {
             this.generateTypeCollection(process, type, name);
         } else {
+            // object
             this.generateTypeModel(process, type, name);
         }
     }
 
     // output the type for a schema scalar
     private generateTypeScalar(process: WriteProcessor, type: Schema, name: string) {
+        // debug('generateTypeExtender', name);
         process.output('export type ').outputType(name).output(' = ');
         this.generateTypeProperty(process, type, false);
         process.outputLine(';');
     }
 
     // output the type for a schema array/object that just extends an existing reference
-    private generateTypeExtender(process: WriteProcessor, type: Schema, name: string, ref) {
-        let kind = nameFromPath(ref);
-        process.output('export interface ').outputType(name).outputLine(` extends ${kind}{}`);
+    private generateTypeExtender(process: WriteProcessor, type: Schema, name: string, ref: string) {
+        // debug('generateTypeExtender', name, ref);
+        process.output('export interface ').outputType(name).output(' extends ');
+        let refName = this.refPrintNameSpaceGetName(process, type, ref);
+        process.outputLine(`${refName}{}`);
     }
 
     // output the type for a schema object
@@ -169,6 +173,25 @@ export class TypeDefinition {
         }
     }
 
+    // name is returned for printing as desired (terminate, etc.); name-space is printed right away for external references.
+    private refPrintNameSpaceGetName(process: WriteProcessor, property: Schema, ref: string): string {
+      let refName = nameFromPath(ref);
+      // if this references a different namespace, print this namespace as well.
+      let { host, path, hash } = new SchemaId(ref).baseId;
+      let refPath = (host ? [host] : []).concat(_.filter(x => x)(path.split('/')));
+      let isExternal = !_.eq(process.path, refPath);
+      if(isExternal) {
+        let hashPath = hash.split('/').slice(1);
+        let isDef = hashPath[0] == 'definitions';
+        // also, definitions can keep their TitleCase, but properties can't.
+        if(!isDef) refName = nameFromPath(property.$ref, false);
+        let nameSpacePath = refPath.slice(0,-1).concat(isDef ? [] : refPath.slice(-1).map(titleCase));
+        let nameSpace = nameSpacePath.map(s => process.convertToType(s, true)).join('.') + '.';
+        process.output(nameSpace);
+      }
+      return refName;
+    }
+
     // output type for a k/v pair in a schema object
     private generateTypeProperty(process: WriteProcessor, property: Schema, terminate = true): void {
         if (!property)
@@ -192,11 +215,11 @@ export class TypeDefinition {
             return;
         }
         if (property.$ref) {
-            let refName = nameFromPath(property.$ref);
+            let refName = this.refPrintNameSpaceGetName(process, property, property.$ref);
             if(terminate) {
-              this.generateTypePropertyNamedType(process, refName, property, terminate);
+              this.generateTypePropertyNamedType(process, refName, property, true);
             } else {
-              process.outputType(refName, terminate);
+              process.outputType(refName, false);
             }
             return;
         }
@@ -281,20 +304,15 @@ export class TypeDefinition {
             } else {
               process.output('{}');
             }
-            if (terminate) {
-              process.outputLine(';');
-            }
-
         } else if (type === 'array') {
             this.generateTypeProperty(process, property.items == null ? {} : property.items, false);
             process.output('[]');
-            if (terminate) {
-                process.outputLine(';');
-            }
-
         } else {
             console.error(property);
             throw new Error('unknown type: ' + property.type);
+        }
+        if (terminate) {
+            process.outputLine(';');
         }
     }
 

@@ -16,6 +16,6 @@ declare namespace json_schema_org {
             height: number;
         };
         // Coordinates of the warehouse with the product
-        warehouseLocation?: Geo;
+        warehouseLocation?: json_schema_org.Geo.geo;
     }> {}
 }
