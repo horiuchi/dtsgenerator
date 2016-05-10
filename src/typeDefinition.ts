@@ -179,7 +179,7 @@ export class TypeDefinition {
       // if this references a different namespace, print this namespace as well.
       let { host, path, hash } = new SchemaId(ref).baseId;
       let refPath = (host ? [host] : []).concat(_.filter(x => x)(path.split('/')));
-      let isExternal = !_.eq(process.path, refPath);
+      let isExternal = !_.eq(process.path.slice(0,-1), refPath.slice(0,-1));
       if(isExternal) {
         let hashPath = hash.split('/').slice(1);
         let isDef = hashPath[0] == 'definitions';
