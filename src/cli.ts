@@ -30,7 +30,7 @@ if (opts.args.length === 0) {
     readSchemasFromFiles(processGenerate);
 }
 
-function readSchemasFromStdin(callback: (err: any, schemas: Schema[]) => void): void {
+function readSchemasFromStdin(callback: (err: any, schemas: json_schema_org.Schema[]) => void): void {
     let data = '';
     process.stdin.setEncoding('utf-8');
 
@@ -51,12 +51,12 @@ function readSchemasFromStdin(callback: (err: any, schemas: Schema[]) => void): 
     });
 }
 
-function readSchemasFromFiles(callback: (err: any, schemas: Schema[]) => void): void {
-    let promises: Promise<Schema>[] = [];
+function readSchemasFromFiles(callback: (err: any, schemas: json_schema_org.Schema[]) => void): void {
+    let promises: Promise<json_schema_org.Schema>[] = [];
     opts.args.forEach((arg) => {
         const files = glob.sync(arg);
         promises = promises.concat(files.map((file: string) => {
-            return new Promise((resolve: (res: Schema) => void, reject: (err: any) => void) => {
+            return new Promise((resolve: (res: json_schema_org.Schema) => void, reject: (err: any) => void) => {
                 fs.readFile(file, { encoding: 'utf-8' }, (err: any, content: string) => {
                     if (err) {
                         reject(err);
@@ -67,14 +67,14 @@ function readSchemasFromFiles(callback: (err: any, schemas: Schema[]) => void): 
             });
         }));
     });
-    Promise.all(promises).then((schemas: Schema[]) => {
+    Promise.all(promises).then((schemas: json_schema_org.Schema[]) => {
         callback(null, schemas);
     }).catch((err: any) => {
         callback(err, []);
     });
 }
 
-function processGenerate(err: any, schemas: Schema[]): void {
+function processGenerate(err: any, schemas: json_schema_org.Schema[]): void {
     if (err) {
         throw err;
     }

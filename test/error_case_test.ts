@@ -7,7 +7,7 @@ import dtsgenerator from '../src/';
 describe('error schema test', () => {
 
     it('no id schema', async () => {
-        const schema: Schema = {
+        const schema: json_schema_org.Schema = {
             type: 'object',
         };
         try {
@@ -48,7 +48,7 @@ describe('error schema test', () => {
     });
 
     it('target of $ref is not found', async () => {
-        const schema: Schema = {
+        const schema: json_schema_org.Schema = {
             id: '/test/target_not_found',
             type: 'object',
             properties: {
@@ -65,7 +65,7 @@ describe('error schema test', () => {
         }
     });
     it('target of $ref is invalid path', async () => {
-        const schema: Schema = {
+        const schema: json_schema_org.Schema = {
             id: '/test/target_not_found',
             type: 'object',
             properties: {

@@ -21,18 +21,17 @@ export function toTSType(type: string, debugSource?: any): string {
     }
 }
 
-export type CorrectTypeName = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
-export function reduceTypes(types: CorrectTypeName[]): CorrectTypeName[] {
+export function reduceTypes(types: json_schema_org.SimpleTypes[]): json_schema_org.SimpleTypes[] {
     if (types.length < 2) {
         return types;
     }
-    const set = new Set<CorrectTypeName>(types);
+    const set = new Set<json_schema_org.SimpleTypes>(types);
     set.delete('null');
     if (set.delete('integer')) {
         set.add('number');
     }
-    const result: CorrectTypeName[] = [];
-    set.forEach((type: CorrectTypeName) => {
+    const result: json_schema_org.SimpleTypes[] = [];
+    set.forEach((type: json_schema_org.SimpleTypes) => {
         result.push(type);
     });
     return result;

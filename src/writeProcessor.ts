@@ -1,7 +1,7 @@
 import { TypeDefinition } from './typeDefinition';
 
 export interface ReferenceResolver {
-    (baseSchema: Schema, ref: string): TypeDefinition;
+    (baseSchema: json_schema_org.Schema, ref: string): TypeDefinition;
 }
 
 export class WriteProcessor {
@@ -75,38 +75,30 @@ export class WriteProcessor {
         return this;
     }
 
-    outputJSDoc(description: string, parameters: { [name: string]: Schema; } = {}): this {
-        if (!description && Object.keys(parameters).length === 0) {
+    outputJSDoc(spec: any): this {
+        let { description, example } = spec;
+        if (!description && !example) {
             return this;
         }
         description = description || '';
 
         this.outputLine('/**');
-        description.split('\n').forEach(line => {
-            this.output(' * ').outputLine(line);
-        });
-        Object.keys(parameters).forEach(parameterKey => {
-            const parameter = parameters[parameterKey];
-            // TODO type doc
-            this.output(' * @params {');
-            switch (parameter.type) {
-                case 'string':
-                    this.output('string');
-                    break;
-                case 'integer':
-                case 'number':
-                    this.output('number');
-                    break;
-                case 'boolean':
-                    this.output('boolean');
-                    break;
-                default:
-                    console.error(parameter);
-                    throw new Error('unknown type');
+        if (description) {
+            description.split('\n').forEach((line: string) => {
+                this.output(' * ').outputLine(line);
+            });
+        }
+        if (example) {
+            let split = example.split('\n');
+            if (split.length === 1) {
+                this.outputLine(` * example: ${example}`);
+            } else {
+                this.outputLine(' * example:');
+                split.forEach((line: string) => {
+                    this.output(' *   ').outputLine(line);
+                });
             }
-
-            this.output('} ').output(parameterKey).output(' ').outputLine(parameter.description);
-        });
+        }
         this.outputLine(' */');
         return this;
     }
