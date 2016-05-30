@@ -1,10 +1,12 @@
 import { TypeDefinition } from './typeDefinition';
+import { toTSType } from './utils';
 
 export interface ReferenceResolver {
     (baseSchema: Schema, ref: string): TypeDefinition;
 }
 
 export class WriteProcessor {
+    public path: string[] = []; // helps allowing JsonSchemaParser to communicate the current namespace to TypeDefinition
 
     public indentChar = ' ';
     public indentStep = 4;
@@ -37,19 +39,25 @@ export class WriteProcessor {
         return this;
     }
 
+    // converts string to snake_case
+    convertToType(type: string, primitive: boolean = false): string {
+      let str = ''
+      if (type === 'this') {
+          return type;
+      }
+      if (this.typePrefix && !primitive) {
+          str += this.typePrefix;
+      }
+      type = type.replace(/[^0-9A-Za-z_$]+/g, '_').replace(/(^_)|(_$)/g, '');
+      if (/^\d/.test(type)) {
+        type = '$' + type;
+      }
+      str += type;
+      return str;
+    }
+
     outputType(type: string, primitive: boolean = false): this {
-        if (type === 'this') {
-            this.output(type);
-            return this;
-        }
-        if (this.typePrefix && !primitive) {
-            this.output(this.typePrefix);
-        }
-        type = type.replace(/[^0-9A-Za-z_$]/g, '_');
-        if (/^\d/.test(type)) {
-          type = '$' + type;
-        }
-        this.output(type);
+        this.output(this.convertToType(type, primitive));
         return this;
     }
 
@@ -75,39 +83,39 @@ export class WriteProcessor {
         return this;
     }
 
-    outputJSDoc(description: string, parameters: { [name: string]: Schema; } = {}): this {
-        if (!description && Object.keys(parameters).length === 0) {
+    outputJSDoc(spec: Object, parameters: { [name: string]: Schema; } = {}, mline = false): this {
+        let { description, example } = spec;
+        if (!description && !example && Object.keys(parameters).length === 0) {
             return this;
         }
-        description = description || '';
-
-        this.outputLine('/**');
-        description.split('\n').forEach(line => {
-            this.output(' * ').outputLine(line);
-        });
+        // this.outputLine('');
+        let start = mline ? ' * ' : '// ';
+        if(mline) {
+            this.outputLine('/**');
+        }
+        if(description) {
+          description.split('\n').forEach(line => {
+              this.output(start).outputLine(line);
+          });
+        }
+        if(example) {
+            let split = example.split('\n');
+            if(split.length == 1) {
+                this.outputLine(start + ` * example: ${example}`);
+            } else {
+                this.outputLine(start + 'example:');
+                split.forEach(line => {
+                    this.output(start + '  ').outputLine(line);
+                });
+            }
+        }
         Object.keys(parameters).forEach(parameterKey => {
             const parameter = parameters[parameterKey];
-            // TODO type doc
-            this.output(' * @params {');
-            switch (parameter.type) {
-                case 'string':
-                    this.output('string');
-                    break;
-                case 'integer':
-                case 'number':
-                    this.output('number');
-                    break;
-                case 'boolean':
-                    this.output('boolean');
-                    break;
-                default:
-                    console.error(parameter);
-                    throw new Error('unknown type');
-            }
-
-            this.output('} ').output(parameterKey).output(' ').outputLine(parameter.description);
+            this.outputLine(start + `@params {${toTSType(parameter.type)}} ${parameterKey} ${parameter.description}`);
         });
-        this.outputLine(' */');
+        if(mline) {
+            this.outputLine(' */');
+        }
         return this;
     }
 
@@ -150,4 +158,3 @@ export class WriteProcessor {
         return this.results;
     }
 }
-

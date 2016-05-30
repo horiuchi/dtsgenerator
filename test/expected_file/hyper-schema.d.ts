@@ -1,5 +1,25 @@
 declare namespace json_schema_org {
     namespace draft_04 {
+        export interface SchemaArray extends Array<HyperSchema> {}
+        export interface LinkDescription {
+            // a URI template, as defined by RFC 6570, with the addition of the $, ( and ) characters for pre-processing
+            href: string;
+            // relation to the target resource of the link
+            rel: string;
+            // a title for the link
+            title?: string;
+            // JSON Schema describing the link target
+            targetSchema?: HyperSchema;
+            // media type (as defined by RFC 2046) describing the link target
+            mediaType?: string;
+            // method for requesting the target of the link (e.g. for HTTP this might be "GET" or "DELETE")
+            method?: string;
+            // The media type in which to submit data along with the request
+            encType?: string;
+            // Schema describing the data to submit along with the request
+            schema?: HyperSchema;
+        }
+        export interface HyperSchema extends Schema{}
         export type PositiveInteger = number;
         export type PositiveIntegerDefault0 = number;
         export interface SchemaArray extends Array<Schema> {}
@@ -9,7 +29,6 @@ declare namespace json_schema_org {
         export interface Schema {
             id?: string; // uri
             $schema?: string; // uri
-            $ref?: string; // uri
             title?: string;
             description?: string;
             default?: any;
