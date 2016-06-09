@@ -61,7 +61,7 @@
     "run-sequence": "^1.2.1",
     "source-map-support": "^0.4.0",
     "tsconfig-cli": "^2.0.0",
-    "tslint": "^3.10.2",
+    "tslint": "^3.11.0",
     "typescript": "^1.8.10"
   }
 }
