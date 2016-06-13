@@ -1,13 +1,14 @@
 import * as url from 'url';
 import { parse } from './jsonPointer';
-import { capitalizeName } from './utils';
-
+import * as Debug from 'debug';
+const debug = Debug('dtsgen');
 
 export class SchemaId {
     private baseId: url.Url;
     private absoluteId: string;
 
     constructor(id: string, parentIds?: string[]) {
+        debug(`SchemaId: ${id}, ${parentIds}`);
         this.absoluteId = id;
         if (parentIds) {
             parentIds.forEach((parent: string) => {
@@ -62,7 +63,6 @@ export class SchemaId {
         if (this.baseId.hash && this.baseId.hash.length > 1) {
             addAllParts(this.baseId.hash.substr(1));
         }
-        ids[ids.length - 1] = capitalizeName(ids[ids.length - 1]);
         return ids;
     }
     public getInterfaceName(): string {
@@ -70,4 +70,3 @@ export class SchemaId {
         return names[names.length - 1];
     }
 }
-

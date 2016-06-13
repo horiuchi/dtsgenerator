@@ -89,4 +89,3 @@ function processGenerate(err: any, schemas: json_schema_org.Schema[]): void {
         console.error(error);
     });
 }
-

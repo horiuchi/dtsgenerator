@@ -1,15 +1,14 @@
+
 export function toTSType(type: string, debugSource?: any): string {
     switch (type) {
+        case 'integer':
+            return 'number';
+        case 'number':
         case 'any':
         case 'null':
-            return 'any';
         case 'string':
-            return 'string';
-        case 'integer':
-        case 'number':
-            return 'number';
         case 'boolean':
-            return 'boolean';
+            return type;
         case 'object':
         case 'array':
             return null;
@@ -58,3 +57,25 @@ export function mergeSchema(a: any, b: any): any {
     return a;
 }
 
+export function strMapToJson(strMap: Map<string>): string {
+    return JSON.stringify(strMapToObj(strMap));
+}
+
+export function strMapToObj(strMap: Map<string>): Object {
+    let obj = Object.create(null);
+    for (let [k, v] of strMap) {
+        obj[k] = v;
+    }
+    return obj;
+}
+
+// converts string to TitleCase
+export function titleCase(str: string): string {
+  return capitalizeName(str.replace(/[^\w]+(\w)/g, s => s.toUpperCase()).replace(/[^0-9A-Za-z_$]/g, ''));
+}
+
+export function nameFromPath(path: string, fixCase: boolean = true): string {
+  if (!path) return '';
+  let name = path.split('/').pop();
+  return fixCase ? titleCase(name) : name;
+}
