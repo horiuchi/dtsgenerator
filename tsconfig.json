@@ -18,7 +18,7 @@
         "src/jsonPointer.ts",
         "src/jsonschema.d.ts",
         "src/jsonSchemaParser.ts",
-        "src/schemaid.ts",
+        "src/schemaId.ts",
         "src/typeDefinition.ts",
         "src/utils.ts",
         "src/writeProcessor.ts",
@@ -32,7 +32,7 @@
         "test/expected_file/schema.d.ts",
         "test/expected_file/simple_example.d.ts",
         "test/file_schema_test.ts",
-        "test/schemaid_test.ts",
+        "test/schemaId_test.ts",
         "test/simple_schema_test.ts",
         "typings/bundle.d.ts"
     ],

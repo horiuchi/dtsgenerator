@@ -130,26 +130,26 @@ declare namespace swagger_io {
         export interface Schema {
             $ref?: string;
             format?: string;
-            title?: json_schema_org.draft_04.Schema.title;
-            description?: json_schema_org.draft_04.Schema.description;
-            default?: json_schema_org.draft_04.Schema.default;
-            multipleOf?: json_schema_org.draft_04.Schema.multipleOf;
-            maximum?: json_schema_org.draft_04.Schema.maximum;
-            exclusiveMaximum?: json_schema_org.draft_04.Schema.exclusiveMaximum;
+            title?: json_schema_org.draft_04.Schema.Title;
+            description?: json_schema_org.draft_04.Schema.Description;
+            default?: json_schema_org.draft_04.Schema.Default;
+            multipleOf?: json_schema_org.draft_04.Schema.MultipleOf;
+            maximum?: json_schema_org.draft_04.Schema.Maximum;
+            exclusiveMaximum?: json_schema_org.draft_04.Schema.ExclusiveMaximum;
             minimum?: json_schema_org.draft_04.Schema.minimum;
-            exclusiveMinimum?: json_schema_org.draft_04.Schema.exclusiveMinimum;
+            exclusiveMinimum?: json_schema_org.draft_04.Schema.ExclusiveMinimum;
             maxLength?: json_schema_org.draft_04.PositiveInteger;
             minLength?: json_schema_org.draft_04.PositiveIntegerDefault0;
             pattern?: json_schema_org.draft_04.Schema.pattern;
             maxItems?: json_schema_org.draft_04.PositiveInteger;
             minItems?: json_schema_org.draft_04.PositiveIntegerDefault0;
-            uniqueItems?: json_schema_org.draft_04.Schema.uniqueItems;
+            uniqueItems?: json_schema_org.draft_04.Schema.UniqueItems;
             maxProperties?: json_schema_org.draft_04.PositiveInteger;
             minProperties?: json_schema_org.draft_04.PositiveIntegerDefault0;
             required?: json_schema_org.draft_04.StringArray;
-            enum?: json_schema_org.draft_04.Schema.enum;
+            enum?: json_schema_org.draft_04.Schema.Enum;
             additionalProperties?: Schema | boolean;
-            type?: json_schema_org.draft_04.Schema.type;
+            type?: json_schema_org.draft_04.Schema.Type;
             items?: Schema | Schema[];
             allOf?: Schema[];
             properties?: {
@@ -161,7 +161,7 @@ declare namespace swagger_io {
             externalDocs?: ExternalDocs;
             example?: any;
         }
-        export interface Parameter extends BodyParameter{}
+        export interface Parameter extends BodyParameter {}
         export interface Response {
             description: string;
             schema?: Schema | FileSchema;
@@ -191,7 +191,7 @@ declare namespace swagger_io {
             deprecated?: boolean;
             security?: Security;
         }
-        export interface ResponseValue extends Response{}
+        export interface ResponseValue extends Response {}
         export interface JsonReference {
             $ref: string;
         }
@@ -200,7 +200,7 @@ declare namespace swagger_io {
             format?: string;
             title?: json_schema_org.draft_04.Schema.title;
             description?: json_schema_org.draft_04.Schema.description;
-            default?: json_schema_org.draft_04.Schema.default;
+            default?: json_schema_org.draft_04.Schema.Default;
             required?: json_schema_org.draft_04.StringArray;
             type: "file";
             readOnly?: boolean;
@@ -253,18 +253,18 @@ declare namespace swagger_io {
             multipleOf?: MultipleOf;
         }
         export type CollectionFormat = ("csv" | "ssv" | "tsv" | "pipes");
-        export interface Default extends json_schema_org.draft_04.Schema.default{}
+        export interface Default extends json_schema_org.draft_04.Schema.default {}
         export type Maximum = json_schema_org.draft_04.Schema.maximum;
         export type ExclusiveMaximum = json_schema_org.draft_04.Schema.exclusiveMaximum;
         export type Minimum = json_schema_org.draft_04.Schema.minimum;
         export type ExclusiveMinimum = json_schema_org.draft_04.Schema.exclusiveMinimum;
         export type MaxLength = json_schema_org.draft_04.PositiveInteger;
-        export interface MinLength extends json_schema_org.draft_04.PositiveIntegerDefault0{}
+        export interface MinLength extends json_schema_org.draft_04.PositiveIntegerDefault0 {}
         export type Pattern = json_schema_org.draft_04.Schema.pattern;
         export type MaxItems = json_schema_org.draft_04.PositiveInteger;
-        export interface MinItems extends json_schema_org.draft_04.PositiveIntegerDefault0{}
+        export interface MinItems extends json_schema_org.draft_04.PositiveIntegerDefault0 {}
         export type UniqueItems = json_schema_org.draft_04.Schema.uniqueItems;
-        export interface Enum extends json_schema_org.draft_04.Schema.enum{}
+        export interface Enum extends json_schema_org.draft_04.Schema.enum {}
         export type MultipleOf = json_schema_org.draft_04.Schema.multipleOf;
         export type CollectionFormatWithMulti = ("csv" | "ssv" | "tsv" | "pipes" | "multi");
         export interface HeaderParameterSubSchema {
@@ -390,7 +390,7 @@ declare namespace swagger_io {
             required?: boolean;
             schema: Schema;
         }
-        export interface NonBodyParameter extends HeaderParameterSubSchema{}
+        export interface NonBodyParameter extends HeaderParameterSubSchema {}
         export interface Xml {
             name?: string;
             namespace?: string;

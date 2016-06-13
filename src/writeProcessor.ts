@@ -1,5 +1,4 @@
 import { TypeDefinition } from './typeDefinition';
-import { toTSType } from './utils';
 
 export interface ReferenceResolver {
     (baseSchema: json_schema_org.Schema, ref: string): TypeDefinition;
@@ -41,10 +40,10 @@ export class WriteProcessor {
 
     // converts string to snake_case
     convertToType(type: string, primitive: boolean = false): string {
-      let str = ''
       if (type === 'this') {
           return type;
       }
+      let str = '';
       if (this.typePrefix && !primitive) {
           str += this.typePrefix;
       }

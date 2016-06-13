@@ -2,10 +2,10 @@ import * as Debug from 'debug';
 import * as http from 'http';
 import * as request from 'request';
 import * as JsonPointer from './jsonPointer';
-import { SchemaId } from './schemaid';
+import { SchemaId } from './schemaId';
 import { TypeDefinition } from './typeDefinition';
 import { WriteProcessor } from './writeProcessor';
-import { strMapToObj, nameFromPath } from './utils';
+import { nameFromPath } from './utils';
 let _ = require('lodash-fp');
 
 const debug = Debug('dtsgen');
@@ -77,11 +77,11 @@ export class JsonSchemaParser {
     private walk(process: WriteProcessor, env: any, path: string[] = []): void {
         const keys = Object.keys(env).sort();
         keys.forEach((key) => {
-            let path_k = path.concat(key);
-            process.path = path_k;
+            let pathKey = path.concat(key);
+            process.path = pathKey;
             const val = env[key];
             if (val instanceof TypeDefinition) {
-                this.walkRefs(process, path_k);
+                this.walkRefs(process, pathKey);
                 val.doProcess(process);
                 // process.outputLine('');
             } else {
@@ -90,7 +90,7 @@ export class JsonSchemaParser {
                 }
                 process.output('namespace ').outputType(key, true).outputLine(' {');
                 process.increaseIndent();
-                this.walk(process, val, path_k);
+                this.walk(process, val, pathKey);
                 process.decreaseIndent();
                 process.outputLine('}');
             }
@@ -107,10 +107,9 @@ export class JsonSchemaParser {
               continue;
             }
             let refMap = this.referenceCache.get(schema);
-            let refs = strMapToObj(refMap);
             for (let id of refMap.keys()) {
                 let v = refMap.get(id);
-                if(id.startsWith(schema.id + '/definitions')) {
+                if (id.startsWith(schema.id + '/definitions')) {
                   let resolved = v.searchRef(process, id);
                   let target = resolved.target;
                   let refName = nameFromPath(id);

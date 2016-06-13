@@ -1,6 +1,6 @@
 import * as JsonPointer from './jsonPointer';
 import * as utils from './utils';
-import { SchemaId } from './schemaid';
+import { SchemaId } from './schemaId';
 import { WriteProcessor } from './writeProcessor';
 import * as Debug from 'debug';
 const debug = Debug('dtsgen');
@@ -96,12 +96,11 @@ export class TypeDefinition {
 
         process.outputJSDoc(type);
         const SCALARS = ['integer', 'number', 'null', 'string', 'boolean'];
-        if (SCALARS.includes(types) || (types == 'any' && !type.properties && !type.patternProperties && !type.additionalProperties)) {
-            // throw new Error('unsupported root type: ' + JSON.stringify(types));
+        if (SCALARS.includes(types) || (types === 'any' && !type.properties && !type.patternProperties && !type.additionalProperties)) {
             this.generateTypeScalar(process, type, name);
         } else if (ref) {
             this.generateTypeExtender(process, type, name, ref);
-        } else if (types == 'array') {
+        } else if (types === 'array') {
             this.generateTypeCollection(process, type, name);
         } else {
             // object
@@ -111,7 +110,7 @@ export class TypeDefinition {
 
     // output the type for a schema scalar
     private generateTypeScalar(process: WriteProcessor, type: json_schema_org.Schema, name: string) {
-        // debug('generateTypeExtender', name);
+        debug('generateTypeScalar', name);
         process.output('export type ').outputType(name).output(' = ');
         this.generateTypeProperty(process, type, false);
         process.outputLine(';');
@@ -119,7 +118,7 @@ export class TypeDefinition {
 
     // output the type for a schema array/object that just extends an existing reference
     private generateTypeExtender(process: WriteProcessor, type: json_schema_org.Schema, name: string, ref: string) {
-        // debug('generateTypeExtender', name, ref);
+        debug('generateTypeExtender', name, ref);
         process.output('export interface ').outputType(name).output(' extends ');
         let refName = this.refPrintNameSpaceGetName(process, type, ref);
         process.outputLine(`${refName}{}`);
@@ -127,7 +126,8 @@ export class TypeDefinition {
 
     // output the type for a schema object
     private generateTypeModel(process: WriteProcessor, type: json_schema_org.Schema, name: string) {
-        if(type.properties || type.additionalProperties) {
+        debug('generateTypeModel', name);
+        if (type.properties || type.additionalProperties) {
           process.output('export interface ').outputType(name).outputLine(' {');
           process.increaseIndent();
           if (type.type === 'any') {
@@ -174,18 +174,18 @@ export class TypeDefinition {
     }
 
     // name is returned for printing as desired (terminate, etc.); name-space is printed right away for external references.
-    private refPrintNameSpaceGetName(process: WriteProcessor, property: Schema, ref: string): string {
+    private refPrintNameSpaceGetName(process: WriteProcessor, property: json_schema_org.Schema, ref: string): string {
       let refName = nameFromPath(ref);
       // if this references a different namespace, print this namespace as well.
       let { host, path, hash } = new SchemaId(ref).baseId;
       let refPath = (host ? [host] : []).concat(_.filter(x => x)(path.split('/')));
-      let isExternal = !_.eq(process.path.slice(0,-1), refPath.slice(0,-1));
-      if(isExternal) {
+      let isExternal = !_.eq(process.path.slice(0, -1), refPath.slice(0, -1));
+      if (isExternal) {
         let hashPath = hash.split('/').slice(1);
-        let isDef = hashPath[0] == 'definitions';
+        let isDef = hashPath[0] === 'definitions';
         // also, definitions can keep their TitleCase, but properties can't.
-        if(!isDef) refName = nameFromPath(property.$ref, false);
-        let nameSpacePath = refPath.slice(0,-1).concat(isDef ? [] : refPath.slice(-1).map(titleCase));
+        if (!isDef) refName = nameFromPath(property.$ref, false);
+        let nameSpacePath = refPath.slice(0, -1).concat(isDef ? [] : refPath.slice(-1).map(titleCase));
         let nameSpace = nameSpacePath.map(s => process.convertToType(s, true)).join('.') + '.';
         process.output(nameSpace);
       }
@@ -216,7 +216,7 @@ export class TypeDefinition {
         }
         if (property.$ref) {
             let refName = this.refPrintNameSpaceGetName(process, property, property.$ref);
-            if(terminate) {
+            if (terminate) {
               this.generateTypePropertyNamedType(process, refName, property, true);
             } else {
               process.outputType(refName, false);
@@ -293,7 +293,7 @@ export class TypeDefinition {
             return;
         }
         if (type === 'object') {
-            if(property.properties || property.additionalProperties) {
+            if (property.properties || property.additionalProperties) {
               process.outputLine('{');
               process.increaseIndent();
               this.isInnerType = true;
