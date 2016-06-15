@@ -1,15 +1,13 @@
 export function toTSType(type: string, debugSource?: any): string {
     switch (type) {
+        case 'integer':
+            return 'number';
         case 'any':
         case 'null':
-            return 'any';
         case 'string':
-            return 'string';
-        case 'integer':
         case 'number':
-            return 'number';
         case 'boolean':
-            return 'boolean';
+            return type;
         case 'object':
         case 'array':
             return null;
@@ -45,6 +43,11 @@ export function capitalizeName(str: string): string {
         return m.toUpperCase();
     })).join('$');
 }
+
+export function titleCase(str: string): string {
+  return capitalizeName(str.replace(/[^\w]+(\w)/g, s => s.toUpperCase()).replace(/[^0-9A-Za-z_$]/g, ''));
+}
+
 
 export function mergeSchema(a: any, b: any): any {
     Object.keys(b).forEach((key) => {
