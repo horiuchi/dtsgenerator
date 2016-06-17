@@ -34,7 +34,7 @@
     "babel-polyfill": "^6.9.1",
     "commander": "^2.9.0",
     "debug": "^2.2.0",
-    "glob": "^7.0.3",
+    "glob": "^7.0.4",
     "mkdirp": "^0.5.1",
     "request": "^2.72.0"
   },
