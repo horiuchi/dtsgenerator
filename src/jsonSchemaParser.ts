@@ -71,11 +71,13 @@ export class JsonSchemaParser {
         });
         return map;
     }
-    private walk(process: WriteProcessor, env: any): void {
+    private walk(process: WriteProcessor, env: any, path: string[] = []): void {
         const keys = Object.keys(env).sort();
         keys.forEach((key) => {
             const val = env[key];
+            const nextPath = path.concat(key);
             if (val instanceof TypeDefinition) {
+                debug(`  walk doProcess: path=${JSON.stringify(nextPath)}, schemaId=${val.schemaId.getAbsoluteId()}`);
                 val.doProcess(process);
             } else {
                 if (process.indentLevel === 0) {
@@ -83,7 +85,7 @@ export class JsonSchemaParser {
                 }
                 process.output('namespace ').outputType(key, true).outputLine(' {');
                 process.increaseIndent();
-                this.walk(process, val);
+                this.walk(process, val, nextPath);
                 process.decreaseIndent();
                 process.outputLine('}');
             }
@@ -184,11 +186,11 @@ export class JsonSchemaParser {
                 const type = new TypeDefinition(schema, paths);
                 obj.id = type.schemaId.getAbsoluteId();
                 this.addType(type);
-                debug(`parse schema: id property found, id=[${obj.id}], paths=[${JSON.stringify(paths)}].`);
+                // debug(`parse schema: id property found, id=[${obj.id}], paths=${JSON.stringify(paths)}.`);
             }
             if (typeof obj.$ref === 'string') {
                 obj.$ref = this.addReference(schema, obj.$ref);
-                debug(`parse schema: $ref property found, $ref=[${obj.$ref}], paths=[${JSON.stringify(paths)}].`);
+                // debug(`parse schema: $ref property found, $ref=[${obj.$ref}], paths=${JSON.stringify(paths)}.`);
             }
         };
         walk(schema, []);

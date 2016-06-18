@@ -31,29 +31,11 @@ export function reduceTypes(types: json_schema_org.SimpleTypes[]): json_schema_o
     return Array.from(set.values());
 }
 
-export function capitalizeName(str: string): string {
+export function toTypeName(str: string): string {
     if (!str) return str;
-    str = str.trim();
-    const ss = str.split('$');
-    return ss.map(s => s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, function(_, m) {
+    str = str.trim().replace(/[^\w]+(\w)/g, s => s.toUpperCase()).replace(/[^0-9A-Za-z_$]/g, '');
+    return str.split('$').map(s => s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, function(_, m) {
         return m.toUpperCase();
     })).join('$');
-}
-
-export function titleCase(str: string): string {
-  return capitalizeName(str.replace(/[^\w]+(\w)/g, s => s.toUpperCase()).replace(/[^0-9A-Za-z_$]/g, ''));
-}
-
-
-export function mergeSchema(a: any, b: any): any {
-    Object.keys(b).forEach((key) => {
-        if (a[key]) {
-            console.error('  lhs=' + a);
-            console.error('  rhs=' + b);
-            throw new Error('invalid schema: duplicate property in allOf.');
-        }
-        a[key] = b[key];
-    });
-    return a;
 }
 

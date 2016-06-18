@@ -6,7 +6,6 @@ import { WriteProcessor } from './writeProcessor';
 export class TypeDefinition {
     private id: SchemaId;
     private target: json_schema_org.Schema;
-    private isInnerType = false;
 
     constructor(private schema: json_schema_org.Schema, private path: string[]) {
         this.target = JsonPointer.get(schema, path);
@@ -17,7 +16,7 @@ export class TypeDefinition {
             const parentsId: string[] = [];
             for (let i = path.length - 1; i >= 0; i--) {
                 const parent = JsonPointer.get(schema, path.slice(0, i));
-                if (parent && parent.id) {
+                if (parent && parent.id && typeof parent.id === 'string') {
                     parentsId.push(parent.id);
                 }
             }
@@ -36,7 +35,7 @@ export class TypeDefinition {
     }
 
     public doProcess(process: WriteProcessor): void {
-        this.generateType(process, this.schema);
+        this.generateType(process, this.target);
     }
 
 
@@ -53,7 +52,6 @@ export class TypeDefinition {
         const myId = this.schemaId;
         if (myId) {
             const baseType = myId.getTypeNames();
-            const isSameLength = result.length === baseType.length;
             for (let name of baseType) {
                 if (result[0] === name) {
                     result.shift();
@@ -62,7 +60,7 @@ export class TypeDefinition {
                 }
             }
             if (result.length === 0) {
-                return !this.isInnerType && isSameLength ? ['this'] : [sid.getInterfaceName()];
+                return [sid.getInterfaceName()];
             }
         }
         return result;
@@ -145,12 +143,12 @@ export class TypeDefinition {
             }
         });
         if (property.allOf) {
-            const schema: any = {};
+            const schema: json_schema_org.Schema = {};
             property.allOf.forEach((p) => {
                 if (p.$ref) {
                     p = this.searchRef(process, p.$ref).targetSchema;
                 }
-                utils.mergeSchema(schema, p);
+                Object.assign(schema, p);
             });
             this.generateTypeProperty(process, schema, terminate);
             return;
@@ -240,9 +238,7 @@ export class TypeDefinition {
         if (type === 'object') {
             process.outputLine('{');
             process.increaseIndent();
-            this.isInnerType = true;
             this.generateProperties(process, property);
-            this.isInnerType = false;
             process.decreaseIndent();
             process.output('}');
             if (terminate) {

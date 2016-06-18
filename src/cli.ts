@@ -85,8 +85,8 @@ function processGenerate(err: any, schemas: json_schema_org.Schema[]): void {
         } else {
             console.log(result);
         }
-    }).catch((error: any) => {
-        console.error(error);
+    }).catch((e: any) => {
+        console.error(e.stack || e);
     });
 }
 

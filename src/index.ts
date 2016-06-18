@@ -12,9 +12,13 @@ try {
 
 export default function dtsgenerator(schemas: json_schema_org.Schema[], prefix?: string): Promise<string> {
     const parser = new JsonSchemaParser();
-    schemas.forEach((schema) => {
-        parser.parseSchema(schema);
-    });
-    return parser.generateDts(prefix);
+    try {
+        schemas.forEach((schema) => {
+            parser.parseSchema(schema);
+        });
+        return parser.generateDts(prefix);
+    } catch (e) {
+        return Promise.reject<string>(e);
+    }
 }
 
