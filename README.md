@@ -1,4 +1,4 @@
-#dtsgenerator
+# dtsgenerator
 
 [![NPM version](https://badge.fury.io/js/dtsgenerator.svg)](http://badge.fury.io/js/dtsgenerator)
 [![Build Status](https://travis-ci.org/horiuchi/dtsgenerator.svg?branch=master)](https://travis-ci.org/horiuchi/dtsgenerator)
@@ -6,9 +6,16 @@
 
 TypeScript d.ts file generator from JSON Schema files
 
+## Links about JSON Schema
+
+- [The home of JSON Schema](http://json-schema.org/)
+- [JSON Schema wiki for discussions on the next version of the draft](https://github.com/json-schema/json-schema/wiki)
+
 # Install
 
     npm install -g dtsgenerator
+
+- [Releases](https://github.com/horiuchi/dtsgenerator/releases)
 
 # Usage
 
