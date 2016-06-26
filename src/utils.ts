@@ -28,11 +28,7 @@ export function reduceTypes(types: json_schema_org.SimpleTypes[]): json_schema_o
     if (set.delete('integer')) {
         set.add('number');
     }
-    const result: json_schema_org.SimpleTypes[] = [];
-    set.forEach((type: json_schema_org.SimpleTypes) => {
-        result.push(type);
-    });
-    return result;
+    return Array.from(set.values());
 }
 
 export function capitalizeName(str: string): string {
