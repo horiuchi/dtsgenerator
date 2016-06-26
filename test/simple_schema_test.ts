@@ -129,7 +129,7 @@ describe('simple schema test', () => {
         array: (string | string[])[];
         boolean: boolean;
         integer: number;
-        null?: any;
+        null?: null;
         number?: number;
         object?: {
         };

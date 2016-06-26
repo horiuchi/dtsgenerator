@@ -1,15 +1,13 @@
 export function toTSType(type: string, debugSource?: any): string {
     switch (type) {
+        case 'integer':
+            return 'number';
         case 'any':
         case 'null':
-            return 'any';
         case 'string':
-            return 'string';
-        case 'integer':
         case 'number':
-            return 'number';
         case 'boolean':
-            return 'boolean';
+            return type;
         case 'object':
         case 'array':
             return null;
@@ -30,11 +28,7 @@ export function reduceTypes(types: json_schema_org.SimpleTypes[]): json_schema_o
     if (set.delete('integer')) {
         set.add('number');
     }
-    const result: json_schema_org.SimpleTypes[] = [];
-    set.forEach((type: json_schema_org.SimpleTypes) => {
-        result.push(type);
-    });
-    return result;
+    return Array.from(set.values());
 }
 
 export function capitalizeName(str: string): string {
@@ -45,6 +39,11 @@ export function capitalizeName(str: string): string {
         return m.toUpperCase();
     })).join('$');
 }
+
+export function titleCase(str: string): string {
+  return capitalizeName(str.replace(/[^\w]+(\w)/g, s => s.toUpperCase()).replace(/[^0-9A-Za-z_$]/g, ''));
+}
+
 
 export function mergeSchema(a: any, b: any): any {
     Object.keys(b).forEach((key) => {
