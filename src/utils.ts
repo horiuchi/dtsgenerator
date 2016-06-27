@@ -33,7 +33,7 @@ export function reduceTypes(types: json_schema_org.SimpleTypes[]): json_schema_o
 
 export function toTypeName(str: string): string {
     if (!str) return str;
-    str = str.trim().replace(/[^\w]+(\w)/g, s => s.toUpperCase()).replace(/[^0-9A-Za-z_$]/g, '');
+    str = str.trim();
     return str.split('$').map(s => s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, function(_, m) {
         return m.toUpperCase();
     })).join('$');

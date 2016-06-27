@@ -7,10 +7,10 @@ export class TypeDefinition {
     private id: SchemaId;
     private target: json_schema_org.Schema;
 
-    constructor(private schema: json_schema_org.Schema, private path: string[]) {
+    constructor(private schema: json_schema_org.Schema, private path: string[], refId?: SchemaId) {
         this.target = JsonPointer.get(schema, path);
         if (!this.target || !this.target.id) {
-            this.id = null;
+            this.id = refId || null;
         } else {
             const baseId = this.target.id;
             const parentsId: string[] = [];
@@ -51,7 +51,7 @@ export class TypeDefinition {
         const result = sid.getTypeNames();
         const myId = this.schemaId;
         if (myId) {
-            const baseType = myId.getTypeNames();
+            const baseType = myId.getTypeNames().slice(0, -1);
             for (let name of baseType) {
                 if (result[0] === name) {
                     result.shift();
@@ -65,8 +65,29 @@ export class TypeDefinition {
         }
         return result;
     }
+    private checkSchema(process: WriteProcessor, base: json_schema_org.Schema): json_schema_org.Schema {
+        ['not'].forEach((keyword) => {
+            const schema: any = base;
+            if (schema[keyword]) {
+                console.error(base);
+                throw new Error('unsupported property: ' + keyword);
+            }
+        });
+        if (base.allOf) {
+            const schema = base;
+            base.allOf.forEach((p) => {
+                if (p.$ref) {
+                    p = this.searchRef(process, p.$ref).targetSchema;
+                }
+                Object.assign(schema, p);
+            });
+            return schema;
+        }
+        return base;
+    }
 
     private generateType(process: WriteProcessor, type: json_schema_org.Schema): void {
+        type = this.checkSchema(process, type);
         const types = type.type;
         if (types === undefined) {
             type.type = 'object';
@@ -135,37 +156,14 @@ export class TypeDefinition {
     private generateTypeProperty(process: WriteProcessor, property: json_schema_org.Schema, terminate = true): void {
         if (!property)
             return;
-        ['not'].forEach((keyword) => {
-            const schema: any = property;
-            if (schema[keyword]) {
-                console.error(property);
-                throw new Error('unsupported property: ' + keyword);
-            }
-        });
-        if (property.allOf) {
-            const schema: json_schema_org.Schema = {};
-            property.allOf.forEach((p) => {
-                if (p.$ref) {
-                    p = this.searchRef(process, p.$ref).targetSchema;
-                }
-                Object.assign(schema, p);
-            });
-            this.generateTypeProperty(process, schema, terminate);
-            return;
-        }
+        property = this.checkSchema(process, property);
+
         if (property.$ref) {
-            if (!process.checkCircularReference(property.$ref)) {
-                this.generateTypeName(process, 'any', property, terminate);
-            } else {
-                const ref = this.searchRef(process, property.$ref);
-                process.pushReference(property.$ref);
-                if (ref.id) {
-                    this.generateTypePropertyNamedType(process, this.getTypename(ref.id), false, ref.targetSchema, terminate);
-                } else {
-                    this.generateTypeProperty(process, ref.targetSchema, terminate);
-                }
-                process.popReference();
+            const ref = this.searchRef(process, property.$ref);
+            if (ref.id == null) {
+                throw new Error('target referenced id is nothing: ' + property.$ref);
             }
+            this.generateTypePropertyNamedType(process, this.getTypename(ref.id), false, ref.targetSchema, terminate);
             return;
         }
         const anyOf = property.anyOf || property.oneOf;
@@ -244,14 +242,12 @@ export class TypeDefinition {
             if (terminate) {
                 process.outputLine(';');
             }
-
         } else if (type === 'array') {
             this.generateTypeProperty(process, property.items == null ? {} : property.items, false);
             process.output('[]');
             if (terminate) {
                 process.outputLine(';');
             }
-
         } else {
             console.error(property);
             throw new Error('unknown type: ' + property.type);

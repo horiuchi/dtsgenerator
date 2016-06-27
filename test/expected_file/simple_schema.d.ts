@@ -1,4 +1,4 @@
-declare namespace json_schema_org {
+declare namespace JsonSchemaOrg {
     /**
      * A geographical coordinate
      */

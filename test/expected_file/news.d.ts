@@ -1,4 +1,4 @@
-declare namespace schema {
+declare namespace Schema {
     /**
      * News data API
      */

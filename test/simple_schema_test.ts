@@ -13,7 +13,7 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema]);
 
-        const expected = `declare namespace test {
+        const expected = `declare namespace Test {
     export interface NoProp {
     }
 }
@@ -32,7 +32,7 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema], 'I');
 
-        const expected = `declare namespace test {
+        const expected = `declare namespace Test {
     export interface IOneLine {
         name?: string;
     }
@@ -46,7 +46,7 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema], 'I');
 
-        const expected = `declare namespace test {
+        const expected = `declare namespace Test {
     export interface INoType {
     }
 }
@@ -71,7 +71,7 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema], 'T');
 
-        const expected = `declare namespace test {
+        const expected = `declare namespace Test {
     export interface TIncArray {
         id?: number;
         array?: (string | number)[];
@@ -124,7 +124,7 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema], 'I');
 
-        const expected = `declare namespace test {
+        const expected = `declare namespace Test {
     export interface IAllSimpleType {
         array: (string | string[])[];
         boolean: boolean;
@@ -159,7 +159,7 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema], 'I');
 
-        const expected = `declare namespace test {
+        const expected = `declare namespace Test {
     export interface IInnerObject {
         title?: string;
         options?: {
@@ -196,7 +196,7 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema], 'I');
 
-        const expected = `declare namespace test {
+        const expected = `declare namespace Test {
     export interface IObjectArray {
         array?: {
             name?: string;
@@ -217,8 +217,8 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema], 'I');
 
-        const expected = `declare namespace test {
-    namespace root {
+        const expected = `declare namespace Test {
+    namespace Root {
         export interface IRootArray extends Array<string> {
         }
     }
@@ -234,8 +234,8 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema], 'I');
 
-        const expected = `declare namespace test {
-    namespace root {
+        const expected = `declare namespace Test {
+    namespace Root {
         /**
          * This is any type schema
          */
@@ -260,8 +260,8 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema], 'I');
 
-        const expected = `declare namespace test {
-    namespace example {
+        const expected = `declare namespace Test {
+    namespace Example {
         /**
          * example:
          *   How get this schema.
@@ -295,8 +295,8 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator([schema], 'I');
 
-        const expected = `declare namespace test {
-    namespace ref {
+        const expected = `declare namespace Test {
+    namespace Ref {
         export interface IIncludeRef {
             "sub-name"?: string;
         }

@@ -23,8 +23,8 @@ declare namespace json_schema_org {
         minLength?: PositiveIntegerDefault0;
         pattern?: string; // regex
         additionalItems?: boolean | this;
-        // items?: this | this[];
-        items?: this;
+        items?: this | this[];
+        // items?: this;
         maxItems?: PositiveInteger;
         minItems?: PositiveIntegerDefault0;
         uniqueItems?: boolean;
