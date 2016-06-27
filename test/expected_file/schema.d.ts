@@ -18,15 +18,15 @@ declare namespace json_schema_org {
             maxLength?: number;
             minLength?: number;
             pattern?: string; // regex
-            additionalItems?: boolean | this;
-            items?: this | this[];
+            additionalItems?: boolean | Schema;
+            items?: Schema | Schema[];
             maxItems?: number;
             minItems?: number;
             uniqueItems?: boolean;
             maxProperties?: number;
             minProperties?: number;
             required?: string[];
-            additionalProperties?: boolean | this;
+            additionalProperties?: boolean | Schema;
             definitions?: {
                 [name: string]: Schema;
             };
@@ -41,10 +41,10 @@ declare namespace json_schema_org {
             };
             enum?: any[];
             type?: ("array" | "boolean" | "integer" | "null" | "number" | "object" | "string") | ("array" | "boolean" | "integer" | "null" | "number" | "object" | "string")[];
-            allOf?: this[];
-            anyOf?: this[];
-            oneOf?: this[];
-            not?: this;
+            allOf?: Schema[];
+            anyOf?: Schema[];
+            oneOf?: Schema[];
+            not?: Schema;
         }
     }
 }
