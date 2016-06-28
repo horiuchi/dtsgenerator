@@ -18,6 +18,9 @@ export class SchemaId {
         if (this.absoluteId.indexOf('#') < 0) {
             this.absoluteId += '#';
         }
+        if (this.absoluteId.indexOf('://') < 0 && this.absoluteId[0] !== '/' && this.absoluteId[0] !== '#') {
+            this.absoluteId = '/' + this.absoluteId;
+        }
         this.baseId = url.parse(this.absoluteId);
     }
 

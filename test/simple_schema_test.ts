@@ -47,8 +47,7 @@ describe('simple schema test', () => {
         const result = await dtsgenerator([schema], 'I');
 
         const expected = `declare namespace Test {
-    export interface INoType {
-    }
+    export type INoType = any;
 }
 `;
         assert.equal(result, expected, result);
@@ -298,7 +297,12 @@ describe('simple schema test', () => {
         const expected = `declare namespace Test {
     namespace Ref {
         export interface IIncludeRef {
-            "sub-name"?: string;
+            "sub-name"?: IncludeRef.Definitions.IName;
+        }
+        namespace IncludeRef {
+            namespace Definitions {
+                export type IName = string;
+            }
         }
     }
 }

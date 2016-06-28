@@ -9,7 +9,7 @@ describe('file schema test', () => {
 
     it('news schema', async () => {
         const schema = fs.readFileSync('./schema/news.json', { encoding: 'utf-8' });
-        const actual = await dtsgenerator([schema], 'I');
+        const actual = await dtsgenerator([schema]);
         const expected = fs.readFileSync('./test/expected_file/news.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });

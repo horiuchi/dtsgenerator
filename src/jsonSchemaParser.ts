@@ -191,6 +191,10 @@ export class JsonSchemaParser {
                 return;
             }
 
+            const allOf = s.allOf;
+            if (allOf != null) {
+                walkArray(allOf, paths.concat('allOf'));
+            }
             const anyOf = s.anyOf;
             if (anyOf != null) {
                 walkArray(anyOf, paths.concat('anyOf'));

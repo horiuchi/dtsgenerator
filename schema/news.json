@@ -14,7 +14,7 @@
     },
     "title": {
       "description": "article's title",
-      "example": "Lexus Golf Activities in Full Swing at U.S.",
+      "example": "Activities in Full Swing at U.S.",
       "type": "string"
     },
     "time": {
@@ -29,13 +29,13 @@
     },
     "imageUrl": {
       "description": "article's image url",
-      "example": "http://pressroom.lexus.com/images/Lexus_logo_bug_2013_thumb_20140604144404730.jpg",
+      "example": "http://image.example.com/images/logo_bug_2013_thumb_20140604144404730.jpg",
       "format": "uri",
       "type": ["string", "null"]
     },
     "detailUrl": {
       "description": "article's page url for hs",
-      "example": "http://bento.uievolution.co.jp/static/news/201406140001.html",
+      "example": "http://www.example.com/static/news/201406140001.html",
       "format": "uri",
       "type": ["string", "null"]
     },

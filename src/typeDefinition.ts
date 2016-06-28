@@ -89,29 +89,30 @@ export class TypeDefinition {
     private generateType(process: WriteProcessor, type: json_schema_org.Schema): void {
         type = this.checkSchema(process, type);
         const types = type.type;
-        if (types === undefined) {
+        if (types === undefined && (type.properties || type.additionalProperties)) {
             type.type = 'object';
         } else if (Array.isArray(types)) {
             const reduced = utils.reduceTypes(types);
-            if (reduced.length > 1) {
-                throw new Error('unsupported root type: ' + JSON.stringify(reduced));
-            } else {
-                type.type = reduced[0];
-            }
-        }
-        if (type.type !== 'object' && type.type !== 'any' && type.type !== 'array') {
-            throw new Error('unsupported root type: ' + JSON.stringify(type.type));
+            type.type = reduced.length === 1 ? reduced[0] : reduced;
         }
 
         process.outputJSDoc(type);
         if (type.type === 'array') {
             this.generateTypeCollection(process, type);
-        } else {
+        } else if (type.type === 'object' || type.type === 'any') {
             this.generateTypeModel(process, type);
+        } else {
+            this.generateDeclareType(process, type);
         }
     }
 
-    private generateTypeModel(process: WriteProcessor, type: json_schema_org.Schema) {
+    private generateDeclareType(process: WriteProcessor, type: json_schema_org.Schema): void {
+        const name = this.id.getInterfaceName();
+        process.output('export type ').outputType(name).output(' = ');
+        this.generateTypeProperty(process, type, true);
+    }
+
+    private generateTypeModel(process: WriteProcessor, type: json_schema_org.Schema): void {
         const name = this.id.getInterfaceName();
         process.output('export interface ').outputType(name).outputLine(' {');
         process.increaseIndent();
@@ -125,7 +126,7 @@ export class TypeDefinition {
         process.outputLine('}');
     }
 
-    private generateTypeCollection(process: WriteProcessor, type: json_schema_org.Schema) {
+    private generateTypeCollection(process: WriteProcessor, type: json_schema_org.Schema): void {
         const name = this.id.getInterfaceName();
         process.output('export interface ').outputType(name).output(' extends Array<');
         this.generateTypeProperty(process, type.items, false);
@@ -258,7 +259,7 @@ export class TypeDefinition {
         if (Array.isArray(typeName)) {
             typeName.forEach((type: string, index: number) => {
                 const isLast = index === typeName.length - 1;
-                process.outputType(type, primitiveType);
+                process.outputType(type, isLast ? primitiveType : true);
                 if (!isLast) {
                     process.output('.');
                 }
