@@ -1,5 +1,5 @@
-declare namespace json_schema_org {
-    namespace draft_04 {
+declare namespace JsonSchemaOrg {
+    namespace Draft04 {
         /**
          * Core schema meta-schema
          */
@@ -15,17 +15,17 @@ declare namespace json_schema_org {
             exclusiveMaximum?: boolean;
             minimum?: number;
             exclusiveMinimum?: boolean;
-            maxLength?: number;
-            minLength?: number;
+            maxLength?: Schema.Definitions.PositiveInteger;
+            minLength?: Schema.Definitions.PositiveIntegerDefault0;
             pattern?: string; // regex
             additionalItems?: boolean | Schema;
-            items?: Schema | Schema[];
-            maxItems?: number;
-            minItems?: number;
+            items?: Schema | Schema.Definitions.SchemaArray;
+            maxItems?: Schema.Definitions.PositiveInteger;
+            minItems?: Schema.Definitions.PositiveIntegerDefault0;
             uniqueItems?: boolean;
-            maxProperties?: number;
-            minProperties?: number;
-            required?: string[];
+            maxProperties?: Schema.Definitions.PositiveInteger;
+            minProperties?: Schema.Definitions.PositiveIntegerDefault0;
+            required?: Schema.Definitions.StringArray;
             additionalProperties?: boolean | Schema;
             definitions?: {
                 [name: string]: Schema;
@@ -37,14 +37,25 @@ declare namespace json_schema_org {
                 [name: string]: Schema;
             };
             dependencies?: {
-                [name: string]: Schema | string[];
+                [name: string]: Schema | Schema.Definitions.StringArray;
             };
             enum?: any[];
-            type?: ("array" | "boolean" | "integer" | "null" | "number" | "object" | "string") | ("array" | "boolean" | "integer" | "null" | "number" | "object" | "string")[];
-            allOf?: Schema[];
-            anyOf?: Schema[];
-            oneOf?: Schema[];
+            type?: Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
+            allOf?: Schema.Definitions.SchemaArray;
+            anyOf?: Schema.Definitions.SchemaArray;
+            oneOf?: Schema.Definitions.SchemaArray;
             not?: Schema;
+        }
+        namespace Schema {
+            namespace Definitions {
+                export type PositiveInteger = number;
+                export type PositiveIntegerDefault0 = number;
+                export interface SchemaArray extends Array<Schema> {
+                }
+                export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
+                export interface StringArray extends Array<string> {
+                }
+            }
         }
     }
 }

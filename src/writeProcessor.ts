@@ -1,7 +1,7 @@
 import { TypeDefinition } from './typeDefinition';
 
 export interface ReferenceResolver {
-    (baseSchema: json_schema_org.Schema, ref: string): TypeDefinition;
+    (baseSchema: JsonSchemaOrg.Schema, ref: string): TypeDefinition;
 }
 
 export class WriteProcessor {

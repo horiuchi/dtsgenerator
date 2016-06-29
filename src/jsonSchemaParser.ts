@@ -13,7 +13,7 @@ const walkMaker = '<<type>>';
 export class JsonSchemaParser {
     private typeCache = new Map<string, TypeDefinition>();
     private schemaReference = new Map<string, TypeDefinition>();
-    private referenceCache = new Map<json_schema_org.Schema, Map<string, TypeDefinition>>();
+    private referenceCache = new Map<JsonSchemaOrg.Schema, Map<string, TypeDefinition>>();
 
     public async generateDts(prefix?: string, header?: string): Promise<string> {
         debug(`generate d.ts: prefix=[${prefix}].`);
@@ -35,7 +35,7 @@ export class JsonSchemaParser {
             }
         }
 
-        const process = new WriteProcessor((baseSchema: json_schema_org.Schema, ref: string): TypeDefinition => {
+        const process = new WriteProcessor((baseSchema: JsonSchemaOrg.Schema, ref: string): TypeDefinition => {
             debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
@@ -143,8 +143,8 @@ export class JsonSchemaParser {
         }
         return true;
     }
-    private fetchRemoteSchema(fileId: string): Promise<json_schema_org.Schema> {
-        return new Promise<json_schema_org.Schema>((resolve: (schema: json_schema_org.Schema) => void, reject: (err: any) => void) => {
+    private fetchRemoteSchema(fileId: string): Promise<JsonSchemaOrg.Schema> {
+        return new Promise<JsonSchemaOrg.Schema>((resolve: (schema: JsonSchemaOrg.Schema) => void, reject: (err: any) => void) => {
             request.get(fileId, (err: any, response: http.IncomingMessage, body: any) => {
                 if (err) {
                     return reject(err);
@@ -161,7 +161,7 @@ export class JsonSchemaParser {
         });
     }
 
-    public parseSchema(schema: json_schema_org.Schema, url?: string): void {
+    public parseSchema(schema: JsonSchemaOrg.Schema, url?: string): void {
         if (typeof schema === 'string') {
             schema = JSON.parse(<string>schema);
         }
@@ -170,13 +170,13 @@ export class JsonSchemaParser {
         if (schema.id == null) {
             schema.id = url;
         }
-        const walk = (s: json_schema_org.Schema, paths: string[]): void => {
-            function walkArray(array: json_schema_org.Schema[], pathArray: string[]): void {
-                array.forEach((item: json_schema_org.Schema, index: number) => {
+        const walk = (s: JsonSchemaOrg.Schema, paths: string[]): void => {
+            function walkArray(array: JsonSchemaOrg.Schema[], pathArray: string[]): void {
+                array.forEach((item: JsonSchemaOrg.Schema, index: number) => {
                     walk(item, pathArray.concat(index.toString()));
                 });
             }
-            function walkObject(obj: { [name: string]: json_schema_org.Schema; }, pathObject: string[], isDefinitions: boolean = false): void {
+            function walkObject(obj: { [name: string]: JsonSchemaOrg.Schema; }, pathObject: string[], isDefinitions: boolean = false): void {
                 Object.keys(obj).forEach((key) => {
                     const sub = obj[key];
                     if (sub != null) {
@@ -238,11 +238,11 @@ export class JsonSchemaParser {
                 const type = new TypeDefinition(schema, paths);
                 s.id = type.schemaId.getAbsoluteId();
                 this.addType(type);
-                // debug(`parse schema: id property found, id=[${obj.id}], paths=${JSON.stringify(paths)}.`);
+                // debug(`parse schema: id property found, id=[${s.id}], paths=${JSON.stringify(paths)}.`);
             }
             if (typeof s.$ref === 'string') {
                 s.$ref = this.addReference(schema, s.$ref);
-                // debug(`parse schema: $ref property found, $ref=[${obj.$ref}], paths=${JSON.stringify(paths)}.`);
+                // debug(`parse schema: $ref property found, $ref=[${s.$ref}], paths=${JSON.stringify(paths)}.`);
             }
         };
         walk(schema, []);
@@ -258,7 +258,7 @@ export class JsonSchemaParser {
             }
         }
     }
-    private addReference(schema: json_schema_org.Schema, ref: string): string {
+    private addReference(schema: JsonSchemaOrg.Schema, ref: string): string {
         let map = this.referenceCache.get(schema);
         if (map == null) {
             map = new Map<string, TypeDefinition>();

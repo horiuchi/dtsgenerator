@@ -5,9 +5,9 @@ import { WriteProcessor } from './writeProcessor';
 
 export class TypeDefinition {
     private id: SchemaId;
-    private target: json_schema_org.Schema;
+    private target: JsonSchemaOrg.Schema;
 
-    constructor(private schema: json_schema_org.Schema, private path: string[], refId?: SchemaId) {
+    constructor(private schema: JsonSchemaOrg.Schema, private path: string[], refId?: SchemaId) {
         this.target = JsonPointer.get(schema, path);
         if (!this.target || !this.target.id) {
             this.id = refId || null;
@@ -27,10 +27,10 @@ export class TypeDefinition {
     get schemaId(): SchemaId {
         return this.id;
     }
-    get rootSchema(): json_schema_org.Schema {
+    get rootSchema(): JsonSchemaOrg.Schema {
         return this.schema;
     }
-    get targetSchema(): json_schema_org.Schema {
+    get targetSchema(): JsonSchemaOrg.Schema {
         return this.target;
     }
 
@@ -65,7 +65,7 @@ export class TypeDefinition {
         }
         return result;
     }
-    private checkSchema(process: WriteProcessor, base: json_schema_org.Schema): json_schema_org.Schema {
+    private checkSchema(process: WriteProcessor, base: JsonSchemaOrg.Schema): JsonSchemaOrg.Schema {
         ['not'].forEach((keyword) => {
             const schema: any = base;
             if (schema[keyword]) {
@@ -86,7 +86,7 @@ export class TypeDefinition {
         return base;
     }
 
-    private generateType(process: WriteProcessor, type: json_schema_org.Schema): void {
+    private generateType(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         type = this.checkSchema(process, type);
         const types = type.type;
         if (types === undefined && (type.properties || type.additionalProperties)) {
@@ -106,13 +106,13 @@ export class TypeDefinition {
         }
     }
 
-    private generateDeclareType(process: WriteProcessor, type: json_schema_org.Schema): void {
+    private generateDeclareType(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         const name = this.id.getInterfaceName();
         process.output('export type ').outputType(name).output(' = ');
         this.generateTypeProperty(process, type, true);
     }
 
-    private generateTypeModel(process: WriteProcessor, type: json_schema_org.Schema): void {
+    private generateTypeModel(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         const name = this.id.getInterfaceName();
         process.output('export interface ').outputType(name).outputLine(' {');
         process.increaseIndent();
@@ -126,7 +126,7 @@ export class TypeDefinition {
         process.outputLine('}');
     }
 
-    private generateTypeCollection(process: WriteProcessor, type: json_schema_org.Schema): void {
+    private generateTypeCollection(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         const name = this.id.getInterfaceName();
         process.output('export interface ').outputType(name).output(' extends Array<');
         this.generateTypeProperty(process, type.items, false);
@@ -134,7 +134,7 @@ export class TypeDefinition {
         process.outputLine('}');
     }
 
-    private generateProperties(process: WriteProcessor, type: json_schema_org.Schema): void {
+    private generateProperties(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         if (type.additionalProperties) {
             process.output('[name: string]: ');
             this.generateTypeProperty(process, type.additionalProperties, true);
@@ -148,13 +148,13 @@ export class TypeDefinition {
             });
         }
     }
-    private generatePropertyName(process: WriteProcessor, propertyName: string, property: json_schema_org.Schema): void {
+    private generatePropertyName(process: WriteProcessor, propertyName: string, property: JsonSchemaOrg.Schema): void {
         if (propertyName) {
             const optionalProperty = !property.required || property.required.indexOf(propertyName) < 0;
             process.outputKey(propertyName, optionalProperty).output(': ');
         }
     }
-    private generateTypeProperty(process: WriteProcessor, property: json_schema_org.Schema, terminate = true): void {
+    private generateTypeProperty(process: WriteProcessor, property: JsonSchemaOrg.Schema, terminate = true): void {
         if (!property)
             return;
         property = this.checkSchema(process, property);
@@ -208,11 +208,11 @@ export class TypeDefinition {
         }
     }
 
-    private generateArrayedType(process: WriteProcessor, types: json_schema_org.Schema[], separator: string, terminate: boolean): void {
+    private generateArrayedType(process: WriteProcessor, types: JsonSchemaOrg.Schema[], separator: string, terminate: boolean): void {
         if (!terminate) {
             process.output('(');
         }
-        types.forEach((type: json_schema_org.Schema, index: number) => {
+        types.forEach((type: JsonSchemaOrg.Schema, index: number) => {
             const isLast = index === types.length - 1;
             if (type.id) {
                 this.generateTypePropertyNamedType(process, this.getTypename(type.id), false, type, isLast && terminate);
@@ -228,7 +228,7 @@ export class TypeDefinition {
         }
     }
 
-    private generateTypeName(process: WriteProcessor, type: string, property: json_schema_org.Schema, terminate: boolean): void {
+    private generateTypeName(process: WriteProcessor, type: string, property: JsonSchemaOrg.Schema, terminate: boolean): void {
         const tsType = utils.toTSType(type, property);
         if (tsType) {
             this.generateTypePropertyNamedType(process, tsType, true, property, terminate);
@@ -255,7 +255,7 @@ export class TypeDefinition {
         }
     }
 
-    private generateTypePropertyNamedType(process: WriteProcessor, typeName: string | string[], primitiveType: boolean, property: json_schema_org.Schema, terminate = true): void {
+    private generateTypePropertyNamedType(process: WriteProcessor, typeName: string | string[], primitiveType: boolean, property: JsonSchemaOrg.Schema, terminate = true): void {
         if (Array.isArray(typeName)) {
             typeName.forEach((type: string, index: number) => {
                 const isLast = index === typeName.length - 1;
@@ -275,7 +275,7 @@ export class TypeDefinition {
             this.generateOptionalInformation(process, property, terminate);
         }
     }
-    private generateOptionalInformation(process: WriteProcessor, property: json_schema_org.Schema, terminate = true): void {
+    private generateOptionalInformation(process: WriteProcessor, property: JsonSchemaOrg.Schema, terminate = true): void {
         if (!property.format && !property.pattern) {
             return;
         }
