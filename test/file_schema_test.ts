@@ -41,6 +41,13 @@ describe('file schema test', () => {
         const expected = fs.readFileSync('./test/expected_file/simple_schema.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
+    it('download related advanced schema', async () => {
+        const actual = await dtsgenerator([
+            fs.readFileSync('./schema/advanced_example.json', { encoding: 'utf-8' })
+        ]);
+        const expected = fs.readFileSync('./test/expected_file/advanced_schema.d.ts', { encoding: 'utf-8' });
+        assert.equal(actual, expected, actual);
+    });
 
 });
 

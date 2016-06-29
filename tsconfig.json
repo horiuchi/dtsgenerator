@@ -23,6 +23,7 @@
         "src/utils.ts",
         "src/writeProcessor.ts",
         "test/error_case_test.ts",
+        "test/expected_file/advanced_schema.d.ts",
         "test/expected_file/apimeta.d.ts",
         "test/expected_file/circular.d.ts",
         "test/expected_file/news.d.ts",
