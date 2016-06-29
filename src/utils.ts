@@ -19,11 +19,11 @@ export function toTSType(type: string, debugSource?: any): string {
     }
 }
 
-export function reduceTypes(types: json_schema_org.SimpleTypes[]): json_schema_org.SimpleTypes[] {
+export function reduceTypes(types: JsonSchemaOrg.Schema.Definitions.SimpleTypes[]): JsonSchemaOrg.Schema.Definitions.SimpleTypes[] {
     if (types.length < 2) {
         return types;
     }
-    const set = new Set<json_schema_org.SimpleTypes>(types);
+    const set = new Set<JsonSchemaOrg.Schema.Definitions.SimpleTypes>(types);
     set.delete('null');
     if (set.delete('integer')) {
         set.add('number');
@@ -33,7 +33,7 @@ export function reduceTypes(types: json_schema_org.SimpleTypes[]): json_schema_o
 
 export function toTypeName(str: string): string {
     if (!str) return str;
-    str = str.trim().replace(/[^\w]+(\w)/g, s => s.toUpperCase()).replace(/[^0-9A-Za-z_$]/g, '');
+    str = str.trim();
     return str.split('$').map(s => s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, function(_, m) {
         return m.toUpperCase();
     })).join('$');

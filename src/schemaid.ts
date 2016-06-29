@@ -18,6 +18,9 @@ export class SchemaId {
         if (this.absoluteId.indexOf('#') < 0) {
             this.absoluteId += '#';
         }
+        if (this.absoluteId.indexOf('://') < 0 && this.absoluteId[0] !== '/' && this.absoluteId[0] !== '#') {
+            this.absoluteId = '/' + this.absoluteId;
+        }
         this.baseId = url.parse(this.absoluteId);
     }
 
@@ -61,8 +64,7 @@ export class SchemaId {
         if (this.baseId.hash && this.baseId.hash.length > 1) {
             addAllParts(this.baseId.hash.substr(1));
         }
-        ids[ids.length - 1] = toTypeName(ids[ids.length - 1]);
-        return ids;
+        return ids.map(toTypeName);
     }
     public getInterfaceName(): string {
         const names = this.getTypeNames();

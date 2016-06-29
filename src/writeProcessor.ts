@@ -1,7 +1,7 @@
 import { TypeDefinition } from './typeDefinition';
 
 export interface ReferenceResolver {
-    (baseSchema: json_schema_org.Schema, ref: string): TypeDefinition;
+    (baseSchema: JsonSchemaOrg.Schema, ref: string): TypeDefinition;
 }
 
 export class WriteProcessor {
@@ -38,10 +38,6 @@ export class WriteProcessor {
     }
 
     outputType(type: string, primitive: boolean = false): this {
-        if (type === 'this') {
-            this.output(type);
-            return this;
-        }
         if (this.typePrefix && !primitive) {
             this.output(this.typePrefix);
         }

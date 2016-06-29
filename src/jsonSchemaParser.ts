@@ -8,11 +8,12 @@ import { WriteProcessor } from './writeProcessor';
 
 const debug = Debug('dtsgen');
 
+const walkMaker = '<<type>>';
 
 export class JsonSchemaParser {
     private typeCache = new Map<string, TypeDefinition>();
     private schemaReference = new Map<string, TypeDefinition>();
-    private referenceCache = new Map<json_schema_org.Schema, Map<string, TypeDefinition>>();
+    private referenceCache = new Map<JsonSchemaOrg.Schema, Map<string, TypeDefinition>>();
 
     public async generateDts(prefix?: string, header?: string): Promise<string> {
         debug(`generate d.ts: prefix=[${prefix}].`);
@@ -34,7 +35,7 @@ export class JsonSchemaParser {
             }
         }
 
-        const process = new WriteProcessor((baseSchema: json_schema_org.Schema, ref: string): TypeDefinition => {
+        const process = new WriteProcessor((baseSchema: JsonSchemaOrg.Schema, ref: string): TypeDefinition => {
             debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
@@ -64,22 +65,25 @@ export class JsonSchemaParser {
         if (types.size === 0) {
             throw new Error('There is no id in the input schema(s)');
         }
-        types.forEach((type: TypeDefinition, uri: string) => {
-            const id = new SchemaId(uri);
-            const names = id.getTypeNames();
-            JsonPointer.set(map, names, type);
-        });
+        for (let type of types.values()) {
+            const names = type.schemaId.getTypeNames();
+            JsonPointer.set(map, names.concat(walkMaker), type);
+        }
         return map;
     }
     private walk(process: WriteProcessor, env: any, path: string[] = []): void {
         const keys = Object.keys(env).sort();
         keys.forEach((key) => {
             const val = env[key];
-            const nextPath = path.concat(key);
-            if (val instanceof TypeDefinition) {
-                debug(`  walk doProcess: path=${JSON.stringify(nextPath)}, schemaId=${val.schemaId.getAbsoluteId()}`);
-                val.doProcess(process);
-            } else {
+            const type = val[walkMaker];
+            if (type instanceof TypeDefinition) {
+                debug(`  walk doProcess: path=${JSON.stringify(path)}, schemaId=${type.schemaId.getAbsoluteId()}`);
+                type.doProcess(process);
+            }
+            delete val[walkMaker];
+
+            if (Object.keys(val).length > 0) {
+                const nextPath = path.concat(key);
                 if (process.indentLevel === 0) {
                     process.output('declare ');
                 }
@@ -121,7 +125,9 @@ export class JsonSchemaParser {
                 if (refId.isJsonPointerHash()) {
                     const pointer = refId.getJsonPointerHash();
                     const targetSchema = fileId ? this.schemaReference.get(fileId).rootSchema : schema;
-                    map.set(ref, new TypeDefinition(targetSchema, pointer));
+                    const type = new TypeDefinition(targetSchema, pointer, refId);
+                    map.set(ref, type);
+                    this.addType(type);
                 } else {
                     const target = this.typeCache.get(ref);
                     if (target == null) {
@@ -137,8 +143,8 @@ export class JsonSchemaParser {
         }
         return true;
     }
-    private fetchRemoteSchema(fileId: string): Promise<json_schema_org.Schema> {
-        return new Promise<json_schema_org.Schema>((resolve: (schema: json_schema_org.Schema) => void, reject: (err: any) => void) => {
+    private fetchRemoteSchema(fileId: string): Promise<JsonSchemaOrg.Schema> {
+        return new Promise<JsonSchemaOrg.Schema>((resolve: (schema: JsonSchemaOrg.Schema) => void, reject: (err: any) => void) => {
             request.get(fileId, (err: any, response: http.IncomingMessage, body: any) => {
                 if (err) {
                     return reject(err);
@@ -155,7 +161,7 @@ export class JsonSchemaParser {
         });
     }
 
-    public parseSchema(schema: json_schema_org.Schema, url?: string): void {
+    public parseSchema(schema: JsonSchemaOrg.Schema, url?: string): void {
         if (typeof schema === 'string') {
             schema = JSON.parse(<string>schema);
         }
@@ -164,33 +170,79 @@ export class JsonSchemaParser {
         if (schema.id == null) {
             schema.id = url;
         }
-        const walk = (obj: any, paths: string[]): void => {
-            if (obj == null || typeof obj !== 'object') {
-                return;
-            }
-            if (Array.isArray(obj)) {
-                obj.forEach((item: any, index: number) => {
-                    const subPaths = paths.concat('' + index);
-                    walk(item, subPaths);
+        const walk = (s: JsonSchemaOrg.Schema, paths: string[]): void => {
+            function walkArray(array: JsonSchemaOrg.Schema[], pathArray: string[]): void {
+                array.forEach((item: JsonSchemaOrg.Schema, index: number) => {
+                    walk(item, pathArray.concat(index.toString()));
                 });
+            }
+            function walkObject(obj: { [name: string]: JsonSchemaOrg.Schema; }, pathObject: string[], isDefinitions: boolean = false): void {
+                Object.keys(obj).forEach((key) => {
+                    const sub = obj[key];
+                    if (sub != null) {
+                        if (isDefinitions && sub.id == null) {
+                            sub.id = `#/definitions/${key}`;
+                        }
+                        walk(sub, pathObject.concat(key));
+                    }
+                });
+            }
+            if (s == null || typeof s !== 'object') {
                 return;
             }
-            Object.keys(obj).forEach((key) => {
-                const sub = obj[key];
-                if (sub != null) {
-                    const subPaths = paths.concat(key);
-                    walk(sub, subPaths);
-                }
-            });
-            if (typeof obj.id === 'string') {
-                const type = new TypeDefinition(schema, paths);
-                obj.id = type.schemaId.getAbsoluteId();
-                this.addType(type);
-                // debug(`parse schema: id property found, id=[${obj.id}], paths=${JSON.stringify(paths)}.`);
+
+            const allOf = s.allOf;
+            if (allOf != null) {
+                walkArray(allOf, paths.concat('allOf'));
             }
-            if (typeof obj.$ref === 'string') {
-                obj.$ref = this.addReference(schema, obj.$ref);
-                // debug(`parse schema: $ref property found, $ref=[${obj.$ref}], paths=${JSON.stringify(paths)}.`);
+            const anyOf = s.anyOf;
+            if (anyOf != null) {
+                walkArray(anyOf, paths.concat('anyOf'));
+            }
+            const oneOf = s.oneOf;
+            if (oneOf != null) {
+                walkArray(oneOf, paths.concat('oneOf'));
+            }
+
+            const items = s.items;
+            if (items != null) {
+                if (Array.isArray(items)) {
+                    walkArray(items, paths.concat('items'));
+                } else {
+                    walk(items, paths.concat('items'));
+                }
+            }
+            const additionalItems = s.additionalItems;
+            if (additionalItems != null && typeof additionalItems !== 'boolean') {
+                walk(additionalItems, paths.concat('additionalItems'));
+            }
+
+            const definitions = s.definitions;
+            if (definitions != null) {
+                walkObject(s.definitions, paths.concat('definitions'), true);
+            }
+            const properties = s.properties;
+            if (properties != null) {
+                walkObject(s.properties, paths.concat('properties'));
+            }
+            const patternProperties = s.patternProperties;
+            if (patternProperties != null) {
+                walkObject(s.patternProperties, paths.concat('patternProperties'));
+            }
+            const additionalProperties = s.additionalProperties;
+            if (additionalProperties != null && typeof additionalProperties !== 'boolean') {
+                walk(additionalProperties, paths.concat('additionalProperties'));
+            }
+
+            if (typeof s.id === 'string') {
+                const type = new TypeDefinition(schema, paths);
+                s.id = type.schemaId.getAbsoluteId();
+                this.addType(type);
+                // debug(`parse schema: id property found, id=[${s.id}], paths=${JSON.stringify(paths)}.`);
+            }
+            if (typeof s.$ref === 'string') {
+                s.$ref = this.addReference(schema, s.$ref);
+                // debug(`parse schema: $ref property found, $ref=[${s.$ref}], paths=${JSON.stringify(paths)}.`);
             }
         };
         walk(schema, []);
@@ -206,7 +258,7 @@ export class JsonSchemaParser {
             }
         }
     }
-    private addReference(schema: json_schema_org.Schema, ref: string): string {
+    private addReference(schema: JsonSchemaOrg.Schema, ref: string): string {
         let map = this.referenceCache.get(schema);
         if (map == null) {
             map = new Map<string, TypeDefinition>();
