@@ -1,3 +1,7 @@
+import * as Debug from 'debug';
+
+const debug = Debug('dtsgen');
+
 export function toTSType(type: string, debugSource?: any): string {
     switch (type) {
         case 'integer':
@@ -37,5 +41,26 @@ export function toTypeName(str: string): string {
     return str.split('$').map(s => s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, function(_, m) {
         return m.toUpperCase();
     })).join('$');
+}
+
+export function mergeSchema(a: any, b: any): any {
+    Object.keys(b).forEach((key: string) => {
+        if (a[key] == null) {
+            a[key] = b[key];
+        } else {
+            const value = b[key];
+            if (typeof value !== typeof a[key]) {
+                debug(`mergeSchema warning: type is missmatched, key=${key}`);
+                a[key] = value;
+            } else if (Array.isArray(value)) {
+                Array.prototype.push.apply(a[key], value);
+            } else if (typeof value === 'object') {
+                Object.assign(a[key], value);
+            } else {
+                a[key] = value;
+            }
+        }
+    });
+    return a;
 }
 
