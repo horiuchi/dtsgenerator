@@ -44,3 +44,18 @@ $ dtsgen --help
 Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
     $ DEBUG=dtsgen dtsgen schema/news.json
+
+
+# ChangeLog
+
+## [v0.7.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.7.0) (2016-7-3)
+
+Update with some braking change
+
+## [v0.6.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.6.1) (2016-4-28)
+
+minor update from v0.6.0
+
+## [v0.6.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.6.0) (2016-4-14)
+
+First stable version of `dtsgenerator`
