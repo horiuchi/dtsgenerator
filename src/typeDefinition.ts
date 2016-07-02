@@ -66,13 +66,6 @@ export class TypeDefinition {
         return result;
     }
     private checkSchema(process: WriteProcessor, base: JsonSchemaOrg.Schema): JsonSchemaOrg.Schema {
-        ['not'].forEach((keyword) => {
-            const schema: any = base;
-            if (schema[keyword]) {
-                console.error(base);
-                throw new Error('unsupported property: ' + keyword);
-            }
-        });
         if (base.allOf) {
             const schema = base;
             base.allOf.forEach((p) => {
