@@ -218,8 +218,7 @@ describe('simple schema test', () => {
 
         const expected = `declare namespace Test {
     namespace Root {
-        export interface IRootArray extends Array<string> {
-        }
+        export type IRootArray = string[];
     }
 }
 `;

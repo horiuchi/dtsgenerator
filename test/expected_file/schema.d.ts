@@ -50,11 +50,9 @@ declare namespace JsonSchemaOrg {
             namespace Definitions {
                 export type PositiveInteger = number;
                 export type PositiveIntegerDefault0 = number;
-                export interface SchemaArray extends Array<Schema> {
-                }
+                export type SchemaArray = Schema[];
                 export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
-                export interface StringArray extends Array<string> {
-                }
+                export type StringArray = string[];
             }
         }
     }
