@@ -48,6 +48,13 @@ describe('file schema test', () => {
         const expected = fs.readFileSync('./test/expected_file/advanced_schema.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
+    it('swagger2.0 sample schema', async () => {
+        const actual = await dtsgenerator([
+            fs.readFileSync('./schema/petstore-expanded.json', { encoding: 'utf-8' })
+        ]);
+        const expected = fs.readFileSync('./test/expected_file/petstore-expanded.d.ts', { encoding: 'utf-8' });
+        assert.equal(actual, expected, actual);
+    });
 
 });
 

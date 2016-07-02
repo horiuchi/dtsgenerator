@@ -72,7 +72,7 @@ export class TypeDefinition {
                 if (p.$ref) {
                     p = this.searchRef(process, p.$ref).targetSchema;
                 }
-                Object.assign(schema, p);
+                utils.mergeSchema(schema, p);
             });
             return schema;
         }
