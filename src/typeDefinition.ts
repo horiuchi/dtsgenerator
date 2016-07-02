@@ -121,10 +121,9 @@ export class TypeDefinition {
 
     private generateTypeCollection(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         const name = this.id.getInterfaceName();
-        process.output('export interface ').outputType(name).output(' extends Array<');
-        this.generateTypeProperty(process, type.items, false);
-        process.outputLine('> {');
-        process.outputLine('}');
+        process.output('export type ').outputType(name).output(' = ');
+        this.generateTypeProperty(process, type.items == null ? {} : type.items, false);
+        process.outputLine('[];');
     }
 
     private generateProperties(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {

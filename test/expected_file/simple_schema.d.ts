@@ -6,7 +6,7 @@ declare namespace JsonSchemaOrg {
         latitude?: number;
         longitude?: number;
     }
-    export interface SimpleExample extends Array<{
+    export type SimpleExample = {
         /**
          * The unique identifier for a product
          */
@@ -23,6 +23,5 @@ declare namespace JsonSchemaOrg {
          * Coordinates of the warehouse with the product
          */
         warehouseLocation?: Geo;
-    }> {
-    }
+    }[];
 }
