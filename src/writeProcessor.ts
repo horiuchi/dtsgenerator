@@ -85,14 +85,21 @@ export class WriteProcessor {
             });
         }
         if (example) {
-            let split = example.split('\n');
-            if (split.length === 1) {
+            let defaultExample = true;
+
+            if (typeof example === 'string') {
+                let split = example.split('\n');
+                if (split.length > 1) {
+                    defaultExample = false;
+                    this.outputLine(' * example:');
+                    split.forEach((line: string) => {
+                        this.output(' *   ').outputLine(line);
+                    });
+                }
+            }
+
+            if (defaultExample) {
                 this.outputLine(` * example: ${example}`);
-            } else {
-                this.outputLine(' * example:');
-                split.forEach((line: string) => {
-                    this.output(' *   ').outputLine(line);
-                });
             }
         }
         this.outputLine(' */');
@@ -138,4 +145,3 @@ export class WriteProcessor {
         return this.results;
     }
 }
-
