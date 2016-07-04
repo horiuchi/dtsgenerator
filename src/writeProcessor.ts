@@ -85,14 +85,21 @@ export class WriteProcessor {
             });
         }
         if (example) {
-            let split = example.split('\n');
-            if (split.length === 1) {
-                this.outputLine(` * example: ${example}`);
-            } else {
-                this.outputLine(' * example:');
-                split.forEach((line: string) => {
-                    this.output(' *   ').outputLine(line);
-                });
+            var defaultExample = true;
+
+            if (typeof example === 'string') {
+                var split = example.split('\n');
+                if (split.length > 1) {
+                    defaultExample = false;
+                    this.outputLine(' * example:');
+                    split.forEach(function (line) {
+                        _this.output(' *   ').outputLine(line);
+                    });
+                }
+            }
+
+            if (defaultExample) {
+                this.outputLine(' * example: ' + example);
             }
         }
         this.outputLine(' */');
