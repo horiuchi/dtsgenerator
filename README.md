@@ -48,6 +48,10 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 # ChangeLog
 
+## [v0.7.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.7.1) (2016-7-5)
+
+Fix crash bug #67
+
 ## [v0.7.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.7.0) (2016-7-3)
 
 Update with some braking change
