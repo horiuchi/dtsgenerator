@@ -76,16 +76,15 @@ export class WriteProcessor {
         if (!description && !example) {
             return this;
         }
-        description = description || '';
 
         this.outputLine('/**');
         if (description) {
-            description.split('\n').forEach((line: string) => {
+            description.toString().split('\n').forEach((line: string) => {
                 this.output(' * ').outputLine(line);
             });
         }
         if (example) {
-            let split = example.split('\n');
+            let split = example.toString().split('\n');
             if (split.length === 1) {
                 this.outputLine(` * example: ${example}`);
             } else {
