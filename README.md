@@ -15,6 +15,7 @@ TypeScript d.ts file generator from JSON Schema files
 - [Usage](#usage)
 - [Development](#development)
 - [ChangeLog](#changelog)
+- [License](#license)
 
 ## Install
 
