@@ -36,7 +36,7 @@
     "debug": "^2.2.0",
     "glob": "^7.0.6",
     "mkdirp": "^0.5.1",
-    "request": "^2.74.0"
+    "request": "^2.75.0"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",
