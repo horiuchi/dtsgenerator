@@ -8,6 +8,7 @@ export function toTSType(type: string, debugSource?: any): string {
             return 'number';
         case 'any':
         case 'null':
+        case 'undefined':
         case 'string':
         case 'number':
         case 'boolean':

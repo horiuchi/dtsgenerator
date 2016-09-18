@@ -116,6 +116,12 @@ describe('simple schema test', () => {
                 string: {
                     type: 'string'
                 },
+                any: {
+                    type: 'any'
+                },
+                undefined: {
+                    type: 'undefined'
+                }
             },
             required: [
                 'array', 'boolean', 'integer'
@@ -133,6 +139,8 @@ describe('simple schema test', () => {
         object?: {
         };
         string?: string;
+        any?: any;
+        undefined?: undefined;
     }
 }
 `;
