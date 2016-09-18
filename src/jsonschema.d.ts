@@ -53,7 +53,7 @@ declare namespace JsonSchemaOrg {
             export type PositiveIntegerDefault0 = number;
             export interface SchemaArray extends Array<Schema> {
             }
-            export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
+            export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string" | "any" | "undefined";
             export interface StringArray extends Array<string> {
             }
         }

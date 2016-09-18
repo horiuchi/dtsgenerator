@@ -81,6 +81,15 @@ describe('error schema test', () => {
             assert.equal('$ref target is not found: /test/target_not_found#hogefuga', e.message);
         }
     });
+    it('invalid format schema', async () => {
+        const schema = 'not schema data and invalid JSON format {.';
+        try {
+            await dtsgenerator([schema]);
+            assert.fail();
+        } catch (e) {
+            assert.equal('Unexpected token o in JSON at position 1', e.message);
+        }
+    });
 
 });
 
