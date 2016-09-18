@@ -14,7 +14,7 @@ describe('error schema test', () => {
             await dtsgenerator([schema]);
             assert.fail();
         } catch (e) {
-            assert.equal('There is no id in the input schema(s)', e.message);
+            assert.equal(e.message, 'There is no id in the input schema(s)');
         }
     });
     it('unkown type schema', async () => {
@@ -26,7 +26,7 @@ describe('error schema test', () => {
             await dtsgenerator([schema], 'I');
             assert.fail();
         } catch (e) {
-            assert.equal('unknown type: hoge', e.message);
+            assert.equal(e.message, 'unknown type: hoge');
         }
     });
     it('unkown type property', async () => {
@@ -43,7 +43,7 @@ describe('error schema test', () => {
             await dtsgenerator([schema], 'I');
             assert.fail();
         } catch (e) {
-            assert.equal('unknown type: fuga', e.message);
+            assert.equal(e.message, 'unknown type: fuga');
         }
     });
 
@@ -61,7 +61,7 @@ describe('error schema test', () => {
             await dtsgenerator([schema], 'I');
             assert.fail();
         } catch (e) {
-            assert.equal('$ref target is not found: /notFound/id#', e.message);
+            assert.equal(e.message, '$ref target is not found: /notFound/id#');
         }
     });
     it('target of $ref is invalid path', async () => {
@@ -78,7 +78,7 @@ describe('error schema test', () => {
             await dtsgenerator([schema], 'I');
             assert.fail();
         } catch (e) {
-            assert.equal('$ref target is not found: /test/target_not_found#hogefuga', e.message);
+            assert.equal(e.message, '$ref target is not found: /test/target_not_found#hogefuga');
         }
     });
     it('invalid format schema', async () => {
@@ -87,7 +87,7 @@ describe('error schema test', () => {
             await dtsgenerator([schema]);
             assert.fail();
         } catch (e) {
-            assert.equal('Unexpected token o in JSON at position 1', e.message);
+            assert.ok(/^Unexpected token/.test(e.message));
         }
     });
 
