@@ -54,14 +54,13 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-tslint": "^6.1.1",
     "gulp-tslint-stylish": "^1.1.1",
-    "gulp-typescript": "^2.13.6",
+    "gulp-typescript": "^3.0.0",
     "gulp-util": "^3.0.7",
     "mocha": "^3.0.2",
     "power-assert": "^1.4.1",
     "run-sequence": "^1.2.2",
     "source-map-support": "^0.4.2",
-    "tsconfig-cli": "^2.1.0",
     "tslint": "^3.15.1",
-    "typescript": "^1.8.10"
+    "typescript": "^2.0.3"
   }
 }
