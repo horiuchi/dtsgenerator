@@ -9,13 +9,11 @@ var runSequence = require('run-sequence');
 require('babel-core/register');
 
 
-var tsProject = plugins.typescript.createProject('tsconfig.json', {
-  typescript: require('typescript')
-});
+var tsProject = plugins.typescript.createProject('tsconfig.json');
 gulp.task('compile-ts', function() {
   return tsProject.src()
     .pipe(plugins.sourcemaps.init())
-    .pipe(plugins.typescript(tsProject))
+    .pipe(tsProject())
     .js
     .pipe(plugins.babel({
         presets: ['es2015']
@@ -23,10 +21,6 @@ gulp.task('compile-ts', function() {
     .pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest('.'));
 });
-
-gulp.task('tsconfig', plugins.shell.task([
-  'tsconfig -u'
-]));
 
 gulp.task('tslint', function() {
   return tsProject.src()
@@ -80,7 +74,7 @@ gulp.task('watch', function() {
 
 
 gulp.task('compile', function(cb) {
-  runSequence('tsconfig', ['compile-ts', 'tslint'], cb);
+  runSequence(['compile-ts', 'tslint'], cb);
 });
 gulp.task('build', function(cb) {
   runSequence('compile', cb);

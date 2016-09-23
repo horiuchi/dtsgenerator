@@ -2,41 +2,21 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es2015",
+        "noFallthroughCasesInSwitch": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "strictNullChecks": false,
         "sourceMap": true
     },
-    "filesGlob": [
+    "include": [
         "src/**/*.ts",
         "test/**/*.ts",
         "typings/bundle.d.ts"
     ],
-    "files": [
-        "src/cli.ts",
-        "src/index.ts",
-        "src/jsonPointer.ts",
-        "src/jsonschema.d.ts",
-        "src/jsonSchemaParser.ts",
-        "src/schemaid.ts",
-        "src/typeDefinition.ts",
-        "src/utils.ts",
-        "src/writeProcessor.ts",
-        "test/error_case_test.ts",
-        "test/expected_file/advanced_schema.d.ts",
-        "test/expected_file/apimeta.d.ts",
-        "test/expected_file/circular.d.ts",
-        "test/expected_file/news.d.ts",
-        "test/expected_file/petstore-expanded.d.ts",
-        "test/expected_file/schema.d.ts",
-        "test/expected_file/simple_schema.d.ts",
-        "test/file_schema_test.ts",
-        "test/jsonPointer_test.ts",
-        "test/schemaid_test.ts",
-        "test/simple_schema_test.ts",
-        "typings/bundle.d.ts"
-    ],
-    "atom": {
-        "rewriteTsconfig": true
-    }
+    "exclude": [
+        "test/expected_file/**/*.ts"
+    ]
 }

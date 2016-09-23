@@ -7,7 +7,7 @@ export class TypeDefinition {
     private id: SchemaId;
     private target: JsonSchemaOrg.Schema;
 
-    constructor(private schema: JsonSchemaOrg.Schema, private path: string[], refId?: SchemaId) {
+    constructor(private schema: JsonSchemaOrg.Schema, path: string[], refId?: SchemaId) {
         this.target = JsonPointer.get(schema, path);
         if (!this.target || !this.target.id) {
             this.id = refId || null;
