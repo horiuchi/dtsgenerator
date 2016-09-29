@@ -59,7 +59,7 @@
     "mocha": "^3.1.0",
     "power-assert": "^1.4.1",
     "run-sequence": "^1.2.2",
-    "source-map-support": "^0.4.2",
+    "source-map-support": "^0.4.3",
     "tslint": "^3.15.1",
     "typescript": "^2.0.3"
   }
