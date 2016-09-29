@@ -31,7 +31,7 @@
     "node": ">= 4.0.0"
   },
   "dependencies": {
-    "babel-polyfill": "^6.13.0",
+    "babel-polyfill": "^6.16.0",
     "commander": "^2.9.0",
     "debug": "^2.2.0",
     "glob": "^7.1.0",
