@@ -1,3 +1,4 @@
+import opts from './commandOptions';
 import { TypeDefinition } from './typeDefinition';
 
 export interface ReferenceResolver {
@@ -14,7 +15,7 @@ export class WriteProcessor {
     private alreadlyIndentThisLine = false;
     private referenceStack: string[] = [];
 
-    constructor(private refResolver: ReferenceResolver, private typePrefix: string = '') {}
+    constructor(private refResolver: ReferenceResolver) {}
 
     get referenceResolve(): ReferenceResolver {
         return this.refResolver;
@@ -38,8 +39,9 @@ export class WriteProcessor {
     }
 
     outputType(type: string, primitive: boolean = false): this {
-        if (this.typePrefix && !primitive) {
-            this.output(this.typePrefix);
+        const prefix = opts.prefix;
+        if (prefix && !primitive) {
+            this.output(prefix);
         }
         type = type.replace(/[^0-9A-Za-z_$]/g, '_');
         if (/^\d/.test(type)) {

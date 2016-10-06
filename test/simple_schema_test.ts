@@ -2,9 +2,15 @@ require('source-map-support').install();
 
 import * as assert from 'power-assert';
 import dtsgenerator from '../src/';
+import opts, { initialize } from '../src/commandOptions';
 
 
 describe('simple schema test', () => {
+
+    beforeEach(() => {
+        initialize();
+        console.log('initialized: ' + JSON.stringify(opts));
+    });
 
     it('no property schema', async () => {
         const schema: JsonSchemaOrg.Schema = {
@@ -30,7 +36,8 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = await dtsgenerator([schema], 'I');
+        opts.prefix = 'I';
+        const result = await dtsgenerator([schema]);
 
         const expected = `declare namespace Test {
     export interface IOneLine {
@@ -44,9 +51,14 @@ describe('simple schema test', () => {
         const schema: any = {
             id: '/test/no_type'
         };
-        const result = await dtsgenerator([schema], 'I');
+        opts.prefix = 'I';
+        opts.header = `// header string
+`;
+        const result = await dtsgenerator([schema]);
 
-        const expected = `declare namespace Test {
+        const expected = `// header string
+
+declare namespace Test {
     export type INoType = any;
 }
 `;
@@ -68,7 +80,8 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = await dtsgenerator([schema], 'T');
+        opts.prefix = 'T';
+        const result = await dtsgenerator([schema]);
 
         const expected = `declare namespace Test {
     export interface TIncArray {
@@ -127,7 +140,8 @@ describe('simple schema test', () => {
                 'array', 'boolean', 'integer'
             ]
         };
-        const result = await dtsgenerator([schema], 'I');
+        opts.prefix = 'I';
+        const result = await dtsgenerator([schema]);
 
         const expected = `declare namespace Test {
     export interface IAllSimpleType {
@@ -164,7 +178,8 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = await dtsgenerator([schema], 'I');
+        opts.prefix = 'I';
+        const result = await dtsgenerator([schema]);
 
         const expected = `declare namespace Test {
     export interface IInnerObject {
@@ -201,10 +216,10 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = await dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema]);
 
         const expected = `declare namespace Test {
-    export interface IObjectArray {
+    export interface ObjectArray {
         array?: {
             name?: string;
             items?: string[];
@@ -222,11 +237,11 @@ describe('simple schema test', () => {
                 type: 'string'
             }
         };
-        const result = await dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema]);
 
         const expected = `declare namespace Test {
     namespace Root {
-        export type IRootArray = string[];
+        export type RootArray = string[];
     }
 }
 `;
@@ -238,14 +253,14 @@ describe('simple schema test', () => {
             description: 'This is any type schema',
             additionalProperties: true
         };
-        const result = await dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema]);
 
         const expected = `declare namespace Test {
     namespace Root {
         /**
          * This is any type schema
          */
-        export interface IRootAny {
+        export interface RootAny {
             [name: string]: any;
         }
     }
@@ -264,7 +279,7 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = await dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema]);
 
         const expected = `declare namespace Test {
     namespace Example {
@@ -273,7 +288,7 @@ describe('simple schema test', () => {
          *   How get this schema.
          *   Also, How get this data from hoge.
          */
-        export interface IRoot {
+        export interface Root {
             /**
              * example: how get name property
              */
@@ -299,16 +314,16 @@ describe('simple schema test', () => {
                 }
             }
         };
-        const result = await dtsgenerator([schema], 'I');
+        const result = await dtsgenerator([schema]);
 
         const expected = `declare namespace Test {
     namespace Ref {
-        export interface IIncludeRef {
-            "sub-name"?: IncludeRef.Definitions.IName;
+        export interface IncludeRef {
+            "sub-name"?: IncludeRef.Definitions.Name;
         }
         namespace IncludeRef {
             namespace Definitions {
-                export type IName = string;
+                export type Name = string;
             }
         }
     }

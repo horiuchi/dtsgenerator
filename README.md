@@ -32,19 +32,21 @@ $ dtsgen --help
 
   Options:
 
-    -h, --help        output usage information
-    -V, --version     output the version number
-    -o, --out [file]  output d.ts filename
+    -h, --help                  output usage information
+    -V, --version               output the version number
+    --url [url]                 input json schema from the url.
+    -o, --out [file]            output d.ts filename.
     -p, --prefix [type prefix]  set the prefix of interface name. default is nothing.
+    -t, --target [version]      set target TypeScript version. select from `v2` or `v1`. default is `v2`.
 
-```
-
-### Example
+  Examples:
 
     $ dtsgen --out types.d.ts schema/**/*.schema.json
-    $ cat schema1.json | dtsgen
-    $ curl 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json' | dtsgen -o swaggerSchema.d.ts
+    $ cat schema1.json | dtsgen --target v1
+    $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
+    $ dtsgen --help
 
+```
 
 ## Development
 

@@ -1,30 +1,15 @@
-import fs = require('fs');
-import path = require('path');
-import program = require('commander');
-import mkdirp = require('mkdirp');
-import glob = require('glob');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as mkdirp from 'mkdirp';
+import * as glob from 'glob';
 
 import dtsgenerator from './index';
+import opts, { initialize } from './commandOptions';
 
-const pkg = require('../package.json');
+initialize(process.argv);
 
 
-// <hoge> is reuired, [hoge] is optional
-program
-    .version(pkg.version)
-    .usage('[options] <file ... | file patterns using node-glob>')
-    .option('-o, --out [file]', 'output d.ts filename.')
-    .option('-p, --prefix [type prefix]', 'set the prefix of interface name. default is nothing.')
-    .parse(process.argv);
-
-interface CommandOptions {
-    args: string[];
-    out?: string;
-    prefix?: string;
-}
-const opts = program as CommandOptions;
-
-if (opts.args.length === 0) {
+if (opts.isReadFromStdin()) {
     readSchemasFromStdin(processGenerate);
 } else {
     readSchemasFromFiles(processGenerate);
@@ -53,7 +38,7 @@ function readSchemasFromStdin(callback: (err: any, schemas: JsonSchemaOrg.Schema
 
 function readSchemasFromFiles(callback: (err: any, schemas: JsonSchemaOrg.Schema[]) => void): void {
     let promises: Promise<JsonSchemaOrg.Schema>[] = [];
-    opts.args.forEach((arg) => {
+    opts.files.forEach((arg) => {
         const files = glob.sync(arg);
         promises = promises.concat(files.map((file: string) => {
             return new Promise((resolve: (res: JsonSchemaOrg.Schema) => void, reject: (err: any) => void) => {
@@ -78,7 +63,7 @@ function processGenerate(err: any, schemas: JsonSchemaOrg.Schema[]): void {
     if (err) {
         throw err;
     }
-    dtsgenerator(schemas, opts.prefix).then((result) => {
+    dtsgenerator(schemas).then((result) => {
         if (opts.out) {
             mkdirp.sync(path.dirname(opts.out));
             fs.writeFileSync(opts.out, result, { encoding: 'utf-8' });

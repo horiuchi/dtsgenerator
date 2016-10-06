@@ -10,13 +10,13 @@ try {
 } catch (e) {
 }
 
-export default function dtsgenerator(schemas: JsonSchemaOrg.Schema[], prefix?: string): Promise<string> {
+export default function dtsgenerator(schemas: JsonSchemaOrg.Schema[]): Promise<string> {
     const parser = new JsonSchemaParser();
     try {
         schemas.forEach((schema) => {
             parser.parseSchema(schema);
         });
-        return parser.generateDts(prefix);
+        return parser.generateDts();
     } catch (e) {
         return Promise.reject<string>(e);
     }

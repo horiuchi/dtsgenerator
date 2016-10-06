@@ -1,6 +1,7 @@
 import * as Debug from 'debug';
 import * as http from 'http';
 import * as request from 'request';
+import opts from './commandOptions';
 import * as JsonPointer from './jsonPointer';
 import { SchemaId } from './schemaid';
 import { TypeDefinition } from './typeDefinition';
@@ -15,8 +16,8 @@ export class JsonSchemaParser {
     private schemaReference = new Map<string, TypeDefinition>();
     private referenceCache = new Map<JsonSchemaOrg.Schema, Map<string, TypeDefinition>>();
 
-    public async generateDts(prefix?: string, header?: string): Promise<string> {
-        debug(`generate d.ts: prefix=[${prefix}].`);
+    public async generateDts(): Promise<string> {
+        debug(`generate d.ts.`);
         await this.resolveReference();
 
         debug('TypeId list:');
@@ -52,10 +53,10 @@ export class JsonSchemaParser {
                 }
             }
             return result;
-        }, prefix);
+        });
         const env = this.createHierarchicalMap(this.typeCache);
-        if (header) {
-            process.outputLine(header);
+        if (opts.header) {
+            process.outputLine(opts.header);
         }
         this.walk(process, env);
         return process.toDefinition();
