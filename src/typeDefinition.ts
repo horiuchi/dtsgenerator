@@ -189,7 +189,7 @@ export class TypeDefinition {
             }
             types.forEach((t: string, index: number) => {
                 const isLast = index === types.length - 1;
-                this.generateTypeName(process, t, property, terminate);
+                this.generateTypeName(process, t, property, terminate && isLast, isLast);
                 if (!isLast) {
                   process.output(' | ');
                 }
@@ -220,10 +220,10 @@ export class TypeDefinition {
         }
     }
 
-    private generateTypeName(process: WriteProcessor, type: string, property: JsonSchemaOrg.Schema, terminate: boolean): void {
+    private generateTypeName(process: WriteProcessor, type: string, property: JsonSchemaOrg.Schema, terminate: boolean, outputOptional = true): void {
         const tsType = utils.toTSType(type, property);
         if (tsType) {
-            this.generateTypePropertyNamedType(process, tsType, true, property, terminate);
+            this.generateTypePropertyNamedType(process, tsType, true, property, terminate, outputOptional);
             return;
         }
         if (type === 'object') {
@@ -247,7 +247,7 @@ export class TypeDefinition {
         }
     }
 
-    private generateTypePropertyNamedType(process: WriteProcessor, typeName: string | string[], primitiveType: boolean, property: JsonSchemaOrg.Schema, terminate = true): void {
+    private generateTypePropertyNamedType(process: WriteProcessor, typeName: string | string[], primitiveType: boolean, property: JsonSchemaOrg.Schema, terminate = true, outputOptional = true): void {
         if (Array.isArray(typeName)) {
             typeName.forEach((type: string, index: number) => {
                 const isLast = index === typeName.length - 1;
@@ -261,10 +261,12 @@ export class TypeDefinition {
         }
         if (terminate) {
             process.output(';');
+        }
+        if (outputOptional) {
             this.generateOptionalInformation(process, property, terminate);
+        }
+        if (terminate) {
             process.outputLine();
-        } else {
-            this.generateOptionalInformation(process, property, terminate);
         }
     }
     private generateOptionalInformation(process: WriteProcessor, property: JsonSchemaOrg.Schema, terminate = true): void {

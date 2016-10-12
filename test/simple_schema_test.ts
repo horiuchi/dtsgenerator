@@ -75,22 +75,38 @@ declare namespace Test {
                 array: {
                     type: 'array',
                     items: {
-                        type: ['string', 'integer']
+                        type: ['string', 'integer', 'boolean', 'null']
                     }
                 }
             }
         };
         opts.prefix = 'T';
-        const result = await dtsgenerator([schema]);
+        {
+            const result = await dtsgenerator([schema]);
 
-        const expected = `declare namespace Test {
+            const expected = `declare namespace Test {
     export interface TIncArray {
         id?: number;
-        array?: (string | number)[];
+        array?: (string | boolean | null | number)[];
     }
 }
 `;
-        assert.equal(result, expected, result);
+            assert.equal(result, expected, result);
+        }
+
+        opts.target = 'v1';
+        {
+            const result = await dtsgenerator([schema]);
+
+            const expected = `declare namespace Test {
+    export interface TIncArray {
+        id?: number;
+        array?: (string | boolean | number)[];
+    }
+}
+`;
+            assert.equal(result, expected, result);
+        }
     });
     it('all simple type schema', async () => {
         const schema: JsonSchemaOrg.Schema = {
@@ -279,9 +295,32 @@ declare namespace Test {
                 }
             }
         };
-        const result = await dtsgenerator([schema]);
 
-        const expected = `declare namespace Test {
+        {
+            const result = await dtsgenerator([schema]);
+            const expected = `declare namespace Test {
+    namespace Example {
+        /**
+         * example:
+         *   How get this schema.
+         *   Also, How get this data from hoge.
+         */
+        export interface Root {
+            /**
+             * example: how get name property
+             */
+            name?: string | null;
+        }
+    }
+}
+`;
+            assert.equal(result, expected, result);
+        }
+
+        {
+            opts.target = 'v1';
+            const result = await dtsgenerator([schema]);
+            const expected = `declare namespace Test {
     namespace Example {
         /**
          * example:
@@ -297,7 +336,8 @@ declare namespace Test {
     }
 }
 `;
-        assert.equal(result, expected, result);
+            assert.equal(result, expected, result);
+        }
     });
     it('include $ref schema', async () => {
         const schema: JsonSchemaOrg.Schema = {
