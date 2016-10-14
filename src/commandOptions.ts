@@ -8,13 +8,14 @@ type TargetVersion = 'v2' | 'v1';
 export class CommandOptions {
     files: string[];
     urls: string[];
+    stdin?: boolean;
     out?: string;
     prefix?: string;
     header?: string;
     target: TargetVersion;
 
     isReadFromStdin(): boolean {
-        return this.files.length === 0 && this.urls.length === 0;
+        return this.stdin || this.files.length === 0 && this.urls.length === 0;
     }
 }
 
@@ -22,13 +23,13 @@ export class CommandOptions {
 let opts = new CommandOptions();
 clear(opts);
 
-export function initialize(argv?: string[]): CommandOptions {
+export function initialize(argv?: string[]): commander.ICommand | null {
     if (argv) {
-        parse(opts, argv);
+        return parse(opts, argv);
     } else {
         clear(opts);
+        return null;
     }
-    return opts;
 }
 export default opts;
 
@@ -36,14 +37,17 @@ export default opts;
 function clear(o: CommandOptions): void {
     o.files = [];
     o.urls = [];
+    o.stdin = undefined;
     o.out = undefined;
     o.prefix = undefined;
     o.header = undefined;
     o.target = 'v2';
 }
 
-function parse(o: CommandOptions, argv: string[]): void {
-    function collect(val: string, memo: string[]): string[] {
+function parse(o: CommandOptions, argv: string[]): commander.ICommand {
+    const command = new program.Command();
+
+    function collectUrl(val: string, memo: string[]): string[] {
         memo.push(val);
         return memo;
     }
@@ -58,14 +62,15 @@ function parse(o: CommandOptions, argv: string[]): void {
     }
 
     // <hoge> is reuired, [hoge] is optional
-    program
+    command
         .version(pkg.version)
         .usage('[options] <file ... | file patterns using node-glob>')
-        .option('--url [url]', 'input json schema from the url.', collect, [])
-        .option('-o, --out [file]', 'output d.ts filename.')
-        .option('-p, --prefix [type prefix]', 'set the prefix of interface name. default is nothing.')
-        .option('-h, --header [type header string]', 'set the string of type header.')
-        .option('-t, --target [version]', 'set target TypeScript version. select from `v2` or `v1`. default is `v2`.', /^(v?2|v?1)$/i)
+        .option('--url <url>', 'input json schema from the url.', collectUrl, [])
+        .option('--stdin', 'read stdin with other files or urls.')
+        .option('-o, --out <file>', 'output d.ts filename.')
+        .option('-p, --prefix <type prefix>', 'set the prefix of interface name. default is nothing.')
+        .option('-h, --header <type header string>', 'set the string of type header.')
+        .option('-t, --target [version]', 'set target TypeScript version. select from `v2` or `v1`. default is `v2`.', /^(v?2|v?1)$/i, 'v2')
         .on('--help', () => {
             console.log('  Examples:');
             console.log('');
@@ -77,12 +82,14 @@ function parse(o: CommandOptions, argv: string[]): void {
         })
         .parse(argv);
 
-    const res = program as any;
-    o.files = program.args;
+    const res = command as any;
+    o.files = command.args;
     o.urls = res.url;
+    o.stdin = res.stdin;
     o.out = res.out;
     o.prefix = res.prefix;
     o.header = res.header;
     o.target = normalize(res.target);
+    return command;
 }
 

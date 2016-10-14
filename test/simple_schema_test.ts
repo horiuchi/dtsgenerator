@@ -9,7 +9,6 @@ describe('simple schema test', () => {
 
     beforeEach(() => {
         initialize();
-        console.log('initialized: ' + JSON.stringify(opts));
     });
 
     it('no property schema', async () => {
