@@ -1,4 +1,6 @@
 import * as Debug from 'debug';
+import * as fs from 'fs';
+import * as glob from 'glob';
 import * as http from 'http';
 import * as request from 'request';
 import opts from './commandOptions';
@@ -144,9 +146,28 @@ export class JsonSchemaParser {
         }
         return true;
     }
-    private fetchRemoteSchema(fileId: string): Promise<JsonSchemaOrg.Schema> {
+
+    public fetchLocalFileSchemas(globPath: string): Promise<JsonSchemaOrg.Schema[]> {
+        const files = glob.sync(globPath);
+        return Promise.all(files.map((file: string) => {
+            return new Promise((resolve, reject) => {
+                fs.readFile(file, { encoding: 'utf-8' }, (err: any, content: string) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        try {
+                            resolve(JSON.parse(content));
+                        } catch (e) {
+                            reject(e);
+                        }
+                    }
+                });
+            });
+        }));
+    }
+    public fetchRemoteSchema(url: string): Promise<JsonSchemaOrg.Schema> {
         return new Promise<JsonSchemaOrg.Schema>((resolve: (schema: JsonSchemaOrg.Schema) => void, reject: (err: any) => void) => {
-            request.get(fileId, (err: any, response: http.IncomingMessage, body: any) => {
+            request.get(url, (err: any, response: http.IncomingMessage, body: any) => {
                 if (err) {
                     return reject(err);
                 } else if (response.statusCode !== 200) {

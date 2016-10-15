@@ -7,7 +7,7 @@ import opts, { initialize } from '../src/commandOptions';
 
 describe('simple schema test', () => {
 
-    beforeEach(() => {
+    afterEach(() => {
         initialize();
     });
 
