@@ -23,7 +23,7 @@ describe('error schema test', () => {
             type: 'hoge'
         };
         try {
-            await dtsgenerator([schema], 'I');
+            await dtsgenerator([schema]);
             assert.fail();
         } catch (e) {
             assert.equal(e.message, 'unknown type: hoge');
@@ -40,7 +40,7 @@ describe('error schema test', () => {
             }
         };
         try {
-            await dtsgenerator([schema], 'I');
+            await dtsgenerator([schema]);
             assert.fail();
         } catch (e) {
             assert.equal(e.message, 'unknown type: fuga');
@@ -58,7 +58,7 @@ describe('error schema test', () => {
             }
         };
         try {
-            await dtsgenerator([schema], 'I');
+            await dtsgenerator([schema]);
             assert.fail();
         } catch (e) {
             assert.equal(e.message, '$ref target is not found: /notFound/id#');
@@ -75,7 +75,7 @@ describe('error schema test', () => {
             }
         };
         try {
-            await dtsgenerator([schema], 'I');
+            await dtsgenerator([schema]);
             assert.fail();
         } catch (e) {
             assert.equal(e.message, '$ref target is not found: /test/target_not_found#hogefuga');

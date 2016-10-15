@@ -3,7 +3,7 @@ import { parse } from './jsonPointer';
 import { toTypeName } from './utils';
 
 export class SchemaId {
-    private baseId: url.Url;
+    private readonly baseId: url.Url;
     private absoluteId: string;
 
     constructor(id: string, parentIds?: string[]) {

@@ -1,92 +1,58 @@
-import fs = require('fs');
-import path = require('path');
-import program = require('commander');
-import mkdirp = require('mkdirp');
-import glob = require('glob');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as mkdirp from 'mkdirp';
 
 import dtsgenerator from './index';
+import opts, { initialize } from './commandOptions';
 
-const pkg = require('../package.json');
 
-
-// <hoge> is reuired, [hoge] is optional
-program
-    .version(pkg.version)
-    .usage('[options] <file ... | file patterns using node-glob>')
-    .option('-o, --out [file]', 'output d.ts filename.')
-    .option('-p, --prefix [type prefix]', 'set the prefix of interface name. default is nothing.')
-    .parse(process.argv);
-
-interface CommandOptions {
-    args: string[];
-    out?: string;
-    prefix?: string;
-}
-const opts = program as CommandOptions;
-
-if (opts.args.length === 0) {
-    readSchemasFromStdin(processGenerate);
-} else {
-    readSchemasFromFiles(processGenerate);
-}
-
-function readSchemasFromStdin(callback: (err: any, schemas: JsonSchemaOrg.Schema[]) => void): void {
-    let data = '';
+function readSchemasFromStdin(): Promise<JsonSchemaOrg.Schema[]> {
     process.stdin.setEncoding('utf-8');
-
-    process.stdin.on('readable', () => {
-        let chunk: string | Buffer;
-        while (chunk = process.stdin.read()) {
-            if (typeof chunk === 'string') {
-                data += chunk;
+    return new Promise((resolve, reject) => {
+        let data = '';
+        function onRead(): void {
+            let chunk: string | Buffer;
+            while (chunk = process.stdin.read()) {
+                if (typeof chunk === 'string') {
+                    data += chunk;
+                }
             }
         }
-    });
-    process.stdin.on('end', () => {
-        let schemas = JSON.parse(data);
-        if (!Array.isArray(schemas)) {
-            schemas = [schemas];
+        function onEnd(): void {
+            let schemas = JSON.parse(data);
+            if (!Array.isArray(schemas)) {
+                schemas = [schemas];
+            }
+            resolve(schemas);
         }
-        callback(null, schemas);
+        function onError(err: any): void {
+            reject(err);
+        }
+        process.stdin
+            .on('readable', onRead)
+            .once('end', onEnd)
+            .once('error', onError);
     });
 }
 
-function readSchemasFromFiles(callback: (err: any, schemas: JsonSchemaOrg.Schema[]) => void): void {
-    let promises: Promise<JsonSchemaOrg.Schema>[] = [];
-    opts.args.forEach((arg) => {
-        const files = glob.sync(arg);
-        promises = promises.concat(files.map((file: string) => {
-            return new Promise((resolve: (res: JsonSchemaOrg.Schema) => void, reject: (err: any) => void) => {
-                fs.readFile(file, { encoding: 'utf-8' }, (err: any, content: string) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(JSON.parse(content));
-                    }
-                });
-            });
-        }));
-    });
-    Promise.all(promises).then((schemas: JsonSchemaOrg.Schema[]) => {
-        callback(null, schemas);
-    }).catch((err: any) => {
-        callback(err, []);
-    });
-}
+async function exec(): Promise<void> {
+    initialize(process.argv);
 
-function processGenerate(err: any, schemas: JsonSchemaOrg.Schema[]): void {
-    if (err) {
-        throw err;
+    let schemas: JsonSchemaOrg.Schema[] = [];
+    if (opts.isReadFromStdin()) {
+        schemas = await readSchemasFromStdin();
     }
-    dtsgenerator(schemas, opts.prefix).then((result) => {
+
+    dtsgenerator(schemas).then((result: string) => {
         if (opts.out) {
             mkdirp.sync(path.dirname(opts.out));
             fs.writeFileSync(opts.out, result, { encoding: 'utf-8' });
         } else {
             console.log(result);
         }
-    }).catch((e: any) => {
-        console.error(e.stack || e);
+    }).catch((err: any) => {
+        console.error(err.stack || err);
     });
 }
+exec();
 

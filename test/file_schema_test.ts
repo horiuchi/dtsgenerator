@@ -2,56 +2,55 @@ require('source-map-support').install();
 
 import * as fs from 'fs';
 import * as assert from 'power-assert';
+import opts, { initialize } from '../src/commandOptions';
 import dtsgenerator from '../src/';
 
 
 describe('file schema test', () => {
 
+    afterEach(() => {
+        initialize();
+    });
+
     it('news schema', async () => {
-        const schema = fs.readFileSync('./schema/news.json', { encoding: 'utf-8' });
-        const actual = await dtsgenerator([schema]);
+        opts.files = ['./schema/news.json'];
+        const actual = await dtsgenerator();
         const expected = fs.readFileSync('./test/expected_file/news.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
     it('JSON Schemas schema', async () => {
-        const schema = fs.readFileSync('./schema/schema', { encoding: 'utf-8' });
-        const actual = await dtsgenerator([schema]);
+        opts.files = ['./schema/schema'];
+        const actual = await dtsgenerator();
         const expected = fs.readFileSync('./test/expected_file/schema.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
     it('related two schema', async () => {
-        const actual = await dtsgenerator([
-            fs.readFileSync('./schema/apibase.json', { encoding: 'utf-8' }),
-            fs.readFileSync('./schema/apimeta.json', { encoding: 'utf-8' }),
-        ]);
+        opts.files = ['./schema/apibase.json', './schema/apimeta.json'];
+        const actual = await dtsgenerator();
         const expected = fs.readFileSync('./test/expected_file/apimeta.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
     it('circular referenced schema', async () => {
-        const actual = await dtsgenerator([
-            fs.readFileSync('./schema/circular.json', { encoding: 'utf-8' })
-        ]);
+        opts.files = ['./schema/circular.json'];
+        const actual = await dtsgenerator();
         const expected = fs.readFileSync('./test/expected_file/circular.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
     it('download related schema', async () => {
-        const actual = await dtsgenerator([
-            fs.readFileSync('./schema/simple_example.json', { encoding: 'utf-8' })
-        ]);
+        opts.files = ['./schema/simple_example.json'];
+        const actual = await dtsgenerator();
         const expected = fs.readFileSync('./test/expected_file/simple_schema.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
     it('download related advanced schema', async () => {
-        const actual = await dtsgenerator([
-            fs.readFileSync('./schema/advanced_example.json', { encoding: 'utf-8' })
-        ]);
+        opts.files = ['./schema/advanced_example.json'];
+        const actual = await dtsgenerator();
         const expected = fs.readFileSync('./test/expected_file/advanced_schema.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
     it('swagger2.0 sample schema', async () => {
-        const actual = await dtsgenerator([
-            fs.readFileSync('./schema/petstore-expanded.json', { encoding: 'utf-8' })
-        ]);
+        opts.files = ['./schema/petstore-expanded.json'];
+        const actual = await dtsgenerator();
         const expected = fs.readFileSync('./test/expected_file/petstore-expanded.d.ts', { encoding: 'utf-8' });
         assert.equal(actual, expected, actual);
     });
