@@ -67,25 +67,30 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v0.8.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.8.0) (2016-10-16)
+
+- Add to support null type for TypeScript 2.0
+- Add some input parameters
+
 ### [v0.7.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.7.2) (2016-9-19)
 
-Update dependencies library
+- Update dependencies library
 
 ### [v0.7.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.7.1) (2016-7-5)
 
-Fix crash bug #67
+- Fix crash bug #67
 
 ### [v0.7.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.7.0) (2016-7-3)
 
-Update with some braking change
+- Update with some braking change
 
 ### [v0.6.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.6.1) (2016-4-28)
 
-minor update from v0.6.0
+- Minor update from v0.6.0
 
 ### [v0.6.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.6.0) (2016-4-14)
 
-First stable version of `dtsgenerator`
+- First stable version of `dtsgenerator`
 
 
 ## License
