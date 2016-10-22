@@ -1,4 +1,4 @@
-import * as program from 'commander';
+import { Command, ICommand } from 'commander';
 
 const pkg = require('../package.json');
 
@@ -23,7 +23,7 @@ export class CommandOptions {
 let opts = new CommandOptions();
 clear(opts);
 
-export function initialize(argv?: string[]): commander.ICommand | null {
+export function initialize(argv?: string[]): ICommand | null {
     if (argv) {
         return parse(opts, argv);
     } else {
@@ -44,8 +44,8 @@ function clear(o: CommandOptions): void {
     o.target = 'v2';
 }
 
-function parse(o: CommandOptions, argv: string[]): commander.ICommand {
-    const command = new program.Command();
+function parse(o: CommandOptions, argv: string[]): ICommand {
+    const command = new Command();
 
     function collectUrl(val: string, memo: string[]): string[] {
         memo.push(val);

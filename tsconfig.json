@@ -14,8 +14,7 @@
     },
     "include": [
         "src/**/*.ts",
-        "test/**/*.ts",
-        "typings/bundle.d.ts"
+        "test/**/*.ts"
     ],
     "exclude": [
         "test/expected_file/**/*.ts"
