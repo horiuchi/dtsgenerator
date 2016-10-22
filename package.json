@@ -39,6 +39,13 @@
     "request": "^2.75.0"
   },
   "devDependencies": {
+    "@types/commander": "^2.3.30",
+    "@types/debug": "0.0.29",
+    "@types/glob": "^5.0.30",
+    "@types/mkdirp": "^0.3.29",
+    "@types/mocha": "^2.2.32",
+    "@types/power-assert": "^1.4.29",
+    "@types/request": "0.0.32",
     "babel-core": "^6.17.0",
     "babel-preset-es2015": "^6.16.0",
     "coveralls": "^2.11.14",
