@@ -68,6 +68,6 @@
     "run-sequence": "^1.2.2",
     "source-map-support": "^0.4.5",
     "tslint": "^3.15.1",
-    "typescript": "^2.0.3"
+    "typescript": "^2.0.6"
   }
 }
