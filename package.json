@@ -10,7 +10,7 @@
     "clean": "rimraf src/**/*.js* && rimraf test/**/*.js*",
     "prebuild": "tslint --project .",
     "build": "tsc -p . && babel src --out-dir src",
-    "pretest": "npm run build",
+    "watch": "tsc -p . -w --noEmit",
     "test": "nyc --extension .ts mocha --compilers ts:ts-node/register,babel-register",
     "report-coverage": "nyc report --reporter=lcov && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:nocov": "mocha --compilers ts:ts-node/register,babel-register"
