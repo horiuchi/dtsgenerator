@@ -3,7 +3,6 @@ language: node_js
 sudo: false
 
 node_js:
-  - "4"
   - "6"
 env:
   - CXX=g++-4.8
@@ -18,5 +17,7 @@ cache:
   directories:
     - node_module
 
-script: "npm test && npm run report-coverage"
+script: npm test
+
+after_success: npm run coverage
 
