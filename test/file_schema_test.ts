@@ -1,5 +1,3 @@
-require('source-map-support').install();
-
 import * as fs from 'fs';
 import * as assert from 'power-assert';
 import opts, { initialize } from '../src/commandOptions';

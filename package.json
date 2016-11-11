@@ -11,9 +11,9 @@
     "prebuild": "tslint --project .",
     "build": "tsc -p . && babel src --out-dir src",
     "watch": "tsc -p . -w --noEmit",
-    "test": "nyc --extension .ts mocha --compilers ts:ts-node/register,babel-register",
-    "report-coverage": "nyc report --reporter=lcov && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "test:nocov": "mocha --compilers ts:ts-node/register,babel-register"
+    "test": "nyc --extension .ts mocha --compilers ts:ts-node/register",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "test:nocov": "mocha --compilers ts:ts-node/register"
   },
   "directories": {
     "test": "test/"
@@ -33,12 +33,12 @@
     "url": "https://github.com/horiuchi/dtsgenerator/issues"
   },
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 4.0"
   },
   "dependencies": {
     "babel-polyfill": "^6.16.0",
     "commander": "^2.9.0",
-    "debug": "^2.2.0",
+    "debug": "^2.3.2",
     "glob": "^7.1.1",
     "mkdirp": "^0.5.1",
     "request": "^2.78.0"
@@ -50,7 +50,7 @@
     "@types/mkdirp": "^0.3.29",
     "@types/mocha": "^2.2.32",
     "@types/power-assert": "^1.4.29",
-    "@types/request": "0.0.32",
+    "@types/request": "0.0.33",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
     "babel-preset-es2015": "^6.18.0",
@@ -59,11 +59,11 @@
     "coveralls": "^2.11.14",
     "mocha": "^3.1.2",
     "nyc": "^8.4.0",
-    "power-assert": "^1.4.1",
+    "power-assert": "^1.4.2",
     "rimraf": "^2.5.4",
     "source-map-support": "^0.4.6",
-    "ts-node": "^1.6.1",
+    "ts-node": "^1.7.0",
     "tslint": "^3.15.1",
-    "typescript": "^2.0.7"
+    "typescript": "^2.0.9"
   }
 }
