@@ -3,10 +3,8 @@
 # for npm
 node_modules/
 
-# for dtsm
-typings/
-
 # codes
+demo/
 test/
 coverage/
 schema/
@@ -18,7 +16,6 @@ schema/
 .travis.yml
 tsconfig.json
 tslint.json
-dtsm.json
 gulpfile.js
 
 test-results.xml
