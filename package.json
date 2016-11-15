@@ -48,7 +48,7 @@
     "@types/debug": "0.0.29",
     "@types/glob": "^5.0.30",
     "@types/mkdirp": "^0.3.29",
-    "@types/mocha": "^2.2.32",
+    "@types/mocha": "^2.2.33",
     "@types/power-assert": "^1.4.29",
     "@types/request": "0.0.33",
     "babel-cli": "^6.18.0",
