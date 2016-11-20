@@ -63,7 +63,7 @@
     "rimraf": "^2.5.4",
     "source-map-support": "^0.4.6",
     "ts-node": "^1.7.0",
-    "tslint": "^4.0.0",
+    "tslint": "^4.0.1",
     "typescript": "^2.0.10"
   }
 }
