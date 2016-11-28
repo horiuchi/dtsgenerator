@@ -8,6 +8,7 @@ import * as JsonPointer from './jsonPointer';
 import { SchemaId } from './schemaid';
 import { TypeDefinition } from './typeDefinition';
 import { WriteProcessor } from './writeProcessor';
+import YAML  = require('js-yaml');
 
 const debug = Debug('dtsgen');
 
@@ -156,7 +157,11 @@ export class JsonSchemaParser {
                         reject(err);
                     } else {
                         try {
-                            resolve(JSON.parse(content));
+                            if(file.slice(-5).toLowerCase() === ".yaml"){
+                                resolve(YAML.safeLoad(content));
+                            }else{
+                                resolve(JSON.parse(content));
+                            }
                         } catch (e) {
                             reject(e);
                         }
@@ -174,7 +179,11 @@ export class JsonSchemaParser {
                     return reject(body);
                 } else {
                     try {
-                        resolve(JSON.parse(body));
+                        if(url.slice(-5).toLowerCase() === ".yaml"){
+                            resolve(YAML.safeLoad(body));
+                        }else{
+                            resolve(JSON.parse(body));
+                        }
                     } catch (e) {
                         reject(e);
                     }
