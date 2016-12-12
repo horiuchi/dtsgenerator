@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as assert from 'power-assert';
-import opts, { initialize } from '../src/commandOptions';
 import dtsgenerator from '../src/';
+import opts, { initialize } from '../src/commandOptions';
 
 
 describe('file schema test', () => {

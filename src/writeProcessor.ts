@@ -21,24 +21,24 @@ export class WriteProcessor {
         return this.refResolver;
     }
 
-    pushReference(referenceName: string): number {
+    public pushReference(referenceName: string): number {
         return this.referenceStack.push(referenceName);
     }
-    popReference(): string {
+    public popReference(): string {
         return this.referenceStack.pop();
     }
-    checkCircularReference(referenceName: string): boolean {
+    public checkCircularReference(referenceName: string): boolean {
         return this.referenceStack.indexOf(referenceName) < 0;
     }
 
 
-    output(str: string): this {
+    public output(str: string): this {
         this.doIndent();
         this.results += str;
         return this;
     }
 
-    outputType(type: string, primitive: boolean = false): this {
+    public outputType(type: string, primitive: boolean = false): this {
         const prefix = opts.prefix;
         if (prefix && !primitive) {
             this.output(prefix);
@@ -51,7 +51,7 @@ export class WriteProcessor {
         return this;
     }
 
-    outputKey(name: string, optional: boolean = false): this {
+    public outputKey(name: string, optional: boolean = false): this {
         if (/[^0-9A-Za-z_$]/.test(name) || /^\d/.test(name)) {
             this.output('\"').output(name).output('\"');
         } else {
@@ -63,7 +63,7 @@ export class WriteProcessor {
         return this;
     }
 
-    outputLine(str?: string): this {
+    public outputLine(str?: string): this {
         this.doIndent();
         if (str) {
             this.output(str);
@@ -73,7 +73,7 @@ export class WriteProcessor {
         return this;
     }
 
-    outputJSDoc(spec: any): this {
+    public outputJSDoc(spec: any): this {
         let { description, example } = spec;
         if (!description && !example) {
             return this;
@@ -100,7 +100,7 @@ export class WriteProcessor {
         return this;
     }
 
-    doIndent(): this {
+    public doIndent(): this {
         if (!this.alreadlyIndentThisLine) {
             const indent = this.getIndent();
             this.results += indent;
@@ -113,21 +113,21 @@ export class WriteProcessor {
         return this.indent;
     }
 
-    increaseIndent(): this {
+    public increaseIndent(): this {
         this.indent++;
         return this;
     }
 
-    decreaseIndent(): this {
+    public decreaseIndent(): this {
         this.indent--;
         return this;
     }
 
-    getIndent(): string {
+    public getIndent(): string {
         return this.repeatString(this.indent * this.indentStep, this.indentChar);
     }
 
-    repeatString(n: number, s: string): string {
+    public repeatString(n: number, s: string): string {
         let result = '';
         for (let i = 0; i < n; i++) {
             result += s;
@@ -135,7 +135,7 @@ export class WriteProcessor {
         return result;
     }
 
-    toDefinition(): string {
+    public toDefinition(): string {
         return this.results;
     }
 }

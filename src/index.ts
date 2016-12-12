@@ -1,5 +1,6 @@
 declare var global: any;
 if (!global._babelPolyfill) {
+    /* tslint:disable:no-var-requires */
     require('babel-polyfill');
 }
 import opts from './commandOptions';
@@ -7,8 +8,10 @@ import { JsonSchemaParser } from './jsonSchemaParser';
 
 try {
     // optional
+    /* tslint:disable:no-var-requires */
     require('source-map-support').install();
 } catch (e) {
+    // do nothing
 }
 
 export { initialize } from './commandOptions';

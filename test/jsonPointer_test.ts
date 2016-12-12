@@ -10,16 +10,16 @@ describe('json pointer test', () => {
             b: {
                 c: {
                     d1: 2,
-                    d2: 3
+                    d2: 3,
                 },
-                e: 'hoge'
+                e: 'hoge',
             },
             array: [1, 2, 3, 4, 5],
             arr: [
                 { a: 3, b: 4 },
                 { a: 4, b: 5, c: 6},
-                { a: 5, c: 7 }
-            ]
+                { a: 5, c: 7 },
+            ],
         };
 
         it('success to get value', () => {
@@ -53,16 +53,16 @@ describe('json pointer test', () => {
             b: {
                 c: {
                     d1: 2,
-                    d2: 3
+                    d2: 3,
                 },
-                e: 'hoge'
+                e: 'hoge',
             },
             array: [1, 2, 3, 4, 5],
             arr: [
                 { a: 3, b: 4 },
                 { a: 4, b: 5, c: 6},
-                { a: 5, c: 7 }
-            ]
+                { a: 5, c: 7 },
+            ],
         };
 
         it('success to change value 1', () => {
