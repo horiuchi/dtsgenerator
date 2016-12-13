@@ -7,8 +7,8 @@ import opts from './commandOptions';
 import * as JsonPointer from './jsonPointer';
 import { SchemaId } from './schemaid';
 import { TypeDefinition } from './typeDefinition';
+import { parseFileContent } from './utils';
 import { WriteProcessor } from './writeProcessor';
-import YAML = require('js-yaml');
 
 const debug = Debug('dtsgen');
 
@@ -157,11 +157,7 @@ export class JsonSchemaParser {
                         reject(err);
                     } else {
                         try {
-                            if (file.slice(-5).toLowerCase() === '.yaml') {
-                                resolve(YAML.safeLoad(content));
-                            } else {
-                                resolve(JSON.parse(content));
-                            }
+                            resolve(parseFileContent(content, file));
                         } catch (e) {
                             reject(e);
                         }
@@ -179,11 +175,7 @@ export class JsonSchemaParser {
                     return reject(body);
                 } else {
                     try {
-                        if (url.slice(-5).toLowerCase() === '.yaml') {
-                            resolve(YAML.safeLoad(body));
-                        } else {
-                            resolve(JSON.parse(body));
-                        }
+                        resolve(parseFileContent(body, url));
                     } catch (e) {
                         reject(e);
                     }
