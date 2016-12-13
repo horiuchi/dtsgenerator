@@ -29,9 +29,9 @@ describe('simple schema test', () => {
             type: 'object',
             properties: {
                 name: {
-                    type: 'string'
-                }
-            }
+                    type: 'string',
+                },
+            },
         };
         opts.prefix = 'I';
         const result = await dtsgenerator([schema]);
@@ -46,7 +46,7 @@ describe('simple schema test', () => {
     });
     it('no type schema', async () => {
         const schema: any = {
-            id: '/test/no_type'
+            id: '/test/no_type',
         };
         opts.prefix = 'I';
         opts.header = `// header string
@@ -67,15 +67,15 @@ declare namespace Test {
             type: 'object',
             properties: {
                 id: {
-                    type: 'integer'
+                    type: 'integer',
                 },
                 array: {
                     type: 'array',
                     items: {
-                        type: ['string', 'integer', 'boolean', 'null']
-                    }
-                }
-            }
+                        type: ['string', 'integer', 'boolean', 'null'],
+                    },
+                },
+            },
         };
         opts.prefix = 'T';
         {
@@ -118,40 +118,40 @@ declare namespace Test {
                             {
                                 type: 'array',
                                 items: {
-                                    type: 'string'
-                                }
-                            }
-                        ]
-                    }
+                                    type: 'string',
+                                },
+                            },
+                        ],
+                    },
                 },
                 boolean: {
-                    type: 'boolean'
+                    type: 'boolean',
                 },
                 integer: {
-                    type: 'integer'
+                    type: 'integer',
                 },
                 null: {
-                    type: 'null'
+                    type: 'null',
                 },
                 number: {
-                    type: 'number'
+                    type: 'number',
                 },
                 object: {
-                    type: 'object'
+                    type: 'object',
                 },
                 string: {
-                    type: 'string'
+                    type: 'string',
                 },
                 any: {
-                    type: 'any'
+                    type: 'any',
                 },
                 undefined: {
-                    type: 'undefined'
-                }
+                    type: 'undefined',
+                },
             },
             required: [
-                'array', 'boolean', 'integer'
-            ]
+                'array', 'boolean', 'integer',
+            ],
         };
         opts.prefix = 'I';
         const result = await dtsgenerator([schema]);
@@ -179,7 +179,7 @@ declare namespace Test {
             type: 'object',
             properties: {
                 title: {
-                    type: 'string'
+                    type: 'string',
                 },
                 options: {
                     type: 'object',
@@ -187,9 +187,9 @@ declare namespace Test {
                         A: { type: 'integer' },
                         B: { type: 'number' },
                         C: { type: 'string' },
-                    }
-                }
-            }
+                    },
+                },
+            },
         };
         opts.prefix = 'I';
         const result = await dtsgenerator([schema]);
@@ -221,13 +221,13 @@ declare namespace Test {
                             items: {
                                 type: 'array',
                                 items: {
-                                    type: 'string'
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+                                    type: 'string',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         };
         const result = await dtsgenerator([schema]);
 
@@ -247,8 +247,8 @@ declare namespace Test {
             id: 'test/root/root_array',
             type: 'array',
             items: {
-                type: 'string'
-            }
+                type: 'string',
+            },
         };
         const result = await dtsgenerator([schema]);
 
@@ -264,7 +264,7 @@ declare namespace Test {
         const schema: JsonSchemaOrg.Schema = {
             id: 'test/root/root_any',
             description: 'This is any type schema',
-            additionalProperties: true
+            additionalProperties: true,
         };
         const result = await dtsgenerator([schema]);
 
@@ -288,9 +288,9 @@ declare namespace Test {
             properties: {
                 name: {
                     type: ['string', 'null'],
-                    example: 'how get name property'
-                }
-            }
+                    example: 'how get name property',
+                },
+            },
         };
 
         {
@@ -342,14 +342,14 @@ declare namespace Test {
             type: 'object',
             definitions: {
                 name: {
-                    type: 'string'
-                }
+                    type: 'string',
+                },
             },
             properties: {
                 'sub-name': {
-                    $ref: '#/definitions/name'
-                }
-            }
+                    $ref: '#/definitions/name',
+                },
+            },
         };
         const result = await dtsgenerator([schema]);
 

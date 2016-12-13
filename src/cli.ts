@@ -1,9 +1,9 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import * as mkdirp from 'mkdirp';
+import * as path from 'path';
 
-import dtsgenerator from './index';
 import opts, { initialize } from './commandOptions';
+import dtsgenerator from './index';
 
 
 function readSchemasFromStdin(): Promise<JsonSchemaOrg.Schema[]> {
@@ -11,6 +11,7 @@ function readSchemasFromStdin(): Promise<JsonSchemaOrg.Schema[]> {
     return new Promise((resolve, reject) => {
         let data = '';
         function onRead(): void {
+            /* tslint:disable:no-conditional-assignment */
             let chunk: string | Buffer;
             while (chunk = process.stdin.read()) {
                 if (typeof chunk === 'string') {
@@ -43,6 +44,7 @@ async function exec(): Promise<void> {
         schemas = await readSchemasFromStdin();
     }
 
+    /* tslint:disable:no-console */
     dtsgenerator(schemas).then((result: string) => {
         if (opts.out) {
             mkdirp.sync(path.dirname(opts.out));

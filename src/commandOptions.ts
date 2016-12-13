@@ -1,20 +1,22 @@
 import { Command, ICommand } from 'commander';
 
+/* tslint:disable:no-var-requires */
 const pkg = require('../package.json');
+/* tslint:enable:no-var-requires */
 
 
 type TargetVersion = 'v2' | 'v1';
 
 export class CommandOptions {
-    files: string[];
-    urls: string[];
-    stdin?: boolean;
-    out?: string;
-    prefix?: string;
-    header?: string;
-    target: TargetVersion;
+    public files: string[];
+    public urls: string[];
+    public stdin?: boolean;
+    public out?: string;
+    public prefix?: string;
+    public header?: string;
+    public target: TargetVersion;
 
-    isReadFromStdin(): boolean {
+    public isReadFromStdin(): boolean {
         return this.stdin || this.files.length === 0 && this.urls.length === 0;
     }
 }
@@ -72,6 +74,7 @@ function parse(o: CommandOptions, argv: string[]): ICommand {
         .option('-h, --header <type header string>', 'set the string of type header.')
         .option('-t, --target [version]', 'set target TypeScript version. select from `v2` or `v1`. default is `v2`.', /^(v?2|v?1)$/i, 'v2')
         .on('--help', () => {
+            /* tslint:disable:no-console */
             console.log('  Examples:');
             console.log('');
             console.log('    $ dtsgen --help');

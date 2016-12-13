@@ -18,7 +18,7 @@ describe('error schema test', () => {
     it('unkown type schema', async () => {
         const schema: any = {
             id: '/test/unkown_type',
-            type: 'hoge'
+            type: 'hoge',
         };
         try {
             await dtsgenerator([schema]);
@@ -33,9 +33,9 @@ describe('error schema test', () => {
             type: 'object',
             properties: {
                 name: {
-                    type: 'fuga'
-                }
-            }
+                    type: 'fuga',
+                },
+            },
         };
         try {
             await dtsgenerator([schema]);
@@ -51,9 +51,9 @@ describe('error schema test', () => {
             type: 'object',
             properties: {
                 ref: {
-                    $ref: '/notFound/id#'
-                }
-            }
+                    $ref: '/notFound/id#',
+                },
+            },
         };
         try {
             await dtsgenerator([schema]);
@@ -68,9 +68,9 @@ describe('error schema test', () => {
             type: 'object',
             properties: {
                 ref: {
-                    $ref: '#hogefuga'
-                }
-            }
+                    $ref: '#hogefuga',
+                },
+            },
         };
         try {
             await dtsgenerator([schema]);

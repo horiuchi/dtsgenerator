@@ -5,7 +5,7 @@ import { SchemaId } from '../src/schemaid';
 describe('schema id parser test', () => {
 
     function test(schemaId: SchemaId, expectedId: string, isFetchable: boolean, fileId: string,
-            isJsonPath: boolean, jsonPath: string[], typenames: string[]): void {
+                  isJsonPath: boolean, jsonPath: string[], typenames: string[]): void {
         assert.equal(schemaId.getAbsoluteId(), expectedId);
         assert.equal(schemaId.isFetchable(), isFetchable);
         assert.equal(schemaId.getFileId(), fileId);

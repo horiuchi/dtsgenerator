@@ -45,13 +45,13 @@
     "request": "^2.79.0"
   },
   "devDependencies": {
-    "@types/commander": "^2.3.30",
+    "@types/commander": "^2.3.31",
     "@types/debug": "0.0.29",
     "@types/glob": "^5.0.30",
     "@types/mkdirp": "^0.3.29",
     "@types/mocha": "^2.2.33",
     "@types/power-assert": "^1.4.29",
-    "@types/request": "0.0.33",
+    "@types/request": "0.0.36",
     "@types/js-yaml": "3.5.28",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.20.0",

@@ -8,7 +8,7 @@ import * as JsonPointer from './jsonPointer';
 import { SchemaId } from './schemaid';
 import { TypeDefinition } from './typeDefinition';
 import { WriteProcessor } from './writeProcessor';
-import YAML  = require('js-yaml');
+import YAML = require('js-yaml');
 
 const debug = Debug('dtsgen');
 
@@ -157,9 +157,9 @@ export class JsonSchemaParser {
                         reject(err);
                     } else {
                         try {
-                            if(file.slice(-5).toLowerCase() === ".yaml"){
+                            if (file.slice(-5).toLowerCase() === '.yaml') {
                                 resolve(YAML.safeLoad(content));
-                            }else{
+                            } else {
                                 resolve(JSON.parse(content));
                             }
                         } catch (e) {
@@ -179,9 +179,9 @@ export class JsonSchemaParser {
                     return reject(body);
                 } else {
                     try {
-                        if(url.slice(-5).toLowerCase() === ".yaml"){
+                        if (url.slice(-5).toLowerCase() === '.yaml') {
                             resolve(YAML.safeLoad(body));
-                        }else{
+                        } else {
                             resolve(JSON.parse(body));
                         }
                     } catch (e) {
@@ -194,7 +194,7 @@ export class JsonSchemaParser {
 
     public parseSchema(schema: JsonSchemaOrg.Schema, url?: string): void {
         if (typeof schema === 'string') {
-            schema = JSON.parse(<string>schema);
+            schema = JSON.parse(<string> schema);
         }
         debug(`parse schema: schemaId=[${schema.id}], url=[${url}].`);
 

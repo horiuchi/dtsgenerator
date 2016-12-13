@@ -76,7 +76,7 @@ describe('command options test', () => {
             '--stdin',
             '--url', 'http://example.com/hoge/fuga',
             '--url', 'http://example.com/hoge/fuga2',
-            './file1.json', '../file2.json', 'file3.json'
+            './file1.json', '../file2.json', 'file3.json',
         ]);
 
         assert.deepEqual(opts.files, ['./file1.json', '../file2.json', 'file3.json']);
@@ -92,7 +92,7 @@ describe('command options test', () => {
         initialize([
             'node', 'script.js',
             '--target', '2',
-            './input1.json', './path/input2.json'
+            './input1.json', './path/input2.json',
         ]);
 
         assert.deepEqual(opts.files, ['./input1.json', './path/input2.json']);
@@ -109,7 +109,7 @@ describe('command options test', () => {
             'node', 'script.js',
             '--target',
             '--out', './schema.d.ts',
-            '--url', 'https://example.com/schema.json'
+            '--url', 'https://example.com/schema.json',
         ]);
 
         assert.deepEqual(opts.files, []);

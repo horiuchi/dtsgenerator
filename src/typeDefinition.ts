@@ -1,6 +1,6 @@
 import * as JsonPointer from './jsonPointer';
-import * as utils from './utils';
 import { SchemaId } from './schemaid';
+import * as utils from './utils';
 import { WriteProcessor } from './writeProcessor';
 
 export class TypeDefinition {
@@ -147,8 +147,9 @@ export class TypeDefinition {
         }
     }
     private generateTypeProperty(process: WriteProcessor, property: JsonSchemaOrg.Schema, terminate = true): void {
-        if (!property)
+        if (!property) {
             return;
+        }
         property = this.checkSchema(process, property);
 
         if (property.$ref) {
@@ -168,7 +169,7 @@ export class TypeDefinition {
             if (!terminate) {
                 process.output('(');
             }
-            process.output(property.enum.map(s => '"' + s + '"').join(' | '));
+            process.output(property.enum.map((s) => '"' + s + '"').join(' | '));
             if (!terminate) {
                 process.output(')');
             } else {
