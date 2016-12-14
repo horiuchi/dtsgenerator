@@ -68,6 +68,10 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v0.9.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.0) (2016-12-15)
+
+- Add yaml format support! Thank you @jdthorpe :+1:
+
 ### [v0.8.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.8.2) (2016-11-7)
 
 - Remove gulp scripts
