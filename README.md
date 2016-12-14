@@ -1,6 +1,6 @@
 # dtsgenerator
 
-TypeScript d.ts file generator from JSON Schema files
+TypeScript d.ts file generator from JSON Schema file or Swagger spec file.
 
 [![nodejs version](https://img.shields.io/node/v/dtsgenerator.svg)](#)
 [![npm version](https://badge.fury.io/js/dtsgenerator.svg)](https://www.npmjs.com/package/dtsgenerator)
@@ -47,6 +47,7 @@ $ dtsgen --help
     $ dtsgen --out types.d.ts schema/**/*.schema.json
     $ cat schema1.json | dtsgen --target v1
     $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
+    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
 
 ```
 
@@ -59,11 +60,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
     $ DEBUG=dtsgen dtsgen schema/news.json
 
 
-### Links about JSON Schema
+### Links about JSON Schema and Swagger
 
 - [The home of JSON Schema](http://json-schema.org/)
 - [JSON Schema wiki for discussions on the next version of the draft](https://github.com/json-schema/json-schema/wiki)
-
+- [Swagger Specification](http://swagger.io/specification/)
 
 ## ChangeLog
 

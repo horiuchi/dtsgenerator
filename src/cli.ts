@@ -4,6 +4,7 @@ import * as path from 'path';
 
 import opts, { initialize } from './commandOptions';
 import dtsgenerator from './index';
+import { parseFileContent } from './utils';
 
 
 function readSchemasFromStdin(): Promise<JsonSchemaOrg.Schema[]> {
@@ -20,7 +21,7 @@ function readSchemasFromStdin(): Promise<JsonSchemaOrg.Schema[]> {
             }
         }
         function onEnd(): void {
-            let schemas = JSON.parse(data);
+            let schemas = parseFileContent(data);
             if (!Array.isArray(schemas)) {
                 schemas = [schemas];
             }

@@ -1,4 +1,6 @@
 import * as Debug from 'debug';
+import * as YAML from 'js-yaml';
+import * as path from 'path';
 import opts from './commandOptions';
 
 const debug = Debug('dtsgen');
@@ -68,5 +70,23 @@ export function mergeSchema(a: any, b: any): any {
         }
     });
     return a;
+}
+
+export function parseFileContent(content: string, filename?: string): JsonSchemaOrg.Schema {
+    const ext = filename ? path.extname(filename).toLowerCase() : '';
+    const maybeYaml = ext === '.yaml' || ext === '.yml';
+    try {
+        if (maybeYaml) {
+            return YAML.safeLoad(content);
+        } else {
+            return JSON.parse(content);
+        }
+    } catch (e) {
+        if (maybeYaml) {
+            return JSON.parse(content);
+        } else {
+            return YAML.safeLoad(content);
+        }
+    }
 }
 
