@@ -42,6 +42,7 @@ describe('output command help test', () => {
     $ dtsgen --out types.d.ts schema/**/*.schema.json
     $ cat schema1.json | dtsgen --target v1
     $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
+    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
 
 `);
     });
