@@ -16,6 +16,8 @@
         "test/**/*.ts"
     ],
     "exclude": [
+        "node_modules/",
+        "demo/",
         "test/expected_file/**/*.ts"
     ]
 }

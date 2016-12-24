@@ -8,7 +8,7 @@
   },
   "scripts": {
     "clean": "rimraf src/**/*.js* && rimraf test/**/*.js*",
-    "prebuild": "tslint --project .",
+    "prebuild": "tslint --project ./tsconfig.json",
     "build": "tsc -p . && babel src --out-dir src",
     "watch": "tsc -p . -w --noEmit",
     "test": "nyc --extension .ts mocha --compilers ts:ts-node/register",
@@ -49,10 +49,10 @@
     "@types/debug": "0.0.29",
     "@types/glob": "^5.0.30",
     "@types/mkdirp": "^0.3.29",
-    "@types/mocha": "^2.2.33",
+    "@types/mocha": "^2.2.34",
     "@types/power-assert": "^1.4.29",
     "@types/request": "0.0.36",
-    "@types/js-yaml": "3.5.28",
+    "@types/js-yaml": "3.5.29",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.21.0",
     "babel-preset-es2015": "^6.18.0",
@@ -65,7 +65,7 @@
     "rimraf": "^2.5.4",
     "source-map-support": "^0.4.7",
     "ts-node": "^1.7.2",
-    "tslint": "^4.1.1",
+    "tslint": "^4.2.0",
     "typescript": "^2.1.4"
   }
 }
