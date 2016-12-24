@@ -129,9 +129,9 @@ export class JsonSchemaParser {
                 if (refId.isJsonPointerHash()) {
                     const pointer = refId.getJsonPointerHash();
                     const targetSchema = fileId ? this.schemaReference.get(fileId).rootSchema : schema;
-                    const type = new TypeDefinition(targetSchema, pointer, refId);
-                    map.set(ref, type);
-                    this.addType(type);
+                    const typeDef = new TypeDefinition(targetSchema, pointer, refId);
+                    map.set(ref, typeDef);
+                    this.addType(typeDef);
                 } else {
                     const target = this.typeCache.get(ref);
                     if (target == null) {
