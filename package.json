@@ -60,7 +60,7 @@
     "babel-register": "^6.18.0",
     "coveralls": "^2.11.15",
     "mocha": "^3.2.0",
-    "nyc": "^10.0.0",
+    "nyc": "^10.1.0",
     "power-assert": "^1.4.2",
     "rimraf": "^2.5.4",
     "source-map-support": "^0.4.10",
