@@ -55,7 +55,7 @@
     "@types/js-yaml": "3.5.29",
     "babel-cli": "^6.22.0",
     "babel-core": "^6.22.0",
-    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2015": "^6.22.0",
     "babel-preset-power-assert": "^1.0.0",
     "babel-register": "^6.18.0",
     "coveralls": "^2.11.15",
