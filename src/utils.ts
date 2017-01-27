@@ -21,7 +21,7 @@ export function toTSType(type: string, debugSource?: any): string {
             return null;
         default:
             if (debugSource) {
-                console.error('  debugSource=' + debugSource);
+                console.error('  debugSource=' + JSON.stringify(debugSource, null, 2));
             }
             throw new Error('unknown type: ' + type);
     }
