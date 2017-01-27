@@ -68,6 +68,10 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v0.9.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.1) (2017-01-27)
+
+- Improve message in error log. Thank you @gasi :+1:
+
 ### [v0.9.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.0) (2016-12-15)
 
 - Add yaml format support! Thank you @jdthorpe :+1:
