@@ -1,5 +1,7 @@
 # dtsgenerator
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/horiuchi/dtsgenerator.svg)](https://greenkeeper.io/)
+
 TypeScript d.ts file generator from JSON Schema file or Swagger spec file.
 
 [![nodejs version](https://img.shields.io/node/v/dtsgenerator.svg)](#)
