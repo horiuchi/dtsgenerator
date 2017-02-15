@@ -1,10 +1,14 @@
 import * as url from 'url';
 import { parse } from './jsonPointer';
+import { DefaultNamingStrategy } from './naming/defaultNamingStrategy';
+import { NamingStrategy } from './naming/namingStrategy';
 import { toTypeName } from './utils';
 
 export class SchemaId {
     private readonly baseId: url.Url;
     private absoluteId: string;
+
+    public static namingStrategy: NamingStrategy = new DefaultNamingStrategy();
 
     constructor(id: string, parentIds?: string[]) {
         this.absoluteId = id;
@@ -45,30 +49,11 @@ export class SchemaId {
     }
 
     public getTypeNames(): string[] {
-        const ids: string[] = [];
-        if (this.baseId.host) {
-            ids.push(decodeURIComponent(this.baseId.host));
-        }
-        const addAllParts = (path: string): void => {
-            const paths = path.split('/');
-            if (paths.length > 1 && paths[0] === '') {
-                paths.shift();
-            }
-            paths.forEach((item: string) => {
-                ids.push(decodeURIComponent(item));
-            });
-        };
-        if (this.baseId.pathname) {
-            addAllParts(this.baseId.pathname);
-        }
-        if (this.baseId.hash && this.baseId.hash.length > 1) {
-            addAllParts(this.baseId.hash.substr(1));
-        }
-        return ids.map(toTypeName);
+        return SchemaId.namingStrategy.getTypeNames(this.baseId).map(toTypeName);
     }
+
     public getInterfaceName(): string {
         const names = this.getTypeNames();
         return names[names.length - 1];
     }
 }
-

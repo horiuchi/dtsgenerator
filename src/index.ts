@@ -5,6 +5,9 @@ if (!global._babelPolyfill) {
 }
 import opts from './commandOptions';
 import { JsonSchemaParser } from './jsonSchemaParser';
+import { DefaultNamingStrategy } from './naming/defaultNamingStrategy';
+import { NoExtensionNamingStrategy } from './naming/noExtensionNamingStrategy';
+import { SchemaId } from './schemaid';
 
 try {
     // optional
@@ -18,6 +21,7 @@ export { initialize } from './commandOptions';
 export default async function dtsgenerator(schemas?: JsonSchemaOrg.Schema[]): Promise<string> {
     const parser = new JsonSchemaParser();
     try {
+        initializeNamingStrategy();
         if (schemas) {
             for (let schema of schemas) {
                 parser.parseSchema(schema);
@@ -38,3 +42,15 @@ export default async function dtsgenerator(schemas?: JsonSchemaOrg.Schema[]): Pr
     }
 }
 
+function initializeNamingStrategy() {
+    switch (opts.naming) {
+        case 'include-extensions':
+            SchemaId.namingStrategy = new DefaultNamingStrategy();
+            break;
+        case 'exclude-extensions':
+            SchemaId.namingStrategy = new NoExtensionNamingStrategy();
+            break;
+        default:
+            throw new Error('Unknown naming strategy: ' + opts.naming);
+    }
+}

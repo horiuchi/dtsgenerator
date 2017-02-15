@@ -35,6 +35,7 @@ describe('output command help test', () => {
     -p, --prefix <type prefix>         set the prefix of interface name. default is nothing.
     -h, --header <type header string>  set the string of type header.
     -t, --target [version]             set target TypeScript version. select from \`v2\` or \`v1\`. default is \`v2\`.
+    -n, --naming [strategy]            set naming strategy. select from \`include-extensions\` or \`exclude-extensions\`. default is \`include-extensions\`.
 
   Examples:
 
@@ -70,6 +71,7 @@ describe('command options test', () => {
     it('should parse arguments 2', () => {
         initialize([
             'node', 'script.js',
+            '--naming', 'exclude-extensions',
             '--target', 'V1',
             '--header', '// header string',
             '--prefix', 'I',
@@ -87,6 +89,7 @@ describe('command options test', () => {
         assert.equal(opts.prefix, 'I');
         assert.equal(opts.header, '// header string');
         assert.equal(opts.target, 'v1');
+        assert.equal(opts.naming, 'exclude-extensions');
         assert.equal(opts.isReadFromStdin(), true);
     });
     it('should parse arguments 3', () => {
