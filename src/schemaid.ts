@@ -2,7 +2,6 @@ import * as url from 'url';
 import { parse } from './jsonPointer';
 import { DefaultNamingStrategy } from './naming/defaultNamingStrategy';
 import { NamingStrategy } from './naming/namingStrategy';
-import { toTypeName } from './utils';
 
 export class SchemaId {
     private readonly baseId: url.Url;
@@ -49,7 +48,7 @@ export class SchemaId {
     }
 
     public getTypeNames(): string[] {
-        return SchemaId.namingStrategy.getTypeNames(this.baseId).map(toTypeName);
+        return SchemaId.namingStrategy.getTypeNames(this.baseId);
     }
 
     public getInterfaceName(): string {

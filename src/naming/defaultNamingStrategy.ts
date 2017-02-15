@@ -1,4 +1,5 @@
 import * as url from 'url';
+import { toTypeName } from '../utils';
 
 export class DefaultNamingStrategy {
     public getTypeNames(id: url.Url): string[] {
@@ -21,6 +22,6 @@ export class DefaultNamingStrategy {
         if (id.hash && id.hash.length > 1) {
             addAllParts(id.hash.substr(1));
         }
-        return ids;
+        return ids.map(toTypeName);
     }
 }

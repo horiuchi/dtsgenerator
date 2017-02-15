@@ -5,9 +5,14 @@ export class NoExtensionNamingStrategy {
     private readonly defaultStrategy = new DefaultNamingStrategy();
 
     public getTypeNames(id: url.Url): string[] {
-        return this.defaultStrategy.getTypeNames(id).map((name, i) => {
-          const isHostPart = i === 0;
-          return isHostPart ? name : name.split('.')[0];
+        let pathWithoutExtension = id.pathname;
+        if (pathWithoutExtension) {
+            pathWithoutExtension = pathWithoutExtension.replace(/\.[^/]+$/, '');
+        }
+        return this.defaultStrategy.getTypeNames({
+          ...id,
+          path: pathWithoutExtension,
+          pathname: pathWithoutExtension,
         });
     }
 }
