@@ -1,8 +1,3 @@
-declare var global: any;
-if (!global._babelPolyfill) {
-    /* tslint:disable:no-var-requires */
-    require('babel-polyfill');
-}
 import opts from './commandOptions';
 import { JsonSchemaParser } from './jsonSchemaParser';
 
