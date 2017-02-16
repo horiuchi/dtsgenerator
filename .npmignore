@@ -6,17 +6,15 @@ node_modules/
 # codes
 demo/
 test/
+test-powered/
 coverage/
 schema/
-**/*.ts
 
 # misc
 .gitignore
+.coveralls.yml
 .editorconfig
 .travis.yml
-tsconfig.json
-tslint.json
-gulpfile.js
 
 test-results.xml
 npm-debug.log
