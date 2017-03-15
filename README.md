@@ -1,13 +1,12 @@
 # dtsgenerator
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/horiuchi/dtsgenerator.svg)](https://greenkeeper.io/)
-
 TypeScript d.ts file generator from JSON Schema file or Swagger spec file.
 
 [![nodejs version](https://img.shields.io/node/v/dtsgenerator.svg)](#)
 [![npm version](https://badge.fury.io/js/dtsgenerator.svg)](https://www.npmjs.com/package/dtsgenerator)
 [![build status](https://travis-ci.org/horiuchi/dtsgenerator.svg?branch=master)](https://travis-ci.org/horiuchi/dtsgenerator)
 [![coverage status](https://img.shields.io/coveralls/horiuchi/dtsgenerator.svg)](https://coveralls.io/r/horiuchi/dtsgenerator?branch=coveralls)
+[![Greenkeeper badge](https://badges.greenkeeper.io/horiuchi/dtsgenerator.svg)](https://greenkeeper.io/)
 [![npm download count](https://img.shields.io/npm/dt/dtsgenerator.svg)](https://www.npmjs.com/package/dtsgenerator)
 [![MIT license](https://img.shields.io/npm/l/dtsgenerator.svg)](#)
 
