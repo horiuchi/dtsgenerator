@@ -6,6 +6,7 @@ const pkg = require('../package.json');
 
 
 type TargetVersion = 'v2' | 'v1';
+type NamingStrategy = 'include-extensions' | 'exclude-extensions';
 
 export class CommandOptions {
     public files: string[];
@@ -15,6 +16,7 @@ export class CommandOptions {
     public prefix?: string;
     public header?: string;
     public target: TargetVersion;
+    public naming: NamingStrategy;
 
     public isReadFromStdin(): boolean {
         return this.stdin || this.files.length === 0 && this.urls.length === 0;
@@ -44,6 +46,7 @@ function clear(o: CommandOptions): void {
     o.prefix = undefined;
     o.header = undefined;
     o.target = 'v2';
+    o.naming = 'include-extensions';
 }
 
 function parse(o: CommandOptions, argv: string[]): ICommand {
@@ -73,6 +76,7 @@ function parse(o: CommandOptions, argv: string[]): ICommand {
         .option('-p, --prefix <type prefix>', 'set the prefix of interface name. default is nothing.')
         .option('-h, --header <type header string>', 'set the string of type header.')
         .option('-t, --target [version]', 'set target TypeScript version. select from `v2` or `v1`. default is `v2`.', /^(v?2|v?1)$/i, 'v2')
+        .option('-n, --naming [strategy]', 'set naming strategy. select from `include-extensions` or `exclude-extensions`. default is `include-extensions`.', /^(include-extensions|exclude-extensions)$/, 'include-extensions')
         .on('--help', () => {
             /* tslint:disable:no-console */
             console.log('  Examples:');
@@ -94,6 +98,7 @@ function parse(o: CommandOptions, argv: string[]): ICommand {
     o.prefix = res.prefix;
     o.header = res.header;
     o.target = normalize(res.target);
+    o.naming = res.naming;
     return command;
 }
 

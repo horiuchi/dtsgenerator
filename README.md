@@ -41,6 +41,7 @@ $ dtsgen --help
     -p, --prefix <type prefix>         set the prefix of interface name. default is nothing.
     -h, --header <type header string>  set the string of type header.
     -t, --target [version]             set target TypeScript version. select from `v2` or `v1`. default is `v2`.
+    -n, --naming [strategy]            set naming strategy. select from `include-extensions` or `exclude-extensions`. default is `include-extensions`.
 
   Examples:
 
