@@ -73,6 +73,10 @@ export class WriteProcessor {
         return this;
     }
 
+    private protectComment(str: string): string {
+        return str.replace(/\*\//g, '*\u200B/'); // Unicode [ZERO WIDTH SPACE]
+    }
+
     public outputJSDoc(spec: any): this {
         let { description, example } = spec;
         if (!description && !example) {
@@ -82,17 +86,17 @@ export class WriteProcessor {
         this.outputLine('/**');
         if (description) {
             description.toString().split('\n').forEach((line: string) => {
-                this.output(' * ').outputLine(line);
+                this.output(' * ').outputLine(this.protectComment(line));
             });
         }
         if (example) {
             let split = example.toString().split('\n');
             if (split.length === 1) {
-                this.outputLine(` * example: ${example}`);
+                this.outputLine(` * example: ${this.protectComment(example)}`);
             } else {
                 this.outputLine(' * example:');
                 split.forEach((line: string) => {
-                    this.output(' *   ').outputLine(line);
+                    this.output(' *   ').outputLine(this.protectComment(line));
                 });
             }
         }
