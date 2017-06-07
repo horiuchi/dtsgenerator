@@ -1,4 +1,4 @@
-import { Command, ICommand } from 'commander';
+import { Command } from 'commander';
 
 /* tslint:disable:no-var-requires */
 const pkg = require('../package.json');
@@ -25,7 +25,7 @@ export class CommandOptions {
 let opts = new CommandOptions();
 clear(opts);
 
-export function initialize(argv?: string[]): ICommand | null {
+export function initialize(argv?: string[]) {
     if (argv) {
         return parse(opts, argv);
     } else {
@@ -46,7 +46,7 @@ function clear(o: CommandOptions): void {
     o.target = 'v2';
 }
 
-function parse(o: CommandOptions, argv: string[]): ICommand {
+function parse(o: CommandOptions, argv: string[]) {
     const command = new Command();
 
     function collectUrl(val: string, memo: string[]): string[] {
