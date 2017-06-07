@@ -368,6 +368,63 @@ declare namespace Test {
 `;
         assert.equal(result, expected, result);
     });
+    it(' model in multiple allOf', async () => {
+        const schema: JsonSchemaOrg.Schema = {
+            definitions: {
+                Parent: {
+                    type: 'object',
+                    properties: {
+                        parent: {
+                            type: 'string',
+                        },
+                    },
+                },
+                FirstChild: {
+                    allOf: [
+                        { $ref: '#/definitions/Parent' },
+                        {
+                            type: 'object',
+                            properties: {
+                                first: {
+                                    type: 'string',
+                                },
+                            },
+                        },
+                    ],
+                },
+                SecondChild: {
+                    allOf: [
+                        { $ref: '#/definitions/Parent' },
+                        {
+                            type: 'object',
+                            properties: {
+                                second: {
+                                    type: 'string',
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+        };
+        const result = await dtsgenerator([schema]);
+
+        const expected = `declare namespace Definitions {
+    export interface FirstChild {
+        parent?: string;
+        first?: string;
+    }
+    export interface Parent {
+        parent?: string;
+    }
+    export interface SecondChild {
+        parent?: string;
+        second?: string;
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
 
 });
 

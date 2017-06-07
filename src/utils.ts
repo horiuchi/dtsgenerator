@@ -5,6 +5,15 @@ import opts from './commandOptions';
 
 const debug = Debug('dtsgen');
 
+function deepCopy(value: any): any {
+    const json = JSON.stringify(value);
+    if (json) {
+        return JSON.parse(json);
+    } else {
+        return undefined;
+    }
+}
+
 export function toTSType(type: string, debugSource?: any): string {
     switch (type) {
         case 'integer':
@@ -54,18 +63,18 @@ export function toTypeName(str: string): string {
 export function mergeSchema(a: any, b: any): any {
     Object.keys(b).forEach((key: string) => {
         if (a[key] == null) {
-            a[key] = b[key];
+            a[key] = deepCopy(b[key]);
         } else {
             const value = b[key];
             if (typeof value !== typeof a[key]) {
                 debug(`mergeSchema warning: type is missmatched, key=${key}`);
-                a[key] = value;
+                a[key] = deepCopy(value);
             } else if (Array.isArray(value)) {
-                Array.prototype.push.apply(a[key], value);
+                Array.prototype.push.apply(a[key], deepCopy(value));
             } else if (typeof value === 'object') {
-                Object.assign(a[key], value);
+                Object.assign(a[key], deepCopy(value));
             } else {
-                a[key] = value;
+                a[key] = deepCopy(value);
             }
         }
     });
