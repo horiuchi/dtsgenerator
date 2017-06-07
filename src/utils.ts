@@ -54,7 +54,14 @@ export function toTypeName(str: string): string {
 export function mergeSchema(a: any, b: any): any {
     Object.keys(b).forEach((key: string) => {
         if (a[key] == null) {
-            a[key] = b[key];
+            const value = b[key];
+            if (Array.isArray(value)) {
+                a[key] = value.slice();
+            } else if (typeof value === 'object') {
+                a[key] = Object.assign({}, value);
+            } else {
+                a[key] = value;
+            }
         } else {
             const value = b[key];
             if (typeof value !== typeof a[key]) {
