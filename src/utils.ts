@@ -51,23 +51,18 @@ export function toTypeName(str: string): string {
     })).join('$');
 }
 
-export function mergeSchema(base: any, b: any): any {
-    const a = Object.assign({}, base);
+export function mergeSchema(a: any, b: any): any {
     Object.keys(b).forEach((key: string) => {
-        if (a[key] == null) {
-            a[key] = b[key];
+        const value = b[key];
+        if (typeof value !== typeof a[key]) {
+            debug(`mergeSchema warning: type is missmatched, key=${key}`);
+        }
+        if (Array.isArray(value)) {
+            a[key] = (a[key] || []).concat(value);
+        } else if (typeof value === 'object') {
+            a[key] = Object.assign(a[key] || {}, value);
         } else {
-            const value = b[key];
-            if (typeof value !== typeof a[key]) {
-                debug(`mergeSchema warning: type is missmatched, key=${key}`);
-                a[key] = value;
-            } else if (Array.isArray(value)) {
-                Array.prototype.push.apply(a[key], value);
-            } else if (typeof value === 'object') {
-                Object.assign(a[key], value);
-            } else {
-                a[key] = value;
-            }
+            a[key] = value;
         }
     });
     return a;
