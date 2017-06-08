@@ -54,7 +54,7 @@ export function toTypeName(str: string): string {
 export function mergeSchema(a: any, b: any): any {
     Object.keys(b).forEach((key: string) => {
         const value = b[key];
-        if (typeof value !== typeof a[key]) {
+        if (a[key] != null && typeof value !== typeof a[key]) {
             debug(`mergeSchema warning: type is missmatched, key=${key}`);
         }
         if (Array.isArray(value)) {
