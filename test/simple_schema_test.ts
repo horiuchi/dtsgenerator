@@ -368,6 +368,132 @@ declare namespace Test {
 `;
         assert.equal(result, expected, result);
     });
+    it(' model in multiple allOf', async () => {
+        const schema: JsonSchemaOrg.Schema = {
+            definitions: {
+                Parent: {
+                    type: 'object',
+                    properties: {
+                        parent: {
+                            type: 'string',
+                        },
+                    },
+                },
+                FirstChild: {
+                    allOf: [
+                        { $ref: '#/definitions/Parent' },
+                        {
+                            type: 'object',
+                            properties: {
+                                first: {
+                                    type: 'string',
+                                },
+                            },
+                        },
+                    ],
+                },
+                SecondChild: {
+                    allOf: [
+                        { $ref: '#/definitions/Parent' },
+                        {
+                            type: 'object',
+                            properties: {
+                                second: {
+                                    type: 'string',
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+        };
+        const result = await dtsgenerator([schema]);
 
+        const expected = `declare namespace Definitions {
+    export interface FirstChild {
+        parent?: string;
+        first?: string;
+    }
+    export interface Parent {
+        parent?: string;
+    }
+    export interface SecondChild {
+        parent?: string;
+        second?: string;
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
+    it ('should include allOf schemas', async () => {
+        const baseSchema: JsonSchemaOrg.Schema = {
+            id: 'http://test/zzz/allOf/base',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'string',
+                },
+            },
+            required: ['id'],
+        };
+        const extendedSchema: JsonSchemaOrg.Schema = {
+            id: 'http://test/zzz/allOf/extended',
+            type: 'object',
+            allOf: [
+                { $ref: '/zzz/allOf/base' },
+            ],
+            properties: {
+                value: {
+                    type: 'number',
+                },
+            },
+            required: ['value'],
+        };
+        const separateSchema: JsonSchemaOrg.Schema = {
+            id: 'http://test/separate',
+            type: 'object',
+            properties: {
+                message: {
+                    type: 'string',
+                },
+            },
+            required: ['message'],
+        };
+        const combinedSchema: JsonSchemaOrg.Schema = {
+            id: 'http://test/combined',
+            type: 'object',
+            allOf: [
+                { $ref: '/zzz/allOf/base' },
+                { $ref: '/zzz/allOf/extended' },
+                { $ref: '/separate' },
+            ],
+        };
+
+        const result = await dtsgenerator([baseSchema, extendedSchema, separateSchema, combinedSchema]);
+
+        const expected = `declare namespace Test {
+    export interface Combined {
+        id: string;
+        value: number;
+        message: string;
+    }
+    export interface Separate {
+        message: string;
+    }
+    namespace Zzz {
+        namespace AllOf {
+            export interface Base {
+                id: string;
+            }
+            export interface Extended {
+                value: number;
+                id: string;
+            }
+        }
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
 });
 
