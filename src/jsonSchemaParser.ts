@@ -25,17 +25,17 @@ export class JsonSchemaParser {
 
         if (debug.enabled) {
             debug('TypeId list:');
-            for (let typeId of Array.from(this.typeCache.keys())) {
+            for (const typeId of Array.from(this.typeCache.keys())) {
                 debug('  ' + typeId);
             }
             debug('SchemaId list:');
-            for (let ref of Array.from(this.schemaReference.keys())) {
+            for (const ref of Array.from(this.schemaReference.keys())) {
                 debug('  ' + ref);
             }
             debug('Reference list:');
-            for (let schema of Array.from(this.referenceCache.keys())) {
+            for (const schema of Array.from(this.referenceCache.keys())) {
                 debug('  ' + schema.id);
-                for (let id of Array.from(this.referenceCache.get(schema).keys())) {
+                for (const id of Array.from(this.referenceCache.get(schema).keys())) {
                     debug('    ' + id);
                 }
             }
@@ -71,7 +71,7 @@ export class JsonSchemaParser {
         if (types.size === 0) {
             throw new Error('There is no id in the input schema(s)');
         }
-        for (let type of Array.from(types.values())) {
+        for (const type of Array.from(types.values())) {
             const names = type.schemaId.getTypeNames();
             JsonPointer.set(map, names.concat(walkMaker), type);
         }
@@ -105,9 +105,9 @@ export class JsonSchemaParser {
     public async resolveReference(): Promise<boolean> {
         debug(`resolve reference: reference schema count=${this.referenceCache.size}.`);
         const error: string[] = [];
-        for (let schema of Array.from(this.referenceCache.keys())) {
+        for (const schema of Array.from(this.referenceCache.keys())) {
             const map = this.referenceCache.get(schema);
-            for (let [ref, type] of Array.from(map.entries())) {
+            for (const [ref, type] of Array.from(map.entries())) {
                 if (type != null) {
                     continue;
                 }
@@ -188,7 +188,7 @@ export class JsonSchemaParser {
 
     public parseSchema(schema: JsonSchemaOrg.Schema, url?: string): void {
         if (typeof schema === 'string') {
-            schema = JSON.parse(<string> schema);
+            schema = JSON.parse(schema);
         }
         debug(`parse schema: schemaId=[${schema.id}], url=[${url}].`);
 
