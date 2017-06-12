@@ -22,7 +22,7 @@ export class CommandOptions {
 }
 
 
-let opts = new CommandOptions();
+const opts = new CommandOptions();
 clear(opts);
 
 export function initialize(argv?: string[]) {

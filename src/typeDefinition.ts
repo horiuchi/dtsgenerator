@@ -47,12 +47,12 @@ export class TypeDefinition {
         return type;
     }
     private getTypename(id: SchemaId | string): string[] {
-        let sid = (id instanceof SchemaId) ? id : new SchemaId(id);
+        const sid = (id instanceof SchemaId) ? id : new SchemaId(id);
         const result = sid.getTypeNames();
         const myId = this.schemaId;
         if (myId) {
             const baseType = myId.getTypeNames().slice(0, -1);
-            for (let name of baseType) {
+            for (const name of baseType) {
                 if (result[0] === name) {
                     result.shift();
                 } else {
@@ -243,7 +243,6 @@ export class TypeDefinition {
                 process.outputLine(';');
             }
         } else {
-            console.error(property);
             throw new Error('unknown type: ' + property.type);
         }
     }
