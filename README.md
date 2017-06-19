@@ -69,6 +69,10 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v0.9.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.2) (2017-06-19)
+
+- Fix the bug about `allOf` property of #226. Thank you @dawidgarus @philliphoff :+1:
+
 ### [v0.9.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.1) (2017-01-27)
 
 - Improve message in error log. Thank you @gasi :+1:
