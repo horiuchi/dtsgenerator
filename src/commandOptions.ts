@@ -71,10 +71,11 @@ function parse(o: CommandOptions, argv: string[]) {
         .option('--stdin', 'read stdin with other files or urls.')
         .option('-o, --out <file>', 'output d.ts filename.')
         .option('-p, --prefix <type prefix>', 'set the prefix of interface name. default is nothing.')
-        .option('-h, --header <type header string>', 'set the string of type header.')
+        .option('-H, --header <type header string>', 'set the string of type header.')
         .option('-t, --target [version]', 'set target TypeScript version. select from `v2` or `v1`. default is `v2`.', /^(v?2|v?1)$/i, 'v2')
         .on('--help', () => {
             /* tslint:disable:no-console */
+            console.log('');
             console.log('  Examples:');
             console.log('');
             console.log('    $ dtsgen --help');
@@ -82,7 +83,6 @@ function parse(o: CommandOptions, argv: string[]) {
             console.log('    $ cat schema1.json | dtsgen --target v1');
             console.log('    $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json');
             console.log('    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml');
-            console.log('');
         })
         .parse(argv);
 
