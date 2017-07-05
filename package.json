@@ -36,31 +36,31 @@
     "node": ">= 4.0"
   },
   "dependencies": {
-    "commander": "^2.9.0",
-    "debug": "^2.6.1",
-    "glob": "^7.1.1",
-    "js-yaml": "^3.8.1",
+    "commander": "^2.11.0",
+    "debug": "^2.6.8",
+    "glob": "^7.1.2",
+    "js-yaml": "^3.8.4",
     "mkdirp": "^0.5.1",
-    "request": "^2.79.0"
+    "request": "^2.81.0"
   },
   "devDependencies": {
-    "@types/commander": "^2.3.31",
+    "@types/commander": "^2.9.1",
     "@types/debug": "0.0.29",
     "@types/glob": "^5.0.30",
     "@types/js-yaml": "3.5.31",
     "@types/mkdirp": "^0.3.29",
-    "@types/mocha": "^2.2.39",
-    "@types/node": "^8.0.0",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.7",
     "@types/power-assert": "^1.4.29",
-    "@types/request": "0.0.44",
-    "coveralls": "^2.11.16",
-    "mocha": "^3.2.0",
-    "nyc": "^11.0.2",
-    "power-assert": "^1.4.2",
-    "rimraf": "^2.5.4",
-    "source-map-support": "^0.4.11",
-    "ts-node": "^3.0.6",
+    "@types/request": "0.0.45",
+    "coveralls": "^2.13.1",
+    "mocha": "^3.4.2",
+    "nyc": "^11.0.3",
+    "power-assert": "^1.4.4",
+    "rimraf": "^2.6.1",
+    "source-map-support": "^0.4.15",
+    "ts-node": "^3.1.0",
     "tslint": "^5.4.3",
-    "typescript": "^2.1.6"
+    "typescript": "^2.4.1"
   }
 }
