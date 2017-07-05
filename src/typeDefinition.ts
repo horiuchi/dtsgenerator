@@ -122,14 +122,17 @@ export class TypeDefinition {
     private generateTypeCollection(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         const name = this.id.getInterfaceName();
         process.output('export type ').outputType(name).output(' = ');
-        this.generateTypeProperty(process, type.items == null ? {} : type.items, false);
-        process.outputLine('[];');
+        this.generateArrayTypeProperty(process, type.items, true);
     }
 
     private generateProperties(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         if (type.additionalProperties) {
             process.output('[name: string]: ');
-            this.generateTypeProperty(process, type.additionalProperties, true);
+            if (type.additionalProperties === true) {
+                process.outputLine('any;');
+            } else {
+                this.generateTypeProperty(process, type.additionalProperties, true);
+            }
         }
         if (type.properties) {
             Object.keys(type.properties).forEach((propertyName) => {
@@ -188,19 +191,59 @@ export class TypeDefinition {
             if (!terminate && types.length > 1) {
                 process.output('(');
             }
-            types.forEach((t: string, index: number) => {
+            for (let index = 0; index < types.length; index++) {
+                const t = types[index];
                 const isLast = index === types.length - 1;
                 this.generateTypeName(process, t, property, terminate && isLast, isLast);
                 if (!isLast) {
-                  process.output(' | ');
+                    process.output(' | ');
                 }
-            });
+            }
             if (!terminate && types.length > 1) {
                 process.output(')');
             }
         }
     }
 
+    private generateArrayTypeProperty(process: WriteProcessor, items: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[], terminate = true): void {
+        if (!Array.isArray(items)) {
+            this.generateTypeProperty(process, items == null ? {} : items, false);
+            process.output('[]');
+            if (terminate) {
+                process.outputLine(';');
+            }
+        } else if (items.length === 0) {
+            process.output('[]');
+            if (terminate) {
+                process.outputLine(';');
+            }
+            return;
+        } else {
+            const schemas = items.concat();
+            process.output('[');
+            schemas.forEach((type: JsonSchemaOrg.Schema, index: number) => {
+                const isLast = index === schemas.length - 1;
+                if (type.id) {
+                    this.generateTypePropertyNamedType(process, this.getTypename(type.id), false, type, false);
+                } else {
+                    this.generateTypeProperty(process, type, false);
+                }
+                if (!isLast) {
+                    process.output(', ');
+                }
+            });
+            process.output(']');
+            schemas.pop();
+            if (schemas.length > 0) {
+                process.output(' | ');
+                this.generateArrayTypeProperty(process, schemas, terminate);
+            } else {
+                if (terminate) {
+                    process.outputLine(';');
+                }
+            }
+        }
+    }
     private generateArrayedType(process: WriteProcessor, types: JsonSchemaOrg.Schema[], separator: string, terminate: boolean): void {
         if (!terminate) {
             process.output('(');
@@ -213,7 +256,7 @@ export class TypeDefinition {
                 this.generateTypeProperty(process, type, isLast && terminate);
             }
             if (!isLast) {
-              process.output(separator);
+                process.output(separator);
             }
         });
         if (!terminate) {
@@ -237,11 +280,7 @@ export class TypeDefinition {
                 process.outputLine(';');
             }
         } else if (type === 'array') {
-            this.generateTypeProperty(process, property.items == null ? {} : property.items, false);
-            process.output('[]');
-            if (terminate) {
-                process.outputLine(';');
-            }
+            this.generateArrayTypeProperty(process, property.items, terminate);
         } else {
             throw new Error('unknown type: ' + property.type);
         }

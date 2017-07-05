@@ -11,6 +11,7 @@
     "prebuild": "tslint --project ./tsconfig.json",
     "build": "tsc -p .",
     "watch": "tsc -p . -w --noEmit",
+    "compile": "tsc -p . --noEmit",
     "test": "nyc --extension .ts mocha --compilers ts:ts-node/register",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test:nocov": "mocha --compilers ts:ts-node/register"
