@@ -138,6 +138,42 @@ declare namespace Test {
 `;
         assert.equal(result, expected, result);
     });
+    it('include tuple type schema minItems', async () => {
+        const schema: JsonSchemaOrg.Schema = {
+            id: '/test/inc_tuple_min_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    minItems: 3,
+                    items: [
+                        { type: 'string' },
+                        { type: 'integer' },
+                        { type: 'boolean' },
+                        {
+                            type: 'string',
+                            enum: ['NW', 'NE', 'SW', 'SE'],
+                        },
+                    ],
+                },
+            },
+        };
+        const result = await dtsgenerator([schema]);
+
+        const expected = `declare namespace Test {
+    export interface IncTupleMinItems {
+        id?: number;
+        array?: [string, number, boolean, ("NW" | "NE" | "SW" | "SE")] | [string, number, boolean];
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
+
+
     it('all simple type schema', async () => {
         const schema: JsonSchemaOrg.Schema = {
             id: '/test/all_simple_type',
