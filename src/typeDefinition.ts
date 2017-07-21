@@ -122,7 +122,7 @@ export class TypeDefinition {
     private generateTypeCollection(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         const name = this.id.getInterfaceName();
         process.output('export type ').outputType(name).output(' = ');
-        this.generateArrayTypeProperty(process, type.items, type.minItems, type.maxItems, true);
+        this.generateArrayTypeProperty(process, type.items, type.minItems, true);
     }
 
     private generateProperties(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
@@ -205,7 +205,7 @@ export class TypeDefinition {
         }
     }
 
-    private generateArrayTypeProperty(process: WriteProcessor, items: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[], minItems = 0, maxItems?: number, terminate = true): void {
+    private generateArrayTypeProperty(process: WriteProcessor, items: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[], minItems = 0, terminate = true): void {
         if (!Array.isArray(items)) {
             this.generateTypeProperty(process, items == null ? {} : items, false);
             process.output('[]');
@@ -220,24 +220,9 @@ export class TypeDefinition {
             return;
         } else {
             const schemas = items.concat();
-            let effectiveMaxItems: number;
-            if (maxItems !== undefined) {
-                if (minItems > maxItems) {
-                    process.output('never');
-                    if (terminate) {
-                        process.outputLine(';');
-                    }
-                    return;
-                }
-                schemas.splice(maxItems);
-                effectiveMaxItems = maxItems;
-            } else {
-                // the 1 is for the 'any' we insert to get typescript to allow extra elements
-                // so as to honor unboundedness.
-                effectiveMaxItems = 1 + Math.max(minItems, schemas.length);
-            }
+            const effectiveMaxItems = 1 + Math.max(minItems, schemas.length);
             for (
-                let unionIndex = minItems;
+                let unionIndex = minItems === 0 ? 1 : minItems;
                 unionIndex <= effectiveMaxItems;
                 unionIndex++
             ) {
@@ -251,7 +236,7 @@ export class TypeDefinition {
                             this.generateTypeProperty(process, type, false);
                         }
                     } else {
-                        if (i < minItems || maxItems !== undefined) {
+                        if (i < effectiveMaxItems - 1) {
                             process.output('Object');
                         } else {
                             process.output('any');
@@ -308,7 +293,7 @@ export class TypeDefinition {
                 process.outputLine(';');
             }
         } else if (type === 'array') {
-            this.generateArrayTypeProperty(process, property.items, property.minItems, property.maxItems, terminate);
+            this.generateArrayTypeProperty(process, property.items, property.minItems, terminate);
         } else {
             throw new Error('unknown type: ' + property.type);
         }
