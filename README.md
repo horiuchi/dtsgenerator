@@ -69,6 +69,10 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v0.9.3](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.3) (2017-07-21)
+
+- Support tuple type of #239. Thank you @laurelnaiad :+1:
+
 ### [v0.9.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.2) (2017-06-19)
 
 - Fix the bug about `allOf` property of #226. Thank you @dawidgarus @philliphoff :+1:
