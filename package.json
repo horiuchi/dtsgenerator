@@ -40,7 +40,7 @@
     "commander": "^2.11.0",
     "debug": "^2.6.8",
     "glob": "^7.1.2",
-    "js-yaml": "^3.8.4",
+    "js-yaml": "^3.9.0",
     "mkdirp": "^0.5.1",
     "request": "^2.81.0"
   },
@@ -51,7 +51,7 @@
     "@types/js-yaml": "3.9.0",
     "@types/mkdirp": "^0.5.0",
     "@types/mocha": "^2.2.41",
-    "@types/node": "^8.0.7",
+    "@types/node": "^8.0.14",
     "@types/power-assert": "^1.4.29",
     "@types/request": "2.0.0",
     "coveralls": "^2.13.1",
@@ -60,8 +60,8 @@
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.1",
     "source-map-support": "^0.4.15",
-    "ts-node": "^3.1.0",
-    "tslint": "^5.4.3",
-    "typescript": "^2.4.1"
+    "ts-node": "^3.2.1",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.2"
   }
 }
