@@ -122,7 +122,7 @@ export class TypeDefinition {
     private generateTypeCollection(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         const name = this.id.getInterfaceName();
         process.output('export type ').outputType(name).output(' = ');
-        this.generateArrayTypeProperty(process, type.items, true);
+        this.generateArrayTypeProperty(process, type.items, type.minItems, type.maxItems, true);
     }
 
     private generateProperties(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
@@ -205,7 +205,7 @@ export class TypeDefinition {
         }
     }
 
-    private generateArrayTypeProperty(process: WriteProcessor, items: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[], terminate = true): void {
+    private generateArrayTypeProperty(process: WriteProcessor, items: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[], minItems = 0, maxItems?: number, terminate = true): void {
         if (!Array.isArray(items)) {
             this.generateTypeProperty(process, items == null ? {} : items, false);
             process.output('[]');
@@ -220,30 +220,58 @@ export class TypeDefinition {
             return;
         } else {
             const schemas = items.concat();
-            process.output('[');
-            schemas.forEach((type: JsonSchemaOrg.Schema, index: number) => {
-                const isLast = index === schemas.length - 1;
-                if (type.id) {
-                    this.generateTypePropertyNamedType(process, this.getTypename(type.id), false, type, false);
-                } else {
-                    this.generateTypeProperty(process, type, false);
+            let effectiveMaxItems: number;
+            if (maxItems !== undefined) {
+                if (minItems > maxItems) {
+                    process.output('never');
+                    if (terminate) {
+                        process.outputLine(';');
+                    }
+                    return;
                 }
-                if (!isLast) {
-                    process.output(', ');
-                }
-            });
-            process.output(']');
-            schemas.pop();
-            if (schemas.length > 0) {
-                process.output(' | ');
-                this.generateArrayTypeProperty(process, schemas, terminate);
+                schemas.splice(maxItems);
+                effectiveMaxItems = maxItems;
             } else {
-                if (terminate) {
-                    process.outputLine(';');
+                // the 1 is for the 'any' we insert to get typescript to allow extra elements
+                // so as to honor unboundedness.
+                effectiveMaxItems = 1 + Math.max(minItems, schemas.length);
+            }
+            for (
+                let unionIndex = minItems;
+                unionIndex <= effectiveMaxItems;
+                unionIndex++
+            ) {
+                process.output('[');
+                for (let i = 0; i < unionIndex; i++) {
+                    if (i < schemas.length) {
+                        const type = schemas[i];
+                        if (type.id) {
+                            this.generateTypePropertyNamedType(process, this.getTypename(type.id), false, type, false);
+                        } else {
+                            this.generateTypeProperty(process, type, false);
+                        }
+                    } else {
+                        if (i < minItems || maxItems !== undefined) {
+                            process.output('Object');
+                        } else {
+                            process.output('any');
+                        }
+                    }
+                    if (i < unionIndex - 1) {
+                        process.output(', ');
+                    }
                 }
+                process.output(']');
+                if (unionIndex < effectiveMaxItems) {
+                    process.output(' | ');
+                }
+            }
+            if (terminate) {
+                process.outputLine(';');
             }
         }
     }
+
     private generateArrayedType(process: WriteProcessor, types: JsonSchemaOrg.Schema[], separator: string, terminate: boolean): void {
         if (!terminate) {
             process.output('(');
@@ -280,7 +308,7 @@ export class TypeDefinition {
                 process.outputLine(';');
             }
         } else if (type === 'array') {
-            this.generateArrayTypeProperty(process, property.items, terminate);
+            this.generateArrayTypeProperty(process, property.items, property.minItems, property.maxItems, terminate);
         } else {
             throw new Error('unknown type: ' + property.type);
         }
