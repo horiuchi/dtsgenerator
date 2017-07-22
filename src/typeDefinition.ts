@@ -213,7 +213,7 @@ export class TypeDefinition {
                 process.outputLine(';');
             }
         } else if (items.length === 0) {
-            process.output('[]');
+            process.output('any[]');
             if (terminate) {
                 process.outputLine(';');
             }

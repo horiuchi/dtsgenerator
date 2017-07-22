@@ -8,6 +8,32 @@ describe('tuple test', () => {
         initialize();
     });
 
+    it('no items', async () => {
+        const schema: JsonSchemaOrg.Schema = {
+            id: '/test/inc_tuple_no_min',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    items: [
+                    ],
+                },
+            },
+        };
+        const result = await dtsgenerator([schema]);
+
+        const expected = `declare namespace Test {
+    export interface IncTupleNoMin {
+        id?: number;
+        array?: any[];
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
     it('no min', async () => {
         const schema: JsonSchemaOrg.Schema = {
             id: '/test/inc_tuple_no_min',
