@@ -205,24 +205,24 @@ export class TypeDefinition {
         }
     }
 
-    private generateArrayTypeProperty(process: WriteProcessor, items: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[], minItems = 0, terminate = true): void {
+    private generateArrayTypeProperty(process: WriteProcessor, items: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[], minItems?: number, terminate = true): void {
         if (!Array.isArray(items)) {
             this.generateTypeProperty(process, items == null ? {} : items, false);
             process.output('[]');
             if (terminate) {
                 process.outputLine(';');
             }
-        } else if (items.length === 0) {
-            process.output('[]');
+        } else if (items.length === 0 && minItems === undefined) {
+            process.output('any[]');
             if (terminate) {
                 process.outputLine(';');
             }
             return;
         } else {
             const schemas = items.concat();
-            const effectiveMaxItems = 1 + Math.max(minItems, schemas.length);
+            const effectiveMaxItems = 1 + Math.max(minItems || 0, schemas.length);
             for (
-                let unionIndex = minItems === 0 ? 1 : minItems;
+                let unionIndex = minItems === undefined ? 1 : minItems;
                 unionIndex <= effectiveMaxItems;
                 unionIndex++
             ) {
