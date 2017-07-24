@@ -69,6 +69,10 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v0.9.5](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.5) (2017-07-24)
+
+- Bug fix about tuple type support by #244. Thank you @laurelnaiad :+1:
+
 ### [v0.9.4](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.4) (2017-07-22)
 
 - Support tuple type of #239, #241. Thank you @laurelnaiad :+1:
