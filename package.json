@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/commander": "^2.9.1",
-    "@types/debug": "0.0.29",
+    "@types/debug": "0.0.30",
     "@types/glob": "^5.0.30",
     "@types/js-yaml": "3.9.0",
     "@types/mkdirp": "^0.5.0",
