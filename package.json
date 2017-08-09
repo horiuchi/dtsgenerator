@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "commander": "^2.11.0",
-    "debug": "^2.6.8",
+    "debug": "^3.0.0",
     "glob": "^7.1.2",
     "js-yaml": "^3.9.0",
     "mkdirp": "^0.5.1",
