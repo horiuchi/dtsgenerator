@@ -71,9 +71,7 @@ export class TypeDefinition {
             base.allOf.forEach((p) => {
                 if (p.$ref) {
                     p = this.searchRef(process, p.$ref).targetSchema;
-                    if (p.allOf && p.allOf.some((allOfChild: JsonSchemaOrg.Schema) => !!allOfChild.$ref)) {
-                        p = this.checkSchema(process, p);
-                    }
+                    p = this.checkSchema(process, p);
                 }
                 utils.mergeSchema(schema, p);
             });
