@@ -5,7 +5,7 @@ import opts from './commandOptions';
 
 const debug = Debug('dtsgen');
 
-export function toTSType(type: string, debugSource?: any): string {
+export function toTSType(type: string, debugSource?: any): string | undefined {
     switch (type) {
         case 'integer':
             return 'number';
@@ -18,7 +18,7 @@ export function toTSType(type: string, debugSource?: any): string {
             return type;
         case 'object':
         case 'array':
-            return null;
+            return undefined;
         default:
             if (debugSource) {
                 debug(`toTSType: unknown type: ${JSON.stringify(debugSource, null, 2)}`);

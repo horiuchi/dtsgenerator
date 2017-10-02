@@ -1,13 +1,13 @@
 import * as fs from 'fs';
 import * as assert from 'power-assert';
 import dtsgenerator from '../src/';
-import opts, { initialize } from '../src/commandOptions';
+import opts, { clear } from '../src/commandOptions';
 
 
 describe('file schema test', () => {
 
     afterEach(() => {
-        initialize();
+        clear();
     });
 
     it('news schema', async () => {

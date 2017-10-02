@@ -1,6 +1,6 @@
 import * as assert from 'power-assert';
 
-import opts, { initialize } from '../src/commandOptions';
+import opts, { clear, initialize } from '../src/commandOptions';
 
 
 describe('output command help test', () => {
@@ -52,7 +52,7 @@ describe('output command help test', () => {
 describe('command options test', () => {
 
     afterEach(() => {
-        initialize();
+        clear();
     });
 
     it('should parse arguments 1', () => {

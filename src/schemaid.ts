@@ -3,6 +3,8 @@ import { parse } from './jsonPointer';
 import { toTypeName } from './utils';
 
 export class SchemaId {
+    public static empty = new SchemaId('');
+
     private readonly baseId: url.Url;
     private absoluteId: string;
 
@@ -33,7 +35,7 @@ export class SchemaId {
     public getFileId(): string {
         return this.absoluteId.replace(/#.*$/, '#');
     }
-    public isJsonPointerHash(): boolean {
+    public existsJsonPointerHash(): boolean {
         return this.absoluteId === '#' || /#\//.test(this.absoluteId);
     }
     public getJsonPointerHash(): string[] {

@@ -23,27 +23,21 @@ export class CommandOptions {
 
 
 const opts = new CommandOptions();
-clear(opts);
-
-export function initialize(argv?: string[]) {
-    if (argv) {
-        return parse(opts, argv);
-    } else {
-        clear(opts);
-        return null;
-    }
-}
+clear();
 export default opts;
 
+export function initialize(argv: string[]) {
+    return parse(opts, argv);
+}
 
-function clear(o: CommandOptions): void {
-    o.files = [];
-    o.urls = [];
-    o.stdin = undefined;
-    o.out = undefined;
-    o.prefix = undefined;
-    o.header = undefined;
-    o.target = 'v2';
+export function clear(): void {
+    opts.files = [];
+    opts.urls = [];
+    opts.stdin = undefined;
+    opts.out = undefined;
+    opts.prefix = undefined;
+    opts.header = undefined;
+    opts.target = 'v2';
 }
 
 function parse(o: CommandOptions, argv: string[]) {

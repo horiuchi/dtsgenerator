@@ -17,7 +17,7 @@ const walkMaker = '<<type>>';
 export class JsonSchemaParser {
     private typeCache = new Map<string, TypeDefinition>();
     private schemaReference = new Map<string, TypeDefinition>();
-    private referenceCache = new Map<JsonSchemaOrg.Schema, Map<string, TypeDefinition>>();
+    private referenceCache = new Map<JsonSchemaOrg.Schema, Map<string, TypeDefinition | undefined>>();
 
     public async generateDts(): Promise<string> {
         debug(`generate d.ts.`);
@@ -25,23 +25,23 @@ export class JsonSchemaParser {
 
         if (debug.enabled) {
             debug('TypeId list:');
-            for (const typeId of Array.from(this.typeCache.keys())) {
+            for (const typeId of this.typeCache.keys()) {
                 debug('  ' + typeId);
             }
             debug('SchemaId list:');
-            for (const ref of Array.from(this.schemaReference.keys())) {
+            for (const ref of this.schemaReference.keys()) {
                 debug('  ' + ref);
             }
             debug('Reference list:');
-            for (const schema of Array.from(this.referenceCache.keys())) {
+            for (const [schema, map] of this.referenceCache.entries()) {
                 debug('  ' + schema.id);
-                for (const id of Array.from(this.referenceCache.get(schema).keys())) {
+                for (const id of map.keys()) {
                     debug('    ' + id);
                 }
             }
         }
 
-        const process = new WriteProcessor((baseSchema: JsonSchemaOrg.Schema, ref: string): TypeDefinition => {
+        const process = new WriteProcessor((baseSchema: JsonSchemaOrg.Schema, ref: string): TypeDefinition | undefined => {
             debug(`Search Reference: schemaId=${baseSchema ? baseSchema.id : null}, ref=${ref}`);
             const map = this.referenceCache.get(baseSchema);
             if (map == null) {
@@ -50,9 +50,18 @@ export class JsonSchemaParser {
             const refId = new SchemaId(ref);
             const result = map.get(refId.getAbsoluteId());
             if (result == null) {
-                if (refId.isJsonPointerHash()) {
+                if (refId.existsJsonPointerHash()) {
                     const fileId = refId.getFileId();
-                    const schema = fileId ? this.schemaReference.get(fileId).targetSchema : baseSchema;
+                    const schema = (() => {
+                        if (fileId == null) {
+                            return baseSchema;
+                        }
+                        const refSchema = this.schemaReference.get(fileId);
+                        if (refSchema == null) {
+                            throw Error(`There is no reference target schema. fileId=${fileId}`);
+                        }
+                        return refSchema.targetSchema;
+                    })();
                     debug(`  fileId=${fileId}, schemaId=${schema.id}.`);
                     return JsonPointer.get(schema, refId.getJsonPointerHash());
                 }
@@ -71,7 +80,7 @@ export class JsonSchemaParser {
         if (types.size === 0) {
             throw new Error('There is no id in the input schema(s)');
         }
-        for (const type of Array.from(types.values())) {
+        for (const type of types.values()) {
             const names = type.schemaId.getTypeNames();
             JsonPointer.set(map, names.concat(walkMaker), type);
         }
@@ -105,15 +114,15 @@ export class JsonSchemaParser {
     public async resolveReference(): Promise<boolean> {
         debug(`resolve reference: reference schema count=${this.referenceCache.size}.`);
         const error: string[] = [];
-        for (const schema of Array.from(this.referenceCache.keys())) {
-            const map = this.referenceCache.get(schema);
-            for (const [ref, type] of Array.from(map.entries())) {
+        for (const [schema, map] of this.referenceCache.entries()) {
+            for (const [ref, type] of map.entries()) {
                 if (type != null) {
                     continue;
                 }
                 const refId = new SchemaId(ref);
                 const fileId = refId.getFileId();
-                if (fileId && !this.schemaReference.has(fileId)) {
+                const refSchema = fileId ? this.schemaReference.get(fileId) : undefined;
+                if (fileId && refSchema == null) {
                     if (!refId.isFetchable()) {
                         error.push(`$ref target is not found: ${ref}`);
                         continue;
@@ -128,9 +137,9 @@ export class JsonSchemaParser {
                     }
                 }
                 debug(`resolve reference: ref=[${ref}]`);
-                if (refId.isJsonPointerHash()) {
+                if (refId.existsJsonPointerHash()) {
                     const pointer = refId.getJsonPointerHash();
-                    const targetSchema = fileId ? this.schemaReference.get(fileId).rootSchema : schema;
+                    const targetSchema = refSchema ? refSchema.rootSchema : schema;
                     const typeDef = new TypeDefinition(targetSchema, pointer, refId);
                     map.set(ref, typeDef);
                     this.addType(typeDef);
@@ -244,15 +253,15 @@ export class JsonSchemaParser {
 
             const definitions = s.definitions;
             if (definitions != null) {
-                walkObject(s.definitions, paths.concat('definitions'), true);
+                walkObject(definitions, paths.concat('definitions'), true);
             }
             const properties = s.properties;
             if (properties != null) {
-                walkObject(s.properties, paths.concat('properties'));
+                walkObject(properties, paths.concat('properties'));
             }
             const patternProperties = s.patternProperties;
             if (patternProperties != null) {
-                walkObject(s.patternProperties, paths.concat('patternProperties'));
+                walkObject(patternProperties, paths.concat('patternProperties'));
             }
             const additionalProperties = s.additionalProperties;
             if (additionalProperties != null && typeof additionalProperties !== 'boolean') {
@@ -289,8 +298,8 @@ export class JsonSchemaParser {
             map = new Map<string, TypeDefinition>();
             this.referenceCache.set(schema, map);
         }
-        const refId = new SchemaId(ref, [schema.id]);
-        map.set(refId.getAbsoluteId(), null);
+        const refId = new SchemaId(ref, schema.id ? [schema.id] : undefined);
+        map.set(refId.getAbsoluteId(), undefined);
         return refId.getAbsoluteId();
     }
 
