@@ -10,7 +10,7 @@ export class TypeDefinition {
     constructor(private schema: JsonSchemaOrg.Schema, path: string[], refId?: SchemaId) {
         this.target = JsonPointer.get(schema, path);
         if (!this.target || !this.target.id) {
-            this.id = refId || null;
+            this.id = refId || SchemaId.empty;
         } else {
             const baseId = this.target.id;
             const parentsId: string[] = [];
@@ -136,12 +136,12 @@ export class TypeDefinition {
             }
         }
         if (type.properties) {
-            Object.keys(type.properties).forEach((propertyName) => {
+            for (const propertyName of Object.keys(type.properties)) {
                 const property = type.properties[propertyName];
                 process.outputJSDoc(property);
                 this.generatePropertyName(process, propertyName, type);
                 this.generateTypeProperty(process, property);
-            });
+            }
         }
     }
     private generatePropertyName(process: WriteProcessor, propertyName: string, property: JsonSchemaOrg.Schema): void {
@@ -206,19 +206,14 @@ export class TypeDefinition {
         }
     }
 
-    private generateArrayTypeProperty(process: WriteProcessor, items: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[], minItems?: number, terminate = true): void {
-        if (!Array.isArray(items)) {
+    private generateArrayTypeProperty(process: WriteProcessor, items: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[] | undefined, minItems?: number, terminate = true): void {
+        if (items == null) {
+            process.output('any[]');
+        } else if (!Array.isArray(items)) {
             this.generateTypeProperty(process, items == null ? {} : items, false);
             process.output('[]');
-            if (terminate) {
-                process.outputLine(';');
-            }
         } else if (items.length === 0 && minItems === undefined) {
             process.output('any[]');
-            if (terminate) {
-                process.outputLine(';');
-            }
-            return;
         } else {
             const schemas = items.concat();
             const effectiveMaxItems = 1 + Math.max(minItems || 0, schemas.length);
@@ -252,9 +247,9 @@ export class TypeDefinition {
                     process.output(' | ');
                 }
             }
-            if (terminate) {
-                process.outputLine(';');
-            }
+        }
+        if (terminate) {
+            process.outputLine(';');
         }
     }
 

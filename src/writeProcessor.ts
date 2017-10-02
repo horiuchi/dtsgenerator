@@ -1,7 +1,7 @@
 import opts from './commandOptions';
 import { TypeDefinition } from './typeDefinition';
 
-export type ReferenceResolver = (baseSchema: JsonSchemaOrg.Schema, ref: string) => TypeDefinition;
+export type ReferenceResolver = (baseSchema: JsonSchemaOrg.Schema, ref: string) => TypeDefinition | undefined;
 
 export class WriteProcessor {
 
@@ -22,7 +22,7 @@ export class WriteProcessor {
     public pushReference(referenceName: string): number {
         return this.referenceStack.push(referenceName);
     }
-    public popReference(): string {
+    public popReference(): string | undefined {
         return this.referenceStack.pop();
     }
     public checkCircularReference(referenceName: string): boolean {

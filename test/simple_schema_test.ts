@@ -1,12 +1,12 @@
 import * as assert from 'power-assert';
 import dtsgenerator from '../src/';
-import opts, { initialize } from '../src/commandOptions';
+import opts, { clear } from '../src/commandOptions';
 
 
 describe('simple schema test', () => {
 
     afterEach(() => {
-        initialize();
+        clear();
     });
 
     it('no property schema', async () => {

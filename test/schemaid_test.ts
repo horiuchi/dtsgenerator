@@ -9,7 +9,7 @@ describe('schema id parser test', () => {
         assert.equal(schemaId.getAbsoluteId(), expectedId);
         assert.equal(schemaId.isFetchable(), isFetchable);
         assert.equal(schemaId.getFileId(), fileId);
-        assert.equal(schemaId.isJsonPointerHash(), isJsonPath);
+        assert.equal(schemaId.existsJsonPointerHash(), isJsonPath);
         assert.deepEqual(schemaId.getJsonPointerHash(), jsonPath);
         assert.deepEqual(schemaId.getTypeNames(), typenames);
     }

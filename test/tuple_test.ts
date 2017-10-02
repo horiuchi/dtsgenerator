@@ -1,11 +1,11 @@
 import * as assert from 'power-assert';
 import dtsgenerator from '../src/';
-import { initialize } from '../src/commandOptions';
+import { clear } from '../src/commandOptions';
 
 describe('tuple test', () => {
 
     afterEach(() => {
-        initialize();
+        clear();
     });
 
     it('no min', async () => {
