@@ -56,7 +56,7 @@
     "@types/power-assert": "^1.4.29",
     "@types/request": "^2.0.3",
     "coveralls": "^3.0.0",
-    "mocha": "^3.5.3",
+    "mocha": "^4.0.0",
     "nyc": "^11.2.1",
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.2",
