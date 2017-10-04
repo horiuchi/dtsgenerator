@@ -60,7 +60,7 @@
     "nyc": "^11.2.1",
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.2",
-    "source-map-support": "^0.4.18",
+    "source-map-support": "^0.5.0",
     "ts-node": "^3.3.0",
     "tslint": "^5.7.0",
     "typescript": "^2.5.3"
