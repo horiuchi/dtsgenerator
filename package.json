@@ -37,32 +37,32 @@
     "node": ">= 4.0"
   },
   "dependencies": {
-    "commander": "^2.11.0",
+    "commander": "^2.12.2",
     "debug": "^3.1.0",
     "glob": "^7.1.2",
     "js-yaml": "^3.10.0",
     "mkdirp": "^0.5.1",
     "request": "^2.83.0",
-    "tslib": "^1.7.1"
+    "tslib": "^1.8.1"
   },
   "devDependencies": {
-    "@types/commander": "^2.9.2",
+    "@types/commander": "^2.12.2",
     "@types/debug": "^0.0.30",
-    "@types/glob": "^5.0.32",
+    "@types/glob": "^5.0.33",
     "@types/js-yaml": "3.10.1",
-    "@types/mkdirp": "^0.5.1",
-    "@types/mocha": "^2.2.43",
-    "@types/node": "^8.0.31",
+    "@types/mkdirp": "^0.5.2",
+    "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.57",
     "@types/power-assert": "^1.4.29",
-    "@types/request": "^2.0.3",
+    "@types/request": "^2.0.8",
     "coveralls": "^3.0.0",
-    "mocha": "^4.0.0",
-    "nyc": "^11.2.1",
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.0",
-    "ts-node": "^3.3.0",
-    "tslint": "^5.7.0",
-    "typescript": "^2.5.3"
+    "ts-node": "^4.0.1",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
   }
 }
