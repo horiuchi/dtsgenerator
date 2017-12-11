@@ -29,12 +29,12 @@ describe('output command help test', () => {
   Options:
 
     -V, --version                      output the version number
-    --url <url>                        input json schema from the url.
+    --url <url>                        input json schema from the url. (default: )
     --stdin                            read stdin with other files or urls.
     -o, --out <file>                   output d.ts filename.
     -p, --prefix <type prefix>         set the prefix of interface name. default is nothing.
     -H, --header <type header string>  set the string of type header.
-    -t, --target [version]             set target TypeScript version. select from \`v2\` or \`v1\`. default is \`v2\`.
+    -t, --target [version]             set target TypeScript version. select from \`v2\` or \`v1\`. default is \`v2\`. (default: v2)
     -h, --help                         output usage information
 
   Examples:
