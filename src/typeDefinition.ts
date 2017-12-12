@@ -173,7 +173,7 @@ export class TypeDefinition {
             if (!terminate) {
                 process.output('(');
             }
-            if (property.type === "integer") {
+            if (property.type === 'integer') {
                 process.output(property.enum.join(' | '));
             } else {
                 process.output(property.enum.map((s) => '"' + s + '"').join(' | '));

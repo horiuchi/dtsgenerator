@@ -15,12 +15,12 @@ describe('enum test', () => {
             properties: {
                 port: {
                     type: 'integer',
-                    enum: [1,2,3]
+                    enum: [1, 2, 3],
                 },
                 direction: {
                     type: 'string',
                     enum: ['NW', 'NE', 'SW', 'SE'],
-                }
+                },
             },
         };
         const result = await dtsgenerator([schema]);
