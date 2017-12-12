@@ -69,6 +69,10 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v0.9.7](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.7) (2017-12-12)
+
+- Support the integer enum type by #263. Thank you @heapx :*+1:
+
 ### [v0.9.6](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.6) (2017-09-28)
 
 - Bug fix about unresoled $refs by #253. Thank you @skuligowski :+1:
