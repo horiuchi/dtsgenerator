@@ -5,7 +5,7 @@ import opts from './commandOptions';
 
 const debug = Debug('dtsgen');
 
-export function toTSType(type: string, debugSource?: any): string {
+export function toTSType(type: string, debugSource?: any): string | undefined {
     switch (type) {
         case 'integer':
             return 'number';
@@ -18,10 +18,10 @@ export function toTSType(type: string, debugSource?: any): string {
             return type;
         case 'object':
         case 'array':
-            return null;
+            return undefined;
         default:
             if (debugSource) {
-                console.error('  debugSource=' + JSON.stringify(debugSource, null, 2));
+                debug(`toTSType: unknown type: ${JSON.stringify(debugSource, null, 2)}`);
             }
             throw new Error('unknown type: ' + type);
     }
@@ -53,20 +53,16 @@ export function toTypeName(str: string): string {
 
 export function mergeSchema(a: any, b: any): any {
     Object.keys(b).forEach((key: string) => {
-        if (a[key] == null) {
-            a[key] = b[key];
+        const value = b[key];
+        if (a[key] != null && typeof value !== typeof a[key]) {
+            debug(`mergeSchema warning: type is missmatched, key=${key}`);
+        }
+        if (Array.isArray(value)) {
+            a[key] = (a[key] || []).concat(value);
+        } else if (typeof value === 'object') {
+            a[key] = Object.assign(a[key] || {}, value);
         } else {
-            const value = b[key];
-            if (typeof value !== typeof a[key]) {
-                debug(`mergeSchema warning: type is missmatched, key=${key}`);
-                a[key] = value;
-            } else if (Array.isArray(value)) {
-                Array.prototype.push.apply(a[key], value);
-            } else if (typeof value === 'object') {
-                Object.assign(a[key], value);
-            } else {
-                a[key] = value;
-            }
+            a[key] = value;
         }
     });
     return a;

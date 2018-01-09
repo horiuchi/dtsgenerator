@@ -10,7 +10,7 @@ export class TypeDefinition {
     constructor(private schema: JsonSchemaOrg.Schema, path: string[], refId?: SchemaId) {
         this.target = JsonPointer.get(schema, path);
         if (!this.target || !this.target.id) {
-            this.id = refId || null;
+            this.id = refId || SchemaId.empty;
         } else {
             const baseId = this.target.id;
             const parentsId: string[] = [];
@@ -47,12 +47,12 @@ export class TypeDefinition {
         return type;
     }
     private getTypename(id: SchemaId | string): string[] {
-        let sid = (id instanceof SchemaId) ? id : new SchemaId(id);
+        const sid = (id instanceof SchemaId) ? id : new SchemaId(id);
         const result = sid.getTypeNames();
         const myId = this.schemaId;
         if (myId) {
             const baseType = myId.getTypeNames().slice(0, -1);
-            for (let name of baseType) {
+            for (const name of baseType) {
                 if (result[0] === name) {
                     result.shift();
                 } else {
@@ -71,6 +71,7 @@ export class TypeDefinition {
             base.allOf.forEach((p) => {
                 if (p.$ref) {
                     p = this.searchRef(process, p.$ref).targetSchema;
+                    p = this.checkSchema(process, p);
                 }
                 utils.mergeSchema(schema, p);
             });
@@ -122,22 +123,25 @@ export class TypeDefinition {
     private generateTypeCollection(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         const name = this.id.getInterfaceName();
         process.output('export type ').outputType(name).output(' = ');
-        this.generateTypeProperty(process, type.items == null ? {} : type.items, false);
-        process.outputLine('[];');
+        this.generateArrayTypeProperty(process, type.items, type.minItems, true);
     }
 
     private generateProperties(process: WriteProcessor, type: JsonSchemaOrg.Schema): void {
         if (type.additionalProperties) {
             process.output('[name: string]: ');
-            this.generateTypeProperty(process, type.additionalProperties, true);
+            if (type.additionalProperties === true) {
+                process.outputLine('any;');
+            } else {
+                this.generateTypeProperty(process, type.additionalProperties, true);
+            }
         }
         if (type.properties) {
-            Object.keys(type.properties).forEach((propertyName) => {
+            for (const propertyName of Object.keys(type.properties)) {
                 const property = type.properties[propertyName];
                 process.outputJSDoc(property);
                 this.generatePropertyName(process, propertyName, type);
                 this.generateTypeProperty(process, property);
-            });
+            }
         }
     }
     private generatePropertyName(process: WriteProcessor, propertyName: string, property: JsonSchemaOrg.Schema): void {
@@ -169,7 +173,11 @@ export class TypeDefinition {
             if (!terminate) {
                 process.output('(');
             }
-            process.output(property.enum.map((s) => '"' + s + '"').join(' | '));
+            if (property.type === 'integer') {
+                process.output(property.enum.join(' | '));
+            } else {
+                process.output(property.enum.map((s) => '"' + s + '"').join(' | '));
+            }
             if (!terminate) {
                 process.output(')');
             } else {
@@ -188,16 +196,64 @@ export class TypeDefinition {
             if (!terminate && types.length > 1) {
                 process.output('(');
             }
-            types.forEach((t: string, index: number) => {
+            for (let index = 0; index < types.length; index++) {
+                const t = types[index];
                 const isLast = index === types.length - 1;
                 this.generateTypeName(process, t, property, terminate && isLast, isLast);
                 if (!isLast) {
-                  process.output(' | ');
+                    process.output(' | ');
                 }
-            });
+            }
             if (!terminate && types.length > 1) {
                 process.output(')');
             }
+        }
+    }
+
+    private generateArrayTypeProperty(process: WriteProcessor, items: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[] | undefined, minItems?: number, terminate = true): void {
+        if (items == null) {
+            process.output('any[]');
+        } else if (!Array.isArray(items)) {
+            this.generateTypeProperty(process, items == null ? {} : items, false);
+            process.output('[]');
+        } else if (items.length === 0 && minItems === undefined) {
+            process.output('any[]');
+        } else {
+            const schemas = items.concat();
+            const effectiveMaxItems = 1 + Math.max(minItems || 0, schemas.length);
+            for (
+                let unionIndex = minItems === undefined ? 1 : minItems;
+                unionIndex <= effectiveMaxItems;
+                unionIndex++
+            ) {
+                process.output('[');
+                for (let i = 0; i < unionIndex; i++) {
+                    if (i < schemas.length) {
+                        const type = schemas[i];
+                        if (type.id) {
+                            this.generateTypePropertyNamedType(process, this.getTypename(type.id), false, type, false);
+                        } else {
+                            this.generateTypeProperty(process, type, false);
+                        }
+                    } else {
+                        if (i < effectiveMaxItems - 1) {
+                            process.output('Object');
+                        } else {
+                            process.output('any');
+                        }
+                    }
+                    if (i < unionIndex - 1) {
+                        process.output(', ');
+                    }
+                }
+                process.output(']');
+                if (unionIndex < effectiveMaxItems) {
+                    process.output(' | ');
+                }
+            }
+        }
+        if (terminate) {
+            process.outputLine(';');
         }
     }
 
@@ -213,7 +269,7 @@ export class TypeDefinition {
                 this.generateTypeProperty(process, type, isLast && terminate);
             }
             if (!isLast) {
-              process.output(separator);
+                process.output(separator);
             }
         });
         if (!terminate) {
@@ -237,13 +293,8 @@ export class TypeDefinition {
                 process.outputLine(';');
             }
         } else if (type === 'array') {
-            this.generateTypeProperty(process, property.items == null ? {} : property.items, false);
-            process.output('[]');
-            if (terminate) {
-                process.outputLine(';');
-            }
+            this.generateArrayTypeProperty(process, property.items, property.minItems, terminate);
         } else {
-            console.error(property);
             throw new Error('unknown type: ' + property.type);
         }
     }

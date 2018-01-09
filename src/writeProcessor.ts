@@ -1,9 +1,7 @@
 import opts from './commandOptions';
 import { TypeDefinition } from './typeDefinition';
 
-export interface ReferenceResolver {
-    (baseSchema: JsonSchemaOrg.Schema, ref: string): TypeDefinition;
-}
+export type ReferenceResolver = (baseSchema: JsonSchemaOrg.Schema, ref: string) => TypeDefinition | undefined;
 
 export class WriteProcessor {
 
@@ -24,7 +22,7 @@ export class WriteProcessor {
     public pushReference(referenceName: string): number {
         return this.referenceStack.push(referenceName);
     }
-    public popReference(): string {
+    public popReference(): string | undefined {
         return this.referenceStack.pop();
     }
     public checkCircularReference(referenceName: string): boolean {
@@ -78,7 +76,7 @@ export class WriteProcessor {
     }
 
     public outputJSDoc(spec: any): this {
-        let { description, example } = spec;
+        const { description, example } = spec;
         if (!description && !example) {
             return this;
         }
@@ -90,7 +88,7 @@ export class WriteProcessor {
             });
         }
         if (example) {
-            let split = example.toString().split('\n');
+            const split = example.toString().split('\n');
             if (split.length === 1) {
                 this.outputLine(` * example: ${this.protectComment(example)}`);
             } else {

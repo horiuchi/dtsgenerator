@@ -1,4 +1,4 @@
-import { Command, ICommand } from 'commander';
+import { Command } from 'commander';
 
 /* tslint:disable:no-var-requires */
 const pkg = require('../package.json');
@@ -22,31 +22,25 @@ export class CommandOptions {
 }
 
 
-let opts = new CommandOptions();
-clear(opts);
-
-export function initialize(argv?: string[]): ICommand | null {
-    if (argv) {
-        return parse(opts, argv);
-    } else {
-        clear(opts);
-        return null;
-    }
-}
+const opts = new CommandOptions();
+clear();
 export default opts;
 
-
-function clear(o: CommandOptions): void {
-    o.files = [];
-    o.urls = [];
-    o.stdin = undefined;
-    o.out = undefined;
-    o.prefix = undefined;
-    o.header = undefined;
-    o.target = 'v2';
+export function initialize(argv: string[]) {
+    return parse(opts, argv);
 }
 
-function parse(o: CommandOptions, argv: string[]): ICommand {
+export function clear(): void {
+    opts.files = [];
+    opts.urls = [];
+    opts.stdin = undefined;
+    opts.out = undefined;
+    opts.prefix = undefined;
+    opts.header = undefined;
+    opts.target = 'v2';
+}
+
+function parse(o: CommandOptions, argv: string[]) {
     const command = new Command();
 
     function collectUrl(val: string, memo: string[]): string[] {
@@ -71,10 +65,11 @@ function parse(o: CommandOptions, argv: string[]): ICommand {
         .option('--stdin', 'read stdin with other files or urls.')
         .option('-o, --out <file>', 'output d.ts filename.')
         .option('-p, --prefix <type prefix>', 'set the prefix of interface name. default is nothing.')
-        .option('-h, --header <type header string>', 'set the string of type header.')
+        .option('-H, --header <type header string>', 'set the string of type header.')
         .option('-t, --target [version]', 'set target TypeScript version. select from `v2` or `v1`. default is `v2`.', /^(v?2|v?1)$/i, 'v2')
         .on('--help', () => {
             /* tslint:disable:no-console */
+            console.log('');
             console.log('  Examples:');
             console.log('');
             console.log('    $ dtsgen --help');
@@ -82,7 +77,6 @@ function parse(o: CommandOptions, argv: string[]): ICommand {
             console.log('    $ cat schema1.json | dtsgen --target v1');
             console.log('    $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json');
             console.log('    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml');
-            console.log('');
         })
         .parse(argv);
 

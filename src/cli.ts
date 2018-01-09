@@ -21,7 +21,7 @@ function readSchemasFromStdin(): Promise<JsonSchemaOrg.Schema[]> {
             }
         }
         function onEnd(): void {
-            let schemas = parseFileContent(data);
+            let schemas: JsonSchemaOrg.Schema | JsonSchemaOrg.Schema[] = parseFileContent(data);
             if (!Array.isArray(schemas)) {
                 schemas = [schemas];
             }

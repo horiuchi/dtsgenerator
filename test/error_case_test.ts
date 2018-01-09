@@ -80,7 +80,7 @@ describe('error schema test', () => {
         }
     });
     it('invalid format schema', async () => {
-        const schema = 'not schema data and invalid JSON format {.';
+        const schema = 'not schema data and invalid JSON format {.' as any;
         try {
             await dtsgenerator([schema]);
             assert.fail();

@@ -14,17 +14,17 @@ export default async function dtsgenerator(schemas?: JsonSchemaOrg.Schema[]): Pr
     const parser = new JsonSchemaParser();
     try {
         if (schemas) {
-            for (let schema of schemas) {
+            for (const schema of schemas) {
                 parser.parseSchema(schema);
             }
         }
-        for (let path of opts.files) {
+        for (const path of opts.files) {
             const lschemas = await parser.fetchLocalFileSchemas(path);
-            for (let lschema of lschemas) {
+            for (const lschema of lschemas) {
                 parser.parseSchema(lschema);
             }
         }
-        for (let url of opts.urls) {
+        for (const url of opts.urls) {
             parser.parseSchema(await parser.fetchRemoteSchema(url), url);
         }
         return parser.generateDts();

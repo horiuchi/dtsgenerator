@@ -31,16 +31,17 @@ $ dtsgen --help
 
   Usage: dtsgen [options] <file ... | file patterns using node-glob>
 
+
   Options:
 
-    -h, --help                         output usage information
     -V, --version                      output the version number
     --url <url>                        input json schema from the url.
     --stdin                            read stdin with other files or urls.
     -o, --out <file>                   output d.ts filename.
     -p, --prefix <type prefix>         set the prefix of interface name. default is nothing.
-    -h, --header <type header string>  set the string of type header.
+    -H, --header <type header string>  set the string of type header.
     -t, --target [version]             set target TypeScript version. select from `v2` or `v1`. default is `v2`.
+    -h, --help                         output usage information
 
   Examples:
 
@@ -49,7 +50,6 @@ $ dtsgen --help
     $ cat schema1.json | dtsgen --target v1
     $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
     $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
-
 ```
 
 ## Development
@@ -68,6 +68,26 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 - [Swagger Specification](http://swagger.io/specification/)
 
 ## ChangeLog
+
+### [v0.9.7](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.7) (2017-12-12)
+
+- Support the integer enum type by #263. Thank you @heapx :*+1:
+
+### [v0.9.6](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.6) (2017-09-28)
+
+- Bug fix about unresoled $refs by #253. Thank you @skuligowski :+1:
+
+### [v0.9.5](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.5) (2017-07-24)
+
+- Bug fix about tuple type support by #244. Thank you @laurelnaiad :+1:
+
+### [v0.9.4](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.4) (2017-07-22)
+
+- Support tuple type of #239, #241. Thank you @laurelnaiad :+1:
+
+### [v0.9.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.2) (2017-06-19)
+
+- Fix the bug about `allOf` property of #226. Thank you @dawidgarus @philliphoff :+1:
 
 ### [v0.9.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.1) (2017-01-27)
 
