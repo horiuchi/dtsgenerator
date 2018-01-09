@@ -284,7 +284,7 @@ declare namespace Test {
     it('include example schema', async () => {
         const schema: JsonSchemaOrg.Schema = {
             id: 'test/example/root',
-            example: 'How get this schema.\nAlso, How get this data from hoge.',
+            example: 'How get this schema.\nAlso, How get this data from hoge.\n /* hoge from fuga. */',
             properties: {
                 name: {
                     type: ['string', 'null'],
@@ -301,6 +301,7 @@ declare namespace Test {
          * example:
          *   How get this schema.
          *   Also, How get this data from hoge.
+         *    /* hoge from fuga. *\u200B/
          */
         export interface Root {
             /**
@@ -323,6 +324,7 @@ declare namespace Test {
          * example:
          *   How get this schema.
          *   Also, How get this data from hoge.
+         *    /* hoge from fuga. *\u200B/
          */
         export interface Root {
             /**
