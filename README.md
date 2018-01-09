@@ -69,6 +69,10 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v0.9.8](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.8) (2018-01-09)
+
+- Bug fix about a block comment code in example node by #221. Thank you @GongT :*+1:
+
 ### [v0.9.7](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.7) (2017-12-12)
 
 - Support the integer enum type by #263. Thank you @heapx :*+1:
