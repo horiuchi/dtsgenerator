@@ -75,7 +75,7 @@ export class WriteProcessor {
         return str.replace(/\*\//g, '*\u200B/'); // Unicode [ZERO WIDTH SPACE]
     }
 
-    public outputJSDoc(spec: any): this {
+    public outputJSDoc(spec: JsonSchemaOrg.Schema): this {
         const { description, example } = spec;
         if (!description && !example) {
             return this;
@@ -88,9 +88,10 @@ export class WriteProcessor {
             });
         }
         if (example) {
-            const split = example.toString().split('\n');
+            const text = example.toString();
+            const split = text.split('\n');
             if (split.length === 1) {
-                this.outputLine(` * example: ${this.protectComment(example)}`);
+                this.outputLine(` * example: ${this.protectComment(text)}`);
             } else {
                 this.outputLine(' * example:');
                 split.forEach((line: string) => {
