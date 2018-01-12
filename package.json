@@ -37,7 +37,7 @@
     "node": ">= 4.0"
   },
   "dependencies": {
-    "commander": "^2.12.2",
+    "commander": "^2.13.0",
     "debug": "^3.1.0",
     "glob": "^7.1.2",
     "js-yaml": "^3.10.0",
@@ -54,7 +54,7 @@
     "@types/mocha": "^2.2.46",
     "@types/node": "^9.3.0",
     "@types/power-assert": "^1.4.29",
-    "@types/request": "^2.0.9",
+    "@types/request": "^2.0.10",
     "coveralls": "^3.0.0",
     "mocha": "^4.1.0",
     "nyc": "^11.4.1",
@@ -62,7 +62,7 @@
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.0",
     "ts-node": "^4.1.0",
-    "tslint": "^5.8.0",
+    "tslint": "^5.9.1",
     "typescript": "^2.6.2"
   }
 }
