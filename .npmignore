@@ -1,4 +1,5 @@
 .git/
+.vscode/
 
 # for npm
 node_modules/
@@ -6,11 +7,10 @@ node_modules/
 # codes
 demo/
 test/
-test-powered/
-coverage/
 schema/
 
 # misc
+.nyc_output/
 .gitignore
 .coveralls.yml
 .editorconfig
