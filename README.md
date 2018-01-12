@@ -1,6 +1,6 @@
 # dtsgenerator
 
-TypeScript d.ts file generator from JSON Schema file or Swagger spec file.
+TypeScript d.ts file generator from JSON Schema file or OpenAPI(Swagger) spec file.
 
 [![nodejs version](https://img.shields.io/node/v/dtsgenerator.svg)](#)
 [![npm version](https://badge.fury.io/js/dtsgenerator.svg)](https://www.npmjs.com/package/dtsgenerator)
@@ -64,10 +64,20 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 ### Links about JSON Schema and Swagger
 
 - [The home of JSON Schema](http://json-schema.org/)
-- [JSON Schema wiki for discussions on the next version of the draft](https://github.com/json-schema/json-schema/wiki)
-- [Swagger Specification](http://swagger.io/specification/)
+- [The OpenAPI Specification](https://github.com/OAI/OpenAPI-Specification)
+
+### Supported spec version
+
+- JSON Schema
+    - draft-04
+- OpenAPI
+    - OpenAPI Specification 2.0
 
 ## ChangeLog
+
+### [v0.9.9](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.9) (2018-01-12)
+
+- Bug fix about previous version code by #267. Thank you @bricka :*+1:
 
 ### [v0.9.8](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.8) (2018-01-09)
 
@@ -139,4 +149,5 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 `dtsgenerator` is licensed under the MIT license.
 
-Copyright &copy; 2016, Hiroki Horiuchi
+Copyright &copy; 2016-2018, Hiroki Horiuchi
+
