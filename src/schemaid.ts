@@ -1,4 +1,4 @@
-import * as url from 'url';
+import url from 'url';
 import { parse } from './jsonPointer';
 import { toTypeName } from './utils';
 

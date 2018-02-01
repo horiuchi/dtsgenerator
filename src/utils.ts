@@ -1,6 +1,6 @@
-import * as Debug from 'debug';
-import * as YAML from 'js-yaml';
-import * as path from 'path';
+import Debug from 'debug';
+import YAML from 'js-yaml';
+import path from 'path';
 import opts from './commandOptions';
 
 const debug = Debug('dtsgen');
