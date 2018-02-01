@@ -29,7 +29,7 @@ export default async function dtsgenerator(schemas?: JsonSchemaOrg.Schema[]): Pr
         }
         return parser.generateDts();
     } catch (e) {
-        return Promise.reject(e);
+        throw e;
     }
 }
 

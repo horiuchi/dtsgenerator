@@ -161,18 +161,25 @@ export class JsonSchemaParser {
 
     public fetchLocalFileSchemas(globPath: string): Promise<JsonSchemaOrg.Schema[]> {
         const files = glob.sync(globPath);
+        if (files.length === 0) {
+            return Promise.reject(new Error('File is not found! ' + globPath));
+        }
         return Promise.all(files.map((file: string) => {
-            return new Promise((resolve, reject) => {
-                fs.readFile(file, { encoding: 'utf-8' }, (err: any, content: string) => {
-                    if (err) {
-                        reject(err);
-                    } else {
+            return new Promise<JsonSchemaOrg.Schema>((resolve, reject) => {
+                fs.exists(file, (exists) => {
+                    if (!exists) {
+                        return reject(new Error('File is not fount! ' + file));
+                    }
+                    fs.readFile(file, { encoding: 'utf-8' }, (err: any, content: string) => {
+                        if (err) {
+                            return reject(err);
+                        }
                         try {
                             resolve(parseFileContent(content, file));
                         } catch (e) {
                             reject(e);
                         }
-                    }
+                    });
                 });
             });
         }));
