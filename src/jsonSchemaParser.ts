@@ -1,8 +1,8 @@
-import * as Debug from 'debug';
-import * as fs from 'fs';
-import * as glob from 'glob';
-import * as http from 'http';
-import * as request from 'request';
+import Debug from 'debug';
+import fs from 'fs';
+import glob from 'glob';
+import http from 'http';
+import request from 'request';
 import opts from './commandOptions';
 import * as JsonPointer from './jsonPointer';
 import { SchemaId } from './schemaid';

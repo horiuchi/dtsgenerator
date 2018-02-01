@@ -43,26 +43,26 @@
     "js-yaml": "^3.10.0",
     "mkdirp": "^0.5.1",
     "request": "^2.83.0",
-    "tslib": "^1.8.1"
+    "tslib": "^1.9.0"
   },
   "devDependencies": {
     "@types/commander": "^2.12.2",
     "@types/debug": "^0.0.30",
-    "@types/glob": "^5.0.34",
+    "@types/glob": "^5.0.35",
     "@types/js-yaml": "3.10.1",
     "@types/mkdirp": "^0.5.2",
-    "@types/mocha": "^2.2.46",
-    "@types/node": "^9.3.0",
+    "@types/mocha": "^2.2.48",
+    "@types/node": "^9.4.0",
     "@types/power-assert": "^1.4.29",
-    "@types/request": "^2.0.10",
+    "@types/request": "^2.47.0",
     "coveralls": "^3.0.0",
     "mocha": "^5.0.0",
     "nyc": "^11.4.1",
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.2",
-    "source-map-support": "^0.5.0",
+    "source-map-support": "^0.5.3",
     "ts-node": "^4.1.0",
     "tslint": "^5.9.1",
-    "typescript": "^2.6.2"
+    "typescript": "^2.7.1"
   }
 }
