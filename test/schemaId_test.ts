@@ -1,5 +1,5 @@
 import * as assert from 'power-assert';
-import { SchemaId } from '../src/schemaid';
+import { SchemaId } from '../src/schemaId';
 
 
 describe('schema id parser test', () => {
