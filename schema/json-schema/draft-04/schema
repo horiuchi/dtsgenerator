@@ -28,10 +28,16 @@
     "type": "object",
     "properties": {
         "id": {
-            "type": "string"
+            "type": "string",
+            "format": "uri"
         },
         "$schema": {
-            "type": "string"
+            "type": "string",
+            "format": "uri"
+        },
+        "$ref": {
+            "type": "string",
+            "format": "uri"
         },
         "title": {
             "type": "string"
