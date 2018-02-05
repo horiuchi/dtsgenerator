@@ -41,6 +41,7 @@ declare namespace JsonSchemaOrg {
             };
             enum?: any[];
             type?: Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
+            format?: string;
             allOf?: Schema.Definitions.SchemaArray;
             anyOf?: Schema.Definitions.SchemaArray;
             oneOf?: Schema.Definitions.SchemaArray;
