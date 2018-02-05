@@ -1,5 +1,5 @@
 import * as JsonPointer from './jsonPointer';
-import { SchemaId } from './schemaid';
+import { SchemaId } from './schemaId';
 import * as utils from './utils';
 import { WriteProcessor } from './writeProcessor';
 
