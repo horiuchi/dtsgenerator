@@ -5,7 +5,7 @@ import http from 'http';
 import request from 'request';
 import opts from './commandOptions';
 import * as JsonPointer from './jsonPointer';
-import { SchemaId } from './schemaid';
+import { SchemaId } from './schemaId';
 import { TypeDefinition } from './typeDefinition';
 import { parseFileContent } from './utils';
 import { WriteProcessor } from './writeProcessor';
