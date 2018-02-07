@@ -62,6 +62,6 @@
     "test"
   ],
   "exclude": [
-    "test/expected_file"
+    "test/snapshots"
   ]
 }

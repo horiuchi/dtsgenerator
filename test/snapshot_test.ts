@@ -5,6 +5,7 @@ import dtsgenerator from '../src/';
 import opts, { clear } from '../src/commandOptions';
 
 const fixturesDir = path.join(__dirname, 'snapshots');
+const expectedFileName = '_expected.d.ts';
 
 describe('Snapshot testing', () => {
     afterEach(() => {
@@ -17,15 +18,14 @@ describe('Snapshot testing', () => {
             it(`Test ${typeName} ${normalizedTestName}`, async function() {
                 const fixtureDir = path.join(fixturesDir, typeName, caseName);
                 const filePaths = fs.readdirSync(fixtureDir);
-                const expectedFile = filePaths.splice(filePaths.findIndex((file) => /\.d\.ts$/.test(file)), 1)[0];
-                const expectedFilePath = path.join(fixtureDir, expectedFile);
+                const expectedFilePath = path.join(fixtureDir, expectedFileName);
 
-                opts.files = filePaths.map((f) => path.join(fixtureDir, f));
+                opts.files = filePaths.filter((f) => f !== expectedFileName).map((f) => path.join(fixtureDir, f));
                 const actual = await dtsgenerator();
 
                 // UPDATE_SNAPSHOT=1 npm test で呼び出したときはスナップショットを更新
                 if (process.env.UPDATE_SNAPSHOT) {
-                    fs.writeFileSync(expectedFilePath, JSON.stringify(actual, null, 4));
+                    fs.writeFileSync(expectedFilePath, actual);
                     this.skip(); // スキップ
                     return;
                 }

@@ -1,5 +1,5 @@
 {
-    "id": "http://some.site.somewhere/entry-schema#",
+    "$id": "http://some.site.somewhere/entry-schema#",
     "$schema": "http://json-schema.org/draft-06/schema#",
     "description": "schema for an fstab entry",
     "type": "object",
