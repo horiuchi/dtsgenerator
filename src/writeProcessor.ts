@@ -10,7 +10,7 @@ export class WriteProcessor {
 
     private indent = 0;
     private results = '';
-    private alreadlyIndentThisLine = false;
+    private alreadyIndentThisLine = false;
     private referenceStack: string[] = [];
 
     constructor(private refResolver: ReferenceResolver) {}
@@ -67,7 +67,7 @@ export class WriteProcessor {
             this.output(str);
         }
         this.output('\n');
-        this.alreadlyIndentThisLine = false;
+        this.alreadyIndentThisLine = false;
         return this;
     }
 
@@ -104,10 +104,10 @@ export class WriteProcessor {
     }
 
     public doIndent(): this {
-        if (!this.alreadlyIndentThisLine) {
+        if (!this.alreadyIndentThisLine) {
             const indent = this.getIndent();
             this.results += indent;
-            this.alreadlyIndentThisLine = true;
+            this.alreadyIndentThisLine = true;
         }
         return this;
     }
