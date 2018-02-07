@@ -10,7 +10,7 @@ describe('simple schema test', () => {
     });
 
     it('no property schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/no_prop',
             type: 'object',
         };
@@ -24,7 +24,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('one line schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/one_line',
             type: 'object',
             properties: {
@@ -62,7 +62,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('include array schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inc_array',
             type: 'object',
             properties: {
@@ -106,7 +106,7 @@ declare namespace Test {
         }
     });
     it('all simple type schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/all_simple_type',
             type: 'object',
             properties: {
@@ -174,7 +174,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('inner object schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inner_object',
             type: 'object',
             properties: {
@@ -208,7 +208,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('object array schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/object_array',
             type: 'object',
             properties: {
@@ -243,7 +243,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('root array schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: 'test/root/root_array',
             type: 'array',
             items: {
@@ -261,7 +261,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('root any schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: 'test/root/root_any',
             description: 'This is any type schema',
             additionalProperties: true,
@@ -282,7 +282,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('include example schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: 'test/example/root',
             example: 'How get this schema.\nAlso, How get this data from hoge.\n /* hoge from fuga. */',
             properties: {
@@ -339,7 +339,7 @@ declare namespace Test {
         }
     });
     it('include $ref schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: 'test/ref/include_ref',
             type: 'object',
             definitions: {
@@ -371,7 +371,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it(' model in multiple allOf', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             definitions: {
                 Parent: {
                     type: 'object',
@@ -428,7 +428,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it(' model in multiple allOf nested ordered $refs', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             definitions: {
                 Parent: {
                     type: 'object',
@@ -486,7 +486,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it(' model in multiple allOf nested unordered $refs', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             definitions: {
                 Parent: {
                     type: 'object',
@@ -544,7 +544,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('should include allOf schemas', async () => {
-        const baseSchema: JsonSchemaOrg.Schema = {
+        const baseSchema: JsonSchemaOrg.Draft04.Schema = {
             id: 'http://test/zzz/allOf/base',
             type: 'object',
             properties: {
@@ -554,7 +554,7 @@ declare namespace Test {
             },
             required: ['id'],
         };
-        const extendedSchema: JsonSchemaOrg.Schema = {
+        const extendedSchema: JsonSchemaOrg.Draft04.Schema = {
             id: 'http://test/zzz/allOf/extended',
             type: 'object',
             allOf: [
@@ -567,7 +567,7 @@ declare namespace Test {
             },
             required: ['value'],
         };
-        const separateSchema: JsonSchemaOrg.Schema = {
+        const separateSchema: JsonSchemaOrg.Draft04.Schema = {
             id: 'http://test/separate',
             type: 'object',
             properties: {
@@ -577,7 +577,7 @@ declare namespace Test {
             },
             required: ['message'],
         };
-        const combinedSchema: JsonSchemaOrg.Schema = {
+        const combinedSchema: JsonSchemaOrg.Draft04.Schema = {
             id: 'http://test/combined',
             type: 'object',
             allOf: [

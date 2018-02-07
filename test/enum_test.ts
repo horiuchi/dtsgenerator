@@ -9,7 +9,7 @@ describe('enum test', () => {
     });
 
     it('string vs integer', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/enum_string_vs_integer',
             type: 'object',
             properties: {

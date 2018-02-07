@@ -9,7 +9,7 @@ describe('tuple test', () => {
     });
 
     it('no min', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inc_tuple_no_min',
             type: 'object',
             properties: {
@@ -42,7 +42,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('min less than length', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
             type: 'object',
             properties: {
@@ -72,7 +72,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('min eql to length', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inc_tuple_min_items_eql_length',
             type: 'object',
             properties: {
@@ -102,7 +102,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('min greater than length', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inc_tuple_min_items_greater_length',
             type: 'object',
             properties: {
@@ -132,7 +132,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('items.length zero, no minItems', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inc_tuple_no_min',
             type: 'object',
             properties: {
@@ -158,7 +158,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('items.length zero, with minItems', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inc_tuple_no_min',
             type: 'object',
             properties: {

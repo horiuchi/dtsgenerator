@@ -1,5 +1,6 @@
 import Debug from 'debug';
 import opts from '../commandOptions';
+import SimpleTypes = JsonSchemaOrg.Draft04.Schema.Definitions.SimpleTypes;
 
 const debug = Debug('dtsgen');
 
@@ -25,11 +26,11 @@ export function toTSType(type: string, debugSource?: any): string | undefined {
     }
 }
 
-export function reduceTypes(types: JsonSchemaOrg.Schema.Definitions.SimpleTypes[]): JsonSchemaOrg.Schema.Definitions.SimpleTypes[] {
+export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
     if (types.length < 2) {
         return types;
     }
-    const set = new Set<JsonSchemaOrg.Schema.Definitions.SimpleTypes>(types);
+    const set = new Set<SimpleTypes>(types);
     if (opts.target === 'v1') {
         set.delete('null');
     }

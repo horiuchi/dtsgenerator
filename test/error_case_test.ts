@@ -5,7 +5,7 @@ import dtsgenerator from '../src/';
 describe('error schema test', () => {
 
     it('no id schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             type: 'object',
         };
         try {
@@ -46,7 +46,7 @@ describe('error schema test', () => {
     });
 
     it('target of $ref is not found', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/target_not_found',
             type: 'object',
             properties: {
@@ -63,7 +63,7 @@ describe('error schema test', () => {
         }
     });
     it('target of $ref is invalid path', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/target_not_found',
             type: 'object',
             properties: {
