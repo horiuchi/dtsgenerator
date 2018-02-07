@@ -1,5 +1,5 @@
 import url from 'url';
-import { parse } from './jsonPointer';
+import { parse } from '../jsonPointer';
 import { toTypeName } from './utils';
 
 export class SchemaId {

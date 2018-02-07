@@ -1,4 +1,4 @@
-import * as assert from 'power-assert';
+import assert from 'power-assert';
 import dtsgenerator from '../src/';
 import opts, { clear } from '../src/commandOptions';
 

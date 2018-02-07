@@ -1,5 +1,5 @@
 import opts from './commandOptions';
-import { TypeDefinition } from './typeDefinition';
+import { TypeDefinition } from './schema/typeDefinition';
 
 export type ReferenceResolver = (baseSchema: JsonSchemaOrg.Schema, ref: string) => TypeDefinition | undefined;
 

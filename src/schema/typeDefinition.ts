@@ -1,7 +1,7 @@
-import * as JsonPointer from './jsonPointer';
+import * as JsonPointer from '../jsonPointer';
+import { WriteProcessor } from '../writeProcessor';
 import { SchemaId } from './schemaId';
 import * as utils from './utils';
-import { WriteProcessor } from './writeProcessor';
 
 export class TypeDefinition {
     private id: SchemaId;

@@ -5,14 +5,14 @@ import http from 'http';
 import request from 'request';
 import opts from './commandOptions';
 import * as JsonPointer from './jsonPointer';
-import { SchemaId } from './schemaId';
-import { TypeDefinition } from './typeDefinition';
+import { SchemaId } from './schema/schemaId';
+import { TypeDefinition } from './schema/typeDefinition';
 import { parseFileContent } from './utils';
 import { WriteProcessor } from './writeProcessor';
 
 const debug = Debug('dtsgen');
 
-const walkMaker = '<<type>>';
+const walkMaker = '__type__';
 
 export class JsonSchemaParser {
     private typeCache = new Map<string, TypeDefinition>();

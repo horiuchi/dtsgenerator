@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as assert from 'power-assert';
+import fs from 'fs';
+import path from 'path';
+import assert from 'power-assert';
 import dtsgenerator from '../src/';
 import opts, { clear } from '../src/commandOptions';
 
