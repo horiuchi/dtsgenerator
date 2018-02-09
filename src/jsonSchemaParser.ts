@@ -94,8 +94,8 @@ export class JsonSchemaParser {
             if (type instanceof TypeDefinition) {
                 debug(`  walk doProcess: path=${JSON.stringify(path)}, schemaId=${type.schemaId.getAbsoluteId()}`);
                 type.doProcess(process);
+                delete val[walkMaker];
             }
-            delete val[walkMaker];
 
             if (Object.keys(val).length > 0) {
                 const nextPath = path.concat(key);
