@@ -1,6 +1,7 @@
 *.un~
 *.swp
 
+coverage/
 node_modules/
 .nyc_output/
 
