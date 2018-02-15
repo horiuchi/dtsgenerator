@@ -15,6 +15,7 @@ export class CommandOptions {
     public prefix?: string;
     public header?: string;
     public target: TargetVersion = 'v2';
+    public intersection?: boolean;
 
     public isReadFromStdin(): boolean {
         return this.stdin || this.files.length === 0 && this.urls.length === 0;
@@ -38,6 +39,7 @@ export function clear(): void {
     opts.prefix = undefined;
     opts.header = undefined;
     opts.target = 'v2';
+    opts.intersection = undefined;
 }
 
 function parse(o: CommandOptions, argv: string[]) {
@@ -65,6 +67,7 @@ function parse(o: CommandOptions, argv: string[]) {
         .option('--stdin', 'read stdin with other files or urls.')
         .option('-o, --out <file>', 'output d.ts filename.')
         .option('-p, --prefix <type prefix>', 'set the prefix of interface name. default is nothing.')
+        .option('-i, --intersection', 'output intersection types for `allOf` and `anyOf` schema.')
         .option('-H, --header <type header string>', 'set the string of type header.')
         .option('-t, --target [version]', 'set target TypeScript version. select from `v2` or `v1`. default is `v2`.', /^(v?2|v?1)$/i, 'v2')
         .on('--help', () => {
@@ -87,6 +90,7 @@ function parse(o: CommandOptions, argv: string[]) {
     o.out = res.out;
     o.prefix = res.prefix;
     o.header = res.header;
+    o.intersection = res.arithmetic;
     o.target = normalize(res.target);
     return command;
 }
