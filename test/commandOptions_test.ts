@@ -8,15 +8,15 @@ describe('output command help test', () => {
     let oldWrite: any;
 
     beforeEach(() => {
-        oldWrite = process.stdout.write;
+        oldWrite = processor.stdout.write;
         content = '';
-        process.stdout.write = (str: string): boolean => {
+        processor.stdout.write = (str: string): boolean => {
             content += str;
             return true;
         };
     });
     afterEach(() => {
-        process.stdout.write = oldWrite;
+        processor.stdout.write = oldWrite;
     });
 
     it('should output command help ', () => {

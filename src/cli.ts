@@ -8,13 +8,13 @@ import { parseFileContent } from './utils';
 
 
 function readSchemasFromStdin(): Promise<JsonSchemaOrg.Schema[]> {
-    process.stdin.setEncoding('utf-8');
+    processor.stdin.setEncoding('utf-8');
     return new Promise((resolve, reject) => {
         let data = '';
         function onRead(): void {
             /* tslint:disable:no-conditional-assignment */
             let chunk: string | Buffer;
-            while (chunk = process.stdin.read()) {
+            while (chunk = processor.stdin.read()) {
                 if (typeof chunk === 'string') {
                     data += chunk;
                 }
@@ -30,7 +30,7 @@ function readSchemasFromStdin(): Promise<JsonSchemaOrg.Schema[]> {
         function onError(err: any): void {
             reject(err);
         }
-        process.stdin
+        processor.stdin
             .on('readable', onRead)
             .once('end', onEnd)
             .once('error', onError);
@@ -38,7 +38,7 @@ function readSchemasFromStdin(): Promise<JsonSchemaOrg.Schema[]> {
 }
 
 async function exec(): Promise<void> {
-    initialize(process.argv);
+    initialize(processor.argv);
 
     let schemas: JsonSchemaOrg.Schema[] = [];
     if (opts.isReadFromStdin()) {

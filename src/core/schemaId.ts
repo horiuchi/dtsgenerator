@@ -2,7 +2,7 @@ import url from 'url';
 import { parse } from '../jsonPointer';
 import { toTypeName } from './utils';
 
-export class SchemaId {
+export default class SchemaId {
     public static empty = new SchemaId('');
 
     private readonly baseId: url.Url;
@@ -29,6 +29,9 @@ export class SchemaId {
     public getAbsoluteId(): string {
         return this.absoluteId;
     }
+    public isEmpty(): boolean {
+        return !!this.absoluteId;
+    }
     public isFetchable(): boolean {
         return /https?\:\/\//.test(this.absoluteId);
     }
@@ -47,6 +50,7 @@ export class SchemaId {
     }
 
     public getTypeNames(): string[] {
+        // TODO add hook point on convert url to string[].
         const ids: string[] = [];
         if (this.baseId.host) {
             ids.push(decodeURIComponent(this.baseId.host));

@@ -1,6 +1,6 @@
 declare namespace JsonSchemaOrg {
     namespace Draft07 {
-        export type Schema = {
+        export type SchemaObject = {
             $id?: string; // uri-reference
             $schema?: string; // uri
             $ref?: string; // uri-reference
@@ -54,7 +54,8 @@ declare namespace JsonSchemaOrg {
             anyOf?: Schema.Definitions.SchemaArray;
             oneOf?: Schema.Definitions.SchemaArray;
             not?: Schema;
-        } | boolean;
+        }
+        export type Schema = SchemaObject | boolean;
         namespace Schema {
             namespace Definitions {
                 export type NonNegativeInteger = number;

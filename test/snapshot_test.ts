@@ -24,7 +24,7 @@ describe('Snapshot testing', () => {
                 const actual = await dtsgenerator();
 
                 // UPDATE_SNAPSHOT=1 npm test で呼び出したときはスナップショットを更新
-                if (process.env.UPDATE_SNAPSHOT) {
+                if (processor.env.UPDATE_SNAPSHOT) {
                     fs.writeFileSync(expectedFilePath, actual);
                     this.skip(); // スキップ
                     return;

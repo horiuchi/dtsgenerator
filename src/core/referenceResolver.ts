@@ -1,21 +1,39 @@
 import 'cross-fetch/polyfill';
 import Debug from 'debug';
+import * as JsonPointer from '../jsonPointer';
 import { parseFileContent } from '../utils';
-import { getSubSchema, parseSchema, Schema, searchAllSubSchema } from './';
-import { SchemaId } from './schemaId';
+import { getSubSchema, parseSchema, Schema, searchAllSubSchema } from './jsonSchema';
+import SchemaId from './schemaId';
 
 const debug = Debug('dtsgen');
 
-export class ReferenceResolver {
+export default class ReferenceResolver {
     private schemaCache = new Map<string, Schema>();
     private referenceCache = new Map<string, Schema | undefined>();
 
-    public dereference(refId: SchemaId): Schema {
-        const result = this.referenceCache.get(refId.getAbsoluteId());
+    public dereference(refId: string): Schema {
+        const result = this.referenceCache.get(refId);
         if (result == null) {
-            throw new Error('Target reference is not found: ' + refId.getAbsoluteId());
+            throw new Error('Target reference is not found: ' + refId);
         }
         return result;
+    }
+
+    public getAllSchemaMergedMap(typeMarker: symbol): any {
+        const map: any = {};
+        if (this.schemaCache.size === 0) {
+            throw new Error('There is no schema in the input contents.');
+        }
+        for (const type of this.schemaCache.values()) {
+            const names = type.id.getTypeNames();
+            const parent = JsonPointer.get(map, names, true);
+            if (parent == null) {
+                JsonPointer.set(map, names, { typeMarker: type });
+            } else {
+                parent[typeMarker] = type;
+            }
+        }
+        return map;
     }
 
     public async resolve(): Promise<void> {

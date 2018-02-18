@@ -1,7 +1,8 @@
 import * as JsonPointer from '../jsonPointer';
-import { SchemaId } from './schemaId';
+import SchemaId from './schemaId';
 
-type JsonSchema = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.Schema;
+export type JsonSchema = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.Schema;
+export type JsonSchemaObject = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.SchemaObject;
 
 export type SchemaType = 'Draft04' | 'Draft07';
 
@@ -11,6 +12,9 @@ export interface Schema {
     id: SchemaId;
     content: JsonSchema;
     rootSchema?: Schema;
+}
+export interface NormalizedSchema extends Schema {
+    content: JsonSchemaObject;
 }
 
 export function parseSchema(content: any, url?: string): Schema {
@@ -108,6 +112,7 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
         if (schema.type === 'Draft07') {
             if ('propertyNames' in s) {
                 walk(s.propertyNames, paths.concat('propertyNames'), parentIds);
+                walk(s.contains, paths.concat('contains'), parentIds);
                 walk(s.if, paths.concat('if'), parentIds);
                 walk(s.then, paths.concat('then'), parentIds);
                 walk(s.else, paths.concat('else'), parentIds);
