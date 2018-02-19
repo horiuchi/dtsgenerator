@@ -1,6 +1,6 @@
 import assert from 'power-assert';
-import dtsgenerator from '../src/';
 import { clear } from '../src/commandOptions';
+import dtsgenerator from '../src/core';
 
 describe('tuple test', () => {
 
@@ -30,7 +30,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     export interface IncTupleNoMin {
@@ -60,7 +60,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsLessLength {
@@ -90,7 +90,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsEqlLength {
@@ -120,7 +120,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsGreaterLength {
@@ -146,7 +146,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     export interface IncTupleNoMin {
@@ -173,7 +173,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     export interface IncTupleNoMin {

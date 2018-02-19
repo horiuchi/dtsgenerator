@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import assert from 'power-assert';
-import dtsgenerator from '../src/';
-import opts, { clear } from '../src/commandOptions';
+import { clear } from '../src/commandOptions';
+import dtsgenerator from '../src/core';
 
 const fixturesDir = path.join(__dirname, 'snapshots');
 const expectedFileName = '_expected.d.ts';
@@ -20,11 +20,12 @@ describe('Snapshot testing', () => {
                 const filePaths = fs.readdirSync(fixtureDir);
                 const expectedFilePath = path.join(fixtureDir, expectedFileName);
 
-                opts.files = filePaths.filter((f) => f !== expectedFileName).map((f) => path.join(fixtureDir, f));
-                const actual = await dtsgenerator();
+                const files = filePaths.filter((f) => f !== expectedFileName).map((f) => path.join(fixtureDir, f));
+                const contents = files.map((file) => fs.readFileSync(file, { encoding: 'utf-8' })).map((content) => JSON.parse(content))
+                const actual = await dtsgenerator({ contents });
 
                 // UPDATE_SNAPSHOT=1 npm test で呼び出したときはスナップショットを更新
-                if (processor.env.UPDATE_SNAPSHOT) {
+                if (process.env.UPDATE_SNAPSHOT) {
                     fs.writeFileSync(expectedFilePath, actual);
                     this.skip(); // スキップ
                     return;
