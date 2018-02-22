@@ -14,7 +14,8 @@
     "watch": "npm run compile -- -w",
     "test": "nyc --extension .ts mocha --compilers ts:ts-node/register",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test:nocov": "mocha --compilers ts:ts-node/register"
+    "test:nocov": "mocha --compilers ts:ts-node/register",
+    "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test:nocov"
   },
   "directories": {
     "test": "test/"

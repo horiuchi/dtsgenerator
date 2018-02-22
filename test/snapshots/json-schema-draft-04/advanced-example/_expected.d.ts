@@ -21,7 +21,7 @@ declare namespace SomeSiteSomewhere {
             export interface Nfs {
                 type: "nfs";
                 remotePath: string; // ^(/[^/]+)+$
-                server: any /* host-name */  | any /* ipv4 */  | any; // ipv6
+                server: any /* host-name */  | any /* ipv4 */  | any /* ipv6 */ ;
             }
             export interface Tmpfs {
                 type: "tmpfs";

@@ -204,7 +204,7 @@ export default class DtsGenerator {
                         this.convertor.outputRawValue(', ');
                     }
                     if (i < items.length) {
-                        const type = this.normalizeContent(schema, items[i]);
+                        const type = this.normalizeContent(schema, items[i], '#/items/' + i);
                         if (type.id.isEmpty()) {
                             this.generateTypeProperty(type, false);
                         } else {
