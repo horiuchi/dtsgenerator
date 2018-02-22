@@ -67,8 +67,13 @@ export default class WriteProcessor {
     }
 
     public outputJSDoc(...comments: any[]): this {
-        const lines = comments.filter((comment) => comment != null)
-            .map((comment) => comment.toString().split('\n').map((line: string) => this.protectComment(line)));
+        let lines: string[] = [];
+        comments
+            .filter((comment) => comment != null)
+            .map((comment) => comment.toString().split('\n').map((line: string) => this.protectComment(line)))
+            .forEach((ls: string[]) => {
+                lines = lines.concat(ls);
+            });
         if (lines.length > 0) {
             this.outputLine('/**');
             for (const line of lines) {

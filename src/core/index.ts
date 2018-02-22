@@ -18,10 +18,10 @@ export default async function dtsGenerator(options: Options): Promise<string> {
     if (options.contents != null) {
         options.contents
             .map((content) => parseSchema(content))
-            .forEach(resolver.registerSchema);
+            .forEach((schema) => resolver.registerSchema(schema));
     }
     if (options.inputUrls != null) {
-        await Promise.all(options.inputUrls.map(resolver.registerRemoteSchema));
+        await Promise.all(options.inputUrls.map((url) => resolver.registerRemoteSchema(url)));
     }
 
     const generator = new DtsGenerator(resolver, convertor);

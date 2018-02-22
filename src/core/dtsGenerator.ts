@@ -28,14 +28,13 @@ export default class DtsGenerator {
         const keys = Object.keys(map).sort();
         for (const key of keys) {
             const value = map[key];
-            const schema = value[typeMaker] as Schema;
-            if (schema != null) {
+            if (value.hasOwnProperty(typeMaker)) {
+                const schema = value[typeMaker] as Schema;
                 debug(`  walk doProcess: schemaId=${schema.id.getAbsoluteId()}`);
                 this.walkSchema(schema);
                 delete value[typeMaker];
             }
-
-            if (Object.keys(value).length > 0) {
+            if (typeof value === 'object' && Object.keys(value).length > 0) {
                 this.convertor.startNest(key);
                 this.walk(value);
                 this.convertor.endNest();
@@ -59,7 +58,7 @@ export default class DtsGenerator {
         }
     }
 
-    private normalizeContent(schema: Schema, content?: JsonSchema): NormalizedSchema {
+    private normalizeContent(schema: Schema, content?: JsonSchema, pointer?: string): NormalizedSchema {
         let id = schema.id;
         if (content == null) {
             content = schema.content;
@@ -67,8 +66,10 @@ export default class DtsGenerator {
             const s = getId(schema.type, content);
             if (s) {
                 id = new SchemaId(s, [id.getAbsoluteId()]);
+            } else if (pointer) {
+                id = new SchemaId(pointer, [id.getAbsoluteId()]);
             } else {
-                id = SchemaId.empty;
+                throw new Error('If `content` is not null, the `pointer` must not be null.');
             }
         }
         if (typeof content === 'boolean') {
@@ -83,6 +84,7 @@ export default class DtsGenerator {
                     }
                     utils.mergeSchema(work, sub);
                 }
+                delete content.allOf;
                 content = work;
             }
             const types = content.type;
@@ -93,7 +95,7 @@ export default class DtsGenerator {
                 content.type = reduced.length === 1 ? reduced[0] : reduced;
             }
         }
-        return Object.assign({ id, content }, schema);
+        return Object.assign({}, schema, { id, content });
     }
 
     private generateDeclareType(schema: NormalizedSchema): void {
@@ -122,7 +124,7 @@ export default class DtsGenerator {
         const content = baseSchema.content;
         if (content.additionalProperties) {
             this.convertor.outputRawValue('[name: string]: ');
-            const schema = this.normalizeContent(baseSchema, content.additionalProperties);
+            const schema = this.normalizeContent(baseSchema, content.additionalProperties, '#/additionalProperties');
             if (content.additionalProperties === true) {
                 this.convertor.outputStringTypeName(schema, 'any', true);
             } else {
@@ -132,9 +134,9 @@ export default class DtsGenerator {
         if (content.properties) {
             for (const propertyName of Object.keys(content.properties)) {
                 const property = content.properties[propertyName];
-                const schema = this.normalizeContent(baseSchema, property);
+                const schema = this.normalizeContent(baseSchema, property, '#/properties/' + propertyName);
                 this.convertor.outputComments(schema);
-                this.convertor.outputPropertyName(schema, propertyName);
+                this.convertor.outputPropertyName(schema, propertyName, baseSchema.content.required);
                 this.generateTypeProperty(schema);
             }
         }
@@ -149,9 +151,10 @@ export default class DtsGenerator {
             const refSchema = this.normalizeContent(ref);
             return this.convertor.outputTypeIdName(refSchema, schema);
         }
-        const anyOf = content.anyOf || content.oneOf;
-        if (anyOf) {
-            return this.generateArrayedType(schema, anyOf, terminate);
+        if (content.anyOf || content.oneOf) {
+            this.generateArrayedType(schema, content.anyOf, '#/anyOf/', terminate);
+            this.generateArrayedType(schema, content.oneOf, '#/oneOf/', terminate);
+            return;
         }
         if (content.enum) {
             return this.convertor.outputArrayedType(schema, content.enum, (value) => {
@@ -164,6 +167,19 @@ export default class DtsGenerator {
         }
         this.generateType(schema, terminate);
     }
+    private generateArrayedType(baseSchema: NormalizedSchema, contents: JsonSchema[] | undefined, pointer: string, terminate: boolean): void {
+        if (contents) {
+            this.convertor.outputArrayedType(baseSchema, contents, (content, index) => {
+                const schema = this.normalizeContent(baseSchema, content, pointer + index);
+                if (schema.id.isEmpty()) {
+                    this.generateTypeProperty(schema, false);
+                } else {
+                    this.convertor.outputTypeIdName(schema, baseSchema, false);
+                }
+            }, terminate);
+        }
+    }
+
 
     private generateArrayTypeProperty(schema: NormalizedSchema, terminate = true): void {
         const items = schema.content.items;
@@ -171,7 +187,7 @@ export default class DtsGenerator {
         if (items == null) {
             this.convertor.outputStringTypeName(schema, 'any[]', terminate);
         } else if (!Array.isArray(items)) {
-            this.generateTypeProperty(this.normalizeContent(schema, items), false);
+            this.generateTypeProperty(this.normalizeContent(schema, items, '#/items'), false);
             this.convertor.outputStringTypeName(schema, '[]', terminate);
         } else if (items.length === 0 && minItems === undefined) {
             this.convertor.outputStringTypeName(schema, 'any[]', terminate);
@@ -184,10 +200,10 @@ export default class DtsGenerator {
             ) {
                 this.convertor.outputRawValue('[');
                 for (let i = 0; i < unionIndex; i++) {
+                    if (i > 0) {
+                        this.convertor.outputRawValue(', ');
+                    }
                     if (i < items.length) {
-                        if (i > 0) {
-                            this.convertor.outputRawValue(', ');
-                        }
                         const type = this.normalizeContent(schema, items[i]);
                         if (type.id.isEmpty()) {
                             this.generateTypeProperty(type, false);
@@ -209,17 +225,6 @@ export default class DtsGenerator {
             }
             this.convertor.outputStringTypeName(schema, '', terminate);
         }
-    }
-
-    private generateArrayedType(baseSchema: NormalizedSchema, contents: JsonSchema[], terminate: boolean): void {
-        this.convertor.outputArrayedType(baseSchema, contents, (content) => {
-            const schema = this.normalizeContent(baseSchema, content);
-            if (schema.id.isEmpty()) {
-                this.generateTypeProperty(schema, false);
-            } else {
-                this.convertor.outputTypeIdName(schema, baseSchema, false);
-            }
-        }, terminate);
     }
 
     private generateType(schema: NormalizedSchema, terminate: boolean, outputOptional = true): void {

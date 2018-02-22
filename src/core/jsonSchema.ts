@@ -20,13 +20,10 @@ export interface NormalizedSchema extends Schema {
 export function parseSchema(content: any, url?: string): Schema {
     const { type, openApiVersion } = selectSchemaType(content);
     const id = getId(type, content) || url;
-    if (id == null) {
-        throw new Error(`The content ID is not found: ${content}`);
-    }
     return {
         type,
         openApiVersion,
-        id: new SchemaId(id),
+        id: id ? new SchemaId(id) : SchemaId.empty,
         content,
     };
 }
@@ -90,10 +87,11 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 rootSchema: schema,
             };
             onFoundSchema(subSchema);
-            parentIds.push(schemaId.getAbsoluteId());
+            parentIds = parentIds.concat([schemaId.getAbsoluteId()]);
         }
         if (typeof s.$ref === 'string') {
             const schemaId = new SchemaId(s.$ref, parentIds);
+            s.$ref = schemaId.getAbsoluteId();
             onFoundReference(schemaId);
         }
 
@@ -165,7 +163,8 @@ function selectSchemaType(content: any): { type: SchemaType; openApiVersion?: 2 
             };
         }
     }
-    throw new Error(`Unknown content format: ${content}`);
+    // fallback to old version JSON Schema
+    return { type: 'Draft04' };
 }
 function setSubIds(obj: any, idPropertyName: string, prefix: string): void {
     Object.keys(obj).forEach((key) => {

@@ -28,7 +28,7 @@ export default class ReferenceResolver {
             const names = type.id.getTypeNames();
             const parent = JsonPointer.get(map, names, true);
             if (parent == null) {
-                JsonPointer.set(map, names, { typeMarker: type });
+                JsonPointer.set(map, names, { [typeMarker]: type });
             } else {
                 parent[typeMarker] = type;
             }
@@ -38,6 +38,10 @@ export default class ReferenceResolver {
 
     public async resolve(): Promise<void> {
         debug(`resolve reference: reference schema count=${this.referenceCache.size}.`);
+        debug('  schemaCache:');
+        debug(Array.from(this.schemaCache.keys()).join('\n'));
+        debug('  referenceCache:');
+        debug(Array.from(this.referenceCache.keys()).join('\n'));
         const error: string[] = [];
         for (const [key, schema] of this.referenceCache.entries()) {
             if (schema != null) {
@@ -45,34 +49,38 @@ export default class ReferenceResolver {
             }
             const id = new SchemaId(key);
             const fileId = id.getFileId();
-            const refSchema = this.schemaCache.get(fileId);
-            if (refSchema == null) {
-                if (!id.isFetchable()) {
-                    error.push(`The $ref target is not found: ${id.getAbsoluteId()}`);
-                    continue;
+            let result = this.schemaCache.get(id.getAbsoluteId());
+            if (result == null) {
+                const refSchema = this.schemaCache.get(fileId);
+                if (refSchema == null) {
+                    if (!id.isFetchable()) {
+                        error.push(`The $ref target is not exists: ${id.getAbsoluteId()}`);
+                        continue;
+                    }
+                    try {
+                        debug(`fetch remote schema: id=[${fileId}].`);
+                        this.registerRemoteSchema(fileId);
+                    } catch (e) {
+                        error.push(`Fail to fetch the $ref target: ${id.getAbsoluteId()}, ${e}`);
+                        continue;
+                    }
                 }
-                try {
-                    debug(`fetch remote schema: id=[${fileId}].`);
-                    this.registerRemoteSchema(fileId);
-                } catch (e) {
-                    error.push(`Fail to fetch the $ref target: ${id.getAbsoluteId()}, ${e}`);
-                    continue;
-                }
+                result = this.schemaCache.get(id.getAbsoluteId());
             }
             debug(`resolve reference: ref=[${id.getAbsoluteId()}]`);
-            const result = this.schemaCache.get(id.getAbsoluteId());
             if (result != null) {
-                this.referenceCache.set(key, result);
+                this.referenceCache.set(id.getAbsoluteId(), result);
             } else {
                 if (id.existsJsonPointerHash()) {
                     const rootSchema = this.schemaCache.get(fileId);
                     if (rootSchema == null) {
-                        error.push(`The $ref target is not found: ${id.getAbsoluteId()}`);
+                        error.push(`The $ref targets root is not found: ${id.getAbsoluteId()}`);
                         continue;
                     }
                     const targetSchema = getSubSchema(id, rootSchema, id.getJsonPointerHash());
+                    this.addSchema(targetSchema);
                     this.registerSchema(targetSchema);
-                    this.schemaCache.set(key, targetSchema);
+                    this.referenceCache.set(id.getAbsoluteId(), targetSchema);
                 } else {
                     error.push(`The $ref target is not found: ${id.getAbsoluteId()}`);
                     continue;
@@ -82,6 +90,8 @@ export default class ReferenceResolver {
         if (error.length > 0) {
             throw new Error(error.join('\n'));
         }
+        // debug('  resolve reference: resolved schema:');
+        // debug(Array.from(this.referenceCache.keys()).join('\n'));
     }
 
     public async registerRemoteSchema(url: string): Promise<void> {
@@ -106,7 +116,7 @@ export default class ReferenceResolver {
 
     private addSchema(schema: Schema): void {
         const id = schema.id;
-        debug(`add schema: id=${id.getAbsoluteId()}`);
+        // debug(`add schema: id=${id.getAbsoluteId()}`);
         this.schemaCache.set(id.getAbsoluteId(), schema);
         if (schema.rootSchema == null) {
             const fileId = id.getFileId();
@@ -116,7 +126,7 @@ export default class ReferenceResolver {
         }
     }
     private addReference(refId: SchemaId): void {
-        debug(`add reference: id=${refId.getAbsoluteId()}`);
+        // debug(`add reference: id=${refId.getAbsoluteId()}`);
         this.referenceCache.set(refId.getAbsoluteId(), undefined);
     }
 

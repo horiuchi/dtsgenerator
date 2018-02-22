@@ -31,7 +31,7 @@ export default class SchemaConvertor {
     /// acutal type convert methods
 
     public startInterfaceNest(name: string): void {
-        this.processor.output('export interface ').outputType(name);
+        this.processor.output('export interface ').outputType(name).output(' ');
         this.startTypeNest();
     }
     public endInterfaceNest(): void {
@@ -81,9 +81,8 @@ export default class SchemaConvertor {
         this.processor.outputJSDoc(...comments);
     }
 
-    public outputPropertyName(schema: NormalizedSchema, propertyName: string): void {
-        const content = schema.content;
-        const optionalProperty = content.required == null || content.required.indexOf(propertyName) < 0;
+    public outputPropertyName(_schema: NormalizedSchema, propertyName: string, required: string[] | undefined): void {
+        const optionalProperty = required == null || required.indexOf(propertyName) < 0;
         this.processor.outputKey(propertyName, optionalProperty).output(': ');
     }
 
@@ -116,7 +115,10 @@ export default class SchemaConvertor {
     }
     private getTypename(id: SchemaId, baseSchema: Schema): string[] {
         const result = id.getTypeNames();
-        const baseId = baseSchema && baseSchema.id;
+        const getRootId = (schema: Schema): SchemaId => {
+            return schema.rootSchema != null ? getRootId(schema.rootSchema) : schema.id;
+        };
+        const baseId = getRootId(baseSchema);
         if (baseId) {
             const baseTypes = baseId.getTypeNames().slice(0, -1);
             for (const type of baseTypes) {

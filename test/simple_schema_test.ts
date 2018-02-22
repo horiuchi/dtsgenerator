@@ -33,8 +33,8 @@ describe('simple schema test', () => {
                 },
             },
         };
-        opts.prefix = 'I';
-        const result = await dtsgenerator({ contents: [schema] });
+        const prefix = 'I';
+        const result = await dtsgenerator({ contents: [schema], prefix });
 
         const expected = `declare namespace Test {
     export interface IOneLine {
@@ -48,10 +48,10 @@ describe('simple schema test', () => {
         const schema: any = {
             id: '/test/no_type',
         };
-        opts.prefix = 'I';
-        opts.header = `// header string
+        const prefix = 'I';
+        const header = `// header string
 `;
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [schema], prefix, header });
 
         const expected = `// header string
 
@@ -77,9 +77,9 @@ declare namespace Test {
                 },
             },
         };
-        opts.prefix = 'T';
+        const prefix = 'T';
         {
-            const result = await dtsgenerator({ contents: [schema] });
+            const result = await dtsgenerator({ contents: [schema], prefix });
 
             const expected = `declare namespace Test {
     export interface TIncArray {
@@ -93,7 +93,7 @@ declare namespace Test {
 
         opts.target = 'v1';
         {
-            const result = await dtsgenerator({ contents: [schema] });
+            const result = await dtsgenerator({ contents: [schema], prefix });
 
             const expected = `declare namespace Test {
     export interface TIncArray {
@@ -153,8 +153,8 @@ declare namespace Test {
                 'array', 'boolean', 'integer',
             ],
         };
-        opts.prefix = 'I';
-        const result = await dtsgenerator({ contents: [schema] });
+        const prefix = 'I';
+        const result = await dtsgenerator({ contents: [schema], prefix });
 
         const expected = `declare namespace Test {
     export interface IAllSimpleType {
@@ -217,8 +217,8 @@ declare namespace Test {
                 },
             },
         };
-        opts.prefix = 'I';
-        const result = await dtsgenerator({ contents: [schema] });
+        const prefix = 'I';
+        const result = await dtsgenerator({ contents: [schema], prefix });
 
         const expected = `declare namespace Test {
     export interface IInnerObject {
@@ -310,7 +310,7 @@ declare namespace Test {
     it('include example schema', async () => {
         const schema: JsonSchemaOrg.Draft04.Schema = {
             id: 'test/example/root',
-            example: 'How get this schema.\nAlso, How get this data from hoge.\n /* hoge from fuga. */',
+            example: '  How get this schema.\n  Also, How get this data from hoge.\n   /* hoge from fuga. */',
             properties: {
                 name: {
                     type: ['string', 'null'],
@@ -331,7 +331,8 @@ declare namespace Test {
          */
         export interface Root {
             /**
-             * example: how get name property
+             * example:
+             * how get name property
              */
             name?: string | null;
         }
@@ -354,7 +355,8 @@ declare namespace Test {
          */
         export interface Root {
             /**
-             * example: how get name property
+             * example:
+             * how get name property
              */
             name?: string;
         }
@@ -397,7 +399,8 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it(' model in multiple allOf', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema = {
+            swagger: '2.0',
             definitions: {
                 Parent: {
                     type: 'object',
@@ -454,7 +457,8 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it(' model in multiple allOf nested ordered $refs', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema = {
+            swagger: '2.0',
             definitions: {
                 Parent: {
                     type: 'object',
@@ -512,7 +516,8 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it(' model in multiple allOf nested unordered $refs', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema = {
+            swagger: '2.0',
             definitions: {
                 Parent: {
                     type: 'object',
