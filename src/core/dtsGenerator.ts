@@ -149,7 +149,7 @@ export default class DtsGenerator {
                 throw new Error('target referenced id is nothing: ' + content.$ref);
             }
             const refSchema = this.normalizeContent(ref);
-            return this.convertor.outputTypeIdName(refSchema, schema);
+            return this.convertor.outputTypeIdName(refSchema, schema, terminate);
         }
         if (content.anyOf || content.oneOf) {
             this.generateArrayedType(schema, content.anyOf, '#/anyOf/', terminate);
