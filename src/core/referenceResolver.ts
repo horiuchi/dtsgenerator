@@ -119,7 +119,7 @@ export default class ReferenceResolver {
 
     private addSchema(schema: Schema): void {
         const id = schema.id;
-        // debug(`add schema: id=${id.getAbsoluteId()}`);
+        // debug(` add schema: id=${id.getAbsoluteId()}`);
         this.schemaCache.set(id.getAbsoluteId(), schema);
         if (schema.rootSchema == null) {
             const fileId = id.getFileId();
@@ -129,8 +129,10 @@ export default class ReferenceResolver {
         }
     }
     private addReference(refId: SchemaId): void {
-        // debug(`add reference: id=${refId.getAbsoluteId()}`);
-        this.referenceCache.set(refId.getAbsoluteId(), undefined);
+        if (!this.referenceCache.has(refId.getAbsoluteId())) {
+            // debug(` add reference: id=${refId.getAbsoluteId()}`);
+            this.referenceCache.set(refId.getAbsoluteId(), undefined);
+        }
     }
 
     public clear(): void {
