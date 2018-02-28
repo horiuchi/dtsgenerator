@@ -231,7 +231,7 @@ export default class DtsGenerator {
                 this.generateType(schema, terminate, outputOptional);
             } else {
                 this.convertor.outputArrayedType(schema, types, (t) => {
-                    this.generateTypeName(schema, t, false, outputOptional);
+                    this.generateTypeName(schema, t, false, false);
                 }, terminate);
             }
         }
