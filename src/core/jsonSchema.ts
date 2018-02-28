@@ -28,8 +28,20 @@ export function parseSchema(content: any, url?: string): Schema {
     };
 }
 
-export function getSubSchema(id: SchemaId, rootSchema: Schema, jsonPointer: string[]): Schema {
-    const content = JsonPointer.get(rootSchema.content, jsonPointer);
+export function getSubSchema(rootSchema: Schema, pointer: string, id?: SchemaId): Schema {
+    const content = JsonPointer.get(rootSchema.content, JsonPointer.parse(pointer));
+    if (id == null) {
+        const subId = getId(rootSchema.type, content);
+        const getParentIds = (s: Schema, result: string[]): string[] => {
+            result.push(s.id.getAbsoluteId());
+            return s.rootSchema == null ? result : getParentIds(s.rootSchema, result);
+        };
+        if (subId) {
+            id = new SchemaId(subId, getParentIds(rootSchema, []));
+        } else {
+            id = new SchemaId(pointer, getParentIds(rootSchema, []));
+        }
+    }
     return {
         type: rootSchema.type,
         id,
@@ -124,7 +136,7 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
         }
     };
 
-    walk(schema.content, [], []);
+    walk(schema.content, ['#'], []);
 }
 
 function selectSchemaType(content: any): { type: SchemaType; openApiVersion?: 2 | 3; } {

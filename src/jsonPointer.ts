@@ -40,13 +40,15 @@ export function set(obj: any, path: string[], value: any): void {
 }
 
 export function parse(s: string): string[] {
+    if (/^#/.test(s)) {
+        s = s.substring(1);
+    }
     const path = s.split('/');
     if (path.shift() !== '') {
         throw new Error('Invalid JSON-Pointer format: ' + s);
     }
     return path.map((key) => untilde(key));
 }
-
 function untilde(key: string): string {
     return key.replace(/~(0|1)/g, (match) => {
         switch (match) {

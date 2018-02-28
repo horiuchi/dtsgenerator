@@ -102,8 +102,8 @@ export default class SchemaConvertor {
         this.outputTypeNameTrailer(schema, terminate, outputOptional);
     }
 
-    public outputTypeIdName(schema: NormalizedSchema, baseSchema: Schema, terminate = true, outputOptional = true): void {
-        const typeName = this.getTypename(schema.id, baseSchema);
+    public outputTypeIdName(schema: NormalizedSchema, currentSchema: Schema, terminate = true, outputOptional = true): void {
+        const typeName = this.getTypename(schema.id, currentSchema);
         typeName.forEach((type, index) => {
             const isLast = index === typeName.length - 1;
             this.processor.outputType(type, isLast ? false : true);
@@ -115,10 +115,7 @@ export default class SchemaConvertor {
     }
     private getTypename(id: SchemaId, baseSchema: Schema): string[] {
         const result = id.getTypeNames();
-        const getRootId = (schema: Schema): SchemaId => {
-            return schema.rootSchema != null ? getRootId(schema.rootSchema) : schema.id;
-        };
-        const baseId = getRootId(baseSchema);
+        const baseId = baseSchema.id;
         if (baseId) {
             const baseTypes = baseId.getTypeNames().slice(0, -1);
             for (const type of baseTypes) {

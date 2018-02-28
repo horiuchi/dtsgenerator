@@ -8,8 +8,8 @@ import SchemaId from './schemaId';
 const debug = Debug('dtsgen');
 
 export default class ReferenceResolver {
-    private schemaCache = new Map<string, Schema>();
-    private referenceCache = new Map<string, Schema | undefined>();
+    private readonly schemaCache = new Map<string, Schema>();
+    private readonly referenceCache = new Map<string, Schema | undefined>();
 
     public dereference(refId: string): Schema {
         const result = this.referenceCache.get(refId);
@@ -17,6 +17,9 @@ export default class ReferenceResolver {
             throw new Error('Target reference is not found: ' + refId);
         }
         return result;
+    }
+    public getRegisteredSchema(id: string): Schema | undefined {
+        return this.schemaCache.get(id);
     }
 
     public getAllSchemaMergedMap(typeMarker: symbol): any {
@@ -77,7 +80,7 @@ export default class ReferenceResolver {
                         error.push(`The $ref targets root is not found: ${id.getAbsoluteId()}`);
                         continue;
                     }
-                    const targetSchema = getSubSchema(id, rootSchema, id.getJsonPointerHash());
+                    const targetSchema = getSubSchema(rootSchema, id.getJsonPointerHash(), id);
                     this.addSchema(targetSchema);
                     this.registerSchema(targetSchema);
                     this.referenceCache.set(id.getAbsoluteId(), targetSchema);
