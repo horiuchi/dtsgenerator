@@ -1,4 +1,5 @@
 {
+    "$id": "http://json-schema.org/simple_example",
     "$schema": "http://json-schema.org/draft-06/schema#",
     "title": "Product set",
     "type": "array",

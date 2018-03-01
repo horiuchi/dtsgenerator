@@ -3,6 +3,7 @@ import path from 'path';
 import assert from 'power-assert';
 import { clear } from '../src/commandOptions';
 import dtsgenerator from '../src/core';
+import { parseFileContent } from '../src/utils';
 
 const fixturesDir = path.join(__dirname, 'snapshots');
 const expectedFileName = '_expected.d.ts';
@@ -21,7 +22,10 @@ describe('Snapshot testing', () => {
                 const expectedFilePath = path.join(fixtureDir, expectedFileName);
 
                 const files = filePaths.filter((f) => f !== expectedFileName).map((f) => path.join(fixtureDir, f));
-                const contents = files.map((file) => fs.readFileSync(file, { encoding: 'utf-8' })).map((content) => JSON.parse(content))
+                const contents = files.map((file) => ({
+                    file,
+                    content: fs.readFileSync(file, { encoding: 'utf-8' }),
+                })).map(({ file, content }) => parseFileContent(content, file));
                 const actual = await dtsgenerator({ contents });
 
                 // UPDATE_SNAPSHOT=1 npm test で呼び出したときはスナップショットを更新

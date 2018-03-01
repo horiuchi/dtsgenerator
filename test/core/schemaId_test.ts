@@ -29,6 +29,12 @@ describe('schema id parser test', () => {
         test(new SchemaId('t/inner.json#/json/path', ['otherschema.json', 'http://x.y.z/rootschema.json#']), 'http://x.y.z/t/inner.json#/json/path', true, 'http://x.y.z/t/inner.json#', true, '#/json/path', ['XYZ', 'T', 'InnerJson', 'Json', 'Path']);
         test(new SchemaId('some://where.else/completely#', ['http://x.y.z/rootschema.json#']), 'some://where.else/completely#', false, 'some://where.else/completely#', false, '#', ['WhereElse', 'Completely']);
     });
+    it('JSON Schema Draft-07 example pattern', () => {
+        test(new SchemaId('#foo', ['http://example.com/root.json']), 'http://example.com/root.json#foo', true, 'http://example.com/root.json#', false, '#', ['ExampleCom', 'RootJson', 'Foo']);
+        test(new SchemaId('other.json', ['http://example.com/root.json']), 'http://example.com/other.json#', true, 'http://example.com/other.json#', false, '#', ['ExampleCom', 'OtherJson']);
+        test(new SchemaId('#bar', ['other.json', 'http://example.com/root.json']), 'http://example.com/other.json#bar', true, 'http://example.com/other.json#', false, '#', ['ExampleCom', 'OtherJson', 'Bar']);
+        test(new SchemaId('t/inner.json', ['other.json', 'http://example.com/root.json']), 'http://example.com/t/inner.json#', true, 'http://example.com/t/inner.json#', false, '#', ['ExampleCom', 'T', 'InnerJson']);
+    });
 
 });
 

@@ -62,7 +62,7 @@ export default class ReferenceResolver {
                     }
                     try {
                         debug(`fetch remote schema: id=[${fileId}].`);
-                        this.registerRemoteSchema(fileId);
+                        await this.registerRemoteSchema(fileId);
                     } catch (e) {
                         error.push(`Fail to fetch the $ref target: ${id.getAbsoluteId()}, ${e}`);
                         continue;
@@ -119,18 +119,21 @@ export default class ReferenceResolver {
 
     private addSchema(schema: Schema): void {
         const id = schema.id;
-        // debug(` add schema: id=${id.getAbsoluteId()}`);
-        this.schemaCache.set(id.getAbsoluteId(), schema);
-        if (schema.rootSchema == null) {
-            const fileId = id.getFileId();
-            if (!this.schemaCache.has(fileId)) {
-                this.schemaCache.set(fileId, schema);
+        const key = id.getAbsoluteId();
+        if (!this.schemaCache.has(key)) {
+            debug(` add schema: id=${key}`);
+            this.schemaCache.set(key, schema);
+            if (schema.rootSchema == null) {
+                const fileId = id.getFileId();
+                if (!this.schemaCache.has(fileId)) {
+                    this.schemaCache.set(fileId, schema);
+                }
             }
         }
     }
     private addReference(refId: SchemaId): void {
         if (!this.referenceCache.has(refId.getAbsoluteId())) {
-            // debug(` add reference: id=${refId.getAbsoluteId()}`);
+            debug(` add reference: id=${refId.getAbsoluteId()}`);
             this.referenceCache.set(refId.getAbsoluteId(), undefined);
         }
     }
