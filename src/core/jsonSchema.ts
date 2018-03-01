@@ -128,10 +128,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 walk(s.else, paths.concat('else'), parentIds);
             }
         }
-        if (schema.openApiVersion === 3 && paths.length === 0) {
+        if (schema.openApiVersion === 3) {
             const obj = s as any;
-            if (obj.components && obj.components.schema) {
-                walkObject(obj.components.schema, paths.concat('components', 'schema'), parentIds);
+            if (obj.components && obj.components.schemas) {
+                walkObject(obj.components.schemas, paths.concat('components', 'schemas'), parentIds);
             }
         }
     };
@@ -166,8 +166,8 @@ function selectSchemaType(content: any): { type: SchemaType; openApiVersion?: 2 
         const openapi = content.openapi;
         if (/^3\.\d+\.\d+$/.test(openapi)) {
             // Add `id` property in #/components/schemas/*
-            if (content.components && content.components.schema) {
-                setSubIds(content.components.schema, '$id', 'components/schema');
+            if (content.components && content.components.schemas) {
+                setSubIds(content.components.schemas, '$id', 'components/schemas');
             }
             return {
                 type: 'Draft07',
