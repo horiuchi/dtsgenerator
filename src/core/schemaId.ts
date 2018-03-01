@@ -1,33 +1,36 @@
 import url from 'url';
-import { parse } from './jsonPointer';
 import { toTypeName } from './utils';
 
-export class SchemaId {
+export default class SchemaId {
     public static empty = new SchemaId('');
 
     private readonly baseId: url.Url;
-    private absoluteId: string;
+    private readonly absoluteId: string;
 
     constructor(id: string, parentIds?: string[]) {
-        this.absoluteId = id;
+        let absoluteId = id;
         if (parentIds) {
             parentIds.forEach((parent: string) => {
                 if (parent) {
-                    this.absoluteId = url.resolve(parent, this.absoluteId);
+                    absoluteId = url.resolve(parent, absoluteId);
                 }
             });
         }
-        if (this.absoluteId.indexOf('#') < 0) {
-            this.absoluteId += '#';
+        if (absoluteId.indexOf('#') < 0) {
+            absoluteId += '#';
         }
-        if (this.absoluteId.indexOf('://') < 0 && this.absoluteId[0] !== '/' && this.absoluteId[0] !== '#') {
-            this.absoluteId = '/' + this.absoluteId;
+        if (absoluteId.indexOf('://') < 0 && absoluteId[0] !== '/' && absoluteId[0] !== '#') {
+            absoluteId = '/' + absoluteId;
         }
-        this.baseId = url.parse(this.absoluteId);
+        this.absoluteId = absoluteId;
+        this.baseId = url.parse(absoluteId);
     }
 
     public getAbsoluteId(): string {
         return this.absoluteId;
+    }
+    public isEmpty(): boolean {
+        return !!this.absoluteId;
     }
     public isFetchable(): boolean {
         return /https?\:\/\//.test(this.absoluteId);
@@ -38,15 +41,16 @@ export class SchemaId {
     public existsJsonPointerHash(): boolean {
         return this.absoluteId === '#' || /#\//.test(this.absoluteId);
     }
-    public getJsonPointerHash(): string[] {
-        const m = /#(\/.*)$/.exec(this.absoluteId);
+    public getJsonPointerHash(): string {
+        const m = /(#\/.*)$/.exec(this.absoluteId);
         if (m == null) {
-            return [];
+            return '#';
         }
-        return parse(m[1]);
+        return m[1];
     }
 
     public getTypeNames(): string[] {
+        // TODO add hook point on convert url to string[].
         const ids: string[] = [];
         if (this.baseId.host) {
             ids.push(decodeURIComponent(this.baseId.host));

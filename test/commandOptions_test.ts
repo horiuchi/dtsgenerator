@@ -1,4 +1,4 @@
-import * as assert from 'power-assert';
+import assert from 'power-assert';
 
 import opts, { clear, initialize } from '../src/commandOptions';
 

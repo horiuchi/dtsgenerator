@@ -9,6 +9,7 @@ declare namespace JsonSchemaOrg {
             $ref?: string; // uri
             title?: string;
             description?: string;
+            example?: string;
             default?: any;
             multipleOf?: number;
             maximum?: number;
@@ -41,6 +42,7 @@ declare namespace JsonSchemaOrg {
             };
             enum?: any[];
             type?: Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
+            format?: string;
             allOf?: Schema.Definitions.SchemaArray;
             anyOf?: Schema.Definitions.SchemaArray;
             oneOf?: Schema.Definitions.SchemaArray;
@@ -51,7 +53,7 @@ declare namespace JsonSchemaOrg {
                 export type PositiveInteger = number;
                 export type PositiveIntegerDefault0 = number;
                 export type SchemaArray = Schema[];
-                export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
+                export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string" | "any" | "undefined";
                 export type StringArray = string[];
             }
         }

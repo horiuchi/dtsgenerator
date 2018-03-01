@@ -1,5 +1,5 @@
 
-export function get(obj: any, path: string[]): any {
+export function get(obj: any, path: string[], isCreateOnNotExists: boolean = false): any {
     if (path.length === 0) {
         return obj;
     }
@@ -7,9 +7,14 @@ export function get(obj: any, path: string[]): any {
     const lastKey = path[path.length - 1];
     for (let i = 0; i < path.length - 1; i++) {
         const key = path[i];
-        const next = o[key];
+        let next = o[key];
         if (next == null) {
-            return undefined;
+            if (isCreateOnNotExists) {
+                next = {};
+                o[key] = next;
+            } else {
+                return undefined;
+            }
         }
         o = next;
     }
@@ -35,13 +40,15 @@ export function set(obj: any, path: string[], value: any): void {
 }
 
 export function parse(s: string): string[] {
+    if (/^#/.test(s)) {
+        s = s.substring(1);
+    }
     const path = s.split('/');
     if (path.shift() !== '') {
         throw new Error('Invalid JSON-Pointer format: ' + s);
     }
     return path.map((key) => untilde(key));
 }
-
 function untilde(key: string): string {
     return key.replace(/~(0|1)/g, (match) => {
         switch (match) {

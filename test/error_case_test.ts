@@ -1,18 +1,18 @@
-import * as assert from 'power-assert';
-import dtsgenerator from '../src/';
+import assert from 'power-assert';
+import dtsgenerator from '../src/core';
 
 
 describe('error schema test', () => {
 
     it('no id schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             type: 'object',
         };
         try {
-            await dtsgenerator([schema]);
+            await dtsgenerator({ contents: [schema] });
             assert.fail();
         } catch (e) {
-            assert.equal(e.message, 'There is no id in the input schema(s)');
+            assert.equal(e.message, 'There is no schema in the input contents.');
         }
     });
     it('unkown type schema', async () => {
@@ -21,7 +21,7 @@ describe('error schema test', () => {
             type: 'hoge',
         };
         try {
-            await dtsgenerator([schema]);
+            await dtsgenerator({ contents: [schema] });
             assert.fail();
         } catch (e) {
             assert.equal(e.message, 'unknown type: hoge');
@@ -38,7 +38,7 @@ describe('error schema test', () => {
             },
         };
         try {
-            await dtsgenerator([schema]);
+            await dtsgenerator({ contents: [schema] });
             assert.fail();
         } catch (e) {
             assert.equal(e.message, 'unknown type: fuga');
@@ -46,7 +46,7 @@ describe('error schema test', () => {
     });
 
     it('target of $ref is not found', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/target_not_found',
             type: 'object',
             properties: {
@@ -56,14 +56,14 @@ describe('error schema test', () => {
             },
         };
         try {
-            await dtsgenerator([schema]);
+            await dtsgenerator({ contents: [schema] });
             assert.fail();
         } catch (e) {
-            assert.equal(e.message, '$ref target is not found: /notFound/id#');
+            assert.equal(e.message, 'The $ref target is not exists: /notFound/id#');
         }
     });
     it('target of $ref is invalid path', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/target_not_found',
             type: 'object',
             properties: {
@@ -73,19 +73,19 @@ describe('error schema test', () => {
             },
         };
         try {
-            await dtsgenerator([schema]);
+            await dtsgenerator({ contents: [schema] });
             assert.fail();
         } catch (e) {
-            assert.equal(e.message, '$ref target is not found: /test/target_not_found#hogefuga');
+            assert.equal(e.message, 'The $ref target is not found: /test/target_not_found#hogefuga');
         }
     });
     it('invalid format schema', async () => {
-        const schema = 'not schema data and invalid JSON format {.' as any;
+        const schema = 'This string is not schema data and invalid JSON format {.' as any;
         try {
-            await dtsgenerator([schema]);
+            await dtsgenerator({ contents: [schema] });
             assert.fail();
         } catch (e) {
-            assert.ok(/^Unexpected token/.test(e.message));
+            assert.equal(e.message, 'There is no schema in the input contents.');
         }
     });
 

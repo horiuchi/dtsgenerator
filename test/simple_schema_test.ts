@@ -1,6 +1,6 @@
-import * as assert from 'power-assert';
-import dtsgenerator from '../src/';
+import assert from 'power-assert';
 import opts, { clear } from '../src/commandOptions';
+import dtsgenerator from '../src/core';
 
 
 describe('simple schema test', () => {
@@ -10,11 +10,11 @@ describe('simple schema test', () => {
     });
 
     it('no property schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/no_prop',
             type: 'object',
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     export interface NoProp {
@@ -24,7 +24,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('one line schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/one_line',
             type: 'object',
             properties: {
@@ -33,8 +33,8 @@ describe('simple schema test', () => {
                 },
             },
         };
-        opts.prefix = 'I';
-        const result = await dtsgenerator([schema]);
+        const prefix = 'I';
+        const result = await dtsgenerator({ contents: [schema], prefix });
 
         const expected = `declare namespace Test {
     export interface IOneLine {
@@ -48,10 +48,10 @@ describe('simple schema test', () => {
         const schema: any = {
             id: '/test/no_type',
         };
-        opts.prefix = 'I';
-        opts.header = `// header string
+        const prefix = 'I';
+        const header = `// header string
 `;
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema], prefix, header });
 
         const expected = `// header string
 
@@ -62,7 +62,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('include array schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inc_array',
             type: 'object',
             properties: {
@@ -77,9 +77,9 @@ declare namespace Test {
                 },
             },
         };
-        opts.prefix = 'T';
+        const prefix = 'T';
         {
-            const result = await dtsgenerator([schema]);
+            const result = await dtsgenerator({ contents: [schema], prefix });
 
             const expected = `declare namespace Test {
     export interface TIncArray {
@@ -93,7 +93,7 @@ declare namespace Test {
 
         opts.target = 'v1';
         {
-            const result = await dtsgenerator([schema]);
+            const result = await dtsgenerator({ contents: [schema], prefix });
 
             const expected = `declare namespace Test {
     export interface TIncArray {
@@ -106,7 +106,7 @@ declare namespace Test {
         }
     });
     it('all simple type schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/all_simple_type',
             type: 'object',
             properties: {
@@ -153,8 +153,8 @@ declare namespace Test {
                 'array', 'boolean', 'integer',
             ],
         };
-        opts.prefix = 'I';
-        const result = await dtsgenerator([schema]);
+        const prefix = 'I';
+        const result = await dtsgenerator({ contents: [schema], prefix });
 
         const expected = `declare namespace Test {
     export interface IAllSimpleType {
@@ -173,8 +173,34 @@ declare namespace Test {
 `;
         assert.equal(result, expected, result);
     });
+    it('string and integer enum schema', async () => {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
+            id: '/test/enum_string_vs_integer',
+            type: 'object',
+            properties: {
+                port: {
+                    type: 'integer',
+                    enum: [1, 2, 3],
+                },
+                direction: {
+                    type: 'string',
+                    enum: ['NW', 'NE', 'SW', 'SE'],
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [schema] });
+
+        const expected = `declare namespace Test {
+    export interface EnumStringVsInteger {
+        port?: 1 | 2 | 3;
+        direction?: "NW" | "NE" | "SW" | "SE";
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
     it('inner object schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inner_object',
             type: 'object',
             properties: {
@@ -191,8 +217,8 @@ declare namespace Test {
                 },
             },
         };
-        opts.prefix = 'I';
-        const result = await dtsgenerator([schema]);
+        const prefix = 'I';
+        const result = await dtsgenerator({ contents: [schema], prefix });
 
         const expected = `declare namespace Test {
     export interface IInnerObject {
@@ -208,7 +234,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('object array schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/object_array',
             type: 'object',
             properties: {
@@ -229,7 +255,7 @@ declare namespace Test {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     export interface ObjectArray {
@@ -243,14 +269,14 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('root array schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: 'test/root/root_array',
             type: 'array',
             items: {
                 type: 'string',
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     namespace Root {
@@ -261,12 +287,12 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('root any schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: 'test/root/root_any',
             description: 'This is any type schema',
             additionalProperties: true,
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     namespace Root {
@@ -282,9 +308,9 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('include example schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: 'test/example/root',
-            example: 'How get this schema.\nAlso, How get this data from hoge.\n /* hoge from fuga. */',
+            example: '  How get this schema.\n  Also, How get this data from hoge.\n   /* hoge from fuga. */',
             properties: {
                 name: {
                     type: ['string', 'null'],
@@ -294,7 +320,7 @@ declare namespace Test {
         };
 
         {
-            const result = await dtsgenerator([schema]);
+            const result = await dtsgenerator({ contents: [schema] });
             const expected = `declare namespace Test {
     namespace Example {
         /**
@@ -305,7 +331,8 @@ declare namespace Test {
          */
         export interface Root {
             /**
-             * example: how get name property
+             * example:
+             * how get name property
              */
             name?: string | null;
         }
@@ -317,7 +344,7 @@ declare namespace Test {
 
         {
             opts.target = 'v1';
-            const result = await dtsgenerator([schema]);
+            const result = await dtsgenerator({ contents: [schema] });
             const expected = `declare namespace Test {
     namespace Example {
         /**
@@ -328,7 +355,8 @@ declare namespace Test {
          */
         export interface Root {
             /**
-             * example: how get name property
+             * example:
+             * how get name property
              */
             name?: string;
         }
@@ -339,7 +367,7 @@ declare namespace Test {
         }
     });
     it('include $ref schema', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
             id: 'test/ref/include_ref',
             type: 'object',
             definitions: {
@@ -353,7 +381,7 @@ declare namespace Test {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
     namespace Ref {
@@ -371,7 +399,8 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it(' model in multiple allOf', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema = {
+            swagger: '2.0',
             definitions: {
                 Parent: {
                     type: 'object',
@@ -409,7 +438,7 @@ declare namespace Test {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Definitions {
     export interface FirstChild {
@@ -428,7 +457,8 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it(' model in multiple allOf nested ordered $refs', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema = {
+            swagger: '2.0',
             definitions: {
                 Parent: {
                     type: 'object',
@@ -466,7 +496,7 @@ declare namespace Test {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Definitions {
     export interface FirstChild {
@@ -486,7 +516,8 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it(' model in multiple allOf nested unordered $refs', async () => {
-        const schema: JsonSchemaOrg.Schema = {
+        const schema = {
+            swagger: '2.0',
             definitions: {
                 Parent: {
                     type: 'object',
@@ -524,7 +555,7 @@ declare namespace Test {
                 },
             },
         };
-        const result = await dtsgenerator([schema]);
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Definitions {
     export interface FirstChild {
@@ -544,7 +575,7 @@ declare namespace Test {
         assert.equal(result, expected, result);
     });
     it('should include allOf schemas', async () => {
-        const baseSchema: JsonSchemaOrg.Schema = {
+        const baseSchema: JsonSchemaOrg.Draft04.Schema = {
             id: 'http://test/zzz/allOf/base',
             type: 'object',
             properties: {
@@ -554,7 +585,7 @@ declare namespace Test {
             },
             required: ['id'],
         };
-        const extendedSchema: JsonSchemaOrg.Schema = {
+        const extendedSchema: JsonSchemaOrg.Draft04.Schema = {
             id: 'http://test/zzz/allOf/extended',
             type: 'object',
             allOf: [
@@ -567,7 +598,7 @@ declare namespace Test {
             },
             required: ['value'],
         };
-        const separateSchema: JsonSchemaOrg.Schema = {
+        const separateSchema: JsonSchemaOrg.Draft04.Schema = {
             id: 'http://test/separate',
             type: 'object',
             properties: {
@@ -577,7 +608,7 @@ declare namespace Test {
             },
             required: ['message'],
         };
-        const combinedSchema: JsonSchemaOrg.Schema = {
+        const combinedSchema: JsonSchemaOrg.Draft04.Schema = {
             id: 'http://test/combined',
             type: 'object',
             allOf: [
@@ -587,7 +618,7 @@ declare namespace Test {
             ],
         };
 
-        const result = await dtsgenerator([baseSchema, extendedSchema, separateSchema, combinedSchema]);
+        const result = await dtsgenerator({ contents: [baseSchema, extendedSchema, separateSchema, combinedSchema] });
 
         const expected = `declare namespace Test {
     export interface Combined {
