@@ -1,5 +1,4 @@
 import Debug from 'debug';
-import opts from '../commandOptions';
 import SimpleTypes = JsonSchemaOrg.Draft04.Schema.Definitions.SimpleTypes;
 
 const debug = Debug('dtsgen');
@@ -31,9 +30,6 @@ export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
         return types;
     }
     const set = new Set<SimpleTypes>(types);
-    if (opts.target === 'v1') {
-        set.delete('null');
-    }
     if (set.delete('integer')) {
         set.add('number');
     }
