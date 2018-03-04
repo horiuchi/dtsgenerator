@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "commander": "^2.14.1",
-    "cross-fetch": "^1.1.1",
+    "cross-fetch": "^2.0.0",
     "debug": "^3.1.0",
     "glob": "^7.1.2",
     "js-yaml": "^3.10.0",
@@ -63,7 +63,7 @@
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.3",
-    "ts-node": "^5.0.0",
+    "ts-node": "^5.0.1",
     "tslint": "^5.9.1",
     "typescript": "^2.7.2"
   }

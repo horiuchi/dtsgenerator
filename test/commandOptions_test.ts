@@ -28,20 +28,18 @@ describe('output command help test', () => {
 
   Options:
 
-    -V, --version                      output the version number
-    --url <url>                        input json schema from the url. (default: )
-    --stdin                            read stdin with other files or urls.
-    -o, --out <file>                   output d.ts filename.
-    -p, --prefix <type prefix>         set the prefix of interface name. default is nothing.
-    -H, --header <type header string>  set the string of type header.
-    -t, --target [version]             set target TypeScript version. select from \`v2\` or \`v1\`. default is \`v2\`. (default: v2)
-    -h, --help                         output usage information
+    -V, --version               output the version number
+    --url <url>                 input json schema from the url. (default: )
+    --stdin                     read stdin with other files or urls.
+    -o, --out <file>            output d.ts filename.
+    -p, --prefix <type prefix>  set the prefix of interface name. default is nothing.
+    -h, --help                  output usage information
 
   Examples:
 
     $ dtsgen --help
     $ dtsgen --out types.d.ts schema/**/*.schema.json
-    $ cat schema1.json | dtsgen --target v1
+    $ cat schema1.json | dtsgen
     $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
     $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
 `);
@@ -63,15 +61,11 @@ describe('command options test', () => {
         assert.equal(opts.stdin, undefined);
         assert.equal(opts.out, undefined);
         assert.equal(opts.prefix, undefined);
-        assert.equal(opts.header, undefined);
-        assert.equal(opts.target, 'v2');
         assert.equal(opts.isReadFromStdin(), true);
     });
     it('should parse arguments 2', () => {
         initialize([
             'node', 'script.js',
-            '--target', 'V1',
-            '--header', '// header string',
             '--prefix', 'I',
             '--out', 'output.d.ts',
             '--stdin',
@@ -85,14 +79,11 @@ describe('command options test', () => {
         assert.equal(opts.stdin, true);
         assert.equal(opts.out, 'output.d.ts');
         assert.equal(opts.prefix, 'I');
-        assert.equal(opts.header, '// header string');
-        assert.equal(opts.target, 'v1');
         assert.equal(opts.isReadFromStdin(), true);
     });
     it('should parse arguments 3', () => {
         initialize([
             'node', 'script.js',
-            '--target', '2',
             './input1.json', './path/input2.json',
         ]);
 
@@ -101,14 +92,11 @@ describe('command options test', () => {
         assert.equal(opts.stdin, undefined);
         assert.equal(opts.out, undefined);
         assert.equal(opts.prefix, undefined);
-        assert.equal(opts.header, undefined);
-        assert.equal(opts.target, 'v2');
         assert.equal(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 4', () => {
         initialize([
             'node', 'script.js',
-            '--target',
             '--out', './schema.d.ts',
             '--url', 'https://example.com/schema.json',
         ]);
@@ -118,8 +106,6 @@ describe('command options test', () => {
         assert.equal(opts.stdin, undefined);
         assert.equal(opts.out, './schema.d.ts');
         assert.equal(opts.prefix, undefined);
-        assert.equal(opts.header, undefined);
-        assert.equal(opts.target, 'v2');
         assert.equal(opts.isReadFromStdin(), false);
     });
 

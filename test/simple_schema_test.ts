@@ -1,13 +1,8 @@
 import assert from 'power-assert';
-import opts, { clear } from '../src/commandOptions';
 import dtsgenerator from '../src/core';
 
 
 describe('simple schema test', () => {
-
-    afterEach(() => {
-        clear();
-    });
 
     it('no property schema', async () => {
         const schema: JsonSchemaOrg.Draft04.Schema = {
@@ -49,13 +44,9 @@ describe('simple schema test', () => {
             id: '/test/no_type',
         };
         const prefix = 'I';
-        const header = `// header string
-`;
-        const result = await dtsgenerator({ contents: [schema], prefix, header });
+        const result = await dtsgenerator({ contents: [schema], prefix });
 
-        const expected = `// header string
-
-declare namespace Test {
+        const expected = `declare namespace Test {
     export type INoType = any;
 }
 `;
@@ -85,20 +76,6 @@ declare namespace Test {
     export interface TIncArray {
         id?: number;
         array?: (string | boolean | null | number)[];
-    }
-}
-`;
-            assert.equal(result, expected, result);
-        }
-
-        opts.target = 'v1';
-        {
-            const result = await dtsgenerator({ contents: [schema], prefix });
-
-            const expected = `declare namespace Test {
-    export interface TIncArray {
-        id?: number;
-        array?: (string | boolean | number)[];
     }
 }
 `;
@@ -319,9 +296,8 @@ declare namespace Test {
             },
         };
 
-        {
-            const result = await dtsgenerator({ contents: [schema] });
-            const expected = `declare namespace Test {
+        const result = await dtsgenerator({ contents: [schema] });
+        const expected = `declare namespace Test {
     namespace Example {
         /**
          * example:
@@ -339,32 +315,7 @@ declare namespace Test {
     }
 }
 `;
-            assert.equal(result, expected, result);
-        }
-
-        {
-            opts.target = 'v1';
-            const result = await dtsgenerator({ contents: [schema] });
-            const expected = `declare namespace Test {
-    namespace Example {
-        /**
-         * example:
-         *   How get this schema.
-         *   Also, How get this data from hoge.
-         *    /* hoge from fuga. *\u200B/
-         */
-        export interface Root {
-            /**
-             * example:
-             * how get name property
-             */
-            name?: string;
-        }
-    }
-}
-`;
-            assert.equal(result, expected, result);
-        }
+        assert.equal(result, expected, result);
     });
     it('include $ref schema', async () => {
         const schema: JsonSchemaOrg.Draft04.Schema = {

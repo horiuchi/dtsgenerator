@@ -3,12 +3,10 @@ import SchemaId from './schemaId';
 import WriteProcessor from './writeProcessor';
 
 export default class SchemaConvertor {
-    constructor(private processor: WriteProcessor, private header?: string) {}
+    constructor(private processor: WriteProcessor) {}
 
     public start(): void {
-        if (this.header) {
-            this.processor.outputLine(this.header);
-        }
+        // do nothing.
     }
     public end(): string {
         return this.processor.toDefinition();
