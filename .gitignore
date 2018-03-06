@@ -4,6 +4,7 @@
 node_modules/
 .nyc_output/
 
+**/*.d.ts
 **/*.js
 **/*.js.map
 

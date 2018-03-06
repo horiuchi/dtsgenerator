@@ -1,4 +1,4 @@
-import { Command } from 'commander';
+import commander from 'commander';
 
 /* tslint:disable:no-var-requires */
 const pkg = require('../package.json');
@@ -21,7 +21,7 @@ const opts = new CommandOptions();
 clear();
 export default opts;
 
-export function initialize(argv: string[]) {
+export function initialize(argv: string[]): commander.Command {
     return parse(opts, argv);
 }
 
@@ -33,8 +33,8 @@ export function clear(): void {
     opts.prefix = undefined;
 }
 
-function parse(o: CommandOptions, argv: string[]) {
-    const command = new Command();
+function parse(o: CommandOptions, argv: string[]): commander.Command {
+    const command = new commander.Command();
 
     function collectUrl(val: string, memo: string[]): string[] {
         memo.push(val);
