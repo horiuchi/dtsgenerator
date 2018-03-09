@@ -2,15 +2,16 @@
   "name": "dtsgenerator",
   "version": "0.9.9",
   "description": "TypeScript d.ts file generator for JSON Schema file",
-  "main": "index.js",
   "bin": {
     "dtsgen": "./bin/dtsgen"
   },
+  "main": "dist/core/",
+  "typings": "dist/core/index.d.ts",
   "scripts": {
-    "clean": "rimraf src/**/*.js && rimraf test/**/*.js",
+    "clean": "rimraf dist/",
     "prebuild": "tslint --project ./tsconfig.json",
-    "build": "tsc -p .",
-    "compile": "tsc -p . --noEmit --pretty",
+    "build": "tsc -p tsconfig-build.json",
+    "compile": "tsc -p . --pretty",
     "watch": "npm run compile -- -w",
     "test": "nyc --extension .ts mocha --compilers ts:ts-node/register",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
