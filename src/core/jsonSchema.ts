@@ -19,7 +19,11 @@ export interface NormalizedSchema extends Schema {
 
 export function parseSchema(content: any, url?: string): Schema {
     const { type, openApiVersion } = selectSchemaType(content);
-    const id = getId(type, content) || url;
+    console.log(` parseSchema: ${type}, ${openApiVersion}, ${url}`);
+    if (url != null) {
+        setId(type, content, url);
+    }
+    const id = getId(type, content);
     return {
         type,
         openApiVersion,
@@ -51,9 +55,19 @@ export function getSubSchema(rootSchema: Schema, pointer: string, id?: SchemaId)
 }
 
 export function getId(type: SchemaType, content: any): string | undefined {
+    return content[getIdPropertyName(type)];
+}
+function setId(type: SchemaType, content: any, id: string): void {
+    const key = getIdPropertyName(type);
+    if (content[key] == null) {
+        content[key] = id;
+        console.log(`  setId: ${id}`);
+    }
+}
+function getIdPropertyName(type: SchemaType): string {
     switch (type) {
-        case 'Draft04': return content.id;
-        case 'Draft07': return content.$id;
+        case 'Draft04': return 'id';
+        case 'Draft07': return '$id';
     }
 }
 
@@ -155,7 +169,7 @@ function selectSchemaType(content: any): { type: SchemaType; openApiVersion?: 2 
     if (content.swagger === '2.0') {
         // Add `id` property in #/definitions/*
         if (content.definitions) {
-            setSubIds(content.definitions, 'id', 'definitions');
+            setSubIds(content.definitions, 'Draft04', 'definitions');
         }
         return {
             type: 'Draft04',
@@ -167,7 +181,7 @@ function selectSchemaType(content: any): { type: SchemaType; openApiVersion?: 2 
         if (/^3\.\d+\.\d+$/.test(openapi)) {
             // Add `id` property in #/components/schemas/*
             if (content.components && content.components.schemas) {
-                setSubIds(content.components.schemas, '$id', 'components/schemas');
+                setSubIds(content.components.schemas, 'Draft07', 'components/schemas');
             }
             return {
                 type: 'Draft07',
@@ -178,13 +192,11 @@ function selectSchemaType(content: any): { type: SchemaType; openApiVersion?: 2 
     // fallback to old version JSON Schema
     return { type: 'Draft04' };
 }
-function setSubIds(obj: any, idPropertyName: string, prefix: string): void {
+function setSubIds(obj: any, type: SchemaType, prefix: string): void {
     Object.keys(obj).forEach((key) => {
         const sub = obj[key];
         if (sub != null) {
-            if (sub[idPropertyName] == null) {
-                sub[idPropertyName] = `#/${prefix}/${key}`;
-            }
+            setId(type, sub, `#/${prefix}/${key}`);
         }
     });
 }

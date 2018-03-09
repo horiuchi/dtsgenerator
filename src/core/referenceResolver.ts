@@ -41,10 +41,10 @@ export default class ReferenceResolver {
 
     public async resolve(): Promise<void> {
         debug(`resolve reference: reference schema count=${this.referenceCache.size}.`);
-        debug('  schemaCache:');
-        debug(Array.from(this.schemaCache.keys()).join('\n'));
-        debug('  referenceCache:');
-        debug(Array.from(this.referenceCache.keys()).join('\n'));
+        // debug('  schemaCache:');
+        // debug(Array.from(this.schemaCache.keys()).join('\n'));
+        // debug('  referenceCache:');
+        // debug(Array.from(this.referenceCache.keys()).join('\n'));
         const error: string[] = [];
         for (const [key, schema] of this.referenceCache.entries()) {
             if (schema != null) {
