@@ -62,7 +62,6 @@ async function exec(): Promise<void> {
     dtsgenerator({
         contents,
         inputUrls: opts.urls,
-        prefix: opts.prefix,
     }).then((result: string) => {
         if (opts.out) {
             mkdirp.sync(path.dirname(opts.out));

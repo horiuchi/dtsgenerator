@@ -9,7 +9,6 @@ export class CommandOptions {
     public urls: string[] = [];
     public stdin?: boolean;
     public out?: string;
-    public prefix?: string;
 
     public isReadFromStdin(): boolean {
         return this.stdin || this.files.length === 0 && this.urls.length === 0;
@@ -30,7 +29,6 @@ export function clear(): void {
     opts.urls = [];
     opts.stdin = undefined;
     opts.out = undefined;
-    opts.prefix = undefined;
 }
 
 function parse(o: CommandOptions, argv: string[]): commander.Command {
@@ -41,14 +39,13 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         return memo;
     }
 
-    // <hoge> is reuired, [hoge] is optional
+    // <hoge> is required, [hoge] is optional
     command
         .version(pkg.version)
         .usage('[options] <file ... | file patterns using node-glob>')
         .option('--url <url>', 'input json schema from the url.', collectUrl, [])
         .option('--stdin', 'read stdin with other files or urls.')
         .option('-o, --out <file>', 'output d.ts filename.')
-        .option('-p, --prefix <type prefix>', 'set the prefix of interface name. default is nothing.')
         .on('--help', () => {
             /* tslint:disable:no-console */
             console.log('');
@@ -67,7 +64,6 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
     o.urls = res.url;
     o.stdin = res.stdin;
     o.out = res.out;
-    o.prefix = res.prefix;
     return command;
 }
 

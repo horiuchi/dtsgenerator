@@ -19,7 +19,6 @@ export interface NormalizedSchema extends Schema {
 
 export function parseSchema(content: any, url?: string): Schema {
     const { type, openApiVersion } = selectSchemaType(content);
-    console.log(` parseSchema: ${type}, ${openApiVersion}, ${url}`);
     if (url != null) {
         setId(type, content, url);
     }
@@ -61,7 +60,6 @@ function setId(type: SchemaType, content: any, id: string): void {
     const key = getIdPropertyName(type);
     if (content[key] == null) {
         content[key] = id;
-        console.log(`  setId: ${id}`);
     }
 }
 function getIdPropertyName(type: SchemaType): string {

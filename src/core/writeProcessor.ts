@@ -1,11 +1,9 @@
 export interface WriteProcessorOptions {
-    prefix: string;
     indentChar: string;
     indentSize: number;
 }
 
 const defaultOptions: WriteProcessorOptions = {
-    prefix: '',
     indentChar: ' ',
     indentSize: 4,
 };
@@ -28,10 +26,6 @@ export default class WriteProcessor {
     }
 
     public outputType(type: string, primitive: boolean = false): this {
-        const prefix = this.options.prefix;
-        if (prefix && !primitive) {
-            this.output(prefix);
-        }
         type = type.replace(/[^0-9A-Za-z_$]+/g, '_');
         if (/^\d/.test(type)) {
           type = '$' + type;
