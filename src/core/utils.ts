@@ -36,16 +36,6 @@ export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
     return Array.from(set.values());
 }
 
-export function toTypeName(str: string): string {
-    if (!str) {
-        return str;
-    }
-    str = str.trim();
-    return str.split('$').map((s) => s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, (_, m) => {
-        return m.toUpperCase();
-    })).join('$');
-}
-
 export function mergeSchema(a: any, b: any): any {
     Object.keys(b).forEach((key: string) => {
         const value = b[key];
