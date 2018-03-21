@@ -25,15 +25,13 @@ describe('output command help test', () => {
         assert.equal(content, `
   Usage: script [options] <file ... | file patterns using node-glob>
 
-
   Options:
 
-    -V, --version               output the version number
-    --url <url>                 input json schema from the url. (default: )
-    --stdin                     read stdin with other files or urls.
-    -o, --out <file>            output d.ts filename.
-    -p, --prefix <type prefix>  set the prefix of interface name. default is nothing.
-    -h, --help                  output usage information
+    -V, --version     output the version number
+    --url <url>       input json schema from the url. (default: )
+    --stdin           read stdin with other files or urls.
+    -o, --out <file>  output d.ts filename.
+    -h, --help        output usage information
 
   Examples:
 
@@ -60,13 +58,11 @@ describe('command options test', () => {
         assert.deepEqual(opts.urls, []);
         assert.equal(opts.stdin, undefined);
         assert.equal(opts.out, undefined);
-        assert.equal(opts.prefix, undefined);
         assert.equal(opts.isReadFromStdin(), true);
     });
     it('should parse arguments 2', () => {
         initialize([
             'node', 'script.js',
-            '--prefix', 'I',
             '--out', 'output.d.ts',
             '--stdin',
             '--url', 'http://example.com/hoge/fuga',
@@ -78,7 +74,6 @@ describe('command options test', () => {
         assert.deepEqual(opts.urls, ['http://example.com/hoge/fuga', 'http://example.com/hoge/fuga2']);
         assert.equal(opts.stdin, true);
         assert.equal(opts.out, 'output.d.ts');
-        assert.equal(opts.prefix, 'I');
         assert.equal(opts.isReadFromStdin(), true);
     });
     it('should parse arguments 3', () => {
@@ -91,7 +86,6 @@ describe('command options test', () => {
         assert.deepEqual(opts.urls, []);
         assert.equal(opts.stdin, undefined);
         assert.equal(opts.out, undefined);
-        assert.equal(opts.prefix, undefined);
         assert.equal(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 4', () => {
@@ -105,7 +99,6 @@ describe('command options test', () => {
         assert.deepEqual(opts.urls, ['https://example.com/schema.json']);
         assert.equal(opts.stdin, undefined);
         assert.equal(opts.out, './schema.d.ts');
-        assert.equal(opts.prefix, undefined);
         assert.equal(opts.isReadFromStdin(), false);
     });
 

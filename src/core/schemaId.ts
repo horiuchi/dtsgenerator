@@ -1,14 +1,13 @@
 import url from 'url';
-import { toTypeName } from './utils';
 
 export default class SchemaId {
     public static empty = new SchemaId('');
 
-    private readonly baseId: url.Url;
+    public readonly id: url.Url;
     private readonly absoluteId: string;
 
-    constructor(id: string, parentIds?: string[]) {
-        let absoluteId = id;
+    constructor(public readonly inputId: string, parentIds?: string[]) {
+        let absoluteId = inputId;
         if (parentIds) {
             parentIds.forEach((parent: string) => {
                 if (parent) {
@@ -23,7 +22,7 @@ export default class SchemaId {
             absoluteId = '/' + absoluteId;
         }
         this.absoluteId = absoluteId;
-        this.baseId = url.parse(absoluteId);
+        this.id = url.parse(absoluteId);
     }
 
     public getAbsoluteId(): string {
@@ -47,34 +46,6 @@ export default class SchemaId {
             return '#';
         }
         return m[1];
-    }
-
-    public getTypeNames(): string[] {
-        // TODO add hook point on convert url to string[].
-        const ids: string[] = [];
-        if (this.baseId.host) {
-            ids.push(decodeURIComponent(this.baseId.host));
-        }
-        const addAllParts = (path: string): void => {
-            const paths = path.split('/');
-            if (paths.length > 1 && paths[0] === '') {
-                paths.shift();
-            }
-            paths.forEach((item: string) => {
-                ids.push(decodeURIComponent(item));
-            });
-        };
-        if (this.baseId.pathname) {
-            addAllParts(this.baseId.pathname);
-        }
-        if (this.baseId.hash && this.baseId.hash.length > 1) {
-            addAllParts(this.baseId.hash.substr(1));
-        }
-        return ids.map(toTypeName);
-    }
-    public getInterfaceName(): string {
-        const names = this.getTypeNames();
-        return names[names.length - 1];
     }
 }
 

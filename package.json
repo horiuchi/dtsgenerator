@@ -2,19 +2,20 @@
   "name": "dtsgenerator",
   "version": "0.9.9",
   "description": "TypeScript d.ts file generator for JSON Schema file",
-  "main": "index.js",
   "bin": {
     "dtsgen": "./bin/dtsgen"
   },
+  "main": "dist/core/",
+  "typings": "dist/core/index.d.ts",
   "scripts": {
-    "clean": "rimraf src/**/*.js && rimraf test/**/*.js",
+    "clean": "rimraf dist/",
     "prebuild": "tslint --project ./tsconfig.json",
-    "build": "tsc -p .",
-    "compile": "tsc -p . --noEmit --pretty",
+    "build": "tsc -p tsconfig-build.json",
+    "compile": "tsc -p . --pretty",
     "watch": "npm run compile -- -w",
-    "test": "nyc --extension .ts mocha --compilers ts:ts-node/register",
+    "test": "nyc --extension .ts npm run test:exec",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test:nocov": "mocha --compilers ts:ts-node/register",
+    "test:exec": "mocha --require ts-node/register test/*.ts test/**/*.ts",
     "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test:nocov"
   },
   "directories": {
@@ -38,11 +39,11 @@
     "node": ">= 4.0"
   },
   "dependencies": {
-    "commander": "^2.14.1",
-    "cross-fetch": "^2.0.0",
+    "commander": "^2.15.0",
+    "cross-fetch": "^2.1.0",
     "debug": "^3.1.0",
     "glob": "^7.1.2",
-    "js-yaml": "^3.10.0",
+    "js-yaml": "^3.11.0",
     "mkdirp": "^0.5.1",
     "request": "^2.83.0",
     "tslib": "^1.9.0"
@@ -54,11 +55,11 @@
     "@types/js-yaml": "3.10.1",
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^9.4.6",
+    "@types/node": "^9.4.7",
     "@types/power-assert": "^1.4.29",
     "@types/request": "^2.47.0",
     "coveralls": "^3.0.0",
-    "mocha": "^5.0.1",
+    "mocha": "^5.0.4",
     "nyc": "^11.4.1",
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.2",

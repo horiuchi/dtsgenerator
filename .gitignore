@@ -3,9 +3,7 @@
 
 node_modules/
 .nyc_output/
-
-**/*.js
-**/*.js.map
+dist/
 
 !./*.js
 

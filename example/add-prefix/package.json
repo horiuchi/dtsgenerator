@@ -1,0 +1,17 @@
+{
+  "name": "example-add-prefix",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index"
+  },
+  "keywords": [
+    "dtsgenerator"
+  ],
+  "author": "horiuchi",
+  "license": "MIT",
+  "devDependencies": {
+    "ts-node": "^5.0.1"
+  }
+}

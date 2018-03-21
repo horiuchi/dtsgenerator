@@ -1,13 +1,15 @@
+import { normalizeTypeName } from './typeNameConvertor';
+
 export interface WriteProcessorOptions {
-    prefix: string;
     indentChar: string;
     indentSize: number;
+    normalizeTypeName: (type: string, primitive: boolean) => string;
 }
 
 const defaultOptions: WriteProcessorOptions = {
-    prefix: '',
     indentChar: ' ',
     indentSize: 4,
+    normalizeTypeName,
 };
 
 export default class WriteProcessor {
@@ -21,6 +23,12 @@ export default class WriteProcessor {
         this.options = { ...defaultOptions, ...options };
     }
 
+    public clear(): void {
+        this.indent = 0;
+        this.results = '';
+        this.alreadyIndentThisLine = false;
+    }
+
     public output(str: string): this {
         this.doIndent();
         this.results += str;
@@ -28,14 +36,7 @@ export default class WriteProcessor {
     }
 
     public outputType(type: string, primitive: boolean = false): this {
-        const prefix = this.options.prefix;
-        if (prefix && !primitive) {
-            this.output(prefix);
-        }
-        type = type.replace(/[^0-9A-Za-z_$]+/g, '_');
-        if (/^\d/.test(type)) {
-          type = '$' + type;
-        }
+        type = this.options.normalizeTypeName(type, primitive);
         this.output(type);
         return this;
     }

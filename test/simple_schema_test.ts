@@ -28,11 +28,10 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const prefix = 'I';
-        const result = await dtsgenerator({ contents: [schema], prefix });
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
-    export interface IOneLine {
+    export interface OneLine {
         name?: string;
     }
 }
@@ -43,11 +42,10 @@ describe('simple schema test', () => {
         const schema: any = {
             id: '/test/no_type',
         };
-        const prefix = 'I';
-        const result = await dtsgenerator({ contents: [schema], prefix });
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
-    export type INoType = any;
+    export type NoType = any;
 }
 `;
         assert.equal(result, expected, result);
@@ -68,19 +66,16 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const prefix = 'T';
-        {
-            const result = await dtsgenerator({ contents: [schema], prefix });
+        const result = await dtsgenerator({ contents: [schema] });
 
-            const expected = `declare namespace Test {
-    export interface TIncArray {
+        const expected = `declare namespace Test {
+    export interface IncArray {
         id?: number;
         array?: (string | boolean | null | number)[];
     }
 }
 `;
-            assert.equal(result, expected, result);
-        }
+        assert.equal(result, expected, result);
     });
     it('all simple type schema', async () => {
         const schema: JsonSchemaOrg.Draft04.Schema = {
@@ -130,11 +125,10 @@ describe('simple schema test', () => {
                 'array', 'boolean', 'integer',
             ],
         };
-        const prefix = 'I';
-        const result = await dtsgenerator({ contents: [schema], prefix });
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
-    export interface IAllSimpleType {
+    export interface AllSimpleType {
         array: (string | string[])[];
         boolean: boolean;
         integer: number;
@@ -194,11 +188,10 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const prefix = 'I';
-        const result = await dtsgenerator({ contents: [schema], prefix });
+        const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
-    export interface IInnerObject {
+    export interface InnerObject {
         title?: string;
         options?: {
             A?: number;

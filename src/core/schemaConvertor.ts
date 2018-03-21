@@ -1,12 +1,40 @@
+import * as JsonPointer from '../jsonPointer';
 import { NormalizedSchema, Schema } from './jsonSchema';
 import SchemaId from './schemaId';
+import { DefaultTypeNameConvertor, TypeNameConvertor } from './typeNameConvertor';
 import WriteProcessor from './writeProcessor';
 
 export default class SchemaConvertor {
-    constructor(private processor: WriteProcessor) {}
+    constructor(private processor: WriteProcessor, private convertor: TypeNameConvertor = DefaultTypeNameConvertor) {}
+
+    private getLastTypeName(id: SchemaId): string {
+        const names = this.convertor(id);
+        if (names.length > 0) {
+            return names[names.length - 1];
+        } else {
+            return '';
+        }
+    }
+
+    public buildSchemaMergedMap(schemas: IterableIterator<Schema>, typeMarker: symbol): any {
+        const map: any = {};
+        for (const type of schemas) {
+            const names = this.convertor(type.id);
+            const parent = JsonPointer.get(map, names, true);
+            if (parent == null) {
+                JsonPointer.set(map, names, { [typeMarker]: type });
+            } else {
+                parent[typeMarker] = type;
+            }
+        }
+        if (Object.keys(map).length === 0) {
+            throw new Error('There is no schema in the input contents.');
+        }
+        return map;
+    }
 
     public start(): void {
-        // do nothing.
+        this.processor.clear();
     }
     public end(): string {
         return this.processor.toDefinition();
@@ -28,7 +56,8 @@ export default class SchemaConvertor {
 
     /// acutal type convert methods
 
-    public startInterfaceNest(name: string): void {
+    public startInterfaceNest(id: SchemaId): void {
+        const name = this.getLastTypeName(id);
         this.processor.output('export interface ').outputType(name).output(' ');
         this.startTypeNest();
     }
@@ -37,7 +66,8 @@ export default class SchemaConvertor {
         this.processor.outputLine();
     }
 
-    public outputExportType(name: string): void {
+    public outputExportType(id: SchemaId): void {
+        const name = this.getLastTypeName(id);
         this.processor.output('export type ').outputType(name).output(' = ');
     }
 
@@ -112,10 +142,10 @@ export default class SchemaConvertor {
         this.outputTypeNameTrailer(schema, terminate, outputOptional);
     }
     private getTypename(id: SchemaId, baseSchema: Schema): string[] {
-        const result = id.getTypeNames();
+        const result = this.convertor(id);
         const baseId = baseSchema.id;
         if (baseId) {
-            const baseTypes = baseId.getTypeNames().slice(0, -1);
+            const baseTypes = this.convertor(baseId).slice(0, -1);
             for (const type of baseTypes) {
                 if (result[0] === type) {
                     result.shift();
@@ -124,7 +154,7 @@ export default class SchemaConvertor {
                 }
             }
             if (result.length === 0) {
-                return [id.getInterfaceName()];
+                return [this.getLastTypeName(id)];
             }
         }
         return result;

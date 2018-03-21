@@ -5,7 +5,7 @@ import SchemaConvertor from './schemaConvertor';
 import * as utils from './utils';
 
 const debug = Debug('dtsgen');
-const typeMaker = Symbol();
+const typeMarker = Symbol();
 
 export default class DtsGenerator {
 
@@ -17,7 +17,7 @@ export default class DtsGenerator {
         debug('generate type definition files.');
         await this.resolver.resolve();
 
-        const map = this.resolver.getAllSchemaMergedMap(typeMaker);
+        const map = this.convertor.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema(), typeMarker);
         this.convertor.start();
         this.walk(map);
         const result = this.convertor.end();
@@ -29,11 +29,11 @@ export default class DtsGenerator {
         const keys = Object.keys(map).sort();
         for (const key of keys) {
             const value = map[key];
-            if (value.hasOwnProperty(typeMaker)) {
-                const schema = value[typeMaker] as Schema;
+            if (value.hasOwnProperty(typeMarker)) {
+                const schema = value[typeMarker] as Schema;
                 debug(`  walk doProcess: schemaId=${schema.id.getAbsoluteId()}`);
                 this.walkSchema(schema);
-                delete value[typeMaker];
+                delete value[typeMarker];
             }
             if (typeof value === 'object' && Object.keys(value).length > 0) {
                 this.convertor.startNest(key);
@@ -91,14 +91,12 @@ export default class DtsGenerator {
         return Object.assign({}, schema, { content });
     }
     private generateDeclareType(schema: NormalizedSchema): void {
-        const name = schema.id.getInterfaceName();
-        this.convertor.outputExportType(name);
+        this.convertor.outputExportType(schema.id);
         this.generateTypeProperty(schema, true);
     }
 
     private generateTypeModel(schema: NormalizedSchema): void {
-        const name = schema.id.getInterfaceName();
-        this.convertor.startInterfaceNest(name);
+        this.convertor.startInterfaceNest(schema.id);
         if (schema.content.type === 'any') {
             this.convertor.outputRawValue('[name: string]: any; // any', true);
         }
@@ -107,8 +105,7 @@ export default class DtsGenerator {
     }
 
     private generateTypeCollection(schema: NormalizedSchema): void {
-        const name = schema.id.getInterfaceName();
-        this.convertor.outputExportType(name);
+        this.convertor.outputExportType(schema.id);
         this.generateArrayTypeProperty(schema, true);
     }
 

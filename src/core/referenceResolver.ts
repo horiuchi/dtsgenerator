@@ -1,6 +1,5 @@
 import 'cross-fetch/polyfill';
 import Debug from 'debug';
-import * as JsonPointer from '../jsonPointer';
 import { parseFileContent } from '../utils';
 import { getSubSchema, parseSchema, Schema, searchAllSubSchema } from './jsonSchema';
 import SchemaId from './schemaId';
@@ -18,33 +17,17 @@ export default class ReferenceResolver {
         }
         return result;
     }
-    public getRegisteredSchema(id: string): Schema | undefined {
-        return this.schemaCache.get(id);
-    }
 
-    public getAllSchemaMergedMap(typeMarker: symbol): any {
-        const map: any = {};
-        if (this.schemaCache.size === 0) {
-            throw new Error('There is no schema in the input contents.');
-        }
-        for (const type of this.schemaCache.values()) {
-            const names = type.id.getTypeNames();
-            const parent = JsonPointer.get(map, names, true);
-            if (parent == null) {
-                JsonPointer.set(map, names, { [typeMarker]: type });
-            } else {
-                parent[typeMarker] = type;
-            }
-        }
-        return map;
+    public getAllRegisteredSchema(): IterableIterator<Schema> {
+        return this.schemaCache.values();
     }
 
     public async resolve(): Promise<void> {
         debug(`resolve reference: reference schema count=${this.referenceCache.size}.`);
-        debug('  schemaCache:');
-        debug(Array.from(this.schemaCache.keys()).join('\n'));
-        debug('  referenceCache:');
-        debug(Array.from(this.referenceCache.keys()).join('\n'));
+        // debug('  schemaCache:');
+        // debug(Array.from(this.schemaCache.keys()).join('\n'));
+        // debug('  referenceCache:');
+        // debug(Array.from(this.referenceCache.keys()).join('\n'));
         const error: string[] = [];
         for (const [key, schema] of this.referenceCache.entries()) {
             if (schema != null) {

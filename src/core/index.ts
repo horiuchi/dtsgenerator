@@ -2,17 +2,22 @@ import DtsGenerator from './dtsGenerator';
 import { parseSchema } from './jsonSchema';
 import ReferenceResolver from './referenceResolver';
 import SchemaConvertor from './schemaConvertor';
+import { TypeNameConvertor } from './typeNameConvertor';
 import WriteProcessor, { WriteProcessorOptions } from './writeProcessor';
+
+export { default as SchemaId } from './schemaId';
+export { DefaultTypeNameConvertor } from './typeNameConvertor';
 
 export interface Options extends Partial<WriteProcessorOptions> {
     contents?: any[];
     inputUrls?: string[];
+    typeNameConvertor?: TypeNameConvertor;
 }
 
 export default async function dtsGenerator(options: Options): Promise<string> {
     const processor = new WriteProcessor(options);
     const resolver = new ReferenceResolver();
-    const convertor = new SchemaConvertor(processor);
+    const convertor = new SchemaConvertor(processor, options.typeNameConvertor);
 
     if (options.contents != null) {
         options.contents
