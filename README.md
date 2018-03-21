@@ -14,7 +14,7 @@ TypeScript d.ts file generator from JSON Schema file or OpenAPI(Swagger) spec fi
 
 - [Install](#install)
 - [Usage](#usage)
-- [Advance Usage](#advanceusage)
+- [Advance Usage](#advance-usage)
 - [Development](#development)
 - [ChangeLog](#changelog)
 - [License](#license)
