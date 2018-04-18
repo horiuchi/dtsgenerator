@@ -62,7 +62,7 @@
     "power-assert": "^1.4.4",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.3",
-    "ts-node": "^5.0.1",
+    "ts-node": "^6.0.0",
     "tslint": "^5.9.1",
     "typescript": "^2.7.2"
   }
