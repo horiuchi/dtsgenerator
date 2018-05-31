@@ -96,6 +96,7 @@ export default class SchemaConvertor {
         if ('$comment' in content) {
             comments.push(content.$comment);
         }
+        comments.push(content.title);
         comments.push(content.description);
         if ('example' in content || 'examples' in content) {
             comments.push('example:');
