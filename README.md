@@ -117,6 +117,13 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v1.1.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.1.0) (2018-06-01)
+
+- features
+    - add [the supported features document](https://github.com/horiuchi/dtsgenerator/blob/master/SupportedFeatures.md)
+    - support some property
+        - `title`, `const`, `readOnly`
+
 ### [v1.0.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.0.0) (2018-03-22)
 
 - features
