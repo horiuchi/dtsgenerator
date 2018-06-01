@@ -12,9 +12,9 @@ Supported Features
 
 |property|status|on TypeScript|
 |--------|:----:|----|
-|id|o|The type name and using referenced target. Restricted URL value only.|
-|$schema|o|Nothing and using to select schema version|
-|$ref|p|supported other file reference, and also supported local reference.|
+|id|o|type name and using referenced target. Restricted URL value only.|
+|$schema|o|using to select schema version|
+|$ref|p|supported local file and other file reference|
 |title|o|comment string|
 |description|o|comment string|
 |default|x||
@@ -36,10 +36,10 @@ Supported Features
 |required|o|non nullable type|
 |additionalProperties|o|if true, add the index signatures|
 |definitions|o||
-|properties|o|add some properties|
+|properties|o|add some properties in this type|
 |patternProperties|x||
 |dependencies|x|but also search the sub schema types|
-|enum|o|enum type, supported string and number values|
+|enum|o|enum type, supported string and integer values|
 |type|o|The type of that property|
 |format|o|comment string|
 |allOf|p||
