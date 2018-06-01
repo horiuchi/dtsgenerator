@@ -96,6 +96,7 @@ export default class SchemaConvertor {
         if ('$comment' in content) {
             comments.push(content.$comment);
         }
+        comments.push(content.title);
         comments.push(content.description);
         if ('example' in content || 'examples' in content) {
             comments.push('example:');
@@ -112,6 +113,13 @@ export default class SchemaConvertor {
     public outputPropertyName(_schema: NormalizedSchema, propertyName: string, required: string[] | undefined): void {
         const optionalProperty = required == null || required.indexOf(propertyName) < 0;
         this.processor.outputKey(propertyName, optionalProperty).output(': ');
+    }
+
+    public outputPropertyAttribute(schema: NormalizedSchema): void {
+        const content = schema.content;
+        if ('readOnly' in content && content.readOnly) {
+            this.processor.output('readonly ');
+        }
     }
 
     public outputArrayedType<T>(schema: NormalizedSchema, types: T[], output: (t: T, index: number) => void, terminate: boolean, outputOptional = true): void {

@@ -38,6 +38,34 @@ describe('simple schema test', () => {
 `;
         assert.equal(result, expected, result);
     });
+    it('one line readonly schema', async () => {
+        const schema: JsonSchemaOrg.Draft07.Schema = {
+            $id: '/test/one_line',
+            $schema: 'http://json-schema.org/draft-07/schema#',
+            type: 'object',
+            properties: {
+                name: {
+                    type: 'string',
+                    readOnly: true,
+                },
+                type: {
+                    type: 'integer',
+                    readOnly: false,
+                },
+            },
+            required: ['name', 'type'],
+        };
+        const result = await dtsgenerator({ contents: [schema] });
+
+        const expected = `declare namespace Test {
+    export interface OneLine {
+        readonly name: string;
+        type: number;
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
     it('no type schema', async () => {
         const schema: any = {
             id: '/test/no_type',
@@ -165,6 +193,33 @@ describe('simple schema test', () => {
     export interface EnumStringVsInteger {
         port?: 1 | 2 | 3;
         direction?: "NW" | "NE" | "SW" | "SE";
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
+    it('string and integer const schema', async () => {
+        const schema: JsonSchemaOrg.Draft07.Schema = {
+            $id: '/test/const_string_vs_integer',
+            $schema: 'http://json-schema.org/draft-07/schema#',
+            type: 'object',
+            properties: {
+                port: {
+                    type: 'integer',
+                    const: 1,
+                },
+                direction: {
+                    type: 'string',
+                    const: 'NE',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [schema] });
+
+        const expected = `declare namespace Test {
+    export interface ConstStringVsInteger {
+        port?: 1;
+        direction?: "NE";
     }
 }
 `;
@@ -589,4 +644,3 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
 });
-

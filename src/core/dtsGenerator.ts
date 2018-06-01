@@ -124,6 +124,7 @@ export default class DtsGenerator {
             for (const propertyName of Object.keys(content.properties)) {
                 const schema = this.normalizeContent(baseSchema, '/properties/' + propertyName);
                 this.convertor.outputComments(schema);
+                this.convertor.outputPropertyAttribute(schema);
                 this.convertor.outputPropertyName(schema, propertyName, baseSchema.content.required);
                 this.generateTypeProperty(schema);
             }
@@ -145,15 +146,23 @@ export default class DtsGenerator {
             return;
         }
         if (content.enum) {
-            return this.convertor.outputArrayedType(schema, content.enum, (value) => {
+            this.convertor.outputArrayedType(schema, content.enum, (value) => {
                 if (content.type === 'integer') {
                     this.convertor.outputRawValue('' + value);
                 } else {
                     this.convertor.outputRawValue(`"${value}"`);
                 }
             }, terminate);
+        } else if ('const' in content) {
+            const value = content.const;
+            if (content.type === 'integer') {
+                this.convertor.outputStringTypeName(schema, '' + value, terminate);
+            } else {
+                this.convertor.outputStringTypeName(schema, `"${value}"`, terminate);
+            }
+        } else {
+            this.generateType(schema, terminate);
         }
-        this.generateType(schema, terminate);
     }
     private generateArrayedType(baseSchema: NormalizedSchema, contents: JsonSchema[] | undefined, path: string, terminate: boolean): void {
         if (contents) {
