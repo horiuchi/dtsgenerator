@@ -1,5 +1,8 @@
 declare namespace JsonSchemaOrg {
     namespace Draft07 {
+        /**
+         * Core schema meta-schema
+         */
         export type Schema = {
             $id?: string; // uri-reference
             $schema?: string; // uri

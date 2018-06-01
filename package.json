@@ -16,7 +16,7 @@
     "test": "nyc --extension .ts npm run test:exec",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test:exec": "mocha --require ts-node/register test/*.ts test/**/*.ts",
-    "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test:nocov"
+    "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test:exec"
   },
   "directories": {
     "test": "test/"

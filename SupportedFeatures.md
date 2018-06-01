@@ -55,12 +55,12 @@ Supported Features
 |--------|:----:|----|
 |$id|o|replaces `id`|
 |$comment|o|comment string|
-|readOnly|**x**|readonly property|
+|readOnly|o|readonly property|
 |writeOnly|x|TypeScript is not support the `writeOnly` property|
 |examples|o|comment string|
 |contains|x||
 |propertyNames|x||
-|const|**x**|literal type|
+|const|o|literal type|
 |contentMediaType|x||
 |contentEncoding|x||
 |if|x||

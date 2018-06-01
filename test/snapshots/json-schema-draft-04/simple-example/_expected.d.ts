@@ -6,6 +6,9 @@ declare namespace JsonSchemaOrg {
         latitude?: number;
         longitude?: number;
     }
+    /**
+     * Product set
+     */
     export type SimpleExample = {
         /**
          * The unique identifier for a product

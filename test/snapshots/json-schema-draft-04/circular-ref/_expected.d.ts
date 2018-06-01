@@ -1,5 +1,6 @@
 declare namespace Schema {
     /**
+     * Circular
      * Circular Reference Pattern
      */
     export interface Circular {

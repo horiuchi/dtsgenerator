@@ -73,6 +73,9 @@ declare namespace JsonSchemaOrg {
 }
 declare namespace SwaggerIo {
     namespace V2 {
+        /**
+         * A JSON Schema for Swagger 2.0 API.
+         */
         export interface SchemaJson {
             /**
              * The Swagger version of this document.

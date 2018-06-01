@@ -115,6 +115,13 @@ export default class SchemaConvertor {
         this.processor.outputKey(propertyName, optionalProperty).output(': ');
     }
 
+    public outputPropertyAttribute(schema: NormalizedSchema): void {
+        const content = schema.content;
+        if ('readOnly' in content && content.readOnly) {
+            this.processor.output('readonly ');
+        }
+    }
+
     public outputArrayedType<T>(schema: NormalizedSchema, types: T[], output: (t: T, index: number) => void, terminate: boolean, outputOptional = true): void {
         if (!terminate) {
             this.processor.output('(');

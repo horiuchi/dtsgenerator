@@ -1,5 +1,6 @@
 declare namespace Schema {
     /**
+     * News
      * News data API
      */
     export interface News {
