@@ -104,7 +104,7 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 - [The home of JSON Schema](http://json-schema.org/)
 - [The OpenAPI Specification](https://github.com/OAI/OpenAPI-Specification)
 
-### Supported spec version
+### Supported spec and features
 
 - JSON Schema
     - Draft-04 and before
@@ -112,6 +112,8 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 - OpenAPI
     - OpenAPI Specification version 2.0
     - OpenAPI Specification version 3.0
+
+- [supported features in these spec](https://github.com/horiuchi/dtsgenerator/blob/master/SupportedFeatures.md)
 
 ## ChangeLog
 
