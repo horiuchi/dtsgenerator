@@ -40,12 +40,12 @@
   },
   "dependencies": {
     "commander": "^2.15.1",
-    "cross-fetch": "^2.1.1",
+    "cross-fetch": "^2.2.0",
     "debug": "^3.1.0",
     "glob": "^7.1.2",
     "js-yaml": "^3.11.0",
     "mkdirp": "^0.5.1",
-    "tslib": "^1.9.0"
+    "tslib": "^1.9.2"
   },
   "devDependencies": {
     "@types/commander": "^2.12.2",
@@ -54,16 +54,16 @@
     "@types/js-yaml": "3.11.1",
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^5.2.0",
-    "@types/node": "^10.0.4",
+    "@types/node": "^10.3.0",
     "@types/power-assert": "^1.5.0",
     "coveralls": "^3.0.1",
-    "mocha": "^5.1.1",
-    "nyc": "^11.7.1",
+    "mocha": "^5.2.0",
+    "nyc": "^12.0.1",
     "power-assert": "^1.5.0",
     "rimraf": "^2.6.2",
-    "source-map-support": "^0.5.5",
-    "ts-node": "^6.0.3",
+    "source-map-support": "^0.5.6",
+    "ts-node": "^6.0.5",
     "tslint": "^5.10.0",
-    "typescript": "^2.8.3"
+    "typescript": "^2.9.1"
   }
 }
