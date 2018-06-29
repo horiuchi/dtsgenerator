@@ -5,17 +5,14 @@
 node_modules/
 
 # codes
-demo/
 test/
-schema/
 
 # misc
-.nyc_output/
-.gitignore
 .coveralls.yml
 .editorconfig
+.gitignore
 .travis.yml
+coverage/
 
-test-results.xml
 npm-debug.log
 
