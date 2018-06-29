@@ -2,8 +2,8 @@
 *.swp
 
 node_modules/
-.nyc_output/
+coverage/
 dist/
 
-!./*.js
-
+*.js
+*.js.map

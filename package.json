@@ -8,14 +8,15 @@
   "main": "dist/core/",
   "typings": "dist/core/index.d.ts",
   "scripts": {
-    "clean": "rimraf dist/",
-    "prebuild": "tslint --project ./tsconfig.json",
-    "build": "tsc -p tsconfig-build.json",
-    "compile": "tsc -p . --pretty",
+    "clean": "rimraf dist/ **/*.js **/*.js.map",
+    "build": "tsc -p ./tsconfig-build.json",
+    "precompile": "tslint --project ./tsconfig.json",
+    "compile": "tsc -p .",
     "watch": "npm run compile -- -w",
-    "test": "nyc --extension .ts npm run test:exec",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test:exec": "mocha --require ts-node/register test/*.ts test/**/*.ts",
+    "pretest": "npm run compile",
+    "test": "istanbul cover _mocha test/*.js test/**/*.js",
+    "posttest": "remap-istanbul --input coverage/coverage.json -o coverage/report -t html",
+    "coverage": "remap-istanbul --input coverage/coverage.json --type text-lcov | coveralls",
     "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test:exec"
   },
   "directories": {
@@ -57,11 +58,10 @@
     "@types/power-assert": "^1.5.0",
     "coveralls": "^3.0.1",
     "mocha": "^5.2.0",
-    "nyc": "^11.9.0",
     "power-assert": "^1.5.0",
+    "remap-istanbul": "^0.11.1",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.6",
-    "ts-node": "^6.0.5",
     "tslint": "^5.10.0",
     "typescript": "^2.9.1"
   }
