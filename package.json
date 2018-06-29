@@ -8,7 +8,7 @@
   "main": "dist/core/",
   "typings": "dist/core/index.d.ts",
   "scripts": {
-    "clean": "rimraf dist/ src/**/*.js?(.map) test/**/*.js?(.map)",
+    "clean": "rimraf dist/ **/*.js **/*.js.map",
     "build": "tsc -p ./tsconfig-build.json",
     "precompile": "tslint --project ./tsconfig.json",
     "compile": "tsc -p .",
