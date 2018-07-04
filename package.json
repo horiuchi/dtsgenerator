@@ -51,7 +51,7 @@
   "devDependencies": {
     "@types/debug": "^0.0.30",
     "@types/glob": "^5.0.35",
-    "@types/js-yaml": "3.11.1",
+    "@types/js-yaml": "3.11.2",
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^5.2.3",
     "@types/node": "^10.5.1",
