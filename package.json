@@ -1,6 +1,6 @@
 {
   "name": "dtsgenerator",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "TypeScript d.ts file generator for JSON Schema file",
   "bin": {
     "dtsgen": "./bin/dtsgen"
@@ -12,6 +12,7 @@
     "build": "tsc -p ./tsconfig-build.json",
     "precompile": "tslint --project ./tsconfig.json",
     "compile": "tsc -p .",
+    "dist": "npm run compile && mkdir -p dist/core && cp src/*.js dist && cp src/core/*.js dist/core",
     "watch": "npm run compile -- -w",
     "pretest": "npm run compile",
     "test": "istanbul cover _mocha test/*.js test/**/*.js",
@@ -57,6 +58,7 @@
     "@types/node": "^10.9.4",
     "@types/power-assert": "^1.5.0",
     "coveralls": "^3.0.2",
+    "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "power-assert": "^1.6.1",
     "remap-istanbul": "^0.11.1",
