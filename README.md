@@ -35,11 +35,12 @@ $ dtsgen --help
   Options:
 
 
-    -V, --version     output the version number
-    --url <url>       input json schema from the url. (default: )
-    --stdin           read stdin with other files or urls.
-    -o, --out <file>  output d.ts filename.
-    -h, --help        output usage information
+    -V, --version                output the version number
+    --url <url>                  input json schema from the url. (default: )
+    --stdin                      read stdin with other files or urls.
+    -n, --namespace <namespace>  use namespace instead of definitions or components.schema from OpenAPI, or -n ~none~ to suppress namespaces.
+    -o, --out <file>             output d.ts filename.
+    -h, --help                   output usage information
 
   Examples:
 
@@ -47,7 +48,7 @@ $ dtsgen --help
     $ dtsgen --out types.d.ts schema/**/*.schema.json
     $ cat schema1.json | dtsgen
     $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
-    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
+    $ dtsgen -o petstore.d.ts -n PetStore --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
 ```
 
 ## Advance Usage
@@ -116,6 +117,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 - [supported features in these spec](https://github.com/horiuchi/dtsgenerator/blob/master/SupportedFeatures.md)
 
 ## ChangeLog
+
+### v1.2.0 [] 
+
+- features
+  -  Add `--namespace <namespace>` option to control the emitted namespace
 
 ### [v1.1.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.1.0) (2018-06-01)
 

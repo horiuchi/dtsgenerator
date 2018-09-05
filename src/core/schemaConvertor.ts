@@ -5,7 +5,8 @@ import { DefaultTypeNameConvertor, TypeNameConvertor } from './typeNameConvertor
 import WriteProcessor from './writeProcessor';
 
 export default class SchemaConvertor {
-    constructor(private processor: WriteProcessor, private convertor: TypeNameConvertor = DefaultTypeNameConvertor) {}
+    constructor(private processor: WriteProcessor, private convertor: TypeNameConvertor = DefaultTypeNameConvertor) { }
+    private namespaceName?: string; // A namespace identifier, or '~none~' to suppress the namespace statement
 
     private getLastTypeName(id: SchemaId): string {
         const names = this.convertor(id);
@@ -33,8 +34,9 @@ export default class SchemaConvertor {
         return map;
     }
 
-    public start(): void {
+    public start(namespaceName?: string): void {
         this.processor.clear();
+        this.namespaceName = namespaceName;
     }
     public end(): string {
         return this.processor.toDefinition();
@@ -42,16 +44,29 @@ export default class SchemaConvertor {
 
     public startNest(name: string): void {
         const processor = this.processor;
-        if (processor.indentLevel === 0) {
-            processor.output('declare ');
+        if (this.namespaceName) {
+            if (processor.indentLevel === 0 && this.namespaceName !== '~none~') {
+                processor.outputLine(`declare namespace ${this.namespaceName} {`);
+            }
+        } else {
+            if (processor.indentLevel === 0) {
+                processor.output('declare ');
+            }
+            processor.output('namespace ').outputType(name, true).outputLine(' {');
         }
-        processor.output('namespace ').outputType(name, true).outputLine(' {');
         processor.increaseIndent();
     }
+
     public endNest(): void {
         const processor = this.processor;
         processor.decreaseIndent();
-        processor.outputLine('}');
+        if (this.namespaceName) {
+            if (processor.indentLevel === 0 && this.namespaceName !== '~none~') {
+                processor.outputLine('}');
+            }
+        } else {
+            processor.outputLine('}');
+        }
     }
 
     /// acutal type convert methods

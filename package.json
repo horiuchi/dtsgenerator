@@ -1,6 +1,6 @@
 {
   "name": "dtsgenerator",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "TypeScript d.ts file generator for JSON Schema file",
   "bin": {
     "dtsgen": "./bin/dtsgen"
@@ -12,6 +12,7 @@
     "build": "tsc -p ./tsconfig-build.json",
     "precompile": "tslint --project ./tsconfig.json",
     "compile": "tsc -p .",
+    "dist" : "npm run compile && mkdir -p dist/core && cp src/*.js dist && cp src/core/*.js dist/core",
     "watch": "npm run compile -- -w",
     "pretest": "npm run compile",
     "test": "istanbul cover _mocha test/*.js test/**/*.js",
@@ -40,10 +41,10 @@
     "node": ">= 6.0"
   },
   "dependencies": {
-    "commander": "^2.16.0",
+    "commander": "^2.17.1",
     "cross-fetch": "^2.2.2",
     "debug": "^3.1.0",
-    "glob": "^7.1.2",
+    "glob": "^7.1.3",
     "js-yaml": "^3.12.0",
     "mkdirp": "^0.5.1",
     "tslib": "^1.9.3"
@@ -54,15 +55,16 @@
     "@types/js-yaml": "3.11.2",
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^10.5.4",
+    "@types/node": "^10.9.4",
     "@types/power-assert": "^1.5.0",
     "coveralls": "^3.0.2",
+    "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "power-assert": "^1.6.0",
     "remap-istanbul": "^0.11.1",
     "rimraf": "^2.6.2",
-    "source-map-support": "^0.5.6",
+    "source-map-support": "^0.5.9",
     "tslint": "^5.11.0",
-    "typescript": "^3.0.1"
+    "typescript": "^3.0.3"
   }
 }
