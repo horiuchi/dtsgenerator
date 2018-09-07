@@ -7,3 +7,5 @@ dist/
 
 *.js
 *.js.map
+
+.vscode/
