@@ -22,18 +22,16 @@ describe('output command help test', () => {
     it('should output command help ', () => {
         const command = initialize(['node', 'script.js']);
         command.outputHelp();
-        assert.equal(content, `
-  Usage: script [options] <file ... | file patterns using node-glob>
+        assert.equal(content, `Usage: script [options] <file ... | file patterns using node-glob>
 
-  Options:
+Options:
 
-    -V, --version                output the version number
-    --url <url>                  input json schema from the url. (default: )
-    --stdin                      read stdin with other files or urls.
-    -o, --out <file>             output d.ts filename.
-    -n, --namespace <namespace>  use root namespace instead of definitions or components.schema from OpenAPI, or -n "" to suppress namespaces.
-    -h, --help                   output usage information
-
+  -V, --version                output the version number
+  --url <url>                  input json schema from the url. (default: )
+  --stdin                      read stdin with other files or urls.
+  -o, --out <file>             output d.ts filename.
+  -n, --namespace <namespace>  use root namespace instead of definitions or components.schema from OpenAPI, or -n "" to suppress namespaces.
+  -h, --help                   output usage information
 
   Examples:
 

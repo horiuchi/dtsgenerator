@@ -10,9 +10,9 @@
   "scripts": {
     "clean": "rimraf dist/ **/*.js **/*.js.map",
     "build": "tsc -p ./tsconfig-build.json",
+    "prepublish": "npm run build",
     "precompile": "tslint --project ./tsconfig.json",
     "compile": "tsc -p .",
-    "dist": "npm run compile && mkdir -p dist/core && cp src/*.js dist && cp src/core/*.js dist/core",
     "watch": "npm run compile -- -w",
     "pretest": "npm run compile",
     "test": "istanbul cover _mocha test/*.js test/**/*.js",
