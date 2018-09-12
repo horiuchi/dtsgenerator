@@ -5,7 +5,7 @@ import { DefaultTypeNameConvertor, TypeNameConvertor } from './typeNameConvertor
 import WriteProcessor from './writeProcessor';
 
 export default class SchemaConvertor {
-    constructor(private processor: WriteProcessor, private convertor: TypeNameConvertor = DefaultTypeNameConvertor) {}
+    constructor(private processor: WriteProcessor, private convertor: TypeNameConvertor = DefaultTypeNameConvertor) { }
 
     private getLastTypeName(id: SchemaId): string {
         const names = this.convertor(id);
@@ -16,15 +16,28 @@ export default class SchemaConvertor {
         }
     }
 
-    public buildSchemaMergedMap(schemas: IterableIterator<Schema>, typeMarker: symbol): any {
+    public buildSchemaMergedMap(schemas: IterableIterator<Schema>, typeMarker: symbol, namespaceName?: string): any {
         const map: any = {};
+        const paths: Array<{ path: string[]; type: Schema; }> = [];
+        let minLevel = Number.MAX_SAFE_INTEGER;
         for (const type of schemas) {
-            const names = this.convertor(type.id);
-            const parent = JsonPointer.get(map, names, true);
+            const path = this.convertor(type.id);
+            minLevel = Math.min(minLevel, path.length);
+            paths.push({ path, type });
+        }
+        for (const item of paths) {
+            const path = item.path;
+            if (namespaceName != null) {
+                path.splice(0, minLevel - 1);
+                if (namespaceName.length > 0) {
+                    path.unshift(...namespaceName.split('/'));
+                }
+            }
+            const parent = JsonPointer.get(map, path, true);
             if (parent == null) {
-                JsonPointer.set(map, names, { [typeMarker]: type });
+                JsonPointer.set(map, path, { [typeMarker]: item.type });
             } else {
-                parent[typeMarker] = type;
+                parent[typeMarker] = item.type;
             }
         }
         if (Object.keys(map).length === 0) {
@@ -48,6 +61,7 @@ export default class SchemaConvertor {
         processor.output('namespace ').outputType(name, true).outputLine(' {');
         processor.increaseIndent();
     }
+
     public endNest(): void {
         const processor = this.processor;
         processor.decreaseIndent();

@@ -11,13 +11,13 @@ export default class DtsGenerator {
 
     private currentSchema!: NormalizedSchema;
 
-    constructor(private resolver: ReferenceResolver, private convertor: SchemaConvertor) {}
+    constructor(private resolver: ReferenceResolver, private convertor: SchemaConvertor, private namespaceName?: string) {}
 
     public async generate(): Promise<string> {
         debug('generate type definition files.');
         await this.resolver.resolve();
 
-        const map = this.convertor.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema(), typeMarker);
+        const map = this.convertor.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema(), typeMarker, this.namespaceName);
         this.convertor.start();
         this.walk(map);
         const result = this.convertor.end();
@@ -31,7 +31,7 @@ export default class DtsGenerator {
             const value = map[key];
             if (value.hasOwnProperty(typeMarker)) {
                 const schema = value[typeMarker] as Schema;
-                debug(`  walk doProcess: schemaId=${schema.id.getAbsoluteId()}`);
+                debug(`  walk doProcess: key=${key} schemaId=${schema.id.getAbsoluteId()}`);
                 this.walkSchema(schema);
                 delete value[typeMarker];
             }

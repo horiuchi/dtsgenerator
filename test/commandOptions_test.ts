@@ -22,16 +22,16 @@ describe('output command help test', () => {
     it('should output command help ', () => {
         const command = initialize(['node', 'script.js']);
         command.outputHelp();
-        assert.equal(content, `
-  Usage: script [options] <file ... | file patterns using node-glob>
+        assert.equal(content, `Usage: script [options] <file ... | file patterns using node-glob>
 
-  Options:
+Options:
 
-    -V, --version     output the version number
-    --url <url>       input json schema from the url. (default: )
-    --stdin           read stdin with other files or urls.
-    -o, --out <file>  output d.ts filename.
-    -h, --help        output usage information
+  -V, --version                output the version number
+  --url <url>                  input json schema from the url. (default: )
+  --stdin                      read stdin with other files or urls.
+  -o, --out <file>             output d.ts filename.
+  -n, --namespace <namespace>  use root namespace instead of definitions or components.schema from OpenAPI, or -n "" to suppress namespaces.
+  -h, --help                   output usage information
 
   Examples:
 
@@ -39,7 +39,7 @@ describe('output command help test', () => {
     $ dtsgen --out types.d.ts schema/**/*.schema.json
     $ cat schema1.json | dtsgen
     $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
-    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
+    $ dtsgen -o petstore.d.ts -n PetStore --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
 `);
     });
 
@@ -99,6 +99,37 @@ describe('command options test', () => {
         assert.deepEqual(opts.urls, ['https://example.com/schema.json']);
         assert.equal(opts.stdin, undefined);
         assert.equal(opts.out, './schema.d.ts');
+        assert.equal(opts.isReadFromStdin(), false);
+    });
+
+    it('should parse arguments 5', () => {
+        initialize([
+            'node', 'script.js',
+            '--out', './schema.d.ts',
+            '--namespace', 'PetStore',
+            '--url', 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml',
+        ]);
+
+        assert.deepEqual(opts.files, []);
+        assert.deepEqual(opts.urls, ['https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml']);
+        assert.equal(opts.stdin, undefined);
+        assert.equal(opts.out, './schema.d.ts');
+        assert.equal(opts.namespace, 'PetStore');
+        assert.equal(opts.isReadFromStdin(), false);
+    });
+    it('should parse arguments 6', () => {
+        initialize([
+            'node', 'script.js',
+            '--out', './schema.d.ts',
+            '-n', 'PetStore',
+            '--url', 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml',
+        ]);
+
+        assert.deepEqual(opts.files, []);
+        assert.deepEqual(opts.urls, ['https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml']);
+        assert.equal(opts.stdin, undefined);
+        assert.equal(opts.out, './schema.d.ts');
+        assert.equal(opts.namespace, 'PetStore');
         assert.equal(opts.isReadFromStdin(), false);
     });
 
