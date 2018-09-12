@@ -116,27 +116,27 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
-### v1.2.0 []
+### v1.2.0
 
 - features
-  -  Add `--namespace <namespace>` option to control the emitted namespace
+  -  Add `--namespace <namespace>` option to control the emitted namespace. Thank you @DavidBiesack :+1:
 
 ### [v1.1.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.1.0) (2018-06-01)
 
 - features
-    - add [the supported features document](https://github.com/horiuchi/dtsgenerator/blob/master/SupportedFeatures.md)
-    - support some properties
+    - Add [the supported features document](https://github.com/horiuchi/dtsgenerator/blob/master/SupportedFeatures.md)
+    - Support some properties
         - `title`, `const`, `readOnly`
 
 ### [v1.0.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.0.0) (2018-03-22)
 
 - features
-    - support JSON Schema Draft-07 and OpenAPI v3
-    - add the library interface for customize type name
-    - remove some unusual command line options
-    - and rebuild the architecture
+    - Support JSON Schema Draft-07 and OpenAPI v3
+    - Add the library interface for customize type name
+    - Remove some unusual command line options
+    - And rebuild the architecture
 - others
-    - remove the node v4 support
+    - Remove the node v4 support
 
 ### other versions
 
