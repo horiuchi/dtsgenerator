@@ -6,7 +6,6 @@ import WriteProcessor from './writeProcessor';
 
 export default class SchemaConvertor {
     constructor(private processor: WriteProcessor, private convertor: TypeNameConvertor = DefaultTypeNameConvertor) { }
-    private namespaceName?: string; // A namespace identifier, or '~none~' to suppress the namespace statement
 
     private getLastTypeName(id: SchemaId): string {
         const names = this.convertor(id);
@@ -17,15 +16,28 @@ export default class SchemaConvertor {
         }
     }
 
-    public buildSchemaMergedMap(schemas: IterableIterator<Schema>, typeMarker: symbol): any {
+    public buildSchemaMergedMap(schemas: IterableIterator<Schema>, typeMarker: symbol, namespaceName?: string): any {
         const map: any = {};
+        const paths: Array<{ path: string[]; type: Schema; }> = [];
+        let minLevel = Number.MAX_SAFE_INTEGER;
         for (const type of schemas) {
-            const names = this.convertor(type.id);
-            const parent = JsonPointer.get(map, names, true);
+            const path = this.convertor(type.id);
+            minLevel = Math.min(minLevel, path.length);
+            paths.push({ path, type });
+        }
+        for (const item of paths) {
+            const path = item.path;
+            if (namespaceName != null) {
+                path.splice(0, minLevel - 1);
+                if (namespaceName.length > 0) {
+                    path.unshift(...namespaceName.split('/'));
+                }
+            }
+            const parent = JsonPointer.get(map, path, true);
             if (parent == null) {
-                JsonPointer.set(map, names, { [typeMarker]: type });
+                JsonPointer.set(map, path, { [typeMarker]: item.type });
             } else {
-                parent[typeMarker] = type;
+                parent[typeMarker] = item.type;
             }
         }
         if (Object.keys(map).length === 0) {
@@ -34,9 +46,8 @@ export default class SchemaConvertor {
         return map;
     }
 
-    public start(namespaceName?: string): void {
+    public start(): void {
         this.processor.clear();
-        this.namespaceName = namespaceName;
     }
     public end(): string {
         return this.processor.toDefinition();
@@ -44,29 +55,17 @@ export default class SchemaConvertor {
 
     public startNest(name: string): void {
         const processor = this.processor;
-        if (this.namespaceName) {
-            if (processor.indentLevel === 0 && this.namespaceName !== '~none~') {
-                processor.outputLine(`declare namespace ${this.namespaceName} {`);
-            }
-        } else {
-            if (processor.indentLevel === 0) {
-                processor.output('declare ');
-            }
-            processor.output('namespace ').outputType(name, true).outputLine(' {');
+        if (processor.indentLevel === 0) {
+            processor.output('declare ');
         }
+        processor.output('namespace ').outputType(name, true).outputLine(' {');
         processor.increaseIndent();
     }
 
     public endNest(): void {
         const processor = this.processor;
         processor.decreaseIndent();
-        if (this.namespaceName) {
-            if (processor.indentLevel === 0 && this.namespaceName !== '~none~') {
-                processor.outputLine('}');
-            }
-        } else {
-            processor.outputLine('}');
-        }
+        processor.outputLine('}');
     }
 
     /// acutal type convert methods

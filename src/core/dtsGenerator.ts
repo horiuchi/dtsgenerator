@@ -17,8 +17,8 @@ export default class DtsGenerator {
         debug('generate type definition files.');
         await this.resolver.resolve();
 
-        const map = this.convertor.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema(), typeMarker);
-        this.convertor.start(this.namespaceName);
+        const map = this.convertor.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema(), typeMarker, this.namespaceName);
+        this.convertor.start();
         this.walk(map);
         const result = this.convertor.end();
 

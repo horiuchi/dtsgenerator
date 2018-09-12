@@ -48,7 +48,7 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         .option('--url <url>', 'input json schema from the url.', collectUrl, [])
         .option('--stdin', 'read stdin with other files or urls.')
         .option('-o, --out <file>', 'output d.ts filename.')
-        .option('-n, --namespace <namespace>', 'use namespace instead of definitions or components.schema from OpenAPI, or -n ~none~ to suppress namespaces.')
+        .option('-n, --namespace <namespace>', 'use root namespace instead of definitions or components.schema from OpenAPI, or -n "" to suppress namespaces.')
         .on('--help', () => {
             /* tslint:disable:no-console */
             console.log('');

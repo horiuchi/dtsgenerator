@@ -38,7 +38,7 @@ $ dtsgen --help
     -V, --version                output the version number
     --url <url>                  input json schema from the url. (default: )
     --stdin                      read stdin with other files or urls.
-    -n, --namespace <namespace>  use namespace instead of definitions or components.schema from OpenAPI, or -n ~none~ to suppress namespaces.
+    -n, --namespace <namespace>  use root namespace instead of definitions or components.schema from OpenAPI, or -n "" to suppress namespaces.
     -o, --out <file>             output d.ts filename.
     -h, --help                   output usage information
 
@@ -118,7 +118,7 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
-### v1.2.0 [] 
+### v1.2.0 []
 
 - features
   -  Add `--namespace <namespace>` option to control the emitted namespace

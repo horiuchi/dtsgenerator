@@ -1,3 +1,5 @@
+declare namespace Test {
+    namespace PetStore {
         export interface Error {
             code: number; // int32
             message: string;
@@ -11,3 +13,5 @@
             tag?: string;
             id: number; // int64
         }
+    }
+}
