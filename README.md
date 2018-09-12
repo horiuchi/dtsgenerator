@@ -116,7 +116,7 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
-### v1.2.0
+### [v1.2.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.2.0) (2018-09-12)
 
 - features
   -  Add `--namespace <namespace>` option to control the emitted namespace. Thank you @DavidBiesack :+1:
