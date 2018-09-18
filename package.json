@@ -18,7 +18,7 @@
     "test": "istanbul cover _mocha test/*.js test/**/*.js",
     "posttest": "remap-istanbul --input coverage/coverage.json -o coverage/report -t html",
     "coverage": "remap-istanbul --input coverage/coverage.json --type text-lcov | coveralls",
-    "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test:exec"
+    "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test"
   },
   "directories": {
     "test": "test/"
