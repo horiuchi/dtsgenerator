@@ -37,7 +37,7 @@ function toTypeName(str: string): string {
 }
 
 export function normalizeTypeName(type: string): string {
-    type = type.replace(/[^0-9A-Za-z_$]+/g, '_');
+    type = type.replace(/^\//, '').replace(/[^0-9A-Za-z_$]+/g, '_');
     if (/^\d/.test(type)) {
         type = '$' + type;
     }

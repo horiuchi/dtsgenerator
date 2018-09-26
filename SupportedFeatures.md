@@ -66,3 +66,17 @@ Supported Features
 |if|x||
 |then|x||
 |else|x||
+
+
+# OpenAPI
+
+Basically the same as JSON Schema, but it is supported the additional properties as root object in OpenAPI file.
+
+## Version 3.0
+
+The base JSON Schema version is Draft-07
+
+|additional property|
+|:------------------|
+|/components/schemas/*|
+|/paths/*/[get|put|post|delete|options|head|patch|trace]/

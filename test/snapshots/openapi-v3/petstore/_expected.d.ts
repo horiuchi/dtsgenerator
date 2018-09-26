@@ -15,3 +15,28 @@ declare namespace Components {
         }
     }
 }
+declare namespace Paths {
+    namespace Pets {
+        namespace Get {
+            namespace Parameters {
+                export type Limit = number; // int32
+                export type Tags = string[];
+            }
+            namespace Responses {
+                export type $200 = Components.Schemas.Pet[];
+            }
+        }
+    }
+    namespace PetsId_ {
+        namespace Delete {
+            namespace Parameters {
+                export type Id = number; // int64
+            }
+        }
+        namespace Get {
+            namespace Parameters {
+                export type Id = number; // int64
+            }
+        }
+    }
+}
