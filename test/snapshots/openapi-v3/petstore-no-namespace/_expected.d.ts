@@ -3,7 +3,7 @@ declare namespace Delete {
         export type Id = number; // int64
     }
 }
-export interface Error {
+declare interface Error {
     code: number; // int32
     message: string;
 }
@@ -14,14 +14,14 @@ declare namespace Get {
         export type Tags = string[];
     }
     namespace Responses {
-        export type $200 = Components.Schemas.Pet[];
+        export type $200 = Pet[];
     }
 }
-export interface NewPet {
+declare interface NewPet {
     name: string;
     tag?: string;
 }
-export interface Pet {
+declare interface Pet {
     name: string;
     tag?: string;
     id: number; // int64

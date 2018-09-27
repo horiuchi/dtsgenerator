@@ -16,7 +16,7 @@ declare namespace Test {
                 export type Tags = string[];
             }
             namespace Responses {
-                export type $200 = Components.Schemas.Pet[];
+                export type $200 = Test.PetStore.Pet[];
             }
         }
         export interface NewPet {

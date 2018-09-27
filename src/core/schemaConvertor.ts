@@ -71,8 +71,14 @@ export default class SchemaConvertor {
     /// acutal type convert methods
 
     public startInterfaceNest(id: SchemaId): void {
+        const processor = this.processor;
+        if (processor.indentLevel === 0) {
+            processor.output('declare ');
+        } else {
+            processor.output('export ');
+        }
         const name = this.getLastTypeName(id);
-        this.processor.output('export interface ').outputType(name).output(' ');
+        processor.output('interface ').outputType(name).output(' ');
         this.startTypeNest();
     }
     public endInterfaceNest(): void {
@@ -81,8 +87,14 @@ export default class SchemaConvertor {
     }
 
     public outputExportType(id: SchemaId): void {
+        const processor = this.processor;
+        if (processor.indentLevel === 0) {
+            processor.output('declare ');
+        } else {
+            processor.output('export ');
+        }
         const name = this.getLastTypeName(id);
-        this.processor.output('export type ').outputType(name).output(' = ');
+        processor.output('type ').outputType(name).output(' = ');
     }
 
     public startTypeNest(): void {
