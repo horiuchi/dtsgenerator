@@ -65,7 +65,7 @@ declare namespace SwaggerIo {
                      * Determines whether or not this parameter is required or optional.
                      */
                     required?: boolean;
-                    schema: Schema;
+                    schema: JsonSchemaOrg.Draft04.Schema;
                 }
                 export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes';
                 export type CollectionFormatWithMulti = 'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';
@@ -91,7 +91,7 @@ declare namespace SwaggerIo {
                  * One or more JSON objects describing the schemas being consumed and produced by the API.
                  */
                 export interface Definitions {
-                    [name: string]: Schema;
+                    [name: string]: JsonSchemaOrg.Draft04.Schema;
                 }
                 export type Enum = JsonSchemaOrg.Draft04.Schema.Properties.Enum;
                 export interface Examples {
@@ -389,6 +389,7 @@ declare namespace SwaggerIo {
                  * Relative paths to the individual endpoints. They must be relative to the 'basePath'.
                  */
                 export interface Paths {
+                    [path: string]: PathItem;
                 }
                 export type Pattern = JsonSchemaOrg.Draft04.Schema.Properties.Pattern; // regex
                 export interface PrimitivesItems {
@@ -451,7 +452,7 @@ declare namespace SwaggerIo {
                 }
                 export interface Response {
                     description: string;
-                    schema?: Schema | FileSchema;
+                    schema?: JsonSchemaOrg.Draft04.Schema | FileSchema;
                     headers?: Headers;
                     examples?: Examples;
                 }
@@ -466,44 +467,11 @@ declare namespace SwaggerIo {
                  * Response objects names can either be any valid HTTP status code or 'default'.
                  */
                 export interface Responses {
+                    [name: string]: ResponseValue;
                 }
                 /**
                  * A deterministic version of a JSON Schema object.
                  */
-                export interface Schema {
-                    $ref?: string;
-                    format?: string;
-                    title?: JsonSchemaOrg.Draft04.Schema.Properties.Title;
-                    description?: JsonSchemaOrg.Draft04.Schema.Properties.Description;
-                    default?: JsonSchemaOrg.Draft04.Schema.Properties.Default;
-                    multipleOf?: JsonSchemaOrg.Draft04.Schema.Properties.MultipleOf;
-                    maximum?: JsonSchemaOrg.Draft04.Schema.Properties.Maximum;
-                    exclusiveMaximum?: JsonSchemaOrg.Draft04.Schema.Properties.ExclusiveMaximum;
-                    minimum?: JsonSchemaOrg.Draft04.Schema.Properties.Minimum;
-                    exclusiveMinimum?: JsonSchemaOrg.Draft04.Schema.Properties.ExclusiveMinimum;
-                    maxLength?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveInteger;
-                    minLength?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveIntegerDefault0;
-                    pattern?: JsonSchemaOrg.Draft04.Schema.Properties.Pattern; // regex
-                    maxItems?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveInteger;
-                    minItems?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveIntegerDefault0;
-                    uniqueItems?: JsonSchemaOrg.Draft04.Schema.Properties.UniqueItems;
-                    maxProperties?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveInteger;
-                    minProperties?: JsonSchemaOrg.Draft04.Schema.Definitions.PositiveIntegerDefault0;
-                    required?: JsonSchemaOrg.Draft04.Schema.Definitions.StringArray;
-                    enum?: JsonSchemaOrg.Draft04.Schema.Properties.Enum;
-                    additionalProperties?: Schema | boolean;
-                    type?: JsonSchemaOrg.Draft04.Schema.Properties.Type;
-                    items?: Schema | Schema[];
-                    allOf?: Schema[];
-                    properties?: {
-                        [name: string]: Schema;
-                    };
-                    discriminator?: string;
-                    readOnly?: boolean;
-                    xml?: Xml;
-                    externalDocs?: ExternalDocs;
-                    example?: any;
-                }
                 /**
                  * The transfer protocol of the API.
                  */

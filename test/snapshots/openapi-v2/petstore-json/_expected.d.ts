@@ -13,3 +13,12 @@ declare namespace Definitions {
         id: number; // int64
     }
 }
+declare namespace Paths {
+    namespace Pets {
+        namespace Get {
+            namespace Responses {
+                export type $200 = Definitions.Pet[];
+            }
+        }
+    }
+}

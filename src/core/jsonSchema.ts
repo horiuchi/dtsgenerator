@@ -6,6 +6,8 @@ export type JsonSchema = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.Sc
 export type JsonSchemaObject = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.SchemaObject;
 type OpenApiSchema = SwaggerIo.V2.SchemaJson | OpenApisOrg.V3.SchemaJson;
 
+type Parameter = { name: string; schema?: JsonSchemaObject; } | { $ref?: string; };
+
 export type SchemaType = 'Draft04' | 'Draft07';
 
 export interface Schema {
@@ -157,6 +159,61 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 f(item, keys.concat(normalizeTypeName(key)));
             });
         }
+
+        // for OpenAPI
+        const setSubIdToParameterObject = (obj: { [name: string]: Parameter; } | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToParameter, obj, keys);
+        function setSubIdToParameter(param: Parameter | undefined, keys: string[]): void {
+            if (param == null) {
+                return;
+            }
+            if ('schema' in param) {
+                setSubId(param.schema, keys.concat(param.name));
+            }
+        }
+        function setSubIdToParameters(array: Parameter[] | undefined, keys: string[]): void {
+            if (array == null) {
+                return;
+            }
+            array.forEach((item) => {
+                setSubIdToParameter(item, keys);
+            });
+        }
+
+        /// for OpenAPI V2 only
+        const setSubIdToResponsesV2 = (responses: SwaggerIo.V2.SchemaJson.Definitions.Responses | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToResponseV2, responses, keys);
+        function setSubIdToResponseV2(response: SwaggerIo.V2.SchemaJson.Definitions.ResponseValue | undefined, keys: string[]): void {
+            if (response == null) {
+                return;
+            }
+            if ('schema' in response) {
+                const s = response.schema;
+                if (s != null && s.type === 'file') {
+                    return;
+                }
+                setSubId(s as JsonSchemaObject, keys);
+            }
+        }
+        function setSubIdToOperationV2(ops: SwaggerIo.V2.SchemaJson.Definitions.Operation | undefined, keys: string[]): void {
+            if (ops == null) {
+                return;
+            }
+            // const operationId = ops.operationId;
+            setSubIdToParameters(ops.parameters, keys.concat('parameters'));
+            setSubIdToResponsesV2(ops.responses, keys.concat('responses'));
+        }
+        const setSubIdToPathsV2 = (paths: SwaggerIo.V2.SchemaJson.Definitions.Paths, keys: string[]) => setSubIdToAnyObject(setSubIdToPathItemV2, paths, keys);
+        function setSubIdToPathItemV2(pathItem: SwaggerIo.V2.SchemaJson.Definitions.PathItem, keys: string[]): void {
+            setSubIdToParameters(pathItem.parameters, keys.concat('parameters'));
+            setSubIdToOperationV2(pathItem.get, keys.concat('get'));
+            setSubIdToOperationV2(pathItem.put, keys.concat('put'));
+            setSubIdToOperationV2(pathItem.post, keys.concat('post'));
+            setSubIdToOperationV2(pathItem.delete, keys.concat('delete'));
+            setSubIdToOperationV2(pathItem.options, keys.concat('options'));
+            setSubIdToOperationV2(pathItem.head, keys.concat('head'));
+            setSubIdToOperationV2(pathItem.patch, keys.concat('patch'));
+        }
+
+        /// for OpenAPI V3 only
         function setSubIdToMediaTypes(types: OpenApisOrg.V3.SchemaJson.Definitions.MediaTypes | undefined, keys: string[]): void {
             if (types == null) {
                 return;
@@ -167,25 +224,8 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 setSubId(mt.schema, keys);
             }
         }
-        const setSubIdToParameterObject = (array: OpenApisOrg.V3.SchemaJson.Definitions.ParametersOrReferences | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToParameter, array, keys);
-        const setSubIdToParameters = (array: OpenApisOrg.V3.SchemaJson.Definitions.ParameterOrReference[] | undefined, keys: string[]) => {
-            if (array == null) {
-                return;
-            }
-            array.forEach((item) => {
-                setSubIdToParameter(item, keys);
-            });
-        };
-        function setSubIdToParameter(param: OpenApisOrg.V3.SchemaJson.Definitions.ParameterOrReference | undefined, keys: string[]) {
-            if (param == null) {
-                return;
-            }
-            if ('schema' in param) {
-                setSubId(param.schema, keys.concat(param.name));
-            }
-        }
         const setSubIdToRequestBodies = (bodys: OpenApisOrg.V3.SchemaJson.Definitions.RequestBodiesOrReferences | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToRequestBody, bodys, keys);
-        function setSubIdToRequestBody(body: OpenApisOrg.V3.SchemaJson.Definitions.RequestBodyOrReference | undefined, keys: string[]) {
+        function setSubIdToRequestBody(body: OpenApisOrg.V3.SchemaJson.Definitions.RequestBodyOrReference | undefined, keys: string[]): void {
             if (body == null) {
                 return;
             }
@@ -193,8 +233,8 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 setSubIdToMediaTypes(body.content, keys);
             }
         }
-        const setSubIdToResponses = (responses: OpenApisOrg.V3.SchemaJson.Definitions.ResponsesOrReferences | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToResponse, responses, keys);
-        function setSubIdToResponse(response: OpenApisOrg.V3.SchemaJson.Definitions.ResponseOrReference | undefined, keys: string[]) {
+        const setSubIdToResponsesV3 = (responses: OpenApisOrg.V3.SchemaJson.Definitions.ResponsesOrReferences | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToResponseV3, responses, keys);
+        function setSubIdToResponseV3(response: OpenApisOrg.V3.SchemaJson.Definitions.ResponseOrReference | undefined, keys: string[]): void {
             if (response == null) {
                 return;
             }
@@ -202,27 +242,28 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 setSubIdToMediaTypes(response.content, keys);
             }
         }
-        function setSubIdToOperation(ops: OpenApisOrg.V3.SchemaJson.Definitions.Operation | undefined, keys: string[]) {
+        function setSubIdToOperationV3(ops: OpenApisOrg.V3.SchemaJson.Definitions.Operation | undefined, keys: string[]): void {
             if (ops == null) {
                 return;
             }
             // const operationId = ops.operationId;
             setSubIdToParameters(ops.parameters, keys.concat('parameters'));
             setSubIdToRequestBody(ops.requestBody, keys.concat('requestBody'));
-            setSubIdToResponses(ops.responses, keys.concat('responses'));
+            setSubIdToResponsesV3(ops.responses, keys.concat('responses'));
         }
-        const setSubIdToPaths = (paths: OpenApisOrg.V3.SchemaJson.Definitions.Paths, keys: string[]) => setSubIdToAnyObject(setSubIdToPathItem, paths, keys);
-        function setSubIdToPathItem(pathItem: OpenApisOrg.V3.SchemaJson.Definitions.PathItem, keys: string[]) {
+        const setSubIdToPathsV3 = (paths: OpenApisOrg.V3.SchemaJson.Definitions.Paths, keys: string[]) => setSubIdToAnyObject(setSubIdToPathItemV3, paths, keys);
+        function setSubIdToPathItemV3(pathItem: OpenApisOrg.V3.SchemaJson.Definitions.PathItem, keys: string[]): void {
             setSubIdToParameters(pathItem.parameters, keys.concat('parameters'));
-            setSubIdToOperation(pathItem.get, keys.concat('get'));
-            setSubIdToOperation(pathItem.put, keys.concat('put'));
-            setSubIdToOperation(pathItem.post, keys.concat('post'));
-            setSubIdToOperation(pathItem.delete, keys.concat('delete'));
-            setSubIdToOperation(pathItem.options, keys.concat('options'));
-            setSubIdToOperation(pathItem.head, keys.concat('head'));
-            setSubIdToOperation(pathItem.patch, keys.concat('patch'));
-            setSubIdToOperation(pathItem.trace, keys.concat('trace'));
+            setSubIdToOperationV3(pathItem.get, keys.concat('get'));
+            setSubIdToOperationV3(pathItem.put, keys.concat('put'));
+            setSubIdToOperationV3(pathItem.post, keys.concat('post'));
+            setSubIdToOperationV3(pathItem.delete, keys.concat('delete'));
+            setSubIdToOperationV3(pathItem.options, keys.concat('options'));
+            setSubIdToOperationV3(pathItem.head, keys.concat('head'));
+            setSubIdToOperationV3(pathItem.patch, keys.concat('patch'));
+            setSubIdToOperationV3(pathItem.trace, keys.concat('trace'));
         }
+
         function setSubIdToObject(obj: { [name: string]: JsonSchema; } | undefined, paths: string[]): void {
             if (obj == null) {
                 return;
@@ -250,16 +291,20 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
 
         if ('swagger' in openApi) {
             setSubIdToObject(openApi.definitions, ['definitions']);
+            setSubIdToParameterObject(openApi.parameters, ['parameters']);
+            setSubIdToResponsesV2(openApi.responses, ['responses']);
+
+            setSubIdToPathsV2(openApi.paths, ['paths']);
         } else {
             if (openApi.components) {
                 const components = openApi.components;
                 setSubIdToObject(components.schemas, ['components', 'schemas']);
-                setSubIdToResponses(components.responses, ['components', 'responses']);
+                setSubIdToResponsesV3(components.responses, ['components', 'responses']);
                 setSubIdToParameterObject(components.parameters, ['components', 'parameters']);
                 setSubIdToRequestBodies(components.requestBodies, ['components', 'requestBodies']);
             }
             if (openApi.paths) {
-                setSubIdToPaths(openApi.paths, ['paths']);
+                setSubIdToPathsV3(openApi.paths, ['paths']);
             }
         }
     }
