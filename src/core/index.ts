@@ -18,7 +18,7 @@ export interface Options extends Partial<WriteProcessorOptions> {
 export default async function dtsGenerator(options: Options): Promise<string> {
     const processor = new WriteProcessor(options);
     const resolver = new ReferenceResolver();
-    const convertor = new SchemaConvertor(processor, options.typeNameConvertor);
+    const convertor = new SchemaConvertor(processor, options.typeNameConvertor, options.namespaceName);
 
     if (options.contents != null) {
         options.contents
@@ -29,6 +29,6 @@ export default async function dtsGenerator(options: Options): Promise<string> {
         await Promise.all(options.inputUrls.map((url) => resolver.registerRemoteSchema(url)));
     }
 
-    const generator = new DtsGenerator(resolver, convertor, options.namespaceName);
+    const generator = new DtsGenerator(resolver, convertor);
     return await generator.generate();
 }

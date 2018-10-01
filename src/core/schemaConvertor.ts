@@ -5,7 +5,12 @@ import { DefaultTypeNameConvertor, TypeNameConvertor } from './typeNameConvertor
 import WriteProcessor from './writeProcessor';
 
 export default class SchemaConvertor {
-    constructor(private processor: WriteProcessor, private convertor: TypeNameConvertor = DefaultTypeNameConvertor) { }
+    private ns: string[] | undefined;
+    private replaceLevel = 0;
+
+    constructor(private processor: WriteProcessor, private convertor: TypeNameConvertor = DefaultTypeNameConvertor, namespaceName?: string) {
+        this.ns = namespaceName == null ? undefined : namespaceName.split('/').filter((s) => s.length > 0);
+    }
 
     private getLastTypeName(id: SchemaId): string {
         const names = this.convertor(id);
@@ -16,7 +21,7 @@ export default class SchemaConvertor {
         }
     }
 
-    public buildSchemaMergedMap(schemas: IterableIterator<Schema>, typeMarker: symbol, namespaceName?: string): any {
+    public buildSchemaMergedMap(schemas: IterableIterator<Schema>, typeMarker: symbol): any {
         const map: any = {};
         const paths: Array<{ path: string[]; type: Schema; }> = [];
         let minLevel = Number.MAX_SAFE_INTEGER;
@@ -25,14 +30,11 @@ export default class SchemaConvertor {
             minLevel = Math.min(minLevel, path.length);
             paths.push({ path, type });
         }
+        this.replaceLevel = minLevel;
+
         for (const item of paths) {
             const path = item.path;
-            if (namespaceName != null) {
-                path.splice(0, minLevel - 1);
-                if (namespaceName.length > 0) {
-                    path.unshift(...namespaceName.split('/'));
-                }
-            }
+            this.replaceNamespace(path);
             const parent = JsonPointer.get(map, path, true);
             if (parent == null) {
                 JsonPointer.set(map, path, { [typeMarker]: item.type });
@@ -44,6 +46,16 @@ export default class SchemaConvertor {
             throw new Error('There is no schema in the input contents.');
         }
         return map;
+    }
+
+    private replaceNamespace(paths: string[]): void {
+        if (this.ns == null) {
+            return;
+        }
+        paths.splice(0, this.replaceLevel - 1);
+        if (this.ns.length > 0) {
+            paths.unshift(...this.ns);
+        }
     }
 
     public start(): void {
@@ -191,6 +203,7 @@ export default class SchemaConvertor {
                 return [this.getLastTypeName(id)];
             }
         }
+        this.replaceNamespace(result);
         return result;
     }
     public outputPrimitiveTypeName(schema: NormalizedSchema, typeName: string, terminate = true, outputOptional = true): void {
