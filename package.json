@@ -51,11 +51,11 @@
   },
   "devDependencies": {
     "@types/debug": "^0.0.30",
-    "@types/glob": "^7.1.0",
+    "@types/glob": "^7.1.1",
     "@types/js-yaml": "3.11.2",
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^10.10.1",
+    "@types/node": "^10.11.3",
     "@types/power-assert": "^1.5.0",
     "coveralls": "^3.0.2",
     "istanbul": "^0.4.5",
@@ -65,6 +65,6 @@
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.9",
     "tslint": "^5.11.0",
-    "typescript": "^3.0.3"
+    "typescript": "^3.1.1"
   }
 }

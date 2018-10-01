@@ -91,7 +91,6 @@ export default class DtsGenerator {
         return Object.assign({}, schema, { content });
     }
     private generateDeclareType(schema: NormalizedSchema): void {
-        // TODO
         this.convertor.outputExportType(schema.id);
         this.generateTypeProperty(schema, true);
     }
