@@ -56,6 +56,27 @@ declare namespace JsonSchemaOrg {
                 export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string" | "any" | "undefined";
                 export type StringArray = string[];
             }
+            namespace Properties {
+                export type Default = any;
+                export type Description = string;
+                export type Enum = any[];
+                export type ExclusiveMaximum = boolean;
+                export type ExclusiveMinimum = boolean;
+                export type MaxItems = Definitions.PositiveInteger;
+                export type MaxLength = Definitions.PositiveInteger;
+                export type MaxProperties = Definitions.PositiveInteger;
+                export type Maximum = number;
+                export type MinItems = Definitions.PositiveIntegerDefault0;
+                export type MinLength = Definitions.PositiveIntegerDefault0;
+                export type MinProperties = Definitions.PositiveIntegerDefault0;
+                export type Minimum = number;
+                export type MultipleOf = number;
+                export type Pattern = string; // regex
+                export type Required = Definitions.StringArray;
+                export type Title = string;
+                export type Type = Definitions.SimpleTypes | Definitions.SimpleTypes[];
+                export type UniqueItems = boolean;
+            }
         }
     }
 }

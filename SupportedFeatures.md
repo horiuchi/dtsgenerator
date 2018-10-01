@@ -66,3 +66,36 @@ Supported Features
 |if|x||
 |then|x||
 |else|x||
+
+
+# OpenAPI
+
+Basically the same as JSON Schema, but it is supported the additional properties as root object in OpenAPI file.
+
+## Version 2.0
+
+The base JSON Schema version is Draft-04
+
+|additional property|
+|:------------------|
+|/definitions/*|
+|/parameters/*/schema|
+|/responses/*/schema|
+|/paths/\*/parameters/*/schema|
+|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch)/parameters/*/schema|
+|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch)/responses/*/schema|
+
+## Version 3.0
+
+The base JSON Schema version is Draft-07
+
+|additional property|
+|:------------------|
+|/components/schemas/*|
+|/components/parameters/*/schema|
+|/components/requestBodies/*/content/"application/json"|
+|/components/responses/*/content/"application/json"|
+|/paths/\*/parameters/*/schema|
+|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/parameters/*/schema|
+|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/requestBodies/*/content/"application/json"|
+|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/responses/*/content/"application/json"|

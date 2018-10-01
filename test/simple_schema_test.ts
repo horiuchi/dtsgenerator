@@ -18,6 +18,18 @@ describe('simple schema test', () => {
 `;
         assert.equal(result, expected, result);
     });
+    it('no namespace schema', async () => {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
+            id: '/no_namespace',
+            type: 'object',
+        };
+        const result = await dtsgenerator({ contents: [schema] });
+
+        const expected = `declare interface NoNamespace {
+}
+`;
+        assert.equal(result, expected, result);
+    });
     it('one line schema', async () => {
         const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/one_line',
