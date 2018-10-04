@@ -50,7 +50,7 @@
     "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@types/debug": "^0.0.30",
+    "@types/debug": "^0.0.31",
     "@types/glob": "^7.1.1",
     "@types/js-yaml": "3.11.2",
     "@types/mkdirp": "^0.5.2",
