@@ -14,11 +14,9 @@ declare namespace Definitions {
     }
 }
 declare namespace Paths {
-    namespace Pets {
-        namespace Get {
-            namespace Responses {
-                export type $200 = Definitions.Pet[];
-            }
+    namespace FindPets {
+        namespace Responses {
+            export type $200 = Definitions.Pet[];
         }
     }
 }

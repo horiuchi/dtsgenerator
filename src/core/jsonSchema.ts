@@ -197,7 +197,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             if (ops == null) {
                 return;
             }
-            // const operationId = ops.operationId;
+            const operationId = ops.operationId;
+            if (operationId) {
+                keys = [keys[0], operationId];
+            }
             setSubIdToParameters(ops.parameters, keys.concat('parameters'));
             setSubIdToResponsesV2(ops.responses, keys.concat('responses'));
         }
@@ -246,7 +249,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             if (ops == null) {
                 return;
             }
-            // const operationId = ops.operationId;
+            const operationId = ops.operationId;
+            if (operationId) {
+                keys = [keys[0], operationId];
+            }
             setSubIdToParameters(ops.parameters, keys.concat('parameters'));
             setSubIdToRequestBody(ops.requestBody, keys.concat('requestBody'));
             setSubIdToResponsesV3(ops.responses, keys.concat('responses'));
