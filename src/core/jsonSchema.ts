@@ -1,6 +1,5 @@
 import * as JsonPointer from '../jsonPointer';
 import SchemaId from './schemaId';
-import { normalizeTypeName } from './typeNameConvertor';
 
 export type JsonSchema = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.Schema;
 export type JsonSchemaObject = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.SchemaObject;
@@ -150,13 +149,16 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
         function createId(paths: string[]): string {
             return '#/' + paths.join('/');
         }
+        function convertKeyToTypeName(key: string): string {
+            return key.replace(/[\/}]/g, '').replace(/{/, '$');
+        }
         function setSubIdToAnyObject<T>(f: (t: T, keys: string[]) => void, obj: { [key: string]: T } | undefined, keys: string[]): void {
             if (obj == null) {
                 return;
             }
             Object.keys(obj).forEach((key) => {
                 const item = obj[key];
-                f(item, keys.concat(normalizeTypeName(key)));
+                f(item, keys.concat(convertKeyToTypeName(key)));
             });
         }
 
