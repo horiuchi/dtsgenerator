@@ -11,11 +11,20 @@ declare namespace Parameters {
     export type Limit = number; // int32
     export type Tags = string[];
 }
+declare interface PathParameters {
+    id: Parameters.Id; // int64
+}
 declare interface Pet {
     name: string;
     tag?: string;
     id: number; // int64
 }
+declare interface QueryParameters {
+    tags?: Parameters.Tags;
+    limit?: Parameters.Limit; // int32
+}
+declare type RequestBody = NewPet;
 declare namespace Responses {
-    export type $200 = Pet[];
+    export type $200 = Pet;
+    export type Default = Error;
 }

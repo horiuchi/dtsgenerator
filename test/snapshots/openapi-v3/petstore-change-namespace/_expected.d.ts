@@ -13,13 +13,22 @@ declare namespace Test {
             export type Limit = number; // int32
             export type Tags = string[];
         }
+        export interface PathParameters {
+            id: Test.PetStore.Parameters.Id; // int64
+        }
         export interface Pet {
             name: string;
             tag?: string;
             id: number; // int64
         }
+        export interface QueryParameters {
+            tags?: Test.PetStore.Parameters.Limit;
+            limit?: Test.PetStore.Parameters.Limit; // int32
+        }
+        export type RequestBody = Test.PetStore.NewPet;
         namespace Responses {
-            export type $200 = Test.PetStore.Pet[];
+            export type $200 = Test.PetStore.Pet;
+            export type Default = Test.PetStore.Error;
         }
     }
 }
