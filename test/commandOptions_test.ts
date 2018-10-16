@@ -25,9 +25,8 @@ describe('output command help test', () => {
         assert.equal(content, `Usage: script [options] <file ... | file patterns using node-glob>
 
 Options:
-
   -V, --version                output the version number
-  --url <url>                  input json schema from the url. (default: )
+  --url <url>                  input json schema from the url. (default: [])
   --stdin                      read stdin with other files or urls.
   -o, --out <file>             output d.ts filename.
   -n, --namespace <namespace>  use root namespace instead of definitions or components.schema from OpenAPI, or -n "" to suppress namespaces.
