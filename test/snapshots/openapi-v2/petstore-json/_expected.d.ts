@@ -14,11 +14,33 @@ declare namespace Definitions {
     }
 }
 declare namespace Paths {
-    namespace Pets {
-        namespace Get {
-            namespace Responses {
-                export type $200 = Definitions.Pet[];
-            }
+    namespace AddPet {
+        export interface BodyParameters {
+            pet: Parameters.Pet;
+        }
+        namespace Parameters {
+            export type Pet = Definitions.NewPet;
+        }
+        namespace Responses {
+            export type $200 = Definitions.Pet;
+            export type Default = Definitions.Error;
+        }
+    }
+    namespace DeletePet {
+        namespace Responses {
+            export type Default = Definitions.Error;
+        }
+    }
+    namespace FindPetById {
+        namespace Responses {
+            export type $200 = Definitions.Pet;
+            export type Default = Definitions.Error;
+        }
+    }
+    namespace FindPets {
+        namespace Responses {
+            export type $200 = Definitions.Pet[];
+            export type Default = Definitions.Error;
         }
     }
 }

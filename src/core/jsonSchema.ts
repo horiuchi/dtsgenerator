@@ -6,7 +6,8 @@ export type JsonSchema = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.Sc
 export type JsonSchemaObject = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.SchemaObject;
 type OpenApiSchema = SwaggerIo.V2.SchemaJson | OpenApisOrg.V3.SchemaJson;
 
-type Parameter = { name: string; schema?: JsonSchemaObject; } | { $ref?: string; };
+interface ParameterObject { name: string; in: string; required?: boolean; schema?: JsonSchemaObject; }
+type Parameter = ParameterObject | { $ref?: string; };
 
 export type SchemaType = 'Draft04' | 'Draft07';
 
@@ -150,22 +151,22 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
         function createId(paths: string[]): string {
             return '#/' + paths.join('/');
         }
+        function convertKeyToTypeName(key: string): string {
+            return normalizeTypeName(key.replace(/[\/}]/g, '').replace(/{/, '$'));
+        }
         function setSubIdToAnyObject<T>(f: (t: T, keys: string[]) => void, obj: { [key: string]: T } | undefined, keys: string[]): void {
             if (obj == null) {
                 return;
             }
             Object.keys(obj).forEach((key) => {
                 const item = obj[key];
-                f(item, keys.concat(normalizeTypeName(key)));
+                f(item, keys.concat(convertKeyToTypeName(key)));
             });
         }
 
         // for OpenAPI
         const setSubIdToParameterObject = (obj: { [name: string]: Parameter; } | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToParameter, obj, keys);
-        function setSubIdToParameter(param: Parameter | undefined, keys: string[]): void {
-            if (param == null) {
-                return;
-            }
+        function setSubIdToParameter(param: Parameter, keys: string[]): void {
             if ('schema' in param) {
                 setSubId(param.schema, keys.concat(param.name));
             }
@@ -174,9 +175,39 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             if (array == null) {
                 return;
             }
+            const map = new Map<string, ParameterObject[]>();
             array.forEach((item) => {
-                setSubIdToParameter(item, keys);
+                if ('schema' in item) {
+                    setSubIdToParameter(item, keys);
+
+                    let work = map.get(item.in);
+                    if (work == null) {
+                        work = [];
+                        map.set(item.in, work);
+                    }
+                    work.push(item);
+                }
             });
+            addParameterSchema(map, keys);
+        }
+        function addParameterSchema(input: Map<string, ParameterObject[]>, keys: string[]): void {
+            for (const [key, params] of input) {
+                const [paths, obj] = buildParameterSchema(key, params, keys);
+                setSubId(obj, paths);
+            }
+        }
+        function buildParameterSchema(inType: string, params: ParameterObject[], keys: string[]): [string[], JsonSchemaObject] {
+            const paths = keys.slice(0, keys.length - 1).concat(inType + 'Parameters');
+            const properties: any = {};
+            params.forEach((item) => {
+                properties[item.name] = { $ref: createId(keys.concat(item.name)) };
+            });
+            return [paths, {
+                id: createId(paths),
+                type: 'object',
+                properties,
+                required: params.filter((item) => item.required === true).map((item) => item.name),
+            }];
         }
 
         /// for OpenAPI V2 only
@@ -197,7 +228,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             if (ops == null) {
                 return;
             }
-            // const operationId = ops.operationId;
+            const operationId = ops.operationId;
+            if (operationId) {
+                keys = [keys[0], convertKeyToTypeName(operationId)];
+            }
             setSubIdToParameters(ops.parameters, keys.concat('parameters'));
             setSubIdToResponsesV2(ops.responses, keys.concat('responses'));
         }
@@ -246,7 +280,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             if (ops == null) {
                 return;
             }
-            // const operationId = ops.operationId;
+            const operationId = ops.operationId;
+            if (operationId) {
+                keys = [keys[0], convertKeyToTypeName(operationId)];
+            }
             setSubIdToParameters(ops.parameters, keys.concat('parameters'));
             setSubIdToRequestBody(ops.requestBody, keys.concat('requestBody'));
             setSubIdToResponsesV3(ops.responses, keys.concat('responses'));
@@ -282,11 +319,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 const schemaId = new SchemaId(s.$ref);
                 s.$ref = schemaId.getAbsoluteId();
                 onFoundReference(schemaId);
-            } else {
-                const id = createId(paths);
-                setId(schema.type, s, id);
-                walk(s, paths, []);
             }
+            const id = createId(paths);
+            setId(schema.type, s, id);
+            walk(s, paths, []);
         }
 
         if ('swagger' in openApi) {
