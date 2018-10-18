@@ -189,6 +189,7 @@ export default class SchemaConvertor {
     }
     private getTypename(id: SchemaId, baseSchema: Schema): string[] {
         const result = this.convertor(id);
+        this.replaceNamespace(result);
         const baseId = baseSchema.id;
         if (baseId) {
             const baseTypes = this.convertor(baseId).slice(0, -1);
@@ -203,7 +204,6 @@ export default class SchemaConvertor {
                 return [this.getLastTypeName(id)];
             }
         }
-        this.replaceNamespace(result);
         return result;
     }
     public outputPrimitiveTypeName(schema: NormalizedSchema, typeName: string, terminate = true, outputOptional = true): void {

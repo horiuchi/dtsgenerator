@@ -22,7 +22,7 @@ declare namespace Test {
             id: number; // int64
         }
         export interface QueryParameters {
-            tags?: Test.PetStore.Parameters.Limit;
+            tags?: Test.PetStore.Parameters.Tags;
             limit?: Test.PetStore.Parameters.Limit; // int32
         }
         export type RequestBody = Test.PetStore.NewPet;
