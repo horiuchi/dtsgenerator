@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "rimraf dist/ **/*.js **/*.js.map",
     "build": "tsc -p ./tsconfig-build.json",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "precompile": "tslint --project ./tsconfig.json",
     "compile": "tsc -p .",
     "watch": "npm run compile -- -w",
@@ -25,7 +25,8 @@
   },
   "keywords": [
     "TypeScript",
-    "JSON Schema"
+    "JSON Schema",
+    "OpenAPI"
   ],
   "author": "horiuchi",
   "license": "MIT",
@@ -42,7 +43,7 @@
   },
   "dependencies": {
     "commander": "^2.19.0",
-    "cross-fetch": "^2.2.2",
+    "cross-fetch": "^2.2.3",
     "debug": "^4.1.0",
     "glob": "^7.1.3",
     "js-yaml": "^3.12.0",
