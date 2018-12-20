@@ -6,6 +6,7 @@ node_modules/
 
 # codes
 test/
+example/*/node_modules/
 
 # misc
 .coveralls.yml
