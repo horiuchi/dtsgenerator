@@ -58,3 +58,7 @@ function untilde(key: string): string {
         }
     });
 }
+
+export function tilde(key: string): string {
+    return key.replace(/~/, '~0').replace(/\//g, '~1');
+}

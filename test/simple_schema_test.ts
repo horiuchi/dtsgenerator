@@ -50,7 +50,7 @@ describe('simple schema test', () => {
 `;
         assert.equal(result, expected, result);
     });
-    it('one line readonly schema', async () => {
+    it('two line readonly schema', async () => {
         const schema: JsonSchemaOrg.Draft07.Schema = {
             $id: '/test/one_line',
             $schema: 'http://json-schema.org/draft-07/schema#',
@@ -403,6 +403,28 @@ describe('simple schema test', () => {
             namespace Definitions {
                 export type Name = string;
             }
+        }
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
+    it('include `/` properties schema', async () => {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
+            id: '/test/include/slash',
+            type: 'object',
+            properties: {
+                'a/b': {
+                    type: 'string',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [schema] });
+
+        const expected = `declare namespace Test {
+    namespace Include {
+        export interface Slash {
+            "a/b"?: string;
         }
     }
 }
