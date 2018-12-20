@@ -1,4 +1,5 @@
 import Debug from 'debug';
+import { tilde } from '../jsonPointer';
 import { getSubSchema, JsonSchema, NormalizedSchema, Schema } from './jsonSchema';
 import ReferenceResolver from './referenceResolver';
 import SchemaConvertor from './schemaConvertor';
@@ -122,7 +123,7 @@ export default class DtsGenerator {
         }
         if (content.properties) {
             for (const propertyName of Object.keys(content.properties)) {
-                const schema = this.normalizeContent(baseSchema, '/properties/' + propertyName);
+                const schema = this.normalizeContent(baseSchema, '/properties/' + tilde(propertyName));
                 this.convertor.outputComments(schema);
                 this.convertor.outputPropertyAttribute(schema);
                 this.convertor.outputPropertyName(schema, propertyName, baseSchema.content.required);
