@@ -13,6 +13,7 @@ test/
 .gitignore
 .travis.yml
 coverage/
+demo/
 
 npm-debug.log
 
