@@ -32,10 +32,7 @@ describe('Snapshot testing', () => {
                 const contents = files.map((file) => ({
                     file,
                     content: fs.readFileSync(file, { encoding: 'utf-8' }),
-                })).map(({ file, content }) => {
-                    const json = parseFileContent(content, file);
-                    return JSON.parse(JSON.stringify(json));
-                });
+                })).map(({ file, content }) => parseFileContent(content, file));
                 const actual = await dtsgenerator({ contents, ...commandInput });
 
                 // When we do `UPDATE_SNAPSHOT=1 npm test`, update snapshot data.
