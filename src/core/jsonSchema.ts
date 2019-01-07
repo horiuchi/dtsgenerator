@@ -23,8 +23,6 @@ export interface NormalizedSchema extends Schema {
 }
 
 export function parseSchema(content: any, url?: string): Schema {
-    content = JSON.parse(JSON.stringify(content));
-
     const { type, openApiVersion } = selectSchemaType(content);
     if (url != null) {
         setId(type, content, url);

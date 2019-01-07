@@ -7,7 +7,7 @@ export function parseFileContent(content: string, filename?: string): any {
     const maybeYaml = ext === '.yaml' || ext === '.yml';
     try {
         if (maybeYaml) {
-            return YAML.safeLoad(content);
+            return deepCopy(YAML.safeLoad(content));
         } else {
             return JSON.parse(content);
         }
@@ -15,9 +15,12 @@ export function parseFileContent(content: string, filename?: string): any {
         if (maybeYaml) {
             return JSON.parse(content);
         } else {
-            return YAML.safeLoad(content);
+            return deepCopy(YAML.safeLoad(content));
         }
     }
+}
+function deepCopy(obj: any): any {
+    return JSON.parse(JSON.stringify(obj));
 }
 
 export function globFiles(pattern: string, options?: glob.IOptions): Promise<string[]> {
