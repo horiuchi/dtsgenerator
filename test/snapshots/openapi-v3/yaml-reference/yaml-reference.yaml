@@ -1,0 +1,21 @@
+openapi: "3.0.0"
+info:
+  title: Yaml references
+  version: v0.1
+paths:
+  /a: &ads-3.0
+    post:
+      description: a
+      parameters:
+        - name: aa
+          in: query
+          schema:
+            type: string
+      requestBody:
+        application/json:
+          type: object
+      responses:
+        200:
+          application/json:
+            type: object
+  /b: *ads-3.0
