@@ -116,10 +116,16 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.0.4](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.4) (2019-01-07)
+
+- fixed
+  - Fix missing schema due to yaml references #318. Thank you @sakari :+1:
+
 ### [v2.0.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.1) (2018-12-21)
 
 - fixed
   - A property name cannot contain a "/" #315. Thank you @Reggino :+1:
+  - update `.npmignore`
 
 ### [v2.0.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.0) (2018-10-22)
 
