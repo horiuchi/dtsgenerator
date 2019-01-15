@@ -8,6 +8,7 @@ declare namespace JsonSchemaOrg {
             title?: string;
             description?: string;
             default?: any;
+            nullable?: boolean;
             readOnly?: boolean;
             examples?: any[];
             multipleOf?: number;

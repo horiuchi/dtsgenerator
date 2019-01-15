@@ -1,0 +1,21 @@
+openapi: "3.0.0"
+info:
+  title: nullabe types
+  version: v0.1
+components:
+  schemas:
+    nullable:
+      type: object
+      properties:
+        field:
+          type: string
+          nullable: true
+paths:
+  post:
+    requestBody:
+      application/json:
+        $ref: '#/components/schemas/nullable'
+    responses:
+      200:
+        application/json:
+          type: object

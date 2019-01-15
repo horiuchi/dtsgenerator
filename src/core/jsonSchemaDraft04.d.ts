@@ -11,6 +11,7 @@ declare namespace JsonSchemaOrg {
             description?: string;
             example?: string;
             default?: any;
+            nullable?: boolean;
             multipleOf?: number;
             maximum?: number;
             exclusiveMaximum?: boolean;
