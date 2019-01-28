@@ -116,6 +116,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.0.5](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.5) (2019-01-28)
+
+- features
+  - Add to support the `nullable` property on OpenAPI by #319. Thank you @sakari :+1:
+    https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#data-types
+
 ### [v2.0.4](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.4) (2019-01-07)
 
 - fixed

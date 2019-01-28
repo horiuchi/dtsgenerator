@@ -41,6 +41,7 @@ Supported Features
 |dependencies|x|but also search the sub schema types|
 |enum|o|enum type, supported string and integer values|
 |type|o|The type of that property|
+|nullable|o|This property is defined by OpenAPI Specification, not in JSON Schema|
 |format|o|comment string|
 |allOf|p||
 |anyOf|p||
