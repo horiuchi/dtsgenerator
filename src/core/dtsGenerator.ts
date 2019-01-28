@@ -230,7 +230,14 @@ export default class DtsGenerator {
         if (type == null) {
             this.convertor.outputPrimitiveTypeName(schema, 'any', terminate, outputOptional);
         } else if (typeof type === 'string') {
-            this.generateTypeName(schema, type, terminate, outputOptional);
+            if (schema.content.nullable) {
+                const types = [type, 'null'];
+                this.convertor.outputArrayedType(schema, types, (t) => {
+                    this.generateTypeName(schema, t, false, false);
+                }, terminate);
+            } else {
+                this.generateTypeName(schema, type, terminate, outputOptional);
+            }
         } else {
             const types = utils.reduceTypes(type);
             if (types.length <= 1) {
