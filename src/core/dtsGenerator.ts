@@ -81,10 +81,21 @@ export default class DtsGenerator {
                 delete content.allOf;
                 content = work;
             }
-            const types = content.type;
-            if (types === undefined && (content.properties || content.additionalProperties)) {
+            if (content.type === undefined && (content.properties || content.additionalProperties)) {
                 content.type = 'object';
-            } else if (Array.isArray(types)) {
+            }
+            if (content.nullable) {
+                const type = content.type;
+                if (type == null) {
+                    content.type = 'null';
+                } else if (!Array.isArray(type)) {
+                    content.type = [type, 'null'];
+                } else {
+                    type.push('null');
+                }
+            }
+            const types = content.type;
+            if (Array.isArray(types)) {
                 const reduced = utils.reduceTypes(types);
                 content.type = reduced.length === 1 ? reduced[0] : reduced;
             }
@@ -230,14 +241,7 @@ export default class DtsGenerator {
         if (type == null) {
             this.convertor.outputPrimitiveTypeName(schema, 'any', terminate, outputOptional);
         } else if (typeof type === 'string') {
-            if (schema.content.nullable) {
-                const types = [type, 'null'];
-                this.convertor.outputArrayedType(schema, types, (t) => {
-                    this.generateTypeName(schema, t, false, false);
-                }, terminate);
-            } else {
-                this.generateTypeName(schema, type, terminate, outputOptional);
-            }
+            this.generateTypeName(schema, type, terminate, outputOptional);
         } else {
             const types = utils.reduceTypes(type);
             if (types.length <= 1) {
