@@ -1,0 +1,703 @@
+{
+  "openapi": "3.0.1",
+  "id": "group-sample",
+  "info": {
+    "title": "Cognite API",
+    "description": "WARNING: This version is experimental. The behaviour, format, limits etc. of the endpoints might change at any time. This is the reference documentation for the Cognite API. Here you can see an overview of all methods available through the API.",
+    "version": "0.6 (experimental)"
+  },
+  "servers": [
+    {
+      "url": "https://api.cognitedata.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Groups",
+      "description": "Groups control which resources users can access. Each group has a set of permissions. A user has all the permissions of all the groups that user is a member of. Users can only be granted permissions through group membership.\n\nA permission grants one or more access types (READ, WRITE, ADMIN, or RAW_READ). Optionally, permissions can be limited to some assets in the asset hierarchy (and their descendants). If a permission is not limited to some assets, it grants access to all assets. For example, a READ permission to a water pump asset lets users in groups with that permission retrieve data points from all the sensors on the pump.\n\nA permission can optionally be connected to a set of security categories. Security categories hide assets from all users except those that have permissions explicitly granting access to that security category. This allows e.g. stock sensitive data to be hidden from most users by default."
+    }
+  ],
+  "paths": {
+    "/api/0.6/projects/{project}/groups": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "List groups",
+        "description": "Retrieves a list of groups the current user is a member of. Admin users can optionally use the `all` flag to list all groups in a project.",
+        "operationId": "getGroupsV06",
+        "parameters": [
+          {
+            "name": "project",
+            "in": "path",
+            "description": "Project name.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "all",
+            "in": "query",
+            "description": "Whether to get all groups, only available to admin users.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of security groups.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api-key": []
+          },
+          {
+            "token": []
+          }
+        ],
+        "x-capability": [
+          "GroupsAcl:LIST"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DataGroup": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          }
+        }
+      },
+      "DataGroupSpec": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupSpec"
+            }
+          }
+        }
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "description": "The source of this group"
+          },
+          "sourceId": {
+            "type": "string",
+            "description": "ID of the group in the source. Only applicable if source is specified. The combination of source and sourceId must be unique."
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/PermissionsDTO"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "oneOf": [
+                {
+                  "properties": {
+                    "groupsAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "LIST",
+                              "READ",
+                              "CREATE",
+                              "UPDATE",
+                              "DELETE"
+                            ],
+                            "default": "LIST",
+                            "title": "Group:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "oneOf": [
+                            {
+                              "properties": {
+                                "all": {
+                                  "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all",
+                                  "title": "all groups"
+                                }
+                              }
+                            },
+                            {
+                              "properties": {
+                                "currentuserscope": {
+                                  "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/4/properties/usersAcl/properties/scope/oneOf/1/properties/currentuserscope",
+                                  "title": "groups the current user is in"
+                                }
+                              }
+                            }
+                          ],
+                          "title": "Group:Scope"
+                        }
+                      },
+                      "title": "Acl:Group"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "assetsAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "READ",
+                              "WRITE"
+                            ],
+                            "default": "READ",
+                            "title": "Asset:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all"
+                            }
+                          },
+                          "title": "Asset:Scope"
+                        }
+                      },
+                      "title": "Acl:Asset"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "eventsAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "READ",
+                              "WRITE"
+                            ],
+                            "default": "READ",
+                            "title": "Event:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all"
+                            }
+                          },
+                          "title": "Event:Scope"
+                        }
+                      },
+                      "title": "Acl:Event"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "filesAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "READ",
+                              "WRITE"
+                            ],
+                            "default": "READ",
+                            "title": "File:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all"
+                            }
+                          },
+                          "title": "File:Scope"
+                        }
+                      },
+                      "title": "Acl:File"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "usersAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "LIST",
+                              "CREATE",
+                              "DELETE"
+                            ],
+                            "default": "LIST",
+                            "title": "User:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "oneOf": [
+                            {
+                              "properties": {
+                                "all": {
+                                  "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all",
+                                  "title": "all users"
+                                }
+                              }
+                            },
+                            {
+                              "properties": {
+                                "currentuserscope": {
+                                  "title": "the current user making the request",
+                                  "type": "object"
+                                }
+                              }
+                            }
+                          ],
+                          "title": "User:Scope"
+                        }
+                      },
+                      "title": "Acl:User"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "projectsAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "LIST",
+                              "READ",
+                              "CREATE",
+                              "UPDATE"
+                            ],
+                            "default": "LIST",
+                            "title": "Project:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all"
+                            }
+                          },
+                          "title": "Project:Scope"
+                        }
+                      },
+                      "title": "Acl:Project"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "securityCategoriesAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "MEMBEROF",
+                              "LIST",
+                              "CREATE",
+                              "DELETE"
+                            ],
+                            "default": "MEMBEROF",
+                            "title": "SecurityCategory:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all"
+                            }
+                          },
+                          "title": "SecurityCategory:Scope"
+                        }
+                      },
+                      "title": "Acl:SecurityCategory"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "rawAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "READ",
+                              "WRITE",
+                              "LIST"
+                            ],
+                            "default": "READ",
+                            "title": "Raw:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "type": "object",
+                              "title": "Scope:All"
+                            }
+                          },
+                          "title": "Raw:Scope"
+                        }
+                      },
+                      "title": "Acl:Raw"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "timeSeriesAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "READ",
+                              "WRITE"
+                            ],
+                            "default": "READ",
+                            "title": "Timeseries:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "oneOf": [
+                            {
+                              "properties": {
+                                "all": {
+                                  "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all"
+                                }
+                              }
+                            },
+                            {
+                              "properties": {
+                                "assetIdScope": {
+                                  "type": "object",
+                                  "properties": {
+                                    "subtreeIds": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "format": "uint64"
+                                      },
+                                      "title": "root asset id (subtrees)"
+                                    }
+                                  },
+                                  "title": "Scope:AssetIdScope"
+                                }
+                              }
+                            }
+                          ],
+                          "title": "Timeseries:Scope"
+                        }
+                      },
+                      "title": "Acl:Timeseries"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "apikeysAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "LIST",
+                              "CREATE",
+                              "DELETE"
+                            ],
+                            "default": "LIST",
+                            "title": "Apikey:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "oneOf": [
+                            {
+                              "properties": {
+                                "all": {
+                                  "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all"
+                                }
+                              }
+                            },
+                            {
+                              "properties": {
+                                "currentuserscope": {
+                                  "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/4/properties/usersAcl/properties/scope/oneOf/1/properties/currentuserscope",
+                                  "title": "apikeys the user making the request has"
+                                }
+                              }
+                            }
+                          ],
+                          "title": "Apikey:Scope"
+                        }
+                      },
+                      "title": "Acl:Apikey"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "threedAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "READ",
+                              "CREATE",
+                              "UPDATE",
+                              "DELETE"
+                            ],
+                            "default": "READ",
+                            "title": "Threed:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all"
+                            }
+                          },
+                          "title": "Threed:Scope"
+                        }
+                      },
+                      "title": "Acl:Threed"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "sequencesAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "READ",
+                              "WRITE"
+                            ],
+                            "default": "READ",
+                            "title": "Sequences:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all"
+                            }
+                          },
+                          "title": "Sequences:Scope"
+                        }
+                      },
+                      "title": "Acl:Sequences"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "analyticsAcl": {
+                      "type": "object",
+                      "properties": {
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "READ",
+                              "EXECUTE",
+                              "LIST"
+                            ],
+                            "default": "READ",
+                            "title": "Analytics:Action"
+                          }
+                        },
+                        "scope": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "$ref": "#/components/schemas/Group/properties/capabilities/items/oneOf/7/properties/rawAcl/properties/scope/properties/all"
+                            }
+                          },
+                          "title": "Analytics:Scope"
+                        }
+                      },
+                      "title": "Acl:Analytics"
+                    }
+                  }
+                }
+              ]
+            },
+            "title": "Capability"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "deletedTime": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/GroupSpec"
+          }
+        ]
+      },
+      "GroupResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DataGroup"
+          }
+        }
+      },
+      "GroupSpec": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "description": "The source of this group"
+          },
+          "sourceId": {
+            "type": "string",
+            "description": "ID of the group in the source. Only applicable if source is specified. The combination of source and sourceId must be unique."
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/PermissionsDTO"
+          },
+          "capabilities": {
+            "$ref": "#/components/schemas/Group/properties/capabilities"
+          }
+        },
+        "description": "A specification for creating a new group"
+      },
+      "PermissionsDTO": {
+        "type": "object",
+        "properties": {
+          "accessTypes": {
+            "type": "array",
+            "description": "READ, WRITE, RAW_READ or ADMIN.",
+            "items": {
+              "type": "string",
+              "description": "READ, WRITE, RAW_READ or ADMIN.",
+              "enum": [
+                "READ",
+                "WRITE",
+                "ADMIN",
+                "RAW_READ"
+              ]
+            }
+          },
+          "assetIds": {
+            "type": "array",
+            "description": "List of IDs of assets the group should have access to.",
+            "items": {
+              "type": "integer",
+              "description": "List of IDs of assets the group should have access to.",
+              "format": "int64"
+            }
+          },
+          "securityCategoryIds": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        },
+        "description": "Permissions determine the access types of a group, and alternatively also the assets a group has access to."
+      }
+    },
+    "securitySchemes": {
+      "api-key": {
+        "type": "apiKey",
+        "description": "An admin can create API keys in the Cognite console.",
+        "name": "api-key",
+        "in": "header"
+      },
+      "token": {
+        "type": "http",
+        "description": "Human users log in via an OpenId/OAuth flow. Use the /login/redirect flow to obtain a bearer access token. Use a header key of 'Authorization' with a value of 'Bearer: $accesstoken'",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
