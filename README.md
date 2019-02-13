@@ -116,6 +116,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.0.6](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.6) (2019-02-14)
+
+- fixed
+  - Fix "Error: The $ref target is not exists" on valid OpenAPI 3 spec #322. Thank you @f1cognite :+1:
+
 ### [v2.0.5](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.5) (2019-01-28)
 
 - features
