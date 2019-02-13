@@ -15,9 +15,9 @@ describe('error schema test', () => {
             assert.equal(e.message, 'There is no schema in the input contents.');
         }
     });
-    it('unkown type schema', async () => {
+    it('unknown type schema', async () => {
         const schema: any = {
-            id: '/test/unkown_type',
+            id: '/test/unknown_type',
             type: 'hoge',
         };
         try {
@@ -27,9 +27,9 @@ describe('error schema test', () => {
             assert.equal(e.message, 'unknown type: hoge');
         }
     });
-    it('unkown type property', async () => {
+    it('unknown type property', async () => {
         const schema: any = {
-            id: '/test/unkown_property',
+            id: '/test/unknown_property',
             type: 'object',
             properties: {
                 name: {
@@ -59,7 +59,7 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [schema] });
             assert.fail();
         } catch (e) {
-            assert.equal(e.message, 'The $ref target is not exists: /notFound/id#');
+            assert.equal(e.message, 'The $ref target is not found: /notFound/id#');
         }
     });
     it('target of $ref is invalid path', async () => {

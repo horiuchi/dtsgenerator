@@ -38,11 +38,8 @@ export default class ReferenceResolver {
             let result = this.schemaCache.get(id.getAbsoluteId());
             if (result == null) {
                 const refSchema = this.schemaCache.get(fileId);
-                if (refSchema == null) {
-                    if (!id.isFetchable()) {
-                        error.push(`The $ref target is not exists: ${id.getAbsoluteId()}`);
-                        continue;
-                    }
+                debug(`get from schema cache, fileId=${fileId}, exists=${refSchema != null}, ${id.getAbsoluteId()}`);
+                if (refSchema == null && id.isFetchable()) {
                     try {
                         debug(`fetch remote schema: id=[${fileId}].`);
                         await this.registerRemoteSchema(fileId);
@@ -58,7 +55,7 @@ export default class ReferenceResolver {
                 this.referenceCache.set(id.getAbsoluteId(), result);
             } else {
                 if (id.existsJsonPointerHash()) {
-                    const rootSchema = this.schemaCache.get(fileId);
+                    const rootSchema = this.searchParentSchema(id);
                     if (rootSchema == null) {
                         error.push(`The $ref targets root is not found: ${id.getAbsoluteId()}`);
                         continue;
@@ -78,6 +75,23 @@ export default class ReferenceResolver {
         }
         // debug('  resolve reference: resolved schema:');
         // debug(Array.from(this.referenceCache.keys()).join('\n'));
+    }
+    private searchParentSchema(id: SchemaId): Schema | undefined {
+        const fileId = id.getFileId();
+        const rootSchema = this.schemaCache.get(fileId);
+        if (rootSchema != null) {
+            return rootSchema;
+        }
+        const key = id.getAbsoluteId();
+        for (const k of this.schemaCache.keys()) {
+            if (key.startsWith(k)) {
+                const s = this.schemaCache.get(k);
+                if (s != null && s.rootSchema != null) {
+                    return s.rootSchema;
+                }
+            }
+        }
+        return;
     }
 
     public async registerRemoteSchema(url: string): Promise<void> {
