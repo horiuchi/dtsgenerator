@@ -1,0 +1,10 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "example/add-prefix/package.json",
+        "package.json"
+      ]
+    }
+  }
+}
