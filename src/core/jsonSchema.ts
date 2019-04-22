@@ -152,7 +152,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             return '#/' + paths.join('/');
         }
         function convertKeyToTypeName(key: string): string {
-            return normalizeTypeName(key.replace(/[\/}]/g, '').replace(/{/, '$'));
+            key = key.replace(/\/(.)/g, (_match, p1) => {
+                return p1.toUpperCase();
+            });
+            return normalizeTypeName(key.replace(/}/g, '').replace(/{/, '$'));
         }
         function setSubIdToAnyObject<T>(f: (t: T, keys: string[]) => void, obj: { [key: string]: T } | undefined, keys: string[]): void {
             if (obj == null) {
