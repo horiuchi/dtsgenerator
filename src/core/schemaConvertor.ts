@@ -4,12 +4,24 @@ import SchemaId from './schemaId';
 import { DefaultTypeNameConvertor, TypeNameConvertor } from './typeNameConvertor';
 import WriteProcessor from './writeProcessor';
 
+export interface ExportedType {
+    name: string;
+    path: string;
+    schemaRef: string;
+}
+
 export default class SchemaConvertor {
+    public exportedTypes: ExportedType[] = [];
+
     private ns: string[] | undefined;
     private replaceLevel = 0;
 
     constructor(private processor: WriteProcessor, private convertor: TypeNameConvertor = DefaultTypeNameConvertor, namespaceName?: string) {
         this.ns = namespaceName == null ? undefined : namespaceName.split('/').filter((s) => s.length > 0);
+    }
+
+    public getExports() {
+        return this.exportedTypes;
     }
 
     private getLastTypeName(id: SchemaId): string {
@@ -92,6 +104,7 @@ export default class SchemaConvertor {
         const name = this.getLastTypeName(id);
         processor.output('interface ').outputType(name).output(' ');
         this.startTypeNest();
+        this.addExport(id);
     }
     public endInterfaceNest(): void {
         this.endTypeNest(false);
@@ -107,6 +120,7 @@ export default class SchemaConvertor {
         }
         const name = this.getLastTypeName(id);
         processor.output('type ').outputType(name).output(' = ');
+        this.addExport(id);
     }
 
     public startTypeNest(): void {
@@ -247,5 +261,13 @@ export default class SchemaConvertor {
         if (!terminate) {
             this.processor.output(' */ ');
         }
+    }
+
+    private addExport(id: SchemaId) {
+        const name = this.getLastTypeName(id);
+        const schemaRef = id.getJsonPointerHash();
+        const names = this.convertor(id);
+        const path = names.join('.');
+        this.exportedTypes.push({ name, path, schemaRef });
     }
 }
