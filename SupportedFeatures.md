@@ -95,8 +95,12 @@ The base JSON Schema version is Draft-07
 |/components/schemas/*|
 |/components/parameters/*/schema|
 |/components/requestBodies/*/content/"application/json"|
+|/components/requestBodies/*/$ref|
 |/components/responses/*/content/"application/json"|
+|/components/responses/*/$ref|
 |/paths/\*/parameters/*/schema|
 |/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/parameters/*/schema|
 |/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/requestBodies/*/content/"application/json"|
+|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/requestBodies/*/$ref|
 |/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/responses/*/content/"application/json"|
+|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/responses/*/$ref|

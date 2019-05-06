@@ -116,6 +116,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.0.7](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.7) (2019-05-07)
+
+- fixed
+  - Fix: typename when the path is nested #334. Thank you @steelydylan :+1:
+  - Fix: Support ref objects for OAS3 requestBodies + responses #343. Thank you @anttiviljami :+1:
+
 ### [v2.0.6](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.6) (2019-02-14)
 
 - fixed
