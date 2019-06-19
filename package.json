@@ -43,29 +43,29 @@
   },
   "dependencies": {
     "commander": "^2.20.0",
-    "cross-fetch": "^3.0.2",
+    "cross-fetch": "^3.0.4",
     "debug": "^4.1.1",
-    "glob": "^7.1.3",
+    "glob": "^7.1.4",
     "js-yaml": "^3.13.1",
     "mkdirp": "^0.5.1",
-    "tslib": "^1.9.3"
+    "tslib": "^1.10.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.4",
     "@types/glob": "^7.1.1",
     "@types/js-yaml": "^3.12.1",
     "@types/mkdirp": "^0.5.2",
-    "@types/mocha": "^5.2.6",
-    "@types/node": "^12.0.0",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.0.8",
     "@types/power-assert": "^1.5.0",
-    "coveralls": "^3.0.3",
+    "coveralls": "^3.0.4",
     "istanbul": "^0.4.5",
     "mocha": "^6.1.4",
     "power-assert": "^1.6.1",
     "remap-istanbul": "^0.13.0",
     "rimraf": "^2.6.3",
     "source-map-support": "^0.5.12",
-    "tslint": "^5.16.0",
-    "typescript": "^3.4.5"
+    "tslint": "^5.17.0",
+    "typescript": "^3.5.2"
   }
 }

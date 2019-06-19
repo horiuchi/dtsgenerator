@@ -6,14 +6,6 @@ node_js:
   - "8"
   - "10"
   - "12"
-env:
-  - CXX=g++-4.8
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
 
 cache:
   directories:
@@ -25,4 +17,3 @@ script:
   - npm test
 
 after_success: npm run coverage
-
