@@ -81,6 +81,9 @@ export default class DtsGenerator {
                 delete content.allOf;
                 content = work;
             }
+            if (content.oneOf && content.type === 'object') {
+                delete content.type;
+            }
             if (content.type === undefined && (content.properties || content.additionalProperties)) {
                 content.type = 'object';
             }
