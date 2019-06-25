@@ -51,11 +51,11 @@ export default class DtsGenerator {
 
         const type = normalized.content.type;
         switch (type) {
-            case 'object':
             case 'any':
-                return this.generateTypeModel(normalized);
+                return this.generateAnyTypeModel(normalized);
             case 'array':
                 return this.generateTypeCollection(normalized);
+            case 'object':
             default:
                 return this.generateDeclareType(normalized);
         }
@@ -81,9 +81,6 @@ export default class DtsGenerator {
                 delete content.allOf;
                 content = work;
             }
-            if (content.oneOf && content.type === 'object') {
-                delete content.type;
-            }
             if (content.type === undefined && (content.properties || content.additionalProperties)) {
                 content.type = 'object';
             }
@@ -106,16 +103,20 @@ export default class DtsGenerator {
         return Object.assign({}, schema, { content });
     }
     private generateDeclareType(schema: NormalizedSchema): void {
-        this.convertor.outputExportType(schema.id);
-        this.generateTypeProperty(schema, true);
+        const content = schema.content;
+        if (content.$ref || content.oneOf || content.anyOf || content.enum || 'const' in content || content.type !== 'object') {
+            this.convertor.outputExportType(schema.id);
+            this.generateTypeProperty(schema, true);
+        } else {
+            this.convertor.startInterfaceNest(schema.id);
+            this.generateProperties(schema);
+            this.convertor.endInterfaceNest();
+        }
     }
 
-    private generateTypeModel(schema: NormalizedSchema): void {
+    private generateAnyTypeModel(schema: NormalizedSchema): void {
         this.convertor.startInterfaceNest(schema.id);
-        if (schema.content.type === 'any') {
-            this.convertor.outputRawValue('[name: string]: any; // any', true);
-        }
-        this.generateProperties(schema);
+        this.convertor.outputRawValue('[name: string]: any; // any', true);
         this.convertor.endInterfaceNest();
     }
 
