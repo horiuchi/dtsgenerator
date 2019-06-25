@@ -117,6 +117,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.0.8](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.8) (2019-06-25)
+
+- fixed
+  - Fix: OneOf + type "object" produces empty interface #351. Thank you @polomani :+1:
+
 ### [v2.0.7](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.7) (2019-05-07)
 
 - fixed
@@ -150,29 +155,7 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 - features
   - Add to support emit the Request/Response object schema of OpenAPI by #304.
 
-### [v1.2.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.2.0) (2018-09-12)
-
-- features
-  - Add `--namespace <namespace>` option to control the emitted namespace. Thank you @DavidBiesack :+1:
-
-### [v1.1.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.1.0) (2018-06-01)
-
-- features
-  - Add [the supported features document](https://github.com/horiuchi/dtsgenerator/blob/master/SupportedFeatures.md)
-  - Support some properties
-    - `title`, `const`, `readOnly`
-
-### [v1.0.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.0.0) (2018-03-22)
-
-- features
-  - Support JSON Schema Draft-07 and OpenAPI v3
-  - Add the library interface for customize type name
-  - Remove some unusual command line options
-  - And rebuild the architecture
-- others
-  - Remove the node v4 support
-
-### other versions
+### older versions history
 
 [ChangeLogs](https://github.com/horiuchi/dtsgenerator/blob/master/CHANGELOG.md)
 

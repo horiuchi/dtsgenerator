@@ -2,6 +2,28 @@
 
 ## Old Versions
 
+### [v1.2.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.2.0) (2018-09-12)
+
+- features
+  - Add `--namespace <namespace>` option to control the emitted namespace. Thank you @DavidBiesack :+1:
+
+### [v1.1.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.1.0) (2018-06-01)
+
+- features
+  - Add [the supported features document](https://github.com/horiuchi/dtsgenerator/blob/master/SupportedFeatures.md)
+  - Support some properties
+    - `title`, `const`, `readOnly`
+
+### [v1.0.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.0.0) (2018-03-22)
+
+- features
+  - Support JSON Schema Draft-07 and OpenAPI v3
+  - Add the library interface for customize type name
+  - Remove some unusual command line options
+  - And rebuild the architecture
+- others
+  - Remove the node v4 support
+
 ### [v0.9.9](https://github.com/horiuchi/dtsgenerator/releases/tag/v0.9.9) (2018-01-12)
 
 - Bug fix about previous version code by #267. Thank you @bricka :+1:
