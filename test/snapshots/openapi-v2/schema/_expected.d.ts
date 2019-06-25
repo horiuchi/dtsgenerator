@@ -337,8 +337,7 @@ declare namespace SwaggerIo {
                 export type MinLength = JsonSchemaOrg.Draft04.Schema.Definitions.PositiveIntegerDefault0;
                 export type Minimum = JsonSchemaOrg.Draft04.Schema.Properties.Minimum;
                 export type MultipleOf = JsonSchemaOrg.Draft04.Schema.Properties.MultipleOf;
-                export interface NonBodyParameter {
-                }
+                export type NonBodyParameter = HeaderParameterSubSchema | FormDataParameterSubSchema | QueryParameterSubSchema | PathParameterSubSchema;
                 export interface Oauth2AccessCodeSecurity {
                     type: "oauth2";
                     flow: "accessCode";
