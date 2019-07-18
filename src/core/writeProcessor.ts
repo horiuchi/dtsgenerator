@@ -71,7 +71,14 @@ export default class WriteProcessor {
         let lines: string[] = [];
         comments
             .filter((comment) => comment != null)
-            .map((comment) => comment.toString().split('\n').map((line: string) => this.protectComment(line)))
+            .map((comment) => {
+                if (typeof comment === 'string') {
+                    return comment;
+                } else {
+                    return JSON.stringify(comment, null, 2);
+                }
+            })
+            .map((comment) => comment.split('\n').map((line: string) => this.protectComment(line)))
             .forEach((ls: string[]) => {
                 lines = lines.concat(ls);
             });

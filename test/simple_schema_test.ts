@@ -377,6 +377,47 @@ describe('simple schema test', () => {
 `;
         assert.equal(result, expected, result);
     });
+    it('include objected example schema', async () => {
+        const schema: JsonSchemaOrg.Draft07.Schema = {
+            $id: 'test/example2/root',
+            $schema: 'http://json-schema.org/draft-07/schema#',
+            examples: [{
+                ex1: { name: 'test case 1' },
+                ex2: { name: 'test case 2' },
+                ex3: { name: null },
+            }],
+            properties: {
+                name: {
+                    type: ['string', 'null'],
+                },
+            },
+        };
+
+        const result = await dtsgenerator({ contents: [schema] });
+        const expected = `declare namespace Test {
+    namespace Example2 {
+        /**
+         * example:
+         * {
+         *   "ex1": {
+         *     "name": "test case 1"
+         *   },
+         *   "ex2": {
+         *     "name": "test case 2"
+         *   },
+         *   "ex3": {
+         *     "name": null
+         *   }
+         * }
+         */
+        export interface Root {
+            name?: string | null;
+        }
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
     it('include $ref schema', async () => {
         const schema: JsonSchemaOrg.Draft04.Schema = {
             id: 'test/ref/include_ref',
