@@ -117,6 +117,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.1.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.1.0) (2019-07-18)
+
+- features:
+  - Add to support objected example #356. Thank you for reporting the issue #348 by @fantapop :+1:
+  - Add to support the `application/x-www-form-urlencoded` branch on OpenAPI. #357
+
 ### [v2.0.8](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.8) (2019-06-25)
 
 - fixed
