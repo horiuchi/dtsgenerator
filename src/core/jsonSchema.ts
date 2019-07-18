@@ -255,10 +255,11 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             if (types == null) {
                 return;
             }
-            const mime = 'application/json';
-            const mt = types[mime];
-            if (mt != null) {
-                setSubId(mt.schema, keys);
+            for (const mime of ['application/json', 'application/x-www-form-urlencoded']) {
+                const mt = types[mime];
+                if (mt != null) {
+                    setSubId(mt.schema, keys);
+                }
             }
         }
         const setSubIdToRequestBodies = (bodys: OpenApisOrg.V3.SchemaJson.Definitions.RequestBodiesOrReferences | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToRequestBody, bodys, keys);
