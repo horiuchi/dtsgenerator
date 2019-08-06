@@ -57,15 +57,15 @@
     "@types/js-yaml": "^3.12.1",
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.6.8",
+    "@types/node": "^12.6.9",
     "@types/power-assert": "^1.5.0",
     "coveralls": "^3.0.5",
     "istanbul": "^0.4.5",
-    "mocha": "^6.1.4",
+    "mocha": "^6.2.0",
     "power-assert": "^1.6.1",
     "remap-istanbul": "^0.13.0",
     "rimraf": "^2.6.3",
-    "source-map-support": "^0.5.12",
+    "source-map-support": "^0.5.13",
     "tslint": "^5.18.0",
     "typescript": "^3.5.3"
   }
