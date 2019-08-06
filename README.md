@@ -117,6 +117,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.2.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.2.0) (2019-08-06)
+
+- fixed
+  - Fix: "_" character at the end of generated type #358. Thank you @KostblLb :+1:
+
 ### [v2.1.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.1.0) (2019-07-18)
 
 - features:
