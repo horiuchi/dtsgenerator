@@ -30,10 +30,10 @@ function toTypeName(str: string): string {
     if (!str) {
         return str;
     }
-    str = str.trim();
-    return str.split('$').map((s) => s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9])/g, (_, m) => {
+    const result = str.trim().split('$').map((s) => s.replace(/(?:^|[^A-Za-z0-9])([A-Za-z0-9]|$)/g, (_, m) => {
         return m.toUpperCase();
     })).join('$');
+    return result;
 }
 
 export function normalizeTypeName(type: string): string {
