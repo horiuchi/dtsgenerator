@@ -43,7 +43,7 @@
     "node": ">= 6.0"
   },
   "dependencies": {
-    "commander": "^2.20.0",
+    "commander": "^3.0.0",
     "cross-fetch": "^3.0.4",
     "debug": "^4.1.1",
     "glob": "^7.1.4",
