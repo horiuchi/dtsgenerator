@@ -12,7 +12,7 @@ export default class DtsGenerator {
 
     private currentSchema!: NormalizedSchema;
 
-    constructor(private resolver: ReferenceResolver, private convertor: SchemaConvertor) {}
+    constructor(private resolver: ReferenceResolver, private convertor: SchemaConvertor) { }
 
     public async generate(): Promise<string> {
         debug('generate type definition files.');
@@ -197,45 +197,48 @@ export default class DtsGenerator {
     private generateArrayTypeProperty(schema: NormalizedSchema, terminate = true): void {
         const items = schema.content.items;
         const minItems = schema.content.minItems;
+        const maxItems = schema.content.maxItems;
         if (items == null) {
             this.convertor.outputStringTypeName(schema, 'any[]', terminate);
         } else if (!Array.isArray(items)) {
             this.generateTypeProperty(this.normalizeContent(schema, '/items'), false);
             this.convertor.outputStringTypeName(schema, '[]', terminate);
-        } else if (items.length === 0 && minItems === undefined) {
+        } else if (items.length === 0 && minItems === undefined && maxItems === undefined) {
             this.convertor.outputStringTypeName(schema, 'any[]', terminate);
+        } else if (minItems != null && maxItems != null && maxItems < minItems) {
+            this.convertor.outputStringTypeName(schema, 'never', terminate);
         } else {
-            const effectiveMaxItems = 1 + Math.max(minItems || 0, items.length);
-            for (
-                let unionIndex = minItems === undefined ? 1 : minItems;
-                unionIndex <= effectiveMaxItems;
-                unionIndex++
-            ) {
-                this.convertor.outputRawValue('[');
-                for (let i = 0; i < unionIndex; i++) {
-                    if (i > 0) {
-                        this.convertor.outputRawValue(', ');
-                    }
-                    if (i < items.length) {
-                        const type = this.normalizeContent(schema, '/items/' + i);
-                        if (type.id.isEmpty()) {
-                            this.generateTypeProperty(type, false);
-                        } else {
-                            this.convertor.outputTypeIdName(type, this.currentSchema, false);
-                        }
-                    } else {
-                        if (i < effectiveMaxItems - 1) {
-                            this.convertor.outputStringTypeName(schema, 'Object', false, false);
-                        } else {
-                            this.convertor.outputStringTypeName(schema, 'any', false, false);
-                        }
-                    }
+            this.convertor.outputRawValue('[');
+            let itemCount = Math.max(minItems || 0, maxItems || 0, items.length);
+            if (maxItems != null) {
+                itemCount = Math.min(itemCount, maxItems);
+            }
+            for (let i = 0; i < itemCount; i++) {
+                if (i > 0) {
+                    this.convertor.outputRawValue(', ');
                 }
-                this.convertor.outputRawValue(']');
-                if (unionIndex < effectiveMaxItems) {
-                    this.convertor.outputRawValue(' | ');
+                if (i < items.length) {
+                    const type = this.normalizeContent(schema, '/items/' + i);
+                    if (type.id.isEmpty()) {
+                        this.generateTypeProperty(type, false);
+                    } else {
+                        this.convertor.outputTypeIdName(type, this.currentSchema, false);
+                    }
+                } else {
+                    this.convertor.outputStringTypeName(schema, 'any', false, false);
+                }
+                if (minItems == null || i >= minItems) {
+                    this.convertor.outputRawValue('?');
                 }
             }
+            if (maxItems == null) {
+                if (itemCount > 0) {
+                    this.convertor.outputRawValue(', ');
+                }
+                this.convertor.outputStringTypeName(schema, '...any[]', false, false);
+            }
+            this.convertor.outputRawValue(']');
+
             this.convertor.outputStringTypeName(schema, '', terminate);
         }
     }
