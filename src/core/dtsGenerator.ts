@@ -163,7 +163,7 @@ export default class DtsGenerator {
         }
         if (content.enum) {
             this.convertor.outputArrayedType(schema, content.enum, (value) => {
-                if (content.type === 'integer') {
+                if (content.type === 'integer' || content.type === 'number') {
                     this.convertor.outputRawValue('' + value);
                 } else {
                     this.convertor.outputRawValue(`"${value}"`);
@@ -171,7 +171,7 @@ export default class DtsGenerator {
             }, terminate);
         } else if ('const' in content) {
             const value = content.const;
-            if (content.type === 'integer') {
+            if (content.type === 'integer' || content.type === 'number') {
                 this.convertor.outputStringTypeName(schema, '' + value, terminate);
             } else {
                 this.convertor.outputStringTypeName(schema, `"${value}"`, terminate);
