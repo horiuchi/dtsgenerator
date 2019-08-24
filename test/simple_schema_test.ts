@@ -184,13 +184,17 @@ describe('simple schema test', () => {
 `;
         assert.equal(result, expected, result);
     });
-    it('string and integer enum schema', async () => {
+    it('string, integer and number enum schema', async () => {
         const schema: JsonSchemaOrg.Draft04.Schema = {
-            id: '/test/enum_string_vs_integer',
+            id: '/test/enum_string_vs_integer_number',
             type: 'object',
             properties: {
                 port: {
                     type: 'integer',
+                    enum: [1, 2, 3],
+                },
+                status: {
+                    type: 'number',
                     enum: [1, 2, 3],
                 },
                 direction: {
@@ -202,8 +206,9 @@ describe('simple schema test', () => {
         const result = await dtsgenerator({ contents: [schema] });
 
         const expected = `declare namespace Test {
-    export interface EnumStringVsInteger {
+    export interface EnumStringVsIntegerNumber {
         port?: 1 | 2 | 3;
+        status?: 1 | 2 | 3;
         direction?: "NW" | "NE" | "SW" | "SE";
     }
 }
