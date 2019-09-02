@@ -1,0 +1,73 @@
+openapi: "3.0.2"
+info:
+  title: support some media type
+  version: 1.0.0
+paths:
+  /path:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            $ref: '#/components/schemas/Request'
+      responses:
+        200:
+          $ref: '#/components/responses/ReturnData'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        500:
+          $ref: '#/components/responses/Error'
+components:
+  schemas:
+    Request:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+    Data:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - description
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        description:
+          type: string
+      required:
+        - code
+        - description
+  responses:
+    ReturnData:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Data'
+    BadRequest:
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      content:
+        application/forbidden+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Error:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
