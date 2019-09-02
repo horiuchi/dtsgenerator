@@ -117,6 +117,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.3.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.3.1) (2019-09-02)
+
+- features:
+  - Support the dynamic JSON media type #363. Thank you @buelsenfrucht :+1:
+  - Add to support the `number` type enum values #365. Thank you @vincentlin02 :+1:
+
 ### [v2.3.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.3.0) (2019-08-23)
 
 - features:
