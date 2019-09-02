@@ -43,7 +43,7 @@
     "node": ">= 6.0"
   },
   "dependencies": {
-    "commander": "^3.0.0",
+    "commander": "^3.0.1",
     "cross-fetch": "^3.0.4",
     "debug": "^4.1.1",
     "glob": "^7.1.4",
@@ -57,7 +57,7 @@
     "@types/js-yaml": "^3.12.1",
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.7.2",
+    "@types/node": "^12.7.3",
     "@types/power-assert": "^1.5.0",
     "coveralls": "^3.0.6",
     "istanbul": "^0.4.5",
@@ -67,6 +67,6 @@
     "rimraf": "^3.0.0",
     "source-map-support": "^0.5.13",
     "tslint": "^5.19.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.6.2"
   }
 }
