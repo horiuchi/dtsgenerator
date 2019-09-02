@@ -94,17 +94,19 @@ The base JSON Schema version is Draft-07
 |:------------------|
 |/components/schemas/*|
 |/components/parameters/*/schema|
-|/components/requestBodies/*/content/"application/json"|
-|/components/requestBodies/*/content/"application/x-www-form-urlencoded"|
+|/components/requestBodies/*/content/[Media Type]|
 |/components/requestBodies/*/$ref|
-|/components/responses/*/content/"application/json"|
-|/components/responses/*/content/"application/x-www-form-urlencoded"|
+|/components/responses/*/content/[Media Type]|
 |/components/responses/*/$ref|
 |/paths/\*/parameters/*/schema|
 |/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/parameters/*/schema|
-|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/requestBodies/*/content/"application/json"|
-|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/requestBodies/*/content/"application/x-www-form-urlencoded"|
+|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/requestBodies/*/content/[Media Type]|
 |/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/requestBodies/*/$ref|
-|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/responses/*/content/"application/json"|
-|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/responses/*/content/"application/x-www-form-urlencoded"|
+|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/responses/*/content/[Media Type]|
 |/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/responses/*/$ref|
+
+### Support Media Type
+
+- `application/json`
+- `application/x-www-form-urlencoded`
+- `application/*+json`
