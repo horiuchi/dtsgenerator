@@ -1,0 +1,54 @@
+openapi: 3.0.2
+
+info:
+  description: example with response & requestBobies components
+  title: test
+  version: 0.0.1
+
+paths:
+
+  /resources:
+    post:
+      operationId: createResource
+      summary: Create a resource
+      requestBody:
+        $ref: '#/components/requestBodies/ResourceCreationRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/201Created'
+        '400':
+          $ref: '#/components/responses/400Invalid'
+components:
+
+  requestBodies:
+    ResourceCreationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Resource'
+
+  responses:
+    201Created:
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Resource'
+    400Invalid:
+      description: Invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Resource:
+      type: object
+      properties:
+        status:
+          type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
