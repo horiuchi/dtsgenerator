@@ -110,7 +110,7 @@ export default class ReferenceResolver {
         searchAllSubSchema(schema, (subSchema) => {
             this.addSchema(subSchema);
         }, (refId) => {
-            this.addReference(refId);
+            this.addReference(refId, getSubSchema(schema, refId.getJsonPointerHash(), refId));
         });
     }
 
@@ -128,10 +128,14 @@ export default class ReferenceResolver {
             }
         }
     }
-    private addReference(refId: SchemaId): void {
+    private addReference(refId: SchemaId, schema: Schema): void {
         if (!this.referenceCache.has(refId.getAbsoluteId())) {
             debug(` add reference: id=${refId.getAbsoluteId()}`);
-            this.referenceCache.set(refId.getAbsoluteId(), undefined);
+            if (/#\/components\/(responses|requestBodies)\//.test(refId.getJsonPointerHash())) {
+                this.referenceCache.set(refId.getAbsoluteId(), schema);
+            } else {
+                this.referenceCache.set(refId.getAbsoluteId(), undefined);
+            }
         }
     }
 
