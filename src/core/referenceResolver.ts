@@ -6,9 +6,18 @@ import SchemaId from './schemaId';
 
 const debug = Debug('dtsgen');
 
+export type PreProcessor = (fileContents: string) => string;
+
 export default class ReferenceResolver {
     private readonly schemaCache = new Map<string, Schema>();
     private readonly referenceCache = new Map<string, Schema | undefined>();
+    private preProcessor: PreProcessor = (body: string) => body;
+
+    constructor(preProcessor?: PreProcessor) {
+      if (preProcessor) {
+        this.preProcessor = preProcessor;
+      }
+    }
 
     public dereference(refId: string): Schema {
         const result = this.referenceCache.get(refId);
@@ -100,7 +109,8 @@ export default class ReferenceResolver {
         if (!res.ok) {
             throw new Error(`Error on fetch from url(${url}): ${res.status}, ${body}`);
         }
-        const content = parseFileContent(body, url);
+
+        const content = parseFileContent(this.preProcessor(body), url);
         const schema = parseSchema(content, url);
         this.registerSchema(schema);
     }
