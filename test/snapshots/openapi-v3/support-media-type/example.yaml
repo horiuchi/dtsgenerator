@@ -12,13 +12,13 @@ paths:
             $ref: '#/components/schemas/Request'
       responses:
         200:
-          $ref: '#/components/responses/ReturnData'
+          $ref: '#/components/responses/200_ReturnData'
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: '#/components/responses/400_BadRequest'
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/403_Forbidden'
         500:
-          $ref: '#/components/responses/Error'
+          $ref: '#/components/responses/500_Error'
 components:
   schemas:
     Request:
@@ -49,24 +49,24 @@ components:
         - code
         - description
   responses:
-    ReturnData:
+    200_ReturnData:
       content:
         application/json:
           schema:
             type: array
             items:
               $ref: '#/components/schemas/Data'
-    BadRequest:
+    400_BadRequest:
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Error'
-    Forbidden:
+    403_Forbidden:
       content:
         application/forbidden+json:
           schema:
             $ref: '#/components/schemas/Error'
-    Error:
+    500_Error:
       content:
         application/json:
           schema:
