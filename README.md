@@ -117,6 +117,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.3.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.3.2) (2019-11-21)
+
+- fixed
+  - Fix: the bug of the specific identifier #375. Thank you for reporting the bug @adriengibrat :+1:
+
 ### [v2.3.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.3.1) (2019-09-02)
 
 - features:
