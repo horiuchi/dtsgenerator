@@ -6,12 +6,12 @@ import SchemaId from './schemaId';
 
 const debug = Debug('dtsgen');
 
-export type PreProcessor = (fileContents: string) => string;
+export type PreProcessor = (fileContents: string) => Promise<string>;
 
 export default class ReferenceResolver {
     private readonly schemaCache = new Map<string, Schema>();
     private readonly referenceCache = new Map<string, Schema | undefined>();
-    private remoteSchemaPreProcessor: PreProcessor = (body: string) => body;
+    private remoteSchemaPreProcessor: PreProcessor = (body: string) => Promise.resolve(body);
 
     constructor(preProcessor?: PreProcessor) {
       if (typeof preProcessor === 'function') {
@@ -110,7 +110,7 @@ export default class ReferenceResolver {
             throw new Error(`Error on fetch from url(${url}): ${res.status}, ${body}`);
         }
 
-        const content = parseFileContent(this.remoteSchemaPreProcessor(body), url);
+        const content = parseFileContent(await this.remoteSchemaPreProcessor(body), url);
         const schema = parseSchema(content, url);
         this.registerSchema(schema);
     }
