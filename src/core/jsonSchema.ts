@@ -1,6 +1,5 @@
 import * as JsonPointer from '../jsonPointer';
 import SchemaId from './schemaId';
-import { normalizeTypeName } from './typeNameConvertor';
 
 export type JsonSchema = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.Schema;
 export type JsonSchemaObject = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.SchemaObject;
@@ -155,7 +154,8 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             key = key.replace(/\/(.)/g, (_match, p1) => {
                 return p1.toUpperCase();
             });
-            return normalizeTypeName(key.replace(/}/g, '').replace(/{/, '$'));
+            return key.replace(/}/g, '').replace(/{/, '$')
+                    .replace(/^\//, '').replace(/[^0-9A-Za-z_$]+/g, '_');
         }
         function setSubIdToAnyObject<T>(f: (t: T, keys: string[]) => void, obj: { [key: string]: T } | undefined, keys: string[]): void {
             if (obj == null) {
