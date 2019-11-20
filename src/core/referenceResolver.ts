@@ -14,7 +14,7 @@ export default class ReferenceResolver {
     private remoteSchemaPreProcessor: PreProcessor = (body: string) => body;
 
     constructor(preProcessor?: PreProcessor) {
-      if (preProcessor) {
+      if (typeof preProcessor === 'function') {
         this.remoteSchemaPreProcessor = preProcessor;
       }
     }
