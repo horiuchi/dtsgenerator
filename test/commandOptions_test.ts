@@ -20,6 +20,7 @@ describe('output command help test', () => {
     });
 
     it('should output command help ', () => {
+        process.stdout.columns = 160;
         const command = initialize(['node', 'script.js']);
         command.outputHelp();
         assert.equal(content, `Usage: script [options] <file ... | file patterns using node-glob>
