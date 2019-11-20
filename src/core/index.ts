@@ -13,18 +13,17 @@ export interface Options extends Partial<WriteProcessorOptions> {
     inputUrls?: string[];
     typeNameConvertor?: TypeNameConvertor;
     namespaceName?: string;
-    preProcessor?: PreProcessor;
+    remoteSchemaPreProcessor?: PreProcessor;
 }
 
 export default async function dtsGenerator(options: Options): Promise<string> {
-    const { preProcessor } = options;
+    const { remoteSchemaPreProcessor } = options;
     const processor = new WriteProcessor(options);
-    const resolver = new ReferenceResolver(options.preProcessor);
+    const resolver = new ReferenceResolver(remoteSchemaPreProcessor);
     const convertor = new SchemaConvertor(processor, options.typeNameConvertor, options.namespaceName);
 
     if (options.contents != null) {
         options.contents
-            .map((content) => preProcessor ? preProcessor(content) : content)
             .map((content) => parseSchema(content))
             .forEach((schema) => resolver.registerSchema(schema));
     }

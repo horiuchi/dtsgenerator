@@ -11,11 +11,11 @@ export type PreProcessor = (fileContents: string) => string;
 export default class ReferenceResolver {
     private readonly schemaCache = new Map<string, Schema>();
     private readonly referenceCache = new Map<string, Schema | undefined>();
-    private preProcessor: PreProcessor = (body: string) => body;
+    private remoteSchemaPreProcessor: PreProcessor = (body: string) => body;
 
     constructor(preProcessor?: PreProcessor) {
       if (preProcessor) {
-        this.preProcessor = preProcessor;
+        this.remoteSchemaPreProcessor = preProcessor;
       }
     }
 
@@ -110,7 +110,7 @@ export default class ReferenceResolver {
             throw new Error(`Error on fetch from url(${url}): ${res.status}, ${body}`);
         }
 
-        const content = parseFileContent(this.preProcessor(body), url);
+        const content = parseFileContent(this.remoteSchemaPreProcessor(body), url);
         const schema = parseSchema(content, url);
         this.registerSchema(schema);
     }
