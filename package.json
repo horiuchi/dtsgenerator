@@ -14,7 +14,7 @@
     "lint": "tslint --project ./tsconfig.json",
     "precompile": "npm run lint",
     "compile": "tsc -p .",
-    "watch": "npm run compile -- -w",
+    "watch": "npm run compile -- -w --noEmit",
     "pretest": "npm run compile",
     "test": "istanbul cover _mocha test/*.js test/**/*.js",
     "posttest": "remap-istanbul --input coverage/coverage.json -o coverage/report -t html",
@@ -67,6 +67,6 @@
     "rimraf": "^3.0.0",
     "source-map-support": "^0.5.16",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.5"
   }
 }
