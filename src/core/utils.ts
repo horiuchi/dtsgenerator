@@ -1,19 +1,25 @@
 import Debug from 'debug';
+import * as ts from 'typescript';
 import SimpleTypes = JsonSchemaOrg.Draft04.Schema.Definitions.SimpleTypes;
 
 const debug = Debug('dtsgen');
 
-export function toTSType(type: string, debugSource?: any): string | undefined {
+export function toTSType(type: string, debugSource?: any) {
     switch (type) {
-        case 'integer':
-            return 'number';
         case 'any':
-        case 'null':
-        case 'undefined':
-        case 'string':
-        case 'number':
+            return ts.SyntaxKind.AnyKeyword;
         case 'boolean':
-            return type;
+            return ts.SyntaxKind.BooleanKeyword;
+        case 'integer':
+            return ts.SyntaxKind.NumberKeyword;
+        case 'null':
+            return ts.SyntaxKind.NullKeyword;
+        case 'number':
+            return ts.SyntaxKind.NumberKeyword;
+        case 'string':
+            return ts.SyntaxKind.StringKeyword;
+        case 'undefined':
+            return ts.SyntaxKind.UndefinedKeyword;
         case 'object':
         case 'array':
             return undefined;

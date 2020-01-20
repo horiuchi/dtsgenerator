@@ -12,7 +12,7 @@ export default class SchemaConvertor {
         this.ns = namespaceName == null ? undefined : namespaceName.split('/').filter((s) => s.length > 0);
     }
 
-    private getLastTypeName(id: SchemaId): string {
+    public getLastTypeName(id: SchemaId): string {
         const names = this.convertor(id);
         if (names.length > 0) {
             return names[names.length - 1];

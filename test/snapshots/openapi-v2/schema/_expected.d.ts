@@ -425,7 +425,7 @@ declare namespace SwaggerIo {
                     /**
                      * Determines whether or not this parameter is required or optional.
                      */
-                    required: "true";
+                    required: true;
                     /**
                      * Determines the location of the parameter.
                      */

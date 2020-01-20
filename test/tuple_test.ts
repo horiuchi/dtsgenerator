@@ -310,7 +310,7 @@ describe('tuple test', () => {
 `;
         assert.equal(result, expected, result);
     });
-    it('items.length zero, with minItems', async () => {
+    it('items.length zero, without minItems', async () => {
         const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/inc_tuple_no_min',
             type: 'object',
