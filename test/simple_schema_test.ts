@@ -174,8 +174,7 @@ describe('simple schema test', () => {
         integer: number;
         null?: null;
         number?: number;
-        object?: {
-        };
+        object?: {};
         string?: string;
         any?: any;
         undefined?: undefined;
@@ -423,18 +422,41 @@ describe('simple schema test', () => {
 `;
         assert.equal(result, expected, result);
     });
+    it('include format schema', async () => {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
+            id: 'test/format/root',
+            properties: {
+                id: {
+                    type: 'integer',
+                    format: 'int64',
+                },
+            },
+        };
+
+        const result = await dtsgenerator({ contents: [schema] });
+        const expected = `declare namespace Test {
+    namespace Format {
+        export interface Root {
+            id?: number; // int64
+        }
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
     it('include $ref schema', async () => {
         const schema: JsonSchemaOrg.Draft04.Schema = {
-            id: 'test/ref/include_ref',
+            id: 'test/ref/include-ref',
             type: 'object',
             definitions: {
-                name: {
+                id: {
                     type: 'string',
+                    format: 'uri',
                 },
             },
             properties: {
-                'sub-name': {
-                    $ref: '#/definitions/name',
+                'sub-id': {
+                    $ref: '#/definitions/id',
                 },
             },
         };
@@ -443,11 +465,11 @@ describe('simple schema test', () => {
         const expected = `declare namespace Test {
     namespace Ref {
         export interface IncludeRef {
-            "sub-name"?: IncludeRef.Definitions.Name;
+            subId?: IncludeRef.Definitions.Id /* uri */;
         }
         namespace IncludeRef {
             namespace Definitions {
-                export type Name = string;
+                export type Id = string; // uri
             }
         }
     }
@@ -502,7 +524,7 @@ describe('simple schema test', () => {
         const expected = `declare namespace Test {
     namespace Include {
         export interface Slash {
-            "a/b"?: string;
+            aB?: string;
         }
     }
 }
