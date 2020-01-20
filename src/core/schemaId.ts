@@ -1,4 +1,4 @@
-import url from 'url';
+import * as url from 'url';
 
 export default class SchemaId {
     public static empty = new SchemaId('');
