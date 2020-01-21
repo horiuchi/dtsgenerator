@@ -12,7 +12,7 @@ declare namespace Parameters {
     export type Tags = string[];
 }
 export interface PathParameters {
-    id: Parameters.Id; // int64
+    id: Parameters.Id /* int64 */;
 }
 export interface Pet {
     name: string;
@@ -21,7 +21,7 @@ export interface Pet {
 }
 export interface QueryParameters {
     tags?: Parameters.Tags;
-    limit?: Parameters.Limit; // int32
+    limit?: Parameters.Limit /* int32 */;
 }
 export type RequestBody = NewPet;
 declare namespace Responses {

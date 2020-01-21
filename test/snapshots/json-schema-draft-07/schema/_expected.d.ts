@@ -21,48 +21,48 @@ declare namespace JsonSchemaOrg {
             maxLength?: Schema.Definitions.NonNegativeInteger;
             minLength?: Schema.Definitions.NonNegativeIntegerDefault0;
             pattern?: string; // regex
-            additionalItems?: Schema;
-            items?: Schema | Schema.Definitions.SchemaArray;
+            additionalItems?: /* Core schema meta-schema */ Schema;
+            items?: /* Core schema meta-schema */ Schema | Schema.Definitions.SchemaArray;
             maxItems?: Schema.Definitions.NonNegativeInteger;
             minItems?: Schema.Definitions.NonNegativeIntegerDefault0;
             uniqueItems?: boolean;
-            contains?: Schema;
+            contains?: /* Core schema meta-schema */ Schema;
             maxProperties?: Schema.Definitions.NonNegativeInteger;
             minProperties?: Schema.Definitions.NonNegativeIntegerDefault0;
             required?: Schema.Definitions.StringArray;
-            additionalProperties?: Schema;
+            additionalProperties?: /* Core schema meta-schema */ Schema;
             definitions?: {
-                [name: string]: Schema;
+                [name: string]: /* Core schema meta-schema */ Schema;
             };
             properties?: {
-                [name: string]: Schema;
+                [name: string]: /* Core schema meta-schema */ Schema;
             };
             patternProperties?: {
-                [name: string]: Schema;
+                [name: string]: /* Core schema meta-schema */ Schema;
             };
             dependencies?: {
-                [name: string]: Schema | Schema.Definitions.StringArray;
+                [name: string]: /* Core schema meta-schema */ Schema | Schema.Definitions.StringArray;
             };
-            propertyNames?: Schema;
+            propertyNames?: /* Core schema meta-schema */ Schema;
             const?: any;
             enum?: any[];
             type?: Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
             format?: string;
             contentMediaType?: string;
             contentEncoding?: string;
-            if?: Schema;
-            then?: Schema;
-            else?: Schema;
+            if?: /* Core schema meta-schema */ Schema;
+            then?: /* Core schema meta-schema */ Schema;
+            else?: /* Core schema meta-schema */ Schema;
             allOf?: Schema.Definitions.SchemaArray;
             anyOf?: Schema.Definitions.SchemaArray;
             oneOf?: Schema.Definitions.SchemaArray;
-            not?: Schema;
+            not?: /* Core schema meta-schema */ Schema;
         } | boolean;
         namespace Schema {
             namespace Definitions {
                 export type NonNegativeInteger = number;
                 export type NonNegativeIntegerDefault0 = number;
-                export type SchemaArray = Schema[];
+                export type SchemaArray = /* Core schema meta-schema */ Schema[];
                 export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
                 export type StringArray = string[];
             }
