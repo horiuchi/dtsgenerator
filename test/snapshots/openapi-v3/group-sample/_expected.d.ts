@@ -1,10 +1,10 @@
 declare namespace Components {
     namespace Schemas {
         export interface DataGroup {
-            items?: Group[];
+            items?: /* A specification for creating a new group */ Group[];
         }
         export interface DataGroupSpec {
-            items?: GroupSpec[];
+            items?: /* A specification for creating a new group */ GroupSpec[];
         }
         /**
          * A specification for creating a new group
@@ -19,8 +19,8 @@ declare namespace Components {
              * ID of the group in the source. Only applicable if source is specified. The combination of source and sourceId must be unique.
              */
             sourceId?: string;
-            permissions?: PermissionsDTO;
-            capabilities?: Group.Properties.Capabilities;
+            permissions?: /* Permissions determine the access types of a group, and alternatively also the assets a group has access to. */ PermissionsDTO;
+            capabilities?: /* Capability */ Group.Properties.Capabilities;
             id?: number; // int64
             isDeleted?: boolean;
             deletedTime?: number; // int64
@@ -39,16 +39,16 @@ declare namespace Components {
                         /**
                          * Group:Scope
                          */
-                        scope?: {
+                        scope?: /* Group:Scope */ {
                             /**
                              * all groups
                              */
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         } | {
                             /**
                              * groups the current user is in
                              */
-                            currentuserscope?: Capabilities.Items.OneOf.$4.Properties.UsersAcl.Properties.Scope.OneOf.$1.Properties.Currentuserscope;
+                            currentuserscope?: /* the current user making the request */ Capabilities.Items.OneOf.$4.Properties.UsersAcl.Properties.Scope.OneOf.$1.Properties.Currentuserscope;
                         };
                     };
                 } | {
@@ -61,7 +61,7 @@ declare namespace Components {
                          * Asset:Scope
                          */
                         scope?: {
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         };
                     };
                 } | {
@@ -74,7 +74,7 @@ declare namespace Components {
                          * Event:Scope
                          */
                         scope?: {
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         };
                     };
                 } | {
@@ -87,7 +87,7 @@ declare namespace Components {
                          * File:Scope
                          */
                         scope?: {
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         };
                     };
                 } | {
@@ -99,17 +99,16 @@ declare namespace Components {
                         /**
                          * User:Scope
                          */
-                        scope?: {
+                        scope?: /* User:Scope */ {
                             /**
                              * all users
                              */
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         } | {
                             /**
                              * the current user making the request
                              */
-                            currentuserscope?: {
-                            };
+                            currentuserscope?: {};
                         };
                     };
                 } | {
@@ -122,7 +121,7 @@ declare namespace Components {
                          * Project:Scope
                          */
                         scope?: {
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         };
                     };
                 } | {
@@ -135,7 +134,7 @@ declare namespace Components {
                          * SecurityCategory:Scope
                          */
                         scope?: {
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         };
                     };
                 } | {
@@ -151,8 +150,7 @@ declare namespace Components {
                             /**
                              * Scope:All
                              */
-                            all?: {
-                            };
+                            all?: {};
                         };
                     };
                 } | {
@@ -164,8 +162,8 @@ declare namespace Components {
                         /**
                          * Timeseries:Scope
                          */
-                        scope?: {
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                        scope?: /* Timeseries:Scope */ {
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         } | {
                             /**
                              * Scope:AssetIdScope
@@ -174,7 +172,7 @@ declare namespace Components {
                                 /**
                                  * root asset id (subtrees)
                                  */
-                                subtreeIds?: string /* uint64 */ [];
+                                subtreeIds?: string /* uint64 */[];
                             };
                         };
                     };
@@ -187,13 +185,13 @@ declare namespace Components {
                         /**
                          * Apikey:Scope
                          */
-                        scope?: {
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                        scope?: /* Apikey:Scope */ {
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         } | {
                             /**
                              * apikeys the user making the request has
                              */
-                            currentuserscope?: Capabilities.Items.OneOf.$4.Properties.UsersAcl.Properties.Scope.OneOf.$1.Properties.Currentuserscope;
+                            currentuserscope?: /* the current user making the request */ Capabilities.Items.OneOf.$4.Properties.UsersAcl.Properties.Scope.OneOf.$1.Properties.Currentuserscope;
                         };
                     };
                 } | {
@@ -206,7 +204,7 @@ declare namespace Components {
                          * Threed:Scope
                          */
                         scope?: {
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         };
                     };
                 } | {
@@ -219,7 +217,7 @@ declare namespace Components {
                          * Sequences:Scope
                          */
                         scope?: {
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         };
                     };
                 } | {
@@ -232,7 +230,7 @@ declare namespace Components {
                          * Analytics:Scope
                          */
                         scope?: {
-                            all?: Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
+                            all?: /* Scope:All */ Capabilities.Items.OneOf.$7.Properties.RawAcl.Properties.Scope.Properties.All;
                         };
                     };
                 })[];
@@ -298,8 +296,8 @@ declare namespace Components {
              * ID of the group in the source. Only applicable if source is specified. The combination of source and sourceId must be unique.
              */
             sourceId?: string;
-            permissions?: PermissionsDTO;
-            capabilities?: Group.Properties.Capabilities;
+            permissions?: /* Permissions determine the access types of a group, and alternatively also the assets a group has access to. */ PermissionsDTO;
+            capabilities?: /* Capability */ Group.Properties.Capabilities;
         }
         /**
          * Permissions determine the access types of a group, and alternatively also the assets a group has access to.
@@ -312,8 +310,8 @@ declare namespace Components {
             /**
              * List of IDs of assets the group should have access to.
              */
-            assetIds?: number /* int64 */ [];
-            securityCategoryIds?: number /* int64 */ [];
+            assetIds?: number /* int64 */[];
+            securityCategoryIds?: number /* int64 */[];
         }
     }
 }
