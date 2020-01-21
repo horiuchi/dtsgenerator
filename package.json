@@ -16,9 +16,9 @@
     "compile": "tsc -p .",
     "watch": "npm run compile -- -w",
     "pretest": "npm run compile",
-    "test": "istanbul cover _mocha test/*.js test/**/*.js",
-    "posttest": "remap-istanbul --input coverage/coverage.json -o coverage/report -t html",
-    "coverage": "remap-istanbul --input coverage/coverage.json --type text-lcov | coveralls",
+    "do-test": "cross-env TS_NODE_FILES=true mocha --exit --require ts-node/register --colors test/*_test.ts",
+    "test": "nyc npm run do-test",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test"
   },
   "directories": {
@@ -57,16 +57,16 @@
     "@types/js-yaml": "^3.12.1",
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^13.1.7",
+    "@types/node": "^13.1.8",
     "@types/power-assert": "^1.5.3",
     "coveralls": "^3.0.9",
-    "istanbul": "^0.4.5",
+    "cross-env": "^6.0.3",
     "mocha": "^7.0.0",
+    "nyc": "^15.0.0",
     "power-assert": "^1.6.1",
-    "remap-istanbul": "^0.13.0",
     "rimraf": "^3.0.0",
-    "source-map-support": "^0.5.16",
+    "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.5"
   }
 }

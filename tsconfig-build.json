@@ -4,7 +4,8 @@
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "removeComments": true
+    "removeComments": true,
+    "noEmit": false
   },
   "include": [
     "src"

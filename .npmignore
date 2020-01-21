@@ -13,6 +13,7 @@ example/*/node_modules/
 .editorconfig
 .gitignore
 .travis.yml
+.nyc_output/
 coverage/
 demo/
 
