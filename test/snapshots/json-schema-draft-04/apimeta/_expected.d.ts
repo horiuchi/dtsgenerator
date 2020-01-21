@@ -9,5 +9,5 @@ declare interface ApiBaseObject {
  */
 declare interface ApiMetadata {
     serverOperation?: "I" | "U" | "D";
-    test?: ApiBaseObject;
+    test?: /* ApiBaseObject of a record */ ApiBaseObject;
 }
