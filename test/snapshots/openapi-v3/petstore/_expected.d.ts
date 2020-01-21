@@ -28,7 +28,7 @@ declare namespace Paths {
             export type Id = number; // int64
         }
         export interface PathParameters {
-            id: Parameters.Id; // int64
+            id: Parameters.Id /* int64 */;
         }
         namespace Responses {
             export type Default = Components.Schemas.Error;
@@ -39,7 +39,7 @@ declare namespace Paths {
             export type Id = number; // int64
         }
         export interface PathParameters {
-            id: Parameters.Id; // int64
+            id: Parameters.Id /* int64 */;
         }
         namespace Responses {
             export type $200 = Components.Schemas.Pet;
@@ -53,7 +53,7 @@ declare namespace Paths {
         }
         export interface QueryParameters {
             tags?: Parameters.Tags;
-            limit?: Parameters.Limit; // int32
+            limit?: Parameters.Limit /* int32 */;
         }
         namespace Responses {
             export type $200 = Components.Schemas.Pet[];
