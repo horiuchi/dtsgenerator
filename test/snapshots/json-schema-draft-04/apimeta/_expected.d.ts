@@ -1,13 +1,13 @@
 /**
  * ApiBaseObject of a record
  */
-declare interface ApiBaseObject {
+export interface ApiBaseObject {
     first?: string;
 }
 /**
  * Metadata of a record
  */
-declare interface ApiMetadata {
+export interface ApiMetadata {
     serverOperation?: "I" | "U" | "D";
     test?: ApiBaseObject;
 }
