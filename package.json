@@ -56,7 +56,7 @@
     "@types/glob": "^7.1.1",
     "@types/js-yaml": "^3.12.1",
     "@types/mkdirp": "^0.5.2",
-    "@types/mocha": "^5.2.7",
+    "@types/mocha": "^7.0.0",
     "@types/node": "^13.1.8",
     "@types/power-assert": "^1.5.3",
     "coveralls": "^3.0.9",
