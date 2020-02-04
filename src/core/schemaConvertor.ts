@@ -23,7 +23,7 @@ export default class SchemaConvertor {
 
     public buildSchemaMergedMap(schemas: IterableIterator<Schema>, typeMarker: symbol): any {
         const map: any = {};
-        const paths: Array<{ path: string[]; type: Schema; }> = [];
+        const paths: { path: string[]; type: Schema; }[] = [];
         let minLevel = Number.MAX_SAFE_INTEGER;
         for (const type of schemas) {
             const path = this.convertor(type.id);
