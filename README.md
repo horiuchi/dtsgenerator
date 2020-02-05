@@ -117,10 +117,15 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.4.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.4.1) (2020-02-05)
+
+- fixed
+  - fix: the bug of #386. thank you for reporting issue @Oloompa :+1:
+
 ### [v2.4.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.4.0) (2020-02-04)
 
 - fixed
-  - Fix: TypeScript import statement #381. Thank you @lupus92 :+1:
+  - fix: typescript import statement #381. thank you @lupus92 :+1:
   - Fix: use `export` when given empty namespace #386. Thank you @zregvart :+1:
 
 ### [v2.3.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.3.2) (2019-11-21)
