@@ -25,7 +25,7 @@ describe('simple schema test', () => {
         };
         const result = await dtsgenerator({ contents: [schema] });
 
-        const expected = `export interface NoNamespace {
+        const expected = `declare interface NoNamespace {
 }
 `;
         assert.equal(result, expected, result);
