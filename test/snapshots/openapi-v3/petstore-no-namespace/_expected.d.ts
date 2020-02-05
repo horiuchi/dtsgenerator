@@ -1,8 +1,8 @@
-declare interface Error {
+export interface Error {
     code: number; // int32
     message: string;
 }
-declare interface NewPet {
+export interface NewPet {
     name: string;
     tag?: string;
 }
@@ -11,19 +11,19 @@ declare namespace Parameters {
     export type Limit = number; // int32
     export type Tags = string[];
 }
-declare interface PathParameters {
+export interface PathParameters {
     id: Parameters.Id; // int64
 }
-declare interface Pet {
+export interface Pet {
     name: string;
     tag?: string;
     id: number; // int64
 }
-declare interface QueryParameters {
+export interface QueryParameters {
     tags?: Parameters.Tags;
     limit?: Parameters.Limit; // int32
 }
-declare type RequestBody = NewPet;
+export type RequestBody = NewPet;
 declare namespace Responses {
     export type $200 = Pet;
     export type Default = Error;
