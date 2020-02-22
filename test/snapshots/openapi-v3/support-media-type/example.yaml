@@ -1,4 +1,4 @@
-openapi: "3.0.2"
+openapi: '3.0.2'
 info:
   title: support some media type
   version: 1.0.0
@@ -19,6 +19,8 @@ paths:
           $ref: '#/components/responses/403_Forbidden'
         500:
           $ref: '#/components/responses/500_Error'
+        502:
+          $ref: '#/components/responses/502_Error'
 components:
   schemas:
     Request:
@@ -48,6 +50,8 @@ components:
       required:
         - code
         - description
+    ErrorText:
+      type: string
   responses:
     200_ReturnData:
       content:
@@ -71,3 +75,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    502_Error:
+      content:
+        text/plain:
+          schema:
+            $ref: '#/components/schemas/ErrorText'
