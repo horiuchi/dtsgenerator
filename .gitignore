@@ -3,10 +3,12 @@
 
 node_modules/
 .nyc_output/
+build/
 coverage/
 dist/
 
 *.js
 *.js.map
+*.tsbuildinfo
 
 .vscode/
