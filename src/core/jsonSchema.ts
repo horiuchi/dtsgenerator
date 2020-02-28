@@ -256,7 +256,7 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 return;
             }
             for (const mime of Object.keys(types)) {
-                if (/text\/|^(?:application\/x-www-form-urlencoded|application\/([a-z0-9-_]+\+)?json)$/.test(mime)) {
+                if (/^text\/|^(?:application\/x-www-form-urlencoded|application\/([a-z0-9-_]+\+)?json)$/.test(mime)) {
                     const mt = types[mime];
                     setSubId(mt.schema, keys);
                 }
