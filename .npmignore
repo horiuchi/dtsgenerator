@@ -14,8 +14,11 @@ example/*/node_modules/
 .gitignore
 .travis.yml
 .nyc_output/
+build/
 coverage/
 demo/
+greenkeeper.json
+*.tsbuildinfo
 
 npm-debug.log
 
