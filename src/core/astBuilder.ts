@@ -49,7 +49,8 @@ export function buildNamespaceNode(name: string, statements: ts.Statement[], roo
         ts.NodeFlags.Namespace | ts.NodeFlags.ExportContext | ts.NodeFlags.ContextFlags);
 }
 
-export function buildInterfaceNode(name: string, members: ts.TypeElement[], root: boolean): ts.InterfaceDeclaration {
+export function buildInterfaceNode(id: SchemaId, members: ts.TypeElement[], root: boolean): ts.InterfaceDeclaration {
+    const name = getLastTypeName(id);
     const modifiers = root ?
         [ts.createModifier(ts.SyntaxKind.DeclareKeyword)] :
         [ts.createModifier(ts.SyntaxKind.ExportKeyword)] ;
@@ -62,7 +63,8 @@ export function buildInterfaceNode(name: string, members: ts.TypeElement[], root
         members);
 }
 
-export function buildTypeAliasNode(name: string, type: ts.TypeNode, root: boolean): ts.TypeAliasDeclaration {
+export function buildTypeAliasNode(id: SchemaId, type: ts.TypeNode, root: boolean): ts.TypeAliasDeclaration {
+    const name = getLastTypeName(id);
     const modifiers = root ?
         [ts.createModifier(ts.SyntaxKind.DeclareKeyword)] :
         [ts.createModifier(ts.SyntaxKind.ExportKeyword)] ;
@@ -234,4 +236,13 @@ export function addOptionalInformation<T extends ts.Node>(node: T, schema: Norma
     }
     const kind = terminate ? ts.SyntaxKind.SingleLineCommentTrivia : ts.SyntaxKind.MultiLineCommentTrivia;
     return ts.addSyntheticTrailingComment(node, kind, comment, false);
+}
+
+function getLastTypeName(id: SchemaId): string {
+    const names = config.typeNameConvertor(id);
+    if (names.length > 0) {
+        return names[names.length - 1];
+    } else {
+        return '';
+    }
 }
