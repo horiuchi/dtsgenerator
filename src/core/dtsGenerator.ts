@@ -1,11 +1,10 @@
 import Debug from 'debug';
 import ts from 'typescript';
-import { tilde } from '../jsonPointer';
+import { get, set, tilde } from '../jsonPointer';
 import * as ast from './astBuilder';
 import config from './config';
 import { getSubSchema, JsonSchema, JsonSchemaObject, NormalizedSchema, Schema } from './jsonSchema';
 import ReferenceResolver from './referenceResolver';
-import SchemaConvertor from './schemaConvertor';
 import * as utils from './utils';
 
 const debug = Debug('dtsgen');
@@ -15,13 +14,13 @@ export default class DtsGenerator {
 
     private currentSchema!: NormalizedSchema;
 
-    constructor(private resolver: ReferenceResolver, private convertor: SchemaConvertor) { }
+    constructor(private resolver: ReferenceResolver) { }
 
     public async generate(): Promise<string> {
         debug('generate type definition files.');
         await this.resolver.resolve();
 
-        const map = this.convertor.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema(), typeMarker);
+        const map = this.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema());
 
         const root = this.walk(map, true);
         if (config.outputAST) {
@@ -32,6 +31,29 @@ export default class DtsGenerator {
             const result = printer.printList(ts.ListFormat.Decorators, ts.createNodeArray(root, false), resultFile);
             return result;
         }
+    }
+
+    private buildSchemaMergedMap(schemas: IterableIterator<Schema>): any {
+        const map: any = {};
+        const paths: { path: string[]; type: Schema; }[] = [];
+        for (const type of schemas) {
+            const path = config.typeNameConvertor(type.id);
+            paths.push({ path, type });
+        }
+
+        for (const item of paths) {
+            const path = item.path;
+            const parent = get(map, path, true);
+            if (parent == null) {
+                set(map, path, { [typeMarker]: item.type });
+            } else {
+                parent[typeMarker] = item.type;
+            }
+        }
+        if (Object.keys(map).length === 0) {
+            throw new Error('There is no schema in the input contents.');
+        }
+        return map;
     }
 
     private walk(map: any, root: boolean): ts.Statement[] {
@@ -54,7 +76,6 @@ export default class DtsGenerator {
     private walkSchema(schema: Schema, root: boolean): ts.DeclarationStatement {
         const normalized = this.normalizeContent(schema);
         this.currentSchema = normalized;
-        this.convertor.outputComments(normalized);
 
         const getNode = () => {
             const type = normalized.content.type;
@@ -116,21 +137,21 @@ export default class DtsGenerator {
         const content = schema.content;
         if (content.$ref || content.oneOf || content.anyOf || content.enum || 'const' in content || content.type !== 'object') {
             const type = this.generateTypeProperty(schema);
-            return ast.buildTypeAliasNode(this.convertor.getLastTypeName(schema.id), type, root);
+            return ast.buildTypeAliasNode(schema.id, type, root);
         } else {
             const members = this.generateProperties(schema);
-            return ast.buildInterfaceNode(this.convertor.getLastTypeName(schema.id), members, root);
+            return ast.buildInterfaceNode(schema.id, members, root);
         }
     }
 
     private generateAnyTypeModel(schema: NormalizedSchema, root: boolean): ts.DeclarationStatement {
         const member = ast.buildIndexSignatureNode('name', ast.buildStringKeyword(), ast.buildAnyKeyword());
-        return ast.buildInterfaceNode(this.convertor.getLastTypeName(schema.id), [member], root);
+        return ast.buildInterfaceNode(schema.id, [member], root);
     }
 
     private generateTypeCollection(schema: NormalizedSchema, root: boolean): ts.DeclarationStatement {
         const type = this.generateArrayTypeProperty(schema);
-        return ast.buildTypeAliasNode(this.convertor.getLastTypeName(schema.id), type, root);
+        return ast.buildTypeAliasNode(schema.id, type, root);
     }
 
     private generateProperties(baseSchema: NormalizedSchema): ts.TypeElement[] {
