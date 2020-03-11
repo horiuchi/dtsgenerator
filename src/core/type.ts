@@ -1,10 +1,10 @@
 import { SourceFile } from 'typescript';
 import SchemaId from './schemaId';
-import { JsonSchemaOrg as JsonSchemaOrgV4 } from './jsonSchemaDraft04';
-import { JsonSchemaOrg as JsonSchemaOrgV7 } from './jsonSchemaDraft07';
+import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
+import { JsonSchemaDraft07 } from './jsonSchemaDraft07';
 
-export type JsonSchema = JsonSchemaOrgV4.Draft04.Schema | JsonSchemaOrgV7.Draft07.Schema;
-export type JsonSchemaObject = JsonSchemaOrgV4.Draft04.Schema | JsonSchemaOrgV7.Draft07.SchemaObject;
+export type JsonSchema = JsonSchemaDraft04.Schema | JsonSchemaDraft07.Schema;
+export type JsonSchemaObject = JsonSchemaDraft04.Schema | JsonSchemaDraft07.SchemaObject;
 
 export type SchemaType = 'Draft04' | 'Draft07';
 

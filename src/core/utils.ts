@@ -1,6 +1,8 @@
 import Debug from 'debug';
 import * as ts from 'typescript';
-import SimpleTypes = JsonSchemaOrg.Draft04.Schema.Definitions.SimpleTypes;
+import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
+
+import SimpleTypes = JsonSchemaDraft04.Schema.Definitions.SimpleTypes;
 
 const debug = Debug('dtsgen');
 
