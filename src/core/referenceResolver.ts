@@ -1,8 +1,9 @@
 import 'cross-fetch/polyfill';
 import Debug from 'debug';
 import { parseFileContent } from '../utils';
-import { getSubSchema, parseSchema, Schema, searchAllSubSchema } from './jsonSchema';
+import { getSubSchema, parseSchema, searchAllSubSchema } from './jsonSchema';
 import SchemaId from './schemaId';
+import { Schema } from './type';
 
 const debug = Debug('dtsgen');
 
@@ -20,6 +21,9 @@ export default class ReferenceResolver {
 
     public getAllRegisteredSchema(): IterableIterator<Schema> {
         return this.schemaCache.values();
+    }
+    public getAllRegisteredIdAndSchema(): Iterator<[string, Schema]> {
+        return this.schemaCache.entries();
     }
 
     public async resolve(): Promise<void> {

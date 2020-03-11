@@ -1,5 +1,6 @@
-declare namespace OpenApisOrg {
-    namespace V3 {
+// tslint:disable:no-empty-interface
+export namespace OpenApisOrg {
+    export namespace V3 {
         /**
          * A JSON Schema for OpenAPI 3.0.
          * This is the root document object of the OpenAPI document.
@@ -14,8 +15,8 @@ declare namespace OpenApisOrg {
             tags?: SchemaJson.Definitions.Tag[];
             externalDocs?: SchemaJson.Definitions.ExternalDocs;
         }
-        namespace SchemaJson {
-            namespace Definitions {
+        export namespace SchemaJson {
+            export namespace Definitions {
                 export interface Any {
                     [name: string]: any;
                 }

@@ -1,9 +1,10 @@
 import Debug from 'debug';
 import ts from 'typescript';
 import { get, set, tilde } from '../jsonPointer';
+import { Plugin, PluginContext, Schema, JsonSchema, JsonSchemaObject } from './type';
 import * as ast from './astBuilder';
 import config from './config';
-import { getSubSchema, JsonSchema, JsonSchemaObject, NormalizedSchema, Schema } from './jsonSchema';
+import { getSubSchema, NormalizedSchema } from './jsonSchema';
 import ReferenceResolver from './referenceResolver';
 import * as utils from './utils';
 
@@ -21,12 +22,14 @@ export default class DtsGenerator {
         await this.resolver.resolve();
 
         const map = this.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema());
-
         const root = this.walk(map, true);
+        let resultFile = ts.createSourceFile('_.d.ts', '', ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
+
+        resultFile = await this.applyPlugins(resultFile, this.resolver.getAllRegisteredIdAndSchema());
+
         if (config.outputAST) {
-            return JSON.stringify(root, null, 2);
+            return JSON.stringify(resultFile, null, 2);
         } else {
-            const resultFile = ts.createSourceFile('_.d.ts', '', ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
             const printer = ts.createPrinter();
             const result = printer.printList(ts.ListFormat.Decorators, ts.createNodeArray(root, false), resultFile);
             return result;
@@ -54,6 +57,28 @@ export default class DtsGenerator {
             throw new Error('There is no schema in the input contents.');
         }
         return map;
+    }
+
+    private async applyPlugins(root: ts.SourceFile, inputs: Iterator<[string, Schema]>): Promise<ts.SourceFile> {
+        const context: PluginContext = { root, inputs };
+        for (const [name, option] of Object.entries(config.plugins)) {
+            if (option) {
+                const mod = await import(name);
+                if (!('default' in mod)) {
+                    // tslint:disable-next-line: no-console
+                    console.warn(`The plugin (${name}) is invalid module. That is not default export format.`);
+                    continue;
+                }
+                const plugin: Plugin = mod.default;
+                if (!('processor' in plugin) || typeof plugin.processor !== 'function') {
+                    // tslint:disable-next-line: no-console
+                    console.warn(`The plugin (${name}) is invalid module. That dose not include the 'processor' function.`);
+                    continue;
+                }
+                context.root = plugin.processor(context);
+            }
+        }
+        return context.root;
     }
 
     private walk(map: any, root: boolean): ts.Statement[] {
