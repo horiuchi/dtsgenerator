@@ -1,6 +1,8 @@
+import { JsonSchemaOrg } from './jsonSchemaDraft04';
+
 // tslint:disable:no-empty-interface
-declare namespace SwaggerIo {
-    namespace V2 {
+export namespace SwaggerIo {
+    export namespace V2 {
         /**
          * A JSON Schema for Swagger 2.0 API.
          */
@@ -36,8 +38,8 @@ declare namespace SwaggerIo {
             tags?: SchemaJson.Definitions.Tag[];
             externalDocs?: SchemaJson.Definitions.ExternalDocs;
         }
-        namespace SchemaJson {
-            namespace Definitions {
+        export namespace SchemaJson {
+            export namespace Definitions {
                 export interface ApiKeySecurity {
                     type: 'apiKey';
                     name: string;
@@ -90,6 +92,7 @@ declare namespace SwaggerIo {
                 /**
                  * One or more JSON objects describing the schemas being consumed and produced by the API.
                  */
+                // tslint:disable-next-line:no-shadowed-variable
                 export interface Definitions {
                     [name: string]: JsonSchemaOrg.Draft04.Schema;
                 }
@@ -338,7 +341,7 @@ declare namespace SwaggerIo {
                 /**
                  * The parameters needed to send a valid API call.
                  */
-                export type ParametersList = Array<Parameter | JsonReference>;
+                export type ParametersList = (Parameter | JsonReference)[];
                 export interface PathItem {
                     $ref?: string;
                     get?: Operation;
@@ -475,7 +478,7 @@ declare namespace SwaggerIo {
                 /**
                  * The transfer protocol of the API.
                  */
-                export type SchemesList = Array<'http' | 'https' | 'ws' | 'wss'>;
+                export type SchemesList = ('http' | 'https' | 'ws' | 'wss')[];
                 export type Security = SecurityRequirement[];
                 export interface SecurityDefinitions {
                     [name: string]: BasicAuthenticationSecurity | ApiKeySecurity | Oauth2ImplicitSecurity | Oauth2PasswordSecurity | Oauth2ApplicationSecurity | Oauth2AccessCodeSecurity;
