@@ -1,9 +1,10 @@
 // tslint:disable: no-bitwise
 import * as ts from 'typescript';
 import config from './config';
-import { NormalizedSchema, Schema } from './jsonSchema';
+import { NormalizedSchema } from './jsonSchema';
 import SchemaId from './schemaId';
 import { toValidIdentifier } from './validateIdentifier';
+import { Schema } from './type';
 
 function buildIdentifier(name: string): ts.Identifier {
     return ts.createIdentifier(toValidIdentifier(name, config.target));

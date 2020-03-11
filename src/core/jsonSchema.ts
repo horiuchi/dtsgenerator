@@ -1,22 +1,14 @@
 import * as JsonPointer from '../jsonPointer';
 import SchemaId from './schemaId';
+import { Schema, JsonSchemaObject, SchemaType, JsonSchema } from './type';
+import { SwaggerIo } from './openApiV2';
+import { OpenApisOrg } from './openApiV3';
 
-export type JsonSchema = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.Schema;
-export type JsonSchemaObject = JsonSchemaOrg.Draft04.Schema | JsonSchemaOrg.Draft07.SchemaObject;
 type OpenApiSchema = SwaggerIo.V2.SchemaJson | OpenApisOrg.V3.SchemaJson;
 
 interface ParameterObject { name: string; in: string; required?: boolean; schema?: JsonSchemaObject; }
 type Parameter = ParameterObject | { $ref?: string; };
 
-export type SchemaType = 'Draft04' | 'Draft07';
-
-export interface Schema {
-    type: SchemaType;
-    openApiVersion?: 2 | 3;
-    id: SchemaId;
-    content: JsonSchema;
-    rootSchema?: Schema;
-}
 export interface NormalizedSchema extends Schema {
     content: JsonSchemaObject;
 }

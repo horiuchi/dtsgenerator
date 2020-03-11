@@ -1,5 +1,5 @@
-declare namespace JsonSchemaOrg {
-    namespace Draft04 {
+export namespace JsonSchemaOrg {
+    export namespace Draft04 {
         /**
          * Core schema meta-schema
          */
@@ -49,15 +49,15 @@ declare namespace JsonSchemaOrg {
             oneOf?: Schema.Definitions.SchemaArray;
             not?: Schema;
         }
-        namespace Schema {
-            namespace Definitions {
+        export namespace Schema {
+            export namespace Definitions {
                 export type PositiveInteger = number;
                 export type PositiveIntegerDefault0 = number;
                 export type SchemaArray = Schema[];
-                export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string" | "any" | "undefined";
+                export type SimpleTypes = 'array' | 'boolean' | 'integer' | 'null' | 'number' | 'object' | 'string' | 'any' | 'undefined';
                 export type StringArray = string[];
             }
-            namespace Properties {
+            export namespace Properties {
                 export type Default = any;
                 export type Description = string;
                 export type Enum = any[];
