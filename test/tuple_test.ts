@@ -1,6 +1,7 @@
 import assert from 'power-assert';
 import { clear } from '../src/commandOptions';
 import dtsgenerator from '../src/core';
+import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 
 describe('tuple test', () => {
 
@@ -9,7 +10,7 @@ describe('tuple test', () => {
     });
 
     it('no min', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_no_min',
             type: 'object',
             properties: {
@@ -42,7 +43,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('min less than length', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
             type: 'object',
             properties: {
@@ -72,7 +73,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('min eql to length', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_eql_length',
             type: 'object',
             properties: {
@@ -102,7 +103,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('min greater than length', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_greater_length',
             type: 'object',
             properties: {
@@ -132,7 +133,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('items.length zero, no minItems', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_no_min',
             type: 'object',
             properties: {
@@ -159,7 +160,7 @@ describe('tuple test', () => {
     });
 
     it('min less than length and max equals length', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
             type: 'object',
             properties: {
@@ -190,7 +191,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('min less than length and max less than length too', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
             type: 'object',
             properties: {
@@ -221,7 +222,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('min and max equals length', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
             type: 'object',
             properties: {
@@ -252,7 +253,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('max less thant min', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
             type: 'object',
             properties: {
@@ -284,7 +285,7 @@ describe('tuple test', () => {
     });
 
     it('items.length zero, with minItems', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_no_min',
             type: 'object',
             properties: {
@@ -311,7 +312,7 @@ describe('tuple test', () => {
         assert.equal(result, expected, result);
     });
     it('items.length zero, without minItems', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_no_min',
             type: 'object',
             properties: {

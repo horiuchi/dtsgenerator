@@ -1,11 +1,13 @@
 import assert from 'power-assert';
 import dtsgenerator from '../src/core';
+import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
+import { JsonSchemaDraft07 } from '../src/core/jsonSchemaDraft07';
 
 
 describe('simple schema test', () => {
 
     it('no property schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/no_prop',
             type: 'object',
         };
@@ -19,7 +21,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('no namespace schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/no_namespace',
             type: 'object',
         };
@@ -31,7 +33,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('one line schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/one_line',
             type: 'object',
             properties: {
@@ -51,7 +53,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('two line readonly schema', async () => {
-        const schema: JsonSchemaOrg.Draft07.Schema = {
+        const schema: JsonSchemaDraft07.Schema = {
             $id: '/test/one_line',
             $schema: 'http://json-schema.org/draft-07/schema#',
             type: 'object',
@@ -91,7 +93,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('include array schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_array',
             type: 'object',
             properties: {
@@ -118,7 +120,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('all simple type schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/all_simple_type',
             type: 'object',
             properties: {
@@ -184,7 +186,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('string, integer and number enum schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/enum_string_vs_integer_number',
             type: 'object',
             properties: {
@@ -215,7 +217,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('string and integer const schema', async () => {
-        const schema: JsonSchemaOrg.Draft07.Schema = {
+        const schema: JsonSchemaDraft07.Schema = {
             $id: '/test/const_string_vs_integer',
             $schema: 'http://json-schema.org/draft-07/schema#',
             type: 'object',
@@ -242,7 +244,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('inner object schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inner_object',
             type: 'object',
             properties: {
@@ -275,7 +277,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('object array schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/object_array',
             type: 'object',
             properties: {
@@ -310,7 +312,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('root array schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: 'test/root/root_array',
             type: 'array',
             items: {
@@ -328,7 +330,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('root any schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: 'test/root/root_any',
             description: 'This is any type schema',
             additionalProperties: true,
@@ -349,7 +351,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('include example schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: 'test/example/root',
             example: '  How get this schema.\n  Also, How get this data from hoge.\n   /* hoge from fuga. */',
             properties: {
@@ -382,7 +384,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('include objected example schema', async () => {
-        const schema: JsonSchemaOrg.Draft07.Schema = {
+        const schema: JsonSchemaDraft07.Schema = {
             $id: 'test/example2/root',
             $schema: 'http://json-schema.org/draft-07/schema#',
             examples: [{
@@ -423,7 +425,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('include format schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: 'test/format/root',
             properties: {
                 id: {
@@ -445,7 +447,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('include $ref schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: 'test/ref/include-ref',
             type: 'object',
             definitions: {
@@ -510,7 +512,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('include `/` properties schema', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/include/slash',
             type: 'object',
             properties: {
@@ -708,7 +710,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('should include allOf schemas', async () => {
-        const baseSchema: JsonSchemaOrg.Draft04.Schema = {
+        const baseSchema: JsonSchemaDraft04.Schema = {
             id: 'http://test/zzz/allOf/base',
             type: 'object',
             properties: {
@@ -718,7 +720,7 @@ describe('simple schema test', () => {
             },
             required: ['id'],
         };
-        const extendedSchema: JsonSchemaOrg.Draft04.Schema = {
+        const extendedSchema: JsonSchemaDraft04.Schema = {
             id: 'http://test/zzz/allOf/extended',
             type: 'object',
             allOf: [
@@ -731,7 +733,7 @@ describe('simple schema test', () => {
             },
             required: ['value'],
         };
-        const separateSchema: JsonSchemaOrg.Draft04.Schema = {
+        const separateSchema: JsonSchemaDraft04.Schema = {
             id: 'http://test/separate',
             type: 'object',
             properties: {
@@ -741,7 +743,7 @@ describe('simple schema test', () => {
             },
             required: ['message'],
         };
-        const combinedSchema: JsonSchemaOrg.Draft04.Schema = {
+        const combinedSchema: JsonSchemaDraft04.Schema = {
             id: 'http://test/combined',
             type: 'object',
             allOf: [
