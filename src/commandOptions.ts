@@ -1,9 +1,5 @@
 import commander from 'commander';
 
-/* tslint:disable:no-var-requires */
-const pkg = require('../package.json');
-/* tslint:enable:no-var-requires */
-
 export class CommandOptions {
     public files: string[] = [];
     public urls: string[] = [];
@@ -40,6 +36,8 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         memo.push(val);
         return memo;
     }
+
+    const pkg = require('../package.json');
 
     // <hoge> is required, [hoge] is optional
     command

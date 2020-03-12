@@ -1,4 +1,4 @@
-import { SourceFile } from 'typescript';
+import { Statement, TransformerFactory } from 'typescript';
 import SchemaId from './schemaId';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from './jsonSchemaDraft07';
@@ -18,13 +18,12 @@ export interface Schema {
 
 export interface PluginContext {
     option?: any;
-    root: SourceFile;
-    inputs: Iterator<[string, Schema]>;
+    inputSchemas: Iterator<[string, Schema]>;
 }
 
 export interface Plugin {
     meta: {
         description: string;
     };
-    processor: (context: PluginContext) => SourceFile;
+    create: (context: PluginContext) => Promise<TransformerFactory<Statement> | undefined>;
 }
