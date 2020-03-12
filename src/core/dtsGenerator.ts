@@ -23,16 +23,16 @@ export default class DtsGenerator {
 
         const map = this.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema());
         const root = this.walk(map, true);
-        let resultFile = ts.createSourceFile('_.d.ts', '', ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
 
-        resultFile = await this.applyPlugins(resultFile, this.resolver.getAllRegisteredIdAndSchema());
+        const result = ts.transform(root, await this.getPlugins(this.resolver.getAllRegisteredIdAndSchema()));
+        result.dispose();
 
         if (config.outputAST) {
-            return JSON.stringify(resultFile, null, 2);
+            return JSON.stringify(root, null, 2);
         } else {
             const printer = ts.createPrinter();
-            const result = printer.printList(ts.ListFormat.Decorators, ts.createNodeArray(root, false), resultFile);
-            return result;
+            const outputFile = ts.createSourceFile('_.d.ts', '', config.target, false, ts.ScriptKind.TS);
+            return printer.printList(ts.ListFormat.Decorators, ts.createNodeArray(root, false), outputFile);
         }
     }
 
@@ -59,8 +59,9 @@ export default class DtsGenerator {
         return map;
     }
 
-    private async applyPlugins(root: ts.SourceFile, inputs: Iterator<[string, Schema]>): Promise<ts.SourceFile> {
-        const context: PluginContext = { root, inputs };
+    private async getPlugins(inputSchemas: Iterator<[string, Schema]>): Promise<ts.TransformerFactory<ts.Statement>[]> {
+        const result: ts.TransformerFactory<ts.Statement>[] = [];
+        const context: PluginContext = { inputSchemas };
         for (const [name, option] of Object.entries(config.plugins)) {
             if (option) {
                 const mod = await import(name);
@@ -70,15 +71,18 @@ export default class DtsGenerator {
                     continue;
                 }
                 const plugin: Plugin = mod.default;
-                if (!('processor' in plugin) || typeof plugin.processor !== 'function') {
+                if (!('create' in plugin) || typeof plugin.create !== 'function') {
                     // tslint:disable-next-line: no-console
-                    console.warn(`The plugin (${name}) is invalid module. That dose not include the 'processor' function.`);
+                    console.warn(`The plugin (${name}) is invalid module. That dose not include the 'create' function.`);
                     continue;
                 }
-                context.root = plugin.processor(context);
+                const t = await plugin.create(context);
+                if (t != null) {
+                    result.push(t);
+                }
             }
         }
-        return context.root;
+        return result;
     }
 
     private walk(map: any, root: boolean): ts.Statement[] {

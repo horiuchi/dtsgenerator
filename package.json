@@ -53,6 +53,7 @@
     "tslib": "^1.12.0"
   },
   "devDependencies": {
+    "@dtsgenerator/single-quote": "^1.1.1",
     "@types/debug": "^4.1.5",
     "@types/glob": "^7.1.1",
     "@types/js-yaml": "^3.12.3",
