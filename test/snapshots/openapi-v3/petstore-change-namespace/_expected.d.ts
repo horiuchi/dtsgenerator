@@ -8,27 +8,58 @@ declare namespace Test {
             name: string;
             tag?: string;
         }
-        namespace Parameters {
-            export type Id = number; // int64
-            export type Limit = number; // int32
-            export type Tags = string[];
-        }
-        export interface PathParameters {
-            id: Parameters.Id /* int64 */;
-        }
         export interface Pet {
             name: string;
             tag?: string;
             id: number; // int64
         }
-        export interface QueryParameters {
-            tags?: Test.PetStore.Parameters.Tags;
-            limit?: Test.PetStore.Parameters.Limit /* int32 */;
+    }
+}
+declare namespace Test {
+    namespace PetStore {
+        namespace AddPet {
+            export type RequestBody = Test.PetStore.NewPet;
+            namespace Responses {
+                export type $200 = Test.PetStore.Pet;
+                export type Default = Test.PetStore.Error;
+            }
         }
-        export type RequestBody = Test.PetStore.NewPet;
-        namespace Responses {
-            export type $200 = Test.PetStore.Pet;
-            export type Default = Test.PetStore.Error;
+        namespace DeletePet {
+            namespace Parameters {
+                export type Id = number; // int64
+            }
+            export interface PathParameters {
+                id: Parameters.Id /* int64 */;
+            }
+            namespace Responses {
+                export type Default = Test.PetStore.Error;
+            }
+        }
+        namespace FindPetById {
+            namespace Parameters {
+                export type Id = number; // int64
+            }
+            export interface PathParameters {
+                id: Parameters.Id /* int64 */;
+            }
+            namespace Responses {
+                export type $200 = Test.PetStore.Pet;
+                export type Default = Test.PetStore.Error;
+            }
+        }
+        namespace FindPets {
+            namespace Parameters {
+                export type Limit = number; // int32
+                export type Tags = string[];
+            }
+            export interface QueryParameters {
+                tags?: Parameters.Tags;
+                limit?: Parameters.Limit /* int32 */;
+            }
+            namespace Responses {
+                export type $200 = Test.PetStore.Pet[];
+                export type Default = Test.PetStore.Error;
+            }
         }
     }
 }

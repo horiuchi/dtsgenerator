@@ -1,7 +1,7 @@
 import Debug from 'debug';
 import ts from 'typescript';
 import { get, set, tilde } from '../jsonPointer';
-import { Plugin, PluginContext, Schema, JsonSchema, JsonSchemaObject } from './type';
+import { Plugin, Schema, JsonSchema, JsonSchemaObject } from './type';
 import * as ast from './astBuilder';
 import config from './config';
 import { getSubSchema, NormalizedSchema } from './jsonSchema';
@@ -23,16 +23,17 @@ export default class DtsGenerator {
 
         const map = this.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema());
         const root = this.walk(map, true);
+        const file = ts.createSourceFile('_.d.ts', '', config.target, false, ts.ScriptKind.TS);
+        file.statements = ts.createNodeArray(root);
 
-        const result = ts.transform(root, await this.getPlugins(this.resolver.getAllRegisteredIdAndSchema()));
+        const result = ts.transform(file, await this.getPlugins(this.resolver.getAllRegisteredIdAndSchema()));
         result.dispose();
 
         if (config.outputAST) {
-            return JSON.stringify(root, null, 2);
+            return JSON.stringify(file, null, 2);
         } else {
             const printer = ts.createPrinter();
-            const outputFile = ts.createSourceFile('_.d.ts', '', config.target, false, ts.ScriptKind.TS);
-            return printer.printList(ts.ListFormat.Decorators, ts.createNodeArray(root, false), outputFile);
+            return printer.printFile(file);
         }
     }
 
@@ -59,9 +60,9 @@ export default class DtsGenerator {
         return map;
     }
 
-    private async getPlugins(inputSchemas: Iterator<[string, Schema]>): Promise<ts.TransformerFactory<ts.Statement>[]> {
-        const result: ts.TransformerFactory<ts.Statement>[] = [];
-        const context: PluginContext = { inputSchemas };
+    private async getPlugins(inputSchemas: Iterator<[string, Schema]>): Promise<ts.TransformerFactory<ts.SourceFile>[]> {
+        const result: ts.TransformerFactory<ts.SourceFile>[] = [];
+        // tslint:disable-next-line: no-console
         for (const [name, option] of Object.entries(config.plugins)) {
             if (option) {
                 const mod = await import(name);
@@ -76,7 +77,7 @@ export default class DtsGenerator {
                     console.warn(`The plugin (${name}) is invalid module. That dose not include the 'create' function.`);
                     continue;
                 }
-                const t = await plugin.create(context);
+                const t = await plugin.create({ inputSchemas, option });
                 if (t != null) {
                     result.push(t);
                 }
