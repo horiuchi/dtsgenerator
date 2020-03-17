@@ -1,7 +1,7 @@
 import DtsGenerator from './dtsGenerator';
 import { parseSchema } from './jsonSchema';
 import ReferenceResolver from './referenceResolver';
-import { TypeNameConvertor } from './typeNameConvertor';
+import { Config, setConfig } from './config';
 
 export { default as SchemaId } from './schemaId';
 export * from './type';
@@ -10,8 +10,7 @@ export { DefaultTypeNameConvertor } from './typeNameConvertor';
 export interface Options {
     contents?: any[];
     inputUrls?: string[];
-    typeNameConvertor?: TypeNameConvertor;
-    namespaceName?: string;
+    config?: Config;
 }
 
 export default async function dtsGenerator(options: Options): Promise<string> {
@@ -24,6 +23,9 @@ export default async function dtsGenerator(options: Options): Promise<string> {
     }
     if (options.inputUrls != null) {
         await Promise.all(options.inputUrls.map((url) => resolver.registerRemoteSchema(url)));
+    }
+    if (options.config != null) {
+        setConfig(options.config);
     }
 
     const generator = new DtsGenerator(resolver);
