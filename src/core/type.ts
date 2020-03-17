@@ -1,4 +1,4 @@
-import { Statement, TransformerFactory } from 'typescript';
+import { TransformerFactory, SourceFile } from 'typescript';
 import SchemaId from './schemaId';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from './jsonSchemaDraft07';
@@ -25,5 +25,5 @@ export interface Plugin {
     meta: {
         description: string;
     };
-    create: (context: PluginContext) => Promise<TransformerFactory<Statement> | undefined>;
+    create: (context: PluginContext) => Promise<TransformerFactory<SourceFile> | undefined>;
 }
