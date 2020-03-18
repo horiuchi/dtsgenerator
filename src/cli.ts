@@ -4,6 +4,7 @@ import path from 'path';
 import opts, { initialize } from './commandOptions';
 import dtsgenerator from './core';
 import { globFiles, parseFileContent } from './utils';
+import { Config } from './core/config';
 
 function readSchemaFromStdin(): Promise<any> {
     process.stdin.setEncoding('utf-8');
@@ -45,23 +46,42 @@ async function readSchemasFromFile(pattern: string): Promise<any[]> {
         });
     }));
 }
+async function readConfig(configFile: string, outputAST?: boolean): Promise<Partial<Config>> {
+    let config: Partial<Config>;
+    try {
+        config = require(configFile);
+    } catch {
+        config = {};
+    }
+    if (outputAST) {
+        config.outputAST = true;
+    }
+    return config;
+}
 
 async function exec(): Promise<void> {
     initialize(process.argv);
 
     let contents: any[] = [];
+    let config: Partial<Config> | undefined;
+    const ps: Promise<any>[] = [];
     if (opts.isReadFromStdin()) {
         contents.push(await readSchemaFromStdin());
+        ps.push(readSchemaFromStdin().then(s => contents.push(s)));
     }
     for (const pattern of opts.files) {
-        const cs = await readSchemasFromFile(pattern);
-        contents = contents.concat(cs);
+        ps.push(readSchemasFromFile(pattern).then(cs => contents = contents.concat(cs)));
     }
+    if (opts.configFile != null) {
+        ps.push(readConfig(opts.configFile, opts.outputAST).then(c => config = c));
+    }
+    await Promise.all(ps);
 
     /* tslint:disable:no-console */
     dtsgenerator({
         contents,
         inputUrls: opts.urls,
+        config,
     }).then((result: string) => {
         if (opts.out) {
             mkdirp.sync(path.dirname(opts.out));
