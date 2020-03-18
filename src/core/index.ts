@@ -10,7 +10,7 @@ export { DefaultTypeNameConvertor } from './typeNameConvertor';
 export interface Options {
     contents?: any[];
     inputUrls?: string[];
-    config?: Config;
+    config?: Partial<Config>;
 }
 
 export default async function dtsGenerator(options: Options): Promise<string> {
