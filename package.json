@@ -56,17 +56,17 @@
     "@types/glob": "^7.1.1",
     "@types/js-yaml": "^3.12.2",
     "@types/mkdirp": "^1.0.0",
-    "@types/mocha": "^7.0.1",
-    "@types/node": "^13.7.6",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.9.1",
     "@types/power-assert": "^1.5.3",
     "coveralls": "^3.0.9",
-    "cross-env": "^7.0.0",
+    "cross-env": "^7.0.2",
     "mocha": "^7.1.0",
     "nyc": "^15.0.0",
     "power-assert": "^1.6.1",
     "rimraf": "^3.0.2",
     "ts-node": "^8.6.2",
-    "tslint": "^6.0.0",
-    "typescript": "^3.8.2"
+    "tslint": "^6.1.0",
+    "typescript": "^3.8.3"
   }
 }
