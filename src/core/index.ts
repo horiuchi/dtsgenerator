@@ -1,29 +1,21 @@
 import DtsGenerator from './dtsGenerator';
-import { parseSchema } from './jsonSchema';
 import ReferenceResolver from './referenceResolver';
 import { Config, setConfig } from './config';
+import { Schema } from './type';
 
 export { default as SchemaId } from './schemaId';
 export * from './type';
 export { DefaultTypeNameConvertor } from './typeNameConvertor';
 
 export interface Options {
-    contents?: any[];
-    inputUrls?: string[];
+    contents: Schema[];
     config?: Partial<Config>;
 }
 
 export default async function dtsGenerator(options: Options): Promise<string> {
     const resolver = new ReferenceResolver();
 
-    if (options.contents != null) {
-        options.contents
-            .map((content) => parseSchema(content))
-            .forEach((schema) => resolver.registerSchema(schema));
-    }
-    if (options.inputUrls != null) {
-        await Promise.all(options.inputUrls.map((url) => resolver.registerRemoteSchema(url)));
-    }
+    options.contents.forEach((schema) => resolver.registerSchema(schema));
     if (options.config != null) {
         setConfig(options.config);
     }
