@@ -2,6 +2,7 @@ import assert from 'power-assert';
 import dtsgenerator from '../src/core';
 import { clearToDefault, setConfig } from '../src/core/config';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
+import { parseSchema } from '../src/core/jsonSchema';
 
 describe('config test', () => {
 
@@ -31,7 +32,7 @@ describe('config test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface NoConfig {
@@ -70,7 +71,7 @@ describe('config test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface SingleQuote {

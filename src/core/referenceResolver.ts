@@ -1,6 +1,6 @@
 import 'cross-fetch/polyfill';
 import Debug from 'debug';
-import { parseFileContent } from '../utils';
+import { parseFileContent, readUrl } from '../utils';
 import { getSubSchema, parseSchema, searchAllSubSchema } from './jsonSchema';
 import SchemaId from './schemaId';
 import { Schema } from './type';
@@ -46,7 +46,10 @@ export default class ReferenceResolver {
                 if (refSchema == null && id.isFetchable()) {
                     try {
                         debug(`fetch remote schema: id=[${fileId}].`);
-                        await this.registerRemoteSchema(fileId);
+                        const data = await readUrl(fileId);
+                        const content = parseFileContent(data, fileId);
+                        const s = parseSchema(content, fileId);
+                        await this.registerSchema(s);
                     } catch (e) {
                         error.push(`Fail to fetch the $ref target: ${id.getAbsoluteId()}, ${e}`);
                         continue;
@@ -96,17 +99,6 @@ export default class ReferenceResolver {
             }
         }
         return;
-    }
-
-    public async registerRemoteSchema(url: string): Promise<void> {
-        const res = await fetch(url);
-        const body = await res.text();
-        if (!res.ok) {
-            throw new Error(`Error on fetch from url(${url}): ${res.status}, ${body}`);
-        }
-        const content = parseFileContent(body, url);
-        const schema = parseSchema(content, url);
-        this.registerSchema(schema);
     }
 
     public registerSchema(schema: Schema): void {

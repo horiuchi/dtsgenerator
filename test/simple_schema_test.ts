@@ -2,6 +2,7 @@ import assert from 'power-assert';
 import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from '../src/core/jsonSchemaDraft07';
+import { parseSchema } from '../src/core/jsonSchema';
 
 
 describe('simple schema test', () => {
@@ -11,7 +12,7 @@ describe('simple schema test', () => {
             id: '/test/no_prop',
             type: 'object',
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface NoProp {
@@ -25,7 +26,7 @@ describe('simple schema test', () => {
             id: '/no_namespace',
             type: 'object',
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare interface NoNamespace {
 }
@@ -42,7 +43,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface OneLine {
@@ -69,7 +70,7 @@ describe('simple schema test', () => {
             },
             required: ['name', 'type'],
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface OneLine {
@@ -84,7 +85,7 @@ describe('simple schema test', () => {
         const schema: any = {
             id: '/test/no_type',
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export type NoType = any;
@@ -108,7 +109,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncArray {
@@ -167,7 +168,7 @@ describe('simple schema test', () => {
                 'array', 'boolean', 'integer',
             ],
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface AllSimpleType {
@@ -204,7 +205,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface EnumStringVsIntegerNumber {
@@ -232,7 +233,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface ConstStringVsInteger {
@@ -261,7 +262,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface InnerObject {
@@ -298,7 +299,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface ObjectArray {
@@ -319,7 +320,7 @@ describe('simple schema test', () => {
                 type: 'string',
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     namespace Root {
@@ -335,7 +336,7 @@ describe('simple schema test', () => {
             description: 'This is any type schema',
             additionalProperties: true,
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     namespace Root {
@@ -362,7 +363,7 @@ describe('simple schema test', () => {
             },
         };
 
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
         const expected = `declare namespace Test {
     namespace Example {
         /**
@@ -399,7 +400,7 @@ describe('simple schema test', () => {
             },
         };
 
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
         const expected = `declare namespace Test {
     namespace Example2 {
         /**
@@ -435,7 +436,7 @@ describe('simple schema test', () => {
             },
         };
 
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
         const expected = `declare namespace Test {
     namespace Format {
         export interface Root {
@@ -462,7 +463,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     namespace Ref {
@@ -521,7 +522,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     namespace Include {
@@ -573,7 +574,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Definitions {
     export interface FirstChild {
@@ -631,7 +632,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Definitions {
     export interface FirstChild {
@@ -690,7 +691,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Definitions {
     export interface FirstChild {
@@ -753,7 +754,7 @@ describe('simple schema test', () => {
             ],
         };
 
-        const result = await dtsgenerator({ contents: [baseSchema, extendedSchema, separateSchema, combinedSchema] });
+        const result = await dtsgenerator({ contents: [baseSchema, extendedSchema, separateSchema, combinedSchema].map(s => parseSchema(s)) });
 
         const expected = `declare namespace Test {
     export interface Combined {
