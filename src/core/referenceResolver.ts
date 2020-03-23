@@ -1,9 +1,7 @@
 import 'cross-fetch/polyfill';
 import Debug from 'debug';
-import proxy from 'https-proxy-agent';
-import { URL } from 'url';
-import { parseFileContent } from '../utils';
-import { getSubSchema, parseSchema, searchAllSubSchema } from './jsonSchema';
+import { parseFileContent, readUrl } from '../utils';
+import { getSubSchema, searchAllSubSchema } from './jsonSchema';
 import SchemaId from './schemaId';
 import { Schema } from './type';
 
@@ -48,7 +46,10 @@ export default class ReferenceResolver {
                 if (refSchema == null && id.isFetchable()) {
                     try {
                         debug(`fetch remote schema: id=[${fileId}].`);
-                        await this.registerRemoteSchema(fileId);
+                        const data = await readUrl(fileId);
+                        const content = parseFileContent(data, fileId);
+                        const s = parseSchema(content, fileId);
+                        await this.registerSchema(s);
                     } catch (e) {
                         error.push(`Fail to fetch the $ref target: ${id.getAbsoluteId()}, ${e}`);
                         continue;
@@ -98,46 +99,6 @@ export default class ReferenceResolver {
             }
         }
         return;
-    }
-    private noProxy(url: URL): boolean {
-        if (process.env.NO_PROXY) {
-            for (const domain of process.env.NO_PROXY.split(/[, ]+/)) {
-                if (url.hostname.endsWith(domain)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    public async registerRemoteSchema(url: string): Promise<void> {
-        const fetchOptions:any = {};
-        const parsedUrl = new URL(url);
-        let proxyUrl;
-        if (!this.noProxy(parsedUrl)) {
-            if (parsedUrl.protocol === 'http:' && process.env.HTTP_PROXY) {
-                proxyUrl = new URL(process.env.HTTP_PROXY);
-            } else if (parsedUrl.protocol === 'https:' && process.env.HTTPS_PROXY) {
-                proxyUrl = new URL(process.env.HTTPS_PROXY);
-            }
-        }
-        if (proxyUrl) {
-            const agentOptions:any = {};
-            agentOptions.protocol = proxyUrl.protocol;
-            agentOptions.host = proxyUrl.hostname;
-            agentOptions.port = proxyUrl.port;
-            if (proxyUrl.username) {
-                agentOptions.auth = proxyUrl.username + ':' + proxyUrl.password;
-            }
-            fetchOptions.agent = proxy(agentOptions);
-        }
-        const res = await fetch(url, fetchOptions);
-        const body = await res.text();
-        if (!res.ok) {
-            throw new Error(`Error on fetch from url(${url}): ${res.status}, ${body}`);
-        }
-        const content = parseFileContent(body, url);
-        const schema = parseSchema(content, url);
-        this.registerSchema(schema);
     }
 
     public registerSchema(schema: Schema): void {

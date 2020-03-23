@@ -2,6 +2,7 @@ import assert from 'power-assert';
 import { clear } from '../src/commandOptions';
 import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
+import { parseSchema } from '../src/core/jsonSchema';
 
 describe('tuple test', () => {
 
@@ -31,7 +32,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleNoMin {
@@ -61,7 +62,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsLessLength {
@@ -91,7 +92,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsEqlLength {
@@ -121,7 +122,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsGreaterLength {
@@ -147,7 +148,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleNoMin {
@@ -179,7 +180,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsLessLength {
@@ -210,7 +211,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsLessLength {
@@ -241,7 +242,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsLessLength {
@@ -272,7 +273,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsLessLength {
@@ -300,7 +301,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleNoMin {
@@ -327,7 +328,7 @@ describe('tuple test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     export interface IncTupleNoMin {
