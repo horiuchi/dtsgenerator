@@ -4,7 +4,7 @@ import assert from 'power-assert';
 import dtsgenerator from '../src/core';
 import { clearToDefault } from '../src/core/config';
 import { parseFileContent } from '../src/utils';
-import { parseSchema } from '../src/core/jsonSchema';
+import { parseSchema } from '../src/core/type';
 
 const fixturesDir = path.join(__dirname, 'snapshots');
 const expectedFileName = '_expected.d.ts';
