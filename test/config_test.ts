@@ -2,7 +2,7 @@ import assert from 'power-assert';
 import dtsgenerator from '../src/core';
 import { clearToDefault, setConfig } from '../src/core/config';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
-import { parseSchema } from '../src/core/jsonSchema';
+import { parseSchema } from '../src/core/type';
 
 describe('config test', () => {
 
@@ -10,9 +10,14 @@ describe('config test', () => {
         clearToDefault();
     });
 
-    it('no config test', async () => {
+    it('apply plugin test', async () => {
+        setConfig({
+            plugins: {
+                '@dtsgenerator/do-nothing': true,
+            },
+        });
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/no_config',
+            id: '/test/plugin-test',
             type: 'object',
             properties: {
                 id: {
@@ -35,7 +40,7 @@ describe('config test', () => {
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
-    export interface NoConfig {
+    export interface PluginTest {
         id?: number;
         array?: [string?, number?, boolean?, ("NW" | "NE" | "SW" | "SE")?, ...any[]];
     }

@@ -2,7 +2,7 @@ import assert from 'power-assert';
 import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from '../src/core/jsonSchemaDraft07';
-import { parseSchema } from '../src/core/jsonSchema';
+import { parseSchema } from '../src/core/type';
 
 
 describe('simple schema test', () => {

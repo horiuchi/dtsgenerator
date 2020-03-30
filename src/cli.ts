@@ -2,29 +2,9 @@ import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
 import opts, { initialize } from './commandOptions';
-import dtsgenerator, { Schema } from './core';
-import { globFiles, parseFileContent, readStream, readUrl } from './utils';
+import dtsgenerator, { Schema, readSchemaFromStdin, readSchemasFromFile, readSchemaFromUrl } from './core';
 import { Config } from './core/config';
-import { parseSchema } from './core/jsonSchema';
 
-async function readSchemaFromStdin(): Promise<Schema> {
-    const data = await readStream(process.stdin);
-    const content = parseFileContent(data);
-    return parseSchema(content);
-}
-async function readSchemasFromFile(pattern: string): Promise<Schema[]> {
-    const files = await globFiles(pattern);
-    return Promise.all(files.map(async (file) => {
-        const data = await fs.promises.readFile(file, { encoding: 'utf-8' });
-        const content = parseFileContent(data);
-        return parseSchema(content);
-    }));
-}
-async function readSchemaFromUrl(url: string): Promise<Schema> {
-    const data = await readUrl(url);
-    const content = parseFileContent(data, url);
-    return parseSchema(content, url);
-}
 async function readConfig(configFile: string, outputAST?: boolean): Promise<Partial<Config>> {
     let config: Partial<Config>;
     try {

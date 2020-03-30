@@ -1,7 +1,7 @@
 import Debug from 'debug';
 import ts from 'typescript';
 import { get, set, tilde } from '../jsonPointer';
-import { Plugin, Schema, JsonSchema, JsonSchemaObject } from './type';
+import { Plugin, Schema, JsonSchema, JsonSchemaObject, PreProcessHandler } from './type';
 import * as ast from './astBuilder';
 import config from './config';
 import { getSubSchema, NormalizedSchema } from './jsonSchema';
@@ -11,14 +11,27 @@ import * as utils from './utils';
 const debug = Debug('dtsgen');
 const typeMarker = Symbol();
 
+interface PluginConfig {
+    plugin: Plugin;
+    option?: boolean | object;
+}
+
 export default class DtsGenerator {
 
+    private resolver = new ReferenceResolver();
     private currentSchema!: NormalizedSchema;
 
-    constructor(private resolver: ReferenceResolver) { }
+    constructor(private contents: Schema[]) { }
 
     public async generate(): Promise<string> {
+        const plugins = await this.getPlugins();
+        const preProcess = await this.getPreProcess(plugins.pre);
+        for (const p of preProcess) {
+            this.contents = p(this.contents);
+        }
+
         debug('generate type definition files.');
+        this.contents.forEach((schema) => this.resolver.registerSchema(schema));
         await this.resolver.resolve();
 
         const map = this.buildSchemaMergedMap(this.resolver.getAllRegisteredSchema());
@@ -26,7 +39,8 @@ export default class DtsGenerator {
         const file = ts.createSourceFile('_.d.ts', '', config.target, false, ts.ScriptKind.TS);
         file.statements = ts.createNodeArray(root);
 
-        const result = ts.transform(file, await this.getPlugins(this.resolver.getAllRegisteredIdAndSchema()));
+        const postProcess = await this.getPostProcess(plugins.post);
+        const result = ts.transform(file, postProcess);
         result.dispose();
 
         if (config.outputAST) {
@@ -60,9 +74,9 @@ export default class DtsGenerator {
         return map;
     }
 
-    private async getPlugins(inputSchemas: Iterator<[string, Schema]>): Promise<ts.TransformerFactory<ts.SourceFile>[]> {
-        const result: ts.TransformerFactory<ts.SourceFile>[] = [];
-        // tslint:disable-next-line: no-console
+    private async getPlugins(): Promise<{ pre: PluginConfig[]; post: PluginConfig[] }> {
+        const pre: PluginConfig[] = [];
+        const post: PluginConfig[] = [];
         for (const [name, option] of Object.entries(config.plugins)) {
             if (option) {
                 const mod = await import(name);
@@ -72,15 +86,46 @@ export default class DtsGenerator {
                     continue;
                 }
                 const plugin: Plugin = mod.default;
-                if (!('create' in plugin) || typeof plugin.create !== 'function') {
-                    // tslint:disable-next-line: no-console
-                    console.warn(`The plugin (${name}) is invalid module. That dose not include the 'create' function.`);
-                    continue;
+                if ('preProcess' in plugin && typeof plugin.preProcess === 'function') {
+                    pre.push({ plugin, option });
                 }
-                const t = await plugin.create({ inputSchemas, option });
-                if (t != null) {
-                    result.push(t);
+                if ('postProcess' in plugin && typeof plugin.postProcess === 'function') {
+                    post.push({ plugin, option });
                 }
+            }
+        }
+        return { pre, post };
+    }
+    private async getPreProcess(pre: PluginConfig[]): Promise<PreProcessHandler[]> {
+        debug('load pre process plugin.');
+        const result: PreProcessHandler[] = [];
+        const inputSchemas = this.resolver.getAllRegisteredIdAndSchema();
+        for (const pc of pre) {
+            const p = pc.plugin.preProcess;
+            if (p == null) {
+                continue;
+            }
+            const handler = await p({ inputSchemas, option: pc.option });
+            if (handler != null) {
+                result.push(handler);
+                debug('  pre process plugin:', pc.plugin.meta.name, pc.plugin.meta.description);
+            }
+        }
+        return result;
+    }
+    private async getPostProcess(post: PluginConfig[]): Promise<ts.TransformerFactory<ts.SourceFile>[]> {
+        debug('load post process plugin.');
+        const result: ts.TransformerFactory<ts.SourceFile>[] = [];
+        const inputSchemas = this.resolver.getAllRegisteredIdAndSchema();
+        for (const pc of post) {
+            const p = pc.plugin.postProcess;
+            if (p == null) {
+                continue;
+            }
+            const factory = await p({ inputSchemas, option: pc.option });
+            if (factory != null) {
+                result.push(factory);
+                debug('  pre process plugin:', pc.plugin.meta.name, pc.plugin.meta.description);
             }
         }
         return result;

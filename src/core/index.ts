@@ -1,5 +1,4 @@
 import DtsGenerator from './dtsGenerator';
-import ReferenceResolver from './referenceResolver';
 import { Config, setConfig } from './config';
 import { Schema } from './type';
 
@@ -13,13 +12,9 @@ export interface Options {
 }
 
 export default async function dtsGenerator(options: Options): Promise<string> {
-    const resolver = new ReferenceResolver();
-
-    options.contents.forEach((schema) => resolver.registerSchema(schema));
     if (options.config != null) {
         setConfig(options.config);
     }
-
-    const generator = new DtsGenerator(resolver);
+    const generator = new DtsGenerator(options.contents);
     return await generator.generate();
 }

@@ -13,20 +13,6 @@ export interface NormalizedSchema extends Schema {
     content: JsonSchemaObject;
 }
 
-export function parseSchema(content: any, url?: string): Schema {
-    const { type, openApiVersion } = selectSchemaType(content);
-    if (url != null) {
-        setId(type, content, url);
-    }
-    const id = getId(type, content);
-    return {
-        type,
-        openApiVersion,
-        id: id ? new SchemaId(id) : SchemaId.empty,
-        content,
-    };
-}
-
 export function getSubSchema(rootSchema: Schema, pointer: string, id?: SchemaId): Schema {
     const content = JsonPointer.get(rootSchema.content, JsonPointer.parse(pointer));
     if (id == null) {
@@ -52,7 +38,7 @@ export function getSubSchema(rootSchema: Schema, pointer: string, id?: SchemaId)
 export function getId(type: SchemaType, content: any): string | undefined {
     return content[getIdPropertyName(type)];
 }
-function setId(type: SchemaType, content: any, id: string): void {
+export function setId(type: SchemaType, content: any, id: string): void {
     const key = getIdPropertyName(type);
     if (content[key] == null) {
         content[key] = id;
@@ -355,7 +341,7 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
     walk(schema.content, ['#'], []);
 }
 
-function selectSchemaType(content: any): { type: SchemaType; openApiVersion?: 2 | 3; } {
+export function selectSchemaType(content: any): { type: SchemaType; openApiVersion?: 2 | 3; } {
     if (content.$schema) {
         const schema = content.$schema;
         const match = schema.match(/http\:\/\/json-schema\.org\/draft-(\d+)\/schema#?/);
