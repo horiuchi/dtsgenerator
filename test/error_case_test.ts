@@ -1,7 +1,7 @@
 import assert from 'power-assert';
 import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
-import { parseSchema } from '../src/core/jsonSchema';
+import { parseSchema } from '../src/core/type';
 
 
 describe('error schema test', () => {

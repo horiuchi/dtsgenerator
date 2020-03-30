@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import { DefaultTypeNameConvertor, TypeNameConvertor } from './typeNameConvertor';
 
 export interface Config {

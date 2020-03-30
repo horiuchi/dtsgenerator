@@ -1,9 +1,8 @@
 import 'cross-fetch/polyfill';
 import Debug from 'debug';
-import { parseFileContent, readUrl } from '../utils';
-import { getSubSchema, parseSchema, searchAllSubSchema } from './jsonSchema';
+import { getSubSchema, searchAllSubSchema } from './jsonSchema';
 import SchemaId from './schemaId';
-import { Schema } from './type';
+import { Schema, readSchemaFromUrl } from './type';
 
 const debug = Debug('dtsgen');
 
@@ -46,9 +45,7 @@ export default class ReferenceResolver {
                 if (refSchema == null && id.isFetchable()) {
                     try {
                         debug(`fetch remote schema: id=[${fileId}].`);
-                        const data = await readUrl(fileId);
-                        const content = parseFileContent(data, fileId);
-                        const s = parseSchema(content, fileId);
+                        const s = await readSchemaFromUrl(fileId);
                         await this.registerSchema(s);
                     } catch (e) {
                         error.push(`Fail to fetch the $ref target: ${id.getAbsoluteId()}, ${e}`);

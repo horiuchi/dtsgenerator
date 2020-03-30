@@ -2,7 +2,7 @@ import assert from 'power-assert';
 import { clear } from '../src/commandOptions';
 import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
-import { parseSchema } from '../src/core/jsonSchema';
+import { parseSchema } from '../src/core/type';
 
 describe('tuple test', () => {
 
