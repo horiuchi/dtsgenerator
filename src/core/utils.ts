@@ -6,6 +6,8 @@ const debug = Debug('dtsgen');
 export function toTSType(type: string, debugSource?: any): string | undefined {
     switch (type) {
         case 'integer':
+        case 'double':
+        case 'float':
             return 'number';
         case 'any':
         case 'null':
