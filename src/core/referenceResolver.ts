@@ -1,5 +1,6 @@
 import 'cross-fetch/polyfill';
 import Debug from 'debug';
+import proxy from 'https-proxy-agent';
 import { parseFileContent } from '../utils';
 import { getSubSchema, parseSchema, Schema, searchAllSubSchema } from './jsonSchema';
 import SchemaId from './schemaId';
@@ -95,7 +96,18 @@ export default class ReferenceResolver {
     }
 
     public async registerRemoteSchema(url: string): Promise<void> {
-        const res = await fetch(url);
+        const fetchOptions:any = {};
+        if (process.env.HTTP_PROXY) {
+            const proxyUrl = new URL(process.env.HTTP_PROXY);
+            const agentOptions:any = {};
+            agentOptions.host = proxyUrl.hostname;
+            agentOptions.port = proxyUrl.port;
+            if (proxyUrl.username) {
+                agentOptions.auth = proxyUrl.username + ':' + proxyUrl.password;
+            }
+            fetchOptions.agent = proxy(agentOptions);
+        }
+        const res = await fetch(url, fetchOptions);
         const body = await res.text();
         if (!res.ok) {
             throw new Error(`Error on fetch from url(${url}): ${res.status}, ${body}`);
