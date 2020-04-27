@@ -7,7 +7,7 @@ export default class SchemaId {
     private readonly absoluteId: string;
 
     constructor(public readonly inputId: string, parentIds?: string[]) {
-        let absoluteId = inputId;
+        let absoluteId = url.resolve('', inputId);
         if (parentIds) {
             parentIds.forEach((parent: string) => {
                 if (parent) {
@@ -21,8 +21,8 @@ export default class SchemaId {
         if (absoluteId.indexOf('://') < 0 && absoluteId[0] !== '/' && absoluteId[0] !== '#') {
             absoluteId = '/' + absoluteId;
         }
-        this.absoluteId = absoluteId;
         this.id = url.parse(absoluteId);
+        this.absoluteId = this.id.href;
     }
 
     public getAbsoluteId(): string {
@@ -45,7 +45,7 @@ export default class SchemaId {
         if (m == null) {
             return '#';
         }
-        return m[1];
+        return decodeURIComponent(m[1]);
     }
 }
 

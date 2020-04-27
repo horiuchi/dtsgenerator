@@ -455,6 +455,38 @@ describe('simple schema test', () => {
 `;
         assert.equal(result, expected, result);
     });
+    it('include $ref schema 2', async () => {
+        const schema: JsonSchemaOrg.Draft04.Schema = {
+            id: 'test/ref/include_ref2',
+            type: 'object',
+            definitions: {
+                'test $ref': {
+                    type: 'string',
+                },
+            },
+            properties: {
+                'sub-name': {
+                    $ref: '#/definitions/test $ref',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [schema] });
+
+        const expected = `declare namespace Test {
+    namespace Ref {
+        export interface IncludeRef2 {
+            "sub-name"?: IncludeRef2.Definitions.Test$Ref;
+        }
+        namespace IncludeRef2 {
+            namespace Definitions {
+                export type Test$Ref = string;
+            }
+        }
+    }
+}
+`;
+        assert.equal(result, expected, result);
+    });
     it('include `/` properties schema', async () => {
         const schema: JsonSchemaOrg.Draft04.Schema = {
             id: '/test/include/slash',
