@@ -154,7 +154,7 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             key = key.replace(/\/(.)/g, (_match, p1) => {
                 return p1.toUpperCase();
             });
-            return key.replace(/}/g, '').replace(/{/, '$')
+            return key.replace(/}/g, '').replace(/{/g, '$')
                     .replace(/^\//, '').replace(/[^0-9A-Za-z_$]+/g, '_');
         }
         function setSubIdToAnyObject<T>(f: (t: T, keys: string[]) => void, obj: { [key: string]: T } | undefined, keys: string[]): void {
