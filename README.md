@@ -117,6 +117,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.5.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.5.1) (2020-04-27)
+
+- fixed:
+  - Fix: the bug of name conversion by #402. Thank you @unclechu :+1:
+  - Fix: Error when spaces included in a 'name' property under paths/parameters by #407. Thank you @scvnathan :+1:
+
 ### [v2.5.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.5.0) (2020-02-28)
 
 - features:
@@ -133,71 +139,6 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
   - Fix: typescript import statement #381. thank you @lupus92 :+1:
   - Fix: use `export` when given empty namespace #386. Thank you @zregvart :+1:
 
-### [v2.3.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.3.2) (2019-11-21)
-
-- fixed
-  - Fix: the bug of the specific identifier #375. Thank you for reporting the bug @adriengibrat :+1:
-
-### [v2.3.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.3.1) (2019-09-02)
-
-- features:
-  - Support the dynamic JSON media type #363. Thank you @buelsenfrucht :+1:
-  - Add to support the `number` type enum values #365. Thank you @vincentlin02 :+1:
-
-### [v2.3.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.3.0) (2019-08-23)
-
-- features:
-  - Improve the tuple type output by TypeScript v3 syntax, and Support `maxItems` property #339. Thank you @keean :+1:
-
-### [v2.2.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.2.0) (2019-08-06)
-
-- fixed
-  - Fix: "_" character at the end of generated type #358. Thank you @KostblLb :+1:
-
-### [v2.1.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.1.0) (2019-07-18)
-
-- features:
-  - Add to support objected example #356. Thank you for reporting the issue #348 by @fantapop :+1:
-  - Add to support the `application/x-www-form-urlencoded` branch on OpenAPI. #357
-
-### [v2.0.8](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.8) (2019-06-25)
-
-- fixed
-  - Fix: OneOf + type "object" produces empty interface #351. Thank you @polomani :+1:
-
-### [v2.0.7](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.7) (2019-05-07)
-
-- fixed
-  - Fix: typename when the path is nested #334. Thank you @steelydylan :+1:
-  - Fix: Support ref objects for OAS3 requestBodies + responses #343. Thank you @anttiviljami :+1:
-
-### [v2.0.6](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.6) (2019-02-14)
-
-- fixed
-  - Fix "Error: The $ref target is not exists" on valid OpenAPI 3 spec #322. Thank you @f1cognite :+1:
-
-### [v2.0.5](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.5) (2019-01-28)
-
-- features
-  - Add to support the `nullable` property on OpenAPI by #319. Thank you @sakari :+1:
-    https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#data-types
-
-### [v2.0.4](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.4) (2019-01-07)
-
-- fixed
-  - Fix missing schema due to yaml references #318. Thank you @sakari :+1:
-
-### [v2.0.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.1) (2018-12-21)
-
-- fixed
-  - A property name cannot contain a "/" #315. Thank you @Reggino :+1:
-  - update `.npmignore`
-
-### [v2.0.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.0.0) (2018-10-22)
-
-- features
-  - Add to support emit the Request/Response object schema of OpenAPI by #304.
-
 ### older versions history
 
 [ChangeLogs](https://github.com/horiuchi/dtsgenerator/blob/master/CHANGELOG.md)
@@ -206,4 +147,4 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 `dtsgenerator` is licensed under the MIT license.
 
-Copyright &copy; 2016-2019, [Hiroki Horiuchi](mailto:horiuchi.g@gmail.com)
+Copyright &copy; 2016-2020, [Hiroki Horiuchi](mailto:horiuchi.g@gmail.com)
