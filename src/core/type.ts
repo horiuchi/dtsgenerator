@@ -66,6 +66,7 @@ export type PreProcessHandler = (contents: Schema[]) => Schema[];
 export type Plugin = {
     meta: {
         name: string;
+        version: string;
         description?: string;
     };
     preProcess?: (context: PluginContext) => Promise<PreProcessHandler | undefined>;
