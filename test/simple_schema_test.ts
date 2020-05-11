@@ -481,7 +481,7 @@ describe('simple schema test', () => {
         assert.equal(result, expected, result);
     });
     it('include $ref schema 2', async () => {
-        const schema: JsonSchemaOrg.Draft04.Schema = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: 'test/ref/include_ref2',
             type: 'object',
             definitions: {
@@ -495,7 +495,7 @@ describe('simple schema test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [schema] });
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
     namespace Ref {
