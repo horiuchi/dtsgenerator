@@ -13,16 +13,18 @@ declare namespace JsonSchemaOrg {
              * comment test type.
              * description comment.
              * example:
-             *   obj = {
-             *     p1: 'example',
-             *     p2: true,
-             *     p3: [ false, 1.23, 'tuple' ],
-             *   }
+             * [
+             *   "  obj = {",
+             *   "    p1: 'example',",
+             *   "    p2: true,",
+             *   "    p3: [ false, 1.23, 'tuple' ],",
+             *   "  }"
+             * ]
              */
             Patterns.Definitions.CommentTest;
             ta?: Patterns.Definitions.TypeAlias;
             array?: Patterns.Definitions.TypeArray;
-            const?: Patterns.Definitions.MathPi | Patterns.Definitions.IsDebug | Patterns.Definitions.ProjectName;
+            const?: Patterns.Definitions.MathPi | Patterns.Definitions.IsDebug | Patterns.Definitions.IsTest | Patterns.Definitions.ProjectName;
         }
         namespace Patterns {
             namespace Definitions {
@@ -36,11 +38,13 @@ declare namespace JsonSchemaOrg {
                  * comment test type.
                  * description comment.
                  * example:
-                 *   obj = {
-                 *     p1: 'example',
-                 *     p2: true,
-                 *     p3: [ false, 1.23, 'tuple' ],
-                 *   }
+                 * [
+                 *   "  obj = {",
+                 *   "    p1: 'example',",
+                 *   "    p2: true,",
+                 *   "    p3: [ false, 1.23, 'tuple' ],",
+                 *   "  }"
+                 * ]
                  */
                 export interface CommentTest {
                     /**
@@ -53,10 +57,15 @@ declare namespace JsonSchemaOrg {
                     p2: boolean | string | number;
                     /**
                      * p3 is tuple types
+                     * example:
+                     * true
+                     * 2.5
+                     * p3
                      */
-                    p3: [boolean, number, string?];
+                    p3: [boolean, number, string?, ...any[]];
                 }
-                export type IsDebug = true;
+                export type IsDebug = false;
+                export type IsTest = true;
                 export type MathPi = 3.1415926536;
                 export interface NestedTypes {
                     first: {
@@ -66,7 +75,7 @@ declare namespace JsonSchemaOrg {
                     };
                 }
                 export interface Primitives {
-                    any?: any;
+                    readonly any?: any;
                     array?: any[];
                     boolean?: boolean;
                     double?: number; // double
@@ -79,7 +88,7 @@ declare namespace JsonSchemaOrg {
                     undefined?: undefined;
                 }
                 export interface PrimitivesRequired {
-                    any: any;
+                    readonly any: any;
                     array: any[];
                     boolean: boolean;
                     double: number; // double
