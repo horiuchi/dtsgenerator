@@ -468,7 +468,7 @@ describe('simple schema test', () => {
         const expected = `declare namespace Test {
     namespace Ref {
         export interface IncludeRef {
-            subId?: IncludeRef.Definitions.Id /* uri */;
+            "sub-id"?: IncludeRef.Definitions.Id /* uri */;
         }
         namespace IncludeRef {
             namespace Definitions {
@@ -527,7 +527,7 @@ describe('simple schema test', () => {
         const expected = `declare namespace Test {
     namespace Include {
         export interface Slash {
-            aB?: string;
+            "a/b"?: string;
         }
     }
 }
