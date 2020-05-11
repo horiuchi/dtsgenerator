@@ -7,7 +7,8 @@
       "type": "object",
       "properties": {
         "any": {
-          "type": "any"
+          "type": "any",
+          "readOnly": true
         },
         "array": {
           "type": "array"
@@ -199,7 +200,8 @@
             "integer",
             "string"
           ],
-          "title": "p2 is union types."
+          "title": "p2 is union types.",
+          "example": "true or 1 or 'string'"
         },
         "p3": {
           "type": "array",
@@ -219,8 +221,12 @@
             }
           ],
           "minItems": 2,
-          "maxItems": 3,
-          "title": "p3 is tuple types"
+          "$comment": "p3 is tuple types",
+          "examples": [
+            true,
+            2.5,
+            "p3"
+          ]
         }
       },
       "required": [
@@ -276,7 +282,11 @@
     },
     "is_debug": {
       "type": "boolean",
-      "const": "false"
+      "const": false
+    },
+    "is_test": {
+      "type": "boolean",
+      "const": true
     },
     "project_name": {
       "type": "string",
@@ -316,6 +326,9 @@
         },
         {
           "$ref": "#/definitions/is_debug"
+        },
+        {
+          "$ref": "#/definitions/is_test"
         },
         {
           "$ref": "#/definitions/project_name"
