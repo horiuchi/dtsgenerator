@@ -3,11 +3,21 @@ import * as ts from 'typescript';
 import config from './config';
 import { NormalizedSchema } from './jsonSchema';
 import SchemaId from './schemaId';
-import { toValidIdentifier } from './validateIdentifier';
+import { toValidIdentifier, checkInvalidCharacter } from './validateIdentifier';
 import { Schema } from './type';
 
-function buildIdentifier(name: string): ts.Identifier {
+function buildTypeNameIdentifier(name: string): ts.Identifier {
     return ts.createIdentifier(toValidIdentifier(name, config.target));
+}
+function buildPropertyNameIdentifier(name: string): ts.PropertyName {
+    if (/^\d/.test(name)) {
+        name = '$' + name;
+    }
+    if (checkInvalidCharacter(name, config.target)) {
+        return ts.createIdentifier(name);
+    } else {
+        return ts.createStringLiteral(name);
+    }
 }
 
 export function buildKeyword(kind: ts.KeywordTypeNode['kind']): ts.KeywordTypeNode {
@@ -45,7 +55,7 @@ export function buildNamespaceNode(name: string, statements: ts.Statement[], roo
     return ts.createModuleDeclaration(
         undefined,
         modifiers,
-        buildIdentifier(name),
+        buildTypeNameIdentifier(name),
         ts.createModuleBlock(statements),
         ts.NodeFlags.Namespace | ts.NodeFlags.ExportContext | ts.NodeFlags.ContextFlags);
 }
@@ -58,7 +68,7 @@ export function buildInterfaceNode(id: SchemaId, members: ts.TypeElement[], root
     return ts.createInterfaceDeclaration(
         undefined,
         modifiers,
-        buildIdentifier(name),
+        buildTypeNameIdentifier(name),
         undefined,
         undefined,
         members);
@@ -72,7 +82,7 @@ export function buildTypeAliasNode(id: SchemaId, type: ts.TypeNode, root: boolea
     return ts.createTypeAliasDeclaration(
         undefined,
         modifiers,
-        buildIdentifier(name),
+        buildTypeNameIdentifier(name),
         undefined,
         type);
 }
@@ -83,7 +93,7 @@ export function buildPropertySignature(schema: NormalizedSchema, propertyName: s
     const questionToken = required == null || required.indexOf(propertyName) < 0 ? ts.createToken(ts.SyntaxKind.QuestionToken) : undefined;
     return ts.createPropertySignature(
         modifiers,
-        buildIdentifier(propertyName),
+        buildPropertyNameIdentifier(propertyName),
         questionToken,
         valueType,
         undefined);
@@ -97,7 +107,7 @@ export function buildIndexSignatureNode(name: string, indexType: ts.TypeNode, va
             undefined,
             undefined,
             undefined,
-            buildIdentifier(name),
+            buildTypeNameIdentifier(name),
             undefined,
             indexType,
             undefined,
@@ -139,9 +149,9 @@ export function buildTypeReferenceNode(schema: NormalizedSchema, currentSchema: 
     if (typeName.length === 0) {
         throw new Error('TypeName array must not be empty.');
     }
-    let node: ts.EntityName = buildIdentifier(typeName[0]);
+    let node: ts.EntityName = buildTypeNameIdentifier(typeName[0]);
     for (let i = 1; i < typeName.length; i++) {
-        node = ts.createQualifiedName(node, buildIdentifier(typeName[i]));
+        node = ts.createQualifiedName(node, buildTypeNameIdentifier(typeName[i]));
     }
     return ts.createTypeReferenceNode(node, undefined);
 }

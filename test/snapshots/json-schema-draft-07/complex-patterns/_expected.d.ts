@@ -13,13 +13,11 @@ declare namespace JsonSchemaOrg {
              * comment test type.
              * description comment.
              * example:
-             * [
-             *   "  obj = {",
-             *   "    p1: 'example',",
-             *   "    p2: true,",
-             *   "    p3: [ false, 1.23, 'tuple' ],",
-             *   "  }"
-             * ]
+             *   obj = {
+             *     p1: 'example',
+             *     p2: true,
+             *     p3: [ false, 1.23, 'tuple' ],
+             *   }
              */
             Patterns.Definitions.CommentTest;
             ta?: Patterns.Definitions.TypeAlias;
@@ -38,13 +36,11 @@ declare namespace JsonSchemaOrg {
                  * comment test type.
                  * description comment.
                  * example:
-                 * [
-                 *   "  obj = {",
-                 *   "    p1: 'example',",
-                 *   "    p2: true,",
-                 *   "    p3: [ false, 1.23, 'tuple' ],",
-                 *   "  }"
-                 * ]
+                 *   obj = {
+                 *     p1: 'example',
+                 *     p2: true,
+                 *     p3: [ false, 1.23, 'tuple' ],
+                 *   }
                  */
                 export interface CommentTest {
                     /**
@@ -53,6 +49,8 @@ declare namespace JsonSchemaOrg {
                     p1: string;
                     /**
                      * p2 is union types.
+                     * example:
+                     * true or 1 or 'string'
                      */
                     p2: boolean | string | number;
                     /**

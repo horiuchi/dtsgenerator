@@ -1,6 +1,19 @@
 import { ScriptTarget } from 'typescript';
 
 // via. https://github.com/microsoft/TypeScript/blob/v3.7.5/src/services/codefixes/importFixes.ts#L689
+export function checkInvalidCharacter(text: string, target: ScriptTarget): boolean {
+    const firstCharCode = text.charCodeAt(0);
+    if (!isIdentifierStart(firstCharCode, target)) {
+        return false;
+    }
+    for (let i = 1; i < text.length; i++) {
+        const ch = text.charCodeAt(i);
+        if (!isIdentifierPart(ch, target)) {
+            return false;
+        }
+    }
+    return true;
+}
 export function toValidIdentifier(text: string, target: ScriptTarget): string {
     if (/^\d/.test(text)) {
         text = '$' + text;
