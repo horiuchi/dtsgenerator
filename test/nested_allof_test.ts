@@ -1,9 +1,10 @@
 import * as assert from 'assert';
-import dtsGenerator from '../src/core';
+import dtsGenerator, { parseSchema } from '../src/core';
+import { JsonSchemaDraft07 } from '../src/core/jsonSchemaDraft07';
 
 describe('nested \'allOf\' test', () => {
     it ('single \'allOf\' nesting schema', async () => {
-        const schema: JsonSchemaOrg.Draft07.Schema = {
+        const schema: JsonSchemaDraft07.Schema = {
             $id: '/test/nested/allOf',
             $schema: 'http://json-schema.org/draft-07/schema#',
             type: 'object',
@@ -34,7 +35,7 @@ describe('nested \'allOf\' test', () => {
             ],
             required: ['a', 'b', 'c'],
         };
-        const result = await dtsGenerator({contents: [schema]});
+        const result = await dtsGenerator({contents: [parseSchema(schema)]});
 
         const expected = `declare namespace Test {
     namespace Nested {
@@ -49,7 +50,7 @@ describe('nested \'allOf\' test', () => {
         assert.equal(result, expected, 'Nested \'allOf\' definitions should result in all properties being included in the output interface.');
     });
     it ('multiple \'allOf\' nestings schema', async () => {
-        const schema: JsonSchemaOrg.Draft07.Schema = {
+        const schema: JsonSchemaDraft07.Schema = {
             $id: '/test/nested/allOf',
             $schema: 'http://json-schema.org/draft-07/schema#',
             type: 'object',
@@ -114,7 +115,7 @@ describe('nested \'allOf\' test', () => {
             ],
             required: ['a', 'b', 'c', 'd', 'e', 'f'],
         };
-        const result = await dtsGenerator({contents: [schema]});
+        const result = await dtsGenerator({contents: [parseSchema(schema)]});
 
         const expected = `declare namespace Test {
     namespace Nested {
