@@ -117,6 +117,7 @@ export default class ReferenceResolver {
         }
         if (proxyUrl) {
             const agentOptions:any = {};
+            agentOptions.protocol = proxyUrl.protocol;
             agentOptions.host = proxyUrl.hostname;
             agentOptions.port = proxyUrl.port;
             if (proxyUrl.username) {
