@@ -94,11 +94,28 @@ export default class ReferenceResolver {
         }
         return;
     }
-
+    private noProxy(url: URL): boolean {
+        if (process.env.NO_PROXY) {
+            for (const domain of process.env.NO_PROXY.split(/[, ]+/)) {
+                if (url.hostname.endsWith(domain)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public async registerRemoteSchema(url: string): Promise<void> {
         const fetchOptions:any = {};
-        if (process.env.HTTP_PROXY) {
-            const proxyUrl = new URL(process.env.HTTP_PROXY);
+        const parsedUrl = new URL(url);
+        let proxyUrl;
+        if (!this.noProxy(parsedUrl)) {
+            if (parsedUrl.protocol === 'http:' && process.env.HTTP_PROXY) {
+                proxyUrl = new URL(process.env.HTTP_PROXY);
+            } else if (parsedUrl.protocol === 'https:' && process.env.HTTPS_PROXY) {
+                proxyUrl = new URL(process.env.HTTPS_PROXY);
+            }
+        }
+        if (proxyUrl) {
             const agentOptions:any = {};
             agentOptions.host = proxyUrl.hostname;
             agentOptions.port = proxyUrl.port;
