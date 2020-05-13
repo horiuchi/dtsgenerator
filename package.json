@@ -50,7 +50,7 @@
     "https-proxy-agent": "^5.0.0",
     "js-yaml": "^3.13.1",
     "mkdirp": "^1.0.4",
-    "tslib": "^1.11.2"
+    "tslib": "^1.12.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
@@ -58,7 +58,7 @@
     "@types/js-yaml": "^3.12.3",
     "@types/mkdirp": "^1.0.0",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^13.13.5",
+    "@types/node": "^12.12.39",
     "@types/power-assert": "^1.5.3",
     "coveralls": "^3.1.0",
     "cross-env": "^7.0.2",
@@ -68,6 +68,6 @@
     "rimraf": "^3.0.2",
     "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.2"
   }
 }
