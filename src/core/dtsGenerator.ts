@@ -65,18 +65,27 @@ export default class DtsGenerator {
         if (pointer != null) {
             schema = getSubSchema(schema, pointer);
         }
-        let content = schema.content;
+        const content = this.normalizeSchemaContent(schema.content);
+        return Object.assign({}, schema, { content });
+    }
+
+    private normalizeSchemaContent(content: any): any {
         if (typeof content === 'boolean') {
             content = content ? {} : { not: {} };
         } else {
             if (content.allOf) {
                 const work = content;
-                for (let sub of content.allOf) {
+                for (const sub of content.allOf) {
                     if (typeof sub === 'object' && sub.$ref) {
                         const ref = this.resolver.dereference(sub.$ref);
-                        sub = this.normalizeContent(ref).content;
+                        const normalized = this.normalizeContent(ref).content;
+                        utils.mergeSchema(work, normalized);
+                    } else if (typeof sub === 'object') {
+                        const normalized = this.normalizeSchemaContent(sub);
+                        utils.mergeSchema(work, normalized);
+                    } else {
+                        utils.mergeSchema(work, sub);
                     }
-                    utils.mergeSchema(work, sub);
                 }
                 delete content.allOf;
                 content = work;
@@ -100,7 +109,7 @@ export default class DtsGenerator {
                 content.type = reduced.length === 1 ? reduced[0] : reduced;
             }
         }
-        return Object.assign({}, schema, { content });
+        return content;
     }
     private generateDeclareType(schema: NormalizedSchema): void {
         const content = schema.content;

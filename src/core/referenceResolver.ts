@@ -1,5 +1,6 @@
 import 'cross-fetch/polyfill';
 import Debug from 'debug';
+import proxy from 'https-proxy-agent';
 import { parseFileContent } from '../utils';
 import { getSubSchema, parseSchema, Schema, searchAllSubSchema } from './jsonSchema';
 import SchemaId from './schemaId';
@@ -93,9 +94,38 @@ export default class ReferenceResolver {
         }
         return;
     }
-
+    private noProxy(url: URL): boolean {
+        if (process.env.NO_PROXY) {
+            for (const domain of process.env.NO_PROXY.split(/[, ]+/)) {
+                if (url.hostname.endsWith(domain)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public async registerRemoteSchema(url: string): Promise<void> {
-        const res = await fetch(url);
+        const fetchOptions:any = {};
+        const parsedUrl = new URL(url);
+        let proxyUrl;
+        if (!this.noProxy(parsedUrl)) {
+            if (parsedUrl.protocol === 'http:' && process.env.HTTP_PROXY) {
+                proxyUrl = new URL(process.env.HTTP_PROXY);
+            } else if (parsedUrl.protocol === 'https:' && process.env.HTTPS_PROXY) {
+                proxyUrl = new URL(process.env.HTTPS_PROXY);
+            }
+        }
+        if (proxyUrl) {
+            const agentOptions:any = {};
+            agentOptions.protocol = proxyUrl.protocol;
+            agentOptions.host = proxyUrl.hostname;
+            agentOptions.port = proxyUrl.port;
+            if (proxyUrl.username) {
+                agentOptions.auth = proxyUrl.username + ':' + proxyUrl.password;
+            }
+            fetchOptions.agent = proxy(agentOptions);
+        }
+        const res = await fetch(url, fetchOptions);
         const body = await res.text();
         if (!res.ok) {
             throw new Error(`Error on fetch from url(${url}): ${res.status}, ${body}`);
