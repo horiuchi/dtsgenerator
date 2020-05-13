@@ -28,7 +28,7 @@ TypeScript d.ts file generator from JSON Schema file or OpenAPI(Swagger) spec fi
 
 ## Usage
 
-```
+```sh
 $ dtsgen --help
 Usage: script [options] <file ... | file patterns using node-glob>
 
@@ -48,6 +48,17 @@ Options:
     $ cat schema1.json | dtsgen
     $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
     $ dtsgen -o petstore.d.ts -n PetStore --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
+```
+
+### Use HTTP/HTTPS Proxy
+
+If you need a proxy to fetch the schema, please set the following environment variables.
+
+```bash
+export http_proxy=http://proxy.example.com:8080/
+export https_proxy=http://proxy.example.com:8080/
+# If there are exceptionally hosts that do not go through a proxy
+export no_proxy=google.com, yahoo.com
 ```
 
 ## Advance Usage
@@ -116,6 +127,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 - [supported features in these spec](https://github.com/horiuchi/dtsgenerator/blob/master/SupportedFeatures.md)
 
 ## ChangeLog
+
+### [v2.6.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.6.0) (2020-05-14)
+
+- features:
+  - Support nested schema 'allOf' keywords,
+    And added support for accessing the remote schema through a proxy by #405. Thank you @Brian-Kavanagh :+1:
 
 ### [v2.5.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.5.1) (2020-04-27)
 
