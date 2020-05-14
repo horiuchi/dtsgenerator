@@ -1,6 +1,7 @@
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
+import SwaggerParser from '@apidevtools/swagger-parser';
 import opts, { initialize } from './commandOptions';
 import dtsgenerator from './core';
 import { globFiles, parseFileContent } from './utils';
@@ -29,20 +30,8 @@ function readSchemaFromStdin(): Promise<any> {
 }
 async function readSchemasFromFile(pattern: string): Promise<any[]> {
     const files = await globFiles(pattern);
-    return Promise.all(files.map((file: string) => {
-        return new Promise((resolve, reject) => {
-            fs.readFile(file, { encoding: 'utf-8' }, (err: any, content: string) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    try {
-                        resolve(parseFileContent(content, file));
-                    } catch (e) {
-                        reject(e);
-                    }
-                }
-            });
-        });
+    return Promise.all(files.map(async (file: string) => {
+        return await SwaggerParser.bundle(file)
     }));
 }
 
