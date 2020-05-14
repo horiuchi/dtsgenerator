@@ -55,7 +55,7 @@ export default class DtsGenerator {
         const map: any = {};
         const paths: { path: string[]; type: Schema; }[] = [];
         for (const type of schemas) {
-            const path = config.typeNameConvertor(type.id);
+            const path = type.id.toNames();
             paths.push({ path, type });
         }
 

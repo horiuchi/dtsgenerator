@@ -1,7 +1,8 @@
 import * as url from 'url';
+import { toTypeName } from './validateIdentifier';
 
 export default class SchemaId {
-    public static empty = new SchemaId('');
+    public static readonly empty = new SchemaId('');
 
     public readonly id: url.Url;
     private readonly absoluteId: string;
@@ -46,6 +47,30 @@ export default class SchemaId {
             return '#';
         }
         return decodeURIComponent(m[1]);
+    }
+
+    public toNames(): string[] {
+        const uri = this.id;
+        const ids: string[] = [];
+        if (uri.host) {
+            ids.push(decodeURIComponent(uri.host));
+        }
+        const addAllParts = (path: string): void => {
+            const paths = path.split('/');
+            if (paths.length > 1 && paths[0] === '') {
+                paths.shift();
+            }
+            paths.forEach((item: string) => {
+                ids.push(decodeURIComponent(item));
+            });
+        };
+        if (uri.pathname) {
+            addAllParts(uri.pathname);
+        }
+        if (uri.hash && uri.hash.length > 1) {
+            addAllParts(uri.hash.substr(1));
+        }
+        return ids.map(toTypeName);
     }
 }
 

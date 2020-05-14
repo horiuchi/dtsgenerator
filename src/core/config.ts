@@ -1,10 +1,8 @@
 import ts from 'typescript';
-import { DefaultTypeNameConvertor, TypeNameConvertor } from './typeNameConvertor';
 
 export interface Config {
     outputAST: boolean;
     target: ts.ScriptTarget;
-    typeNameConvertor: TypeNameConvertor;
 
     plugins: {
         [pluginName: string]: object | boolean;
@@ -14,7 +12,6 @@ export interface Config {
 const defaultConfig: Config = {
     outputAST: false,
     target: ts.ScriptTarget.Latest,
-    typeNameConvertor: DefaultTypeNameConvertor,
     plugins: {},
 };
 
