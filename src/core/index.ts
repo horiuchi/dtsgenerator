@@ -4,7 +4,6 @@ import { Schema } from './type';
 
 export { default as SchemaId } from './schemaId';
 export * from './type';
-export { DefaultTypeNameConvertor } from './typeNameConvertor';
 
 export interface Options {
     contents: Schema[];

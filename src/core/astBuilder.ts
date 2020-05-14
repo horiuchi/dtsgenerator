@@ -156,11 +156,10 @@ export function buildTypeReferenceNode(schema: NormalizedSchema, currentSchema: 
     return ts.createTypeReferenceNode(node, undefined);
 }
 function getTypename(id: SchemaId, baseSchema: Schema): string[] {
-    const result = config.typeNameConvertor(id);
-    // this.replaceNamespace(result);
+    const result = id.toNames();
     const baseId = baseSchema.id;
     if (baseId) {
-        const baseTypes = config.typeNameConvertor(baseId).slice(0, -1);
+        const baseTypes = baseId.toNames().slice(0, -1);
         for (const type of baseTypes) {
             if (result.length === 1) {
                 break;
@@ -250,7 +249,7 @@ export function addOptionalInformation<T extends ts.Node>(node: T, schema: Norma
 }
 
 function getLastTypeName(id: SchemaId): string {
-    const names = config.typeNameConvertor(id);
+    const names = id.toNames();
     if (names.length > 0) {
         return names[names.length - 1];
     } else {

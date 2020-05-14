@@ -41,6 +41,36 @@ export function toValidIdentifier(text: string, target: ScriptTarget): string {
     // Need `|| "_"` to ensure result isn't empty.
     return res || '_';
 }
+export function toTypeName(text: string, target: ScriptTarget): string {
+    if (/^\d/.test(text)) {
+        text = '$' + text;
+    }
+    let res = '';
+    let lastCharWasValid = true;
+    const firstCharCode = text.charCodeAt(0);
+    if (firstCharCode !== CharacterCodes._ && isIdentifierStart(firstCharCode, target)) {
+        res += String.fromCharCode(firstCharCode).toUpperCase();
+        if (firstCharCode === CharacterCodes.$) {
+            lastCharWasValid = false;
+        }
+    } else {
+        lastCharWasValid = false;
+    }
+    for (let i = 1; i < text.length; i++) {
+        const ch = text.charCodeAt(i);
+        const isValid = ch !== CharacterCodes._ && isIdentifierPart(ch, target);
+        if (isValid) {
+            let char = String.fromCharCode(ch);
+            if (!lastCharWasValid) {
+                char = char.toUpperCase();
+            }
+            res += char;
+        }
+        lastCharWasValid = isValid && ch !== CharacterCodes.$;
+    }
+    // Need `|| "_"` to ensure result isn't empty.
+    return res || '_';
+}
 
 const enum CharacterCodes {
     nullCharacter = 0,
