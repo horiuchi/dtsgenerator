@@ -72,3 +72,28 @@ export type Plugin = {
     preProcess?: (context: PluginContext) => Promise<PreProcessHandler | undefined>;
     postProcess?: (context: PluginContext) => Promise<TransformerFactory<SourceFile> | undefined>;
 }
+
+export async function loadPlugin(name: string, option: boolean | object): Promise<Plugin | undefined> {
+    if (!option) {
+        return undefined;
+    }
+
+    const mod = await import(name);
+    if (!('default' in mod)) {
+        // tslint:disable-next-line: no-console
+        console.warn(`The plugin (${name}) is invalid module. That is not default export format.`);
+        return undefined;
+    }
+    const plugin: Plugin = mod.default;
+    if (plugin.preProcess != null && typeof plugin.preProcess !== 'function') {
+        // tslint:disable-next-line: no-console
+        console.warn(`The plugin (${name}) is invalid module. The 'preProcess' is not a function.`);
+        return undefined;
+    }
+    if (plugin.postProcess != null && typeof plugin.postProcess !== 'function') {
+        // tslint:disable-next-line: no-console
+        console.warn(`The plugin (${name}) is invalid module. The 'postProcess' is not a function.`);
+        return undefined;
+    }
+    return plugin;
+}

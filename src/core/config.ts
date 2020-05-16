@@ -1,8 +1,14 @@
 import ts from 'typescript';
 
 export interface Config {
-    outputAST: boolean;
+    input: {
+        files: string[];
+        urls: string[];
+        stdin: boolean;
+    };
+    outputFile?: string;
     target: ts.ScriptTarget;
+    outputAST: boolean;
 
     plugins: {
         [pluginName: string]: object | boolean;
@@ -10,6 +16,11 @@ export interface Config {
 }
 
 const defaultConfig: Config = {
+    input: {
+        files: [],
+        urls: [],
+        stdin: false,
+    },
     outputAST: false,
     target: ts.ScriptTarget.Latest,
     plugins: {},
