@@ -1,7 +1,7 @@
 import Debug from 'debug';
 import ts from 'typescript';
 import { get, set, tilde } from '../jsonPointer';
-import { Plugin, Schema, JsonSchema, JsonSchemaObject, PreProcessHandler } from './type';
+import { Plugin, Schema, JsonSchema, JsonSchemaObject, PreProcessHandler, loadPlugin } from './type';
 import * as ast from './astBuilder';
 import config from './config';
 import { getSubSchema, NormalizedSchema } from './jsonSchema';
@@ -78,20 +78,15 @@ export default class DtsGenerator {
         const pre: PluginConfig[] = [];
         const post: PluginConfig[] = [];
         for (const [name, option] of Object.entries(config.plugins)) {
-            if (option) {
-                const mod = await import(name);
-                if (!('default' in mod)) {
-                    // tslint:disable-next-line: no-console
-                    console.warn(`The plugin (${name}) is invalid module. That is not default export format.`);
-                    continue;
-                }
-                const plugin: Plugin = mod.default;
-                if ('preProcess' in plugin && typeof plugin.preProcess === 'function') {
-                    pre.push({ plugin, option });
-                }
-                if ('postProcess' in plugin && typeof plugin.postProcess === 'function') {
-                    post.push({ plugin, option });
-                }
+            const plugin = await loadPlugin(name, option);
+            if (plugin == null) {
+                continue;
+            }
+            if (plugin.preProcess != null) {
+                pre.push({ plugin, option });
+            }
+            if (plugin.postProcess != null) {
+                post.push({ plugin, option });
             }
         }
         return { pre, post };

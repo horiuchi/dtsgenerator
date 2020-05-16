@@ -3,11 +3,12 @@ import commander from 'commander';
 const defaultConfigFile = 'dtsgen.json'
 
 export class CommandOptions {
+    public configFile?: string;
     public files: string[] = [];
     public urls: string[] = [];
     public stdin?: boolean;
     public out?: string;
-    public configFile?: string;
+    public target?: string;
     public info?: boolean;
     public outputAST?: boolean;
 
@@ -26,11 +27,12 @@ export function initialize(argv: string[]): commander.Command {
 }
 
 export function clear(): void {
+    opts.configFile = defaultConfigFile;
     opts.files = [];
     opts.urls = [];
     opts.stdin = undefined;
     opts.out = undefined;
-    opts.configFile = defaultConfigFile;
+    opts.target = undefined;
     opts.info = undefined;
     opts.outputAST = undefined;
 }
@@ -50,10 +52,11 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         .name(pkg.name)
         .version(pkg.version)
         .usage('[options] <file ... | file patterns using node-glob>')
+        .option('-c, --config <file>', 'set configuration file path.', defaultConfigFile)
         .option('--url <url>', 'input json schema from the url.', collectUrl, [])
         .option('--stdin', 'read stdin with other files or urls.')
-        .option('-o, --out <file>', 'output d.ts filename.')
-        .option('-c, --config <file>', 'set configuration file path.', defaultConfigFile)
+        .option('-o, --out <file>', 'output filename.')
+        .option('-t, --target <version>', "Specify ECMAScript target version: 'ES3', 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT' (default).")
         .option('--info', 'for developer mode. output loaded config and plugin details only.')
         .option('--output-ast', 'output TypeScript AST instead of d.ts file.')
         .on('--help', () => {
@@ -71,11 +74,12 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         .parse(argv);
 
     const res = command as any;
+    o.configFile = res.config;
     o.files = command.args;
     o.urls = res.url;
     o.stdin = res.stdin;
     o.out = res.out;
-    o.configFile = res.config;
+    o.target = res.target;
     o.info = res.info;
     o.outputAST = res.outputAst;
     return command;
