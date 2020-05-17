@@ -55,7 +55,29 @@ async function showInfo(command: commander.Command, configFile?: string): Promis
     console.log('Version: ' + version);
     console.log('ConfigFile: ' + configFile);
     console.log();
-    console.log('Config: ' + JSON.stringify(config, null, 2));
+
+    console.log('Config:');
+    console.log('  input:');
+    if (config.input.files.length > 0) {
+        console.log('    files: ' + JSON.stringify(config.input.files));
+    }
+    if (config.input.urls.length > 0) {
+        console.log('    urls: ' + JSON.stringify(config.input.urls));
+    }
+    if (config.input.stdin) {
+        console.log('    stdin: true');
+    }
+    if (config.outputFile != null) {
+        console.log('  outputFile: ' + JSON.stringify(config.outputFile));
+    }
+    console.log('  target: ' + showScriptTarget(config.target));
+    if (config.outputAST) {
+        console.log('  outputAST: true');
+    }
+    console.log('  plugins:')
+    for (const [name, option] of Object.entries(config.plugins)) {
+        console.log(`    ${name}: ${JSON.stringify(option)}`);
+    }
     console.log();
 
     const plugins: Plugin[] = [];
@@ -65,7 +87,7 @@ async function showInfo(command: commander.Command, configFile?: string): Promis
             plugins.push(p);
         }
     }
-    console.log('Plugins count=' + plugins.length);
+    console.log('Plugins: count=' + plugins.length);
     for (const p of plugins) {
         console.log(`  ${p.meta.name}@${p.meta.version}: ${p.meta.description}`);
     }
@@ -85,6 +107,20 @@ function convertToScriptTarget(target: string): ts.ScriptTarget {
         case 'es2020': return ts.ScriptTarget.ES2020;
         case 'esnext': return ts.ScriptTarget.ESNext;
         default: return ts.ScriptTarget.Latest;
+    }
+}
+function showScriptTarget(target: ts.ScriptTarget): string {
+    switch (target) {
+        case ts.ScriptTarget.ES3: return 'ES3';
+        case ts.ScriptTarget.ES5: return 'ES5';
+        case ts.ScriptTarget.ES2015: return 'ES2015';
+        case ts.ScriptTarget.ES2016: return 'ES2016';
+        case ts.ScriptTarget.ES2017: return 'ES2017';
+        case ts.ScriptTarget.ES2018: return 'ES2018';
+        case ts.ScriptTarget.ES2019: return 'ES2019';
+        case ts.ScriptTarget.ES2020: return 'ES2020';
+        case ts.ScriptTarget.ESNext: return 'ESNext';
+        default: return 'Latest';
     }
 }
 
