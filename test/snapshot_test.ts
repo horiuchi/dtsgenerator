@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import assert from 'power-assert';
 import dtsgenerator from '../src/core';
-import { clearToDefault } from '../src/core/config';
+import { clearToDefault, setConfig } from '../src/core/config';
 import { parseFileContent } from '../src/utils';
 import { parseSchema } from '../src/core/type';
 
@@ -29,6 +29,7 @@ describe('Snapshot testing', () => {
                 const configFilePath = path.join(fixtureDir, configFileName);
                 const config = fs.existsSync(configFilePath) ? require(configFilePath) : {};
 
+                setConfig(config);
                 const contents = filePaths
                     .filter((f) => !reservedFiles.includes(f))
                     .map((f) => path.join(fixtureDir, f))
@@ -37,7 +38,7 @@ describe('Snapshot testing', () => {
                         const content = parseFileContent(data, file);
                         return parseSchema(content);
                     });
-                const actual = await dtsgenerator({ contents, config });
+                const actual = await dtsgenerator({ contents });
 
                 // When we do `UPDATE_SNAPSHOT=1 npm test`, update snapshot data.
                 if (process.env.UPDATE_SNAPSHOT) {
