@@ -50,15 +50,15 @@
     "https-proxy-agent": "^5.0.0",
     "js-yaml": "^3.13.1",
     "mkdirp": "^1.0.4",
-    "tslib": "^1.12.0"
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@dtsgenerator/do-nothing": "^2.0.0",
-    "@dtsgenerator/replace-namespace": "^1.2.0",
-    "@dtsgenerator/single-quote": "^1.3.0",
+    "@dtsgenerator/replace-namespace": "^1.3.0",
+    "@dtsgenerator/single-quote": "^1.4.0",
     "@types/debug": "^4.1.5",
     "@types/glob": "^7.1.1",
-    "@types/js-yaml": "^3.12.3",
+    "@types/js-yaml": "^3.12.4",
     "@types/mkdirp": "^1.0.0",
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.12.39",
