@@ -12,13 +12,13 @@ describe('output command help test', () => {
             content += str;
             return true;
         };
+        process.stdout.columns = 160;
     });
     afterEach(() => {
         process.stdout.write = oldWrite;
     });
 
-    it('should output command help ', () => {
-        process.stdout.columns = 160;
+    it('check output command help ', () => {
         const command = initialize(['node', 'script.js']);
         command.outputHelp();
         assert.equal(content, `Usage: dtsgenerator [options] <file ... | file patterns using node-glob>
