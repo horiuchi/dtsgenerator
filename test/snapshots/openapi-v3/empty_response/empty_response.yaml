@@ -13,10 +13,13 @@ components:
     created:
       description: 'object created'
 paths:
-  post:
-    requestBody:
-      application/json:
-        $ref: '#/components/schemas/object'
-    responses:
-      204:
-        $ref: '#/components/responses/created'
+  "/Create":
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/object'
+      responses:
+        204:
+          $ref: '#/components/responses/created'

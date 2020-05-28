@@ -269,9 +269,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             }
             if ('content' in body) {
                 setSubIdToMediaTypes(body.content, keys);
-            }
-            if ('$ref' in body) {
+            } else if ('$ref' in body) {
                 setSubId(body, keys);
+            } else {
+                setSubId({}, keys)
             }
         }
         const setSubIdToResponsesV3 = (responses: OpenApisOrg.V3.SchemaJson.Definitions.ResponsesOrReferences | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToResponseV3, responses, keys);
@@ -281,9 +282,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             }
             if ('content' in response) {
                 setSubIdToMediaTypes(response.content, keys);
-            }
-            if ('$ref' in response) {
+            } else if ('$ref' in response) {
                 setSubId(response, keys);
+            } else {
+                setSubId({}, keys)
             }
         }
         function setSubIdToOperationV3(ops: OpenApisOrg.V3.SchemaJson.Definitions.Operation | undefined, keys: string[]): void {
