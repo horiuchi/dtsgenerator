@@ -48,6 +48,8 @@ declare namespace Paths {
                 id: Parameters.Id; // int64
             }
             namespace Responses {
+                export interface $204 {
+                }
                 export type Default = Components.Schemas.Error;
             }
         }

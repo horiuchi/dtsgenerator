@@ -26,5 +26,7 @@ export interface QueryParameters {
 export type RequestBody = NewPet;
 declare namespace Responses {
     export type $200 = Pet;
+    export interface $204 {
+    }
     export type Default = Error;
 }

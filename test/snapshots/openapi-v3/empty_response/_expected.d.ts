@@ -1,6 +1,7 @@
 declare namespace Components {
     namespace Responses {
-        export type Created = any;
+        export interface Created {
+        }
     }
     namespace Schemas {
         export interface Object {

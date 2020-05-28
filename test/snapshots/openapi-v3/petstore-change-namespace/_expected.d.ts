@@ -28,6 +28,8 @@ declare namespace Test {
         export type RequestBody = Test.PetStore.NewPet;
         namespace Responses {
             export type $200 = Test.PetStore.Pet;
+            export interface $204 {
+            }
             export type Default = Test.PetStore.Error;
         }
     }
