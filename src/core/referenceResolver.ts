@@ -1,6 +1,7 @@
 import 'cross-fetch/polyfill';
 import Debug from 'debug';
 import proxy from 'https-proxy-agent';
+import { URL } from 'url';
 import { parseFileContent } from '../utils';
 import { getSubSchema, parseSchema, Schema, searchAllSubSchema } from './jsonSchema';
 import SchemaId from './schemaId';

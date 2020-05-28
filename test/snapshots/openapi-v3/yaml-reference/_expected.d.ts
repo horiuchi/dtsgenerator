@@ -7,6 +7,12 @@ declare namespace Paths {
             export interface QueryParameters {
                 aa?: Parameters.Aa;
             }
+            export interface RequestBody {
+            }
+            namespace Responses {
+                export interface $200 {
+                }
+            }
         }
     }
     namespace B {
@@ -16,6 +22,12 @@ declare namespace Paths {
             }
             export interface QueryParameters {
                 aa?: Parameters.Aa;
+            }
+            export interface RequestBody {
+            }
+            namespace Responses {
+                export interface $200 {
+                }
             }
         }
     }
