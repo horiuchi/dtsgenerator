@@ -128,6 +128,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v2.7.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.7.0) (2020-06-05)
+
+- features:
+  - Support the empty response type on Open API by #416. Thank you @alexkar598 :+1:
+
 ### [v2.6.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.6.0) (2020-05-14)
 
 - features:
