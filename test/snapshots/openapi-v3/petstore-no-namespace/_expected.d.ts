@@ -26,6 +26,8 @@ declare namespace DeletePet {
         id: Parameters.Id /* int64 */;
     }
     namespace Responses {
+        export interface $204 {
+        }
         export type Default = Error;
     }
 }

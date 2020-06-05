@@ -2,8 +2,9 @@ import glob from 'glob';
 import proxy from 'https-proxy-agent';
 import YAML from 'js-yaml';
 import path from 'path';
+import { URL } from 'url';
 
-export function readStream(stream: NodeJS.ReadStream, encoding = 'utf8'): Promise<string> {
+export function readStream(stream: NodeJS.ReadStream, encoding: BufferEncoding = 'utf8'): Promise<string> {
     stream.setEncoding(encoding);
     return new Promise((resolve, reject) => {
         let data = '';

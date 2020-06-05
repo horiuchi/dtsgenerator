@@ -32,6 +32,8 @@ declare namespace Test {
                 id: Parameters.Id /* int64 */;
             }
             namespace Responses {
+                export interface $204 {
+                }
                 export type Default = Test.PetStore.Error;
             }
         }
