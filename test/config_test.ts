@@ -82,8 +82,8 @@ Config:
     @dtsgenerator/replace-namespace: {"map":[{"from":["Components","Schemas"],"to":["Test","PetStore"]},{"from":["Paths"],"to":["Test","PetStore"]}]}
 
 Plugins: count=2
-  @dtsgenerator/single-quote@1.4.0: change all quotation mark to single
-  @dtsgenerator/replace-namespace@1.3.0: replace the namespace names
+  @dtsgenerator/single-quote@1.4.1: change all quotation mark to single
+  @dtsgenerator/replace-namespace@1.3.1: replace the namespace names
 
 `);
     });
