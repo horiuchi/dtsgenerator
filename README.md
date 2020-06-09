@@ -107,7 +107,7 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
-### [v3.0.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.0.0) (2020-06-09)
+### [v3.0.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.0.1) (2020-06-09)
 
 - features:
   - Support the plug-in for pre-process and post-process.
