@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import dtsGenerator, { parseSchema } from '../src/core';
 import { JsonSchemaDraft07 } from '../src/core/jsonSchemaDraft07';
 
@@ -47,7 +47,7 @@ describe('nested \'allOf\' test', () => {
     }
 }
 `;
-        assert.equal(result, expected, 'Nested \'allOf\' definitions should result in all properties being included in the output interface.');
+        assert.strictEqual(result, expected, 'Nested \'allOf\' definitions should result in all properties being included in the output interface.');
     });
     it ('multiple \'allOf\' nestings schema', async () => {
         const schema: JsonSchemaDraft07.Schema = {
@@ -130,6 +130,6 @@ describe('nested \'allOf\' test', () => {
     }
 }
 `;
-        assert.equal(result, expected, 'Nested \'allOf\' definitions should result in all properties being included in the output interface.');
+        assert.strictEqual(result, expected, 'Nested \'allOf\' definitions should result in all properties being included in the output interface.');
     });
 });

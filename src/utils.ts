@@ -1,7 +1,5 @@
 import glob from 'glob';
 import proxy from 'https-proxy-agent';
-import YAML from 'js-yaml';
-import path from 'path';
 import { URL } from 'url';
 
 export function readStream(stream: NodeJS.ReadStream, encoding: BufferEncoding = 'utf8'): Promise<string> {
@@ -33,7 +31,7 @@ function noProxy(url: URL): boolean {
     }
     return false;
 }
-function buildProxyOptions(url: string): any {
+function buildProxyOptions(url: string): RequestInit | undefined {
     const parsedUrl = new URL(url);
     let proxyUrl;
     if (!noProxy(parsedUrl)) {
@@ -51,30 +49,9 @@ function buildProxyOptions(url: string): any {
         if (proxyUrl.username) {
             agentOptions.auth = proxyUrl.username + ':' + proxyUrl.password;
         }
-        return { agent: proxy(agentOptions) };
+        return { agent: proxy(agentOptions) } as RequestInit;
     }
     return undefined;
-}
-
-export function parseFileContent(content: string, filename?: string): any {
-    const ext = filename ? path.extname(filename).toLowerCase() : '';
-    const maybeYaml = ext === '.yaml' || ext === '.yml';
-    try {
-        if (maybeYaml) {
-            return deepCopy(YAML.safeLoad(content));
-        } else {
-            return JSON.parse(content);
-        }
-    } catch (e) {
-        if (maybeYaml) {
-            return JSON.parse(content);
-        } else {
-            return deepCopy(YAML.safeLoad(content));
-        }
-    }
-}
-function deepCopy(obj: any): any {
-    return JSON.parse(JSON.stringify(obj));
 }
 
 export function globFiles(pattern: string, options?: glob.IOptions): Promise<string[]> {

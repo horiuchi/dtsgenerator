@@ -1,10 +1,9 @@
+import assert from 'assert';
 import fs from 'fs';
 import path from 'path';
-import assert from 'power-assert';
 import dtsgenerator from '../src/core';
 import { clearToDefault, setConfig } from '../src/core/config';
-import { parseFileContent } from '../src/utils';
-import { parseSchema } from '../src/core/type';
+import { parseFileContent, parseSchema } from '../src/core/type';
 
 const fixturesDir = path.join(__dirname, 'snapshots');
 const expectedFileName = '_expected.d.ts';
@@ -47,7 +46,7 @@ describe('Snapshot testing', () => {
                     return;
                 }
                 const expected = fs.readFileSync(expectedFilePath, { encoding: 'utf-8' });
-                assert.equal(actual, expected, `
+                assert.strictEqual(actual, expected, `
 ${fixtureDir}
 ${actual}
 `);

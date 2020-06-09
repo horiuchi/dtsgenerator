@@ -1,4 +1,4 @@
-import assert from 'power-assert';
+import assert from 'assert';
 import { clear } from '../src/commandOptions';
 import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
@@ -41,7 +41,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('min less than length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -71,7 +71,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('min eql to length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -101,7 +101,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('min greater than length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -131,7 +131,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('items.length zero, no minItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -157,7 +157,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
 
     it('min less than length and max equals length', async () => {
@@ -189,7 +189,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('min less than length and max less than length too', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -220,7 +220,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('min and max equals length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -251,7 +251,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('max less thant min', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -282,7 +282,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
 
     it('items.length zero, with minItems', async () => {
@@ -310,7 +310,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('items.length zero, without minItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -337,6 +337,6 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
 });

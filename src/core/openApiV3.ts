@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-namespace */
 import { JsonSchemaDraft07 } from './jsonSchemaDraft07';
 
-// tslint:disable:no-empty-interface
 export namespace OpenApisV3 {
     /**
      * A JSON Schema for OpenAPI 3.0.

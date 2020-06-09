@@ -33,7 +33,7 @@ export default class SchemaId {
         return !!this.absoluteId;
     }
     public isFetchable(): boolean {
-        return /https?\:\/\//.test(this.absoluteId);
+        return /https?:\/\//.test(this.absoluteId);
     }
     public getFileId(): string {
         return this.absoluteId.replace(/#.*$/, '#');

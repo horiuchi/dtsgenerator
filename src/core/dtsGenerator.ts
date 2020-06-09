@@ -13,7 +13,7 @@ const typeMarker = Symbol();
 
 interface PluginConfig {
     plugin: Plugin;
-    option?: boolean | object;
+    option: boolean | Record<string, unknown>;
 }
 
 export default class DtsGenerator {
@@ -51,7 +51,9 @@ export default class DtsGenerator {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private buildSchemaMergedMap(schemas: IterableIterator<Schema>): any {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const map: any = {};
         const paths: { path: string[]; type: Schema; }[] = [];
         for (const type of schemas) {
@@ -126,12 +128,13 @@ export default class DtsGenerator {
         return result;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private walk(map: any, root: boolean): ts.Statement[] {
         const result: ts.Statement[] = [];
         const keys = Object.keys(map).sort();
         for (const key of keys) {
             const value = map[key];
-            if (value.hasOwnProperty(typeMarker)) {
+            if (Object.prototype.hasOwnProperty.call(value, typeMarker)) {
                 const schema = value[typeMarker] as Schema;
                 debug(`  walk doProcess: key=${key} schemaId=${schema.id.getAbsoluteId()}`);
                 result.push(this.walkSchema(schema, root));
@@ -170,7 +173,7 @@ export default class DtsGenerator {
         return Object.assign({}, schema, { content });
     }
 
-    private normalizeSchemaContent(content: any): any {
+    private normalizeSchemaContent(content: JsonSchema): JsonSchemaObject {
         if (typeof content === 'boolean') {
             content = content ? {} : { not: {} };
         } else {
@@ -278,6 +281,7 @@ export default class DtsGenerator {
             return this.generateType(schema, terminate);
         }
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private generateLiteralTypeNode(content: JsonSchemaObject, value: any): ts.LiteralTypeNode {
         switch (content.type) {
             case 'integer':
@@ -349,6 +353,7 @@ export default class DtsGenerator {
     }
     private generateTypeName(schema: NormalizedSchema, type: string, terminate: boolean): ts.TypeNode {
         const tsType = utils.toTSType(type, schema.content);
+        // TODO: if文の順番がおかしい？
         if (tsType) {
             return ast.buildKeyword(tsType);
         } else if (type === 'object') {

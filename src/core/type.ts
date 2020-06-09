@@ -1,6 +1,8 @@
 import fs from 'fs';
+import YAML from 'js-yaml';
+import path from 'path';
 import { TransformerFactory, SourceFile } from 'typescript';
-import { globFiles, parseFileContent, readStream, readUrl } from '../utils';
+import { globFiles, readStream, readUrl } from '../utils';
 import SchemaId from './schemaId';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from './jsonSchemaDraft07';
@@ -21,7 +23,7 @@ export interface Schema {
     rootSchema?: Schema;
 }
 
-export function parseSchema(content: any, url?: string): Schema {
+export function parseSchema(content: JsonSchema, url?: string): Schema {
     const { type, openApiVersion } = selectSchemaType(content);
     if (url != null) {
         setId(type, content, url);
@@ -54,10 +56,31 @@ export async function readSchemaFromUrl(url: string): Promise<Schema> {
     return parseSchema(content, url);
 }
 
+export function parseFileContent(content: string, filename?: string): JsonSchema {
+    const ext = filename ? path.extname(filename).toLowerCase() : '';
+    const maybeYaml = ext === '.yaml' || ext === '.yml';
+    try {
+        if (maybeYaml) {
+            return deepCopy(YAML.safeLoad(content));
+        } else {
+            return JSON.parse(content);
+        }
+    } catch (e) {
+        if (maybeYaml) {
+            return JSON.parse(content);
+        } else {
+            return deepCopy(YAML.safeLoad(content));
+        }
+    }
+}
+function deepCopy<T>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
+}
+
 // Plugin Types
 
 export interface PluginContext {
-    option?: any;
+    option: boolean | Record<string, unknown>;
     inputSchemas: Iterator<[string, Schema]>;
 }
 
@@ -73,25 +96,22 @@ export type Plugin = {
     postProcess?: (context: PluginContext) => Promise<TransformerFactory<SourceFile> | undefined>;
 }
 
-export async function loadPlugin(name: string, option: boolean | object): Promise<Plugin | undefined> {
+export async function loadPlugin(name: string, option: boolean | Record<string, unknown>): Promise<Plugin | undefined> {
     if (!option) {
         return undefined;
     }
 
     const mod = await import(name);
     if (!('default' in mod)) {
-        // tslint:disable-next-line: no-console
         console.warn(`The plugin (${name}) is invalid module. That is not default export format.`);
         return undefined;
     }
     const plugin: Plugin = mod.default;
     if (plugin.preProcess != null && typeof plugin.preProcess !== 'function') {
-        // tslint:disable-next-line: no-console
         console.warn(`The plugin (${name}) is invalid module. The 'preProcess' is not a function.`);
         return undefined;
     }
     if (plugin.postProcess != null && typeof plugin.postProcess !== 'function') {
-        // tslint:disable-next-line: no-console
         console.warn(`The plugin (${name}) is invalid module. The 'postProcess' is not a function.`);
         return undefined;
     }

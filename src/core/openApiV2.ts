@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-namespace */
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 
-// tslint:disable:no-empty-interface
 export namespace OpenApisV2 {
     /**
      * A JSON Schema for Swagger 2.0 API.
@@ -38,6 +40,7 @@ export namespace OpenApisV2 {
         externalDocs?: SchemaJson.Definitions.ExternalDocs;
     }
     export namespace SchemaJson {
+        // eslint-disable-next-line @typescript-eslint/no-namespace
         export namespace Definitions {
             export interface ApiKeySecurity {
                 type: 'apiKey';
@@ -91,7 +94,6 @@ export namespace OpenApisV2 {
             /**
              * One or more JSON objects describing the schemas being consumed and produced by the API.
              */
-            // tslint:disable-next-line:no-shadowed-variable
             export interface Definitions {
                 [name: string]: JsonSchemaDraft04.Schema;
             }
@@ -507,4 +509,5 @@ export namespace OpenApisV2 {
         }
     }
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export import SwaggerIo = OpenApisV2;

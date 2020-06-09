@@ -13,7 +13,7 @@ export interface Config {
     outputAST: boolean;
 
     plugins: {
-        [pluginName: string]: object | boolean;
+        [pluginName: string]: boolean | Record<string, unknown>;
     };
 }
 
@@ -39,7 +39,6 @@ export function clearToDefault(): void {
 }
 
 export async function showConfig(version: string, c: Config): Promise<void> {
-    // tslint:disable: no-console
     console.log('Version: ' + version);
     console.log('ConfigFile: ' + c.configFile);
     console.log();
@@ -80,7 +79,6 @@ export async function showConfig(version: string, c: Config): Promise<void> {
         console.log(`  ${p.meta.name}@${p.meta.version}: ${p.meta.description}`);
     }
     console.log();
-    // tslint:enable: no-console
 }
 function showScriptTarget(target: ts.ScriptTarget): string {
     switch (target) {

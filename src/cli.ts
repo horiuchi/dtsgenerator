@@ -12,7 +12,6 @@ function readConfig(options: CommandOptions): Partial<Config> {
         try {
             pc = require(options.configFile);
         } catch (err) {
-            // tslint:disable-next-line: no-console
             console.error('Error to load config file from ' + options.configFile);
         }
     }
@@ -65,15 +64,15 @@ function convertToScriptTarget(target: string): ts.ScriptTarget {
 
 async function loadContents(): Promise<Schema[]> {
     let contents: Schema[] = [];
-    const ps: Promise<any>[] = [];
+    const ps: Promise<void>[] = [];
     if (config.input.stdin) {
-        ps.push(readSchemaFromStdin().then(s => contents.push(s)));
+        ps.push(readSchemaFromStdin().then(s => { contents.push(s) }));
     }
     for (const pattern of config.input.files) {
-        ps.push(readSchemasFromFile(pattern).then(ss => contents = contents.concat(ss)));
+        ps.push(readSchemasFromFile(pattern).then(ss => { contents = contents.concat(ss) }));
     }
     for (const url of config.input.urls) {
-        ps.push(readSchemaFromUrl(url).then(s => contents.push(s)));
+        ps.push(readSchemaFromUrl(url).then(s => { contents.push(s) }));
     }
     await Promise.all(ps);
     return contents;
@@ -98,7 +97,6 @@ async function exec(): Promise<void> {
         mkdirp.sync(path.dirname(opts.out));
         fs.writeFileSync(opts.out, result, { encoding: 'utf-8' });
     } else {
-        /* tslint:disable:no-console */
         console.log(result);
     }
 }
