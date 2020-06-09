@@ -1,4 +1,3 @@
-// tslint:disable: no-bitwise
 import * as ts from 'typescript';
 import config from './config';
 import { NormalizedSchema } from './jsonSchema';
@@ -37,9 +36,6 @@ export function buildSimpleArrayNode(element: ts.TypeNode): ts.ArrayTypeNode {
 }
 
 // TODO
-export function buildLiteralTypeNode(value: any): ts.LiteralTypeNode {
-    return ts.createLiteralTypeNode(ts.createLiteral(value));
-}
 export function buildStringLiteralTypeNode(s: string): ts.LiteralTypeNode {
     return ts.createLiteralTypeNode(ts.createStringLiteral(s));
 }
@@ -196,7 +192,7 @@ function getComment(schema: NormalizedSchema): string[] {
     function protectComment(str: string): string {
         return str.replace(/\*\//g, '*\u200B/'); // Unicode [ZERO WIDTH SPACE]
     }
-    function appendComment(value: any): void {
+    function appendComment(value?: string): void {
         if (value == null) {
             return;
         }

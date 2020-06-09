@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import * as JsonPointer from '../jsonPointer';
 import SchemaId from './schemaId';
 import { Schema, JsonSchemaObject, SchemaType, JsonSchema } from './type';
 import { OpenApisV2 } from './openApiV2';
 import { OpenApisV3 } from './openApiV3';
+import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 
 type OpenApiSchema = OpenApisV2.SchemaJson | OpenApisV3.SchemaJson;
 
@@ -35,9 +37,11 @@ export function getSubSchema(rootSchema: Schema, pointer: string, id?: SchemaId)
     };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getId(type: SchemaType, content: any): string | undefined {
     return content[getIdPropertyName(type)];
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setId(type: SchemaType, content: any, id: string): void {
     const key = getIdPropertyName(type);
     if (content[key] == null) {
@@ -179,7 +183,7 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
         }
         function buildParameterSchema(inType: string, params: ParameterObject[], keys: string[]): [string[], JsonSchemaObject] {
             const paths = keys.slice(0, keys.length - 1).concat(inType + 'Parameters');
-            const properties: any = {};
+            const properties: { [name: string]: JsonSchemaDraft04.Schema } = {};
             params.forEach((item) => {
                 properties[item.name] = { $ref: createId(keys.concat(item.name)) };
             });
@@ -240,7 +244,7 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 }
             }
         }
-        const setSubIdToRequestBodies = (bodys: OpenApisV3.SchemaJson.Definitions.RequestBodiesOrReferences | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToRequestBody, bodys, keys);
+        const setSubIdToRequestBodies = (bodies: OpenApisV3.SchemaJson.Definitions.RequestBodiesOrReferences | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToRequestBody, bodies, keys);
         function setSubIdToRequestBody(body: OpenApisV3.SchemaJson.Definitions.RequestBodyOrReference | undefined, keys: string[]): void {
             if (body == null) {
                 return;
@@ -343,10 +347,11 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
     walk(schema.content, ['#'], []);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function selectSchemaType(content: any): { type: SchemaType; openApiVersion?: 2 | 3; } {
     if (content.$schema) {
         const schema = content.$schema;
-        const match = schema.match(/http\:\/\/json-schema\.org\/draft-(\d+)\/schema#?/);
+        const match = schema.match(/http:\/\/json-schema\.org\/draft-(\d+)\/schema#?/);
         if (match) {
             const version = Number(match[1]);
             if (version <= 4) {

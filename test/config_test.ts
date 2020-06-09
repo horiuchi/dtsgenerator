@@ -1,4 +1,4 @@
-import assert from 'power-assert';
+import assert from 'assert';
 import dtsgenerator from '../src/core';
 import config, { clearToDefault, setConfig, showConfig } from '../src/core/config';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
@@ -7,7 +7,7 @@ import ts from 'typescript';
 
 describe('show config test', () => {
     let content: string;
-    let oldWrite: any;
+    let oldWrite: typeof process.stdout.write;
 
     beforeEach(() => {
         oldWrite = process.stdout.write;
@@ -25,7 +25,7 @@ describe('show config test', () => {
     it('no config test', async () => {
         setConfig({});
         await showConfig('no_config', config);
-        assert.equal(content, `Version: no_config
+        assert.strictEqual(content, `Version: no_config
 ConfigFile: undefined
 
 Config:
@@ -66,7 +66,7 @@ Plugins: count=0
             },
         });
         await showConfig('full_config', config);
-        assert.equal(content, `Version: full_config
+        assert.strictEqual(content, `Version: full_config
 ConfigFile: test.json
 
 Config:
@@ -132,7 +132,7 @@ describe('config test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
 
     it('apply single-quote plugin test', async () => {
@@ -171,6 +171,6 @@ describe('config test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
 });

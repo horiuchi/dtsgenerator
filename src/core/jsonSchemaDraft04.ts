@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-namespace */
+
 export namespace JsonSchemaDraft04 {
     /**
      * Core schema meta-schema

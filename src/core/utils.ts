@@ -1,12 +1,13 @@
 import Debug from 'debug';
-import * as ts from 'typescript';
+import ts from 'typescript';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
+import { JsonSchemaObject } from './type';
 
 import SimpleTypes = JsonSchemaDraft04.Schema.Definitions.SimpleTypes;
 
 const debug = Debug('dtsgen');
 
-export function toTSType(type: string, debugSource?: any) {
+export function toTSType(type: string, debugSource?: JsonSchemaObject): ts.KeywordTypeNode['kind'] | undefined {
     switch (type) {
         case 'any':
             return ts.SyntaxKind.AnyKeyword;
@@ -44,6 +45,7 @@ export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
     return Array.from(set.values());
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 export function mergeSchema(a: any, b: any): any {
     Object.keys(b).forEach((key: string) => {
         const value = b[key];

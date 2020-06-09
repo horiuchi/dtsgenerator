@@ -1,8 +1,9 @@
-import assert from 'power-assert';
+import assert from 'assert';
 import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from '../src/core/jsonSchemaDraft07';
-import { parseSchema } from '../src/core/type';
+import { parseSchema, JsonSchema } from '../src/core/type';
+import { OpenApisV2 } from '../src/core/openApiV2';
 
 
 describe('simple schema test', () => {
@@ -19,7 +20,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('no namespace schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -31,7 +32,7 @@ describe('simple schema test', () => {
         const expected = `declare interface NoNamespace {
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('one line schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -51,7 +52,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('two line readonly schema', async () => {
         const schema: JsonSchemaDraft07.Schema = {
@@ -79,10 +80,10 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('no type schema', async () => {
-        const schema: any = {
+        const schema: JsonSchema = {
             id: '/test/no_type',
         };
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
@@ -91,7 +92,7 @@ describe('simple schema test', () => {
     export type NoType = any;
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('include array schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -118,7 +119,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('all simple type schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -184,7 +185,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('string, integer and number enum schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -215,7 +216,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('string and integer const schema', async () => {
         const schema: JsonSchemaDraft07.Schema = {
@@ -242,7 +243,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('inner object schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -275,7 +276,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('object array schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -310,7 +311,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('root array schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -328,7 +329,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('root any schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -349,7 +350,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('include example schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -382,7 +383,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('include objected example schema', async () => {
         const schema: JsonSchemaDraft07.Schema = {
@@ -423,7 +424,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('include format schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -445,7 +446,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('include $ref schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -478,7 +479,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('include $ref schema 2', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -510,7 +511,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('include `/` properties schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -532,11 +533,16 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it(' model in multiple allOf', async () => {
-        const schema = {
+        const schema: OpenApisV2.SchemaJson = {
             swagger: '2.0',
+            info: {
+                title: 'swagger 2.0 sample',
+                version: '0.1.0',
+            },
+            paths: {},
             definitions: {
                 Parent: {
                     type: 'object',
@@ -590,11 +596,16 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it(' model in multiple allOf nested ordered $refs', async () => {
-        const schema = {
+        const schema: OpenApisV2.SchemaJson = {
             swagger: '2.0',
+            info: {
+                title: 'swagger 2.0 sample',
+                version: '0.1.0',
+            },
+            paths: {},
             definitions: {
                 Parent: {
                     type: 'object',
@@ -649,11 +660,16 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it(' model in multiple allOf nested unordered $refs', async () => {
-        const schema = {
+        const schema: OpenApisV2.SchemaJson = {
             swagger: '2.0',
+            info: {
+                title: 'swagger 2.0 sample',
+                version: '0.1.0',
+            },
+            paths: {},
             definitions: {
                 Parent: {
                     type: 'object',
@@ -708,7 +724,7 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
     it('should include allOf schemas', async () => {
         const baseSchema: JsonSchemaDraft04.Schema = {
@@ -778,6 +794,6 @@ describe('simple schema test', () => {
     }
 }
 `;
-        assert.equal(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
 });

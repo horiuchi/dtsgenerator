@@ -292,27 +292,27 @@ function lookupInUnicodeMap(code: number, map: readonly number[]): boolean {
     return false;
 }
 
-function isUnicodeIdentifierStart(code: number, languageVersion: ScriptTarget | undefined) {
-    return languageVersion! >= ScriptTarget.ES2015 ?
+function isUnicodeIdentifierStart(code: number, languageVersion: ScriptTarget) {
+    return languageVersion >= ScriptTarget.ES2015 ?
         lookupInUnicodeMap(code, unicodeESNextIdentifierStart) :
-        languageVersion! === ScriptTarget.ES5 ? lookupInUnicodeMap(code, unicodeES5IdentifierStart) :
+        languageVersion === ScriptTarget.ES5 ? lookupInUnicodeMap(code, unicodeES5IdentifierStart) :
             lookupInUnicodeMap(code, unicodeES3IdentifierStart);
 }
 
-function isUnicodeIdentifierPart(code: number, languageVersion: ScriptTarget | undefined) {
-    return languageVersion! >= ScriptTarget.ES2015 ?
+function isUnicodeIdentifierPart(code: number, languageVersion: ScriptTarget) {
+    return languageVersion >= ScriptTarget.ES2015 ?
         lookupInUnicodeMap(code, unicodeESNextIdentifierPart) :
-        languageVersion! === ScriptTarget.ES5 ? lookupInUnicodeMap(code, unicodeES5IdentifierPart) :
+        languageVersion === ScriptTarget.ES5 ? lookupInUnicodeMap(code, unicodeES5IdentifierPart) :
             lookupInUnicodeMap(code, unicodeES3IdentifierPart);
 }
 
-function isIdentifierStart(ch: number, languageVersion: ScriptTarget | undefined): boolean {
+function isIdentifierStart(ch: number, languageVersion: ScriptTarget): boolean {
     return ch >= CharacterCodes.A && ch <= CharacterCodes.Z || ch >= CharacterCodes.a && ch <= CharacterCodes.z ||
         ch === CharacterCodes.$ || ch === CharacterCodes._ ||
         ch > CharacterCodes.maxAsciiCharacter && isUnicodeIdentifierStart(ch, languageVersion);
 }
 
-function isIdentifierPart(ch: number, languageVersion: ScriptTarget | undefined): boolean {
+function isIdentifierPart(ch: number, languageVersion: ScriptTarget): boolean {
     return ch >= CharacterCodes.A && ch <= CharacterCodes.Z || ch >= CharacterCodes.a && ch <= CharacterCodes.z ||
         ch >= CharacterCodes._0 && ch <= CharacterCodes._9 || ch === CharacterCodes.$ || ch === CharacterCodes._ ||
         ch > CharacterCodes.maxAsciiCharacter && isUnicodeIdentifierPart(ch, languageVersion);

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-export function get(obj: any, path: string[], isCreateOnNotExists: boolean = false): any {
+export function get(obj: any, path: string[], isCreateOnNotExists = false): any {
     if (path.length === 0) {
         return obj;
     }

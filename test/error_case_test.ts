@@ -1,4 +1,5 @@
-import assert from 'power-assert';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import assert from 'assert';
 import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { parseSchema } from '../src/core/type';
@@ -14,7 +15,7 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
         } catch (e) {
-            assert.equal(e.message, 'There is no schema in the input contents.');
+            assert.strictEqual(e.message, 'There is no schema in the input contents.');
         }
     });
     it('unknown type schema', async () => {
@@ -26,7 +27,7 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
         } catch (e) {
-            assert.equal(e.message, 'unknown type: hoge');
+            assert.strictEqual(e.message, 'unknown type: hoge');
         }
     });
     it('unknown type property', async () => {
@@ -43,7 +44,7 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
         } catch (e) {
-            assert.equal(e.message, 'unknown type: fuga');
+            assert.strictEqual(e.message, 'unknown type: fuga');
         }
     });
 
@@ -61,7 +62,7 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
         } catch (e) {
-            assert.equal(e.message, 'The $ref target is not found: /notFound/id#');
+            assert.strictEqual(e.message, 'The $ref target is not found: /notFound/id#');
         }
     });
     it('target of $ref is invalid path', async () => {
@@ -78,7 +79,7 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
         } catch (e) {
-            assert.equal(e.message, 'The $ref target is not found: /test/target_not_found#hogefuga');
+            assert.strictEqual(e.message, 'The $ref target is not found: /test/target_not_found#hogefuga');
         }
     });
     it('invalid format schema', async () => {
@@ -87,7 +88,7 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
         } catch (e) {
-            assert.equal(e.message, 'There is no schema in the input contents.');
+            assert.strictEqual(e.message, 'There is no schema in the input contents.');
         }
     });
 

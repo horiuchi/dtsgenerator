@@ -1,9 +1,9 @@
-import assert from 'power-assert';
+import assert from 'assert';
 import opts, { clear, initialize } from '../src/commandOptions';
 
 describe('output command help test', () => {
     let content: string;
-    let oldWrite: any;
+    let oldWrite: typeof process.stdout.write;
 
     beforeEach(() => {
         oldWrite = process.stdout.write;
@@ -21,7 +21,7 @@ describe('output command help test', () => {
     it('check output command help ', () => {
         const command = initialize(['node', 'script.js']);
         command.outputHelp();
-        assert.equal(content, `Usage: dtsgenerator [options] <file ... | file patterns using node-glob>
+        assert.strictEqual(content, `Usage: dtsgenerator [options] <file ... | file patterns using node-glob>
 
 Options:
   -V, --version           output the version number
@@ -56,15 +56,15 @@ describe('command options test', () => {
     it('should parse arguments 1', () => {
         initialize(['node', 'script.js']);
 
-        assert.equal(opts.configFile, 'dtsgen.json');
-        assert.deepEqual(opts.files, []);
-        assert.deepEqual(opts.urls, []);
-        assert.equal(opts.stdin, undefined);
-        assert.equal(opts.out, undefined);
-        assert.equal(opts.target, undefined);
-        assert.equal(opts.info, undefined);
-        assert.equal(opts.outputAST, undefined);
-        assert.equal(opts.isReadFromStdin(), true);
+        assert.strictEqual(opts.configFile, 'dtsgen.json');
+        assert.deepStrictEqual(opts.files, []);
+        assert.deepStrictEqual(opts.urls, []);
+        assert.strictEqual(opts.stdin, undefined);
+        assert.strictEqual(opts.out, undefined);
+        assert.strictEqual(opts.target, undefined);
+        assert.strictEqual(opts.info, undefined);
+        assert.strictEqual(opts.outputAST, undefined);
+        assert.strictEqual(opts.isReadFromStdin(), true);
     });
     it('should parse arguments 2', () => {
         initialize([
@@ -76,15 +76,15 @@ describe('command options test', () => {
             './file1.json', '../file2.json', 'file3.json',
         ]);
 
-        assert.equal(opts.configFile, 'dtsgen.json');
-        assert.deepEqual(opts.files, ['./file1.json', '../file2.json', 'file3.json']);
-        assert.deepEqual(opts.urls, ['http://example.com/hoge/fuga', 'http://example.com/hoge/fuga2']);
-        assert.equal(opts.stdin, true);
-        assert.equal(opts.out, 'output.d.ts');
-        assert.equal(opts.target, undefined);
-        assert.equal(opts.info, undefined);
-        assert.equal(opts.outputAST, undefined);
-        assert.equal(opts.isReadFromStdin(), true);
+        assert.strictEqual(opts.configFile, 'dtsgen.json');
+        assert.deepStrictEqual(opts.files, ['./file1.json', '../file2.json', 'file3.json']);
+        assert.deepStrictEqual(opts.urls, ['http://example.com/hoge/fuga', 'http://example.com/hoge/fuga2']);
+        assert.strictEqual(opts.stdin, true);
+        assert.strictEqual(opts.out, 'output.d.ts');
+        assert.strictEqual(opts.target, undefined);
+        assert.strictEqual(opts.info, undefined);
+        assert.strictEqual(opts.outputAST, undefined);
+        assert.strictEqual(opts.isReadFromStdin(), true);
     });
     it('should parse arguments 3', () => {
         initialize([
@@ -92,15 +92,15 @@ describe('command options test', () => {
             './input1.json', './path/input2.json',
         ]);
 
-        assert.equal(opts.configFile, 'dtsgen.json');
-        assert.deepEqual(opts.files, ['./input1.json', './path/input2.json']);
-        assert.deepEqual(opts.urls, []);
-        assert.equal(opts.stdin, undefined);
-        assert.equal(opts.out, undefined);
-        assert.equal(opts.target, undefined);
-        assert.equal(opts.info, undefined);
-        assert.equal(opts.outputAST, undefined);
-        assert.equal(opts.isReadFromStdin(), false);
+        assert.strictEqual(opts.configFile, 'dtsgen.json');
+        assert.deepStrictEqual(opts.files, ['./input1.json', './path/input2.json']);
+        assert.deepStrictEqual(opts.urls, []);
+        assert.strictEqual(opts.stdin, undefined);
+        assert.strictEqual(opts.out, undefined);
+        assert.strictEqual(opts.target, undefined);
+        assert.strictEqual(opts.info, undefined);
+        assert.strictEqual(opts.outputAST, undefined);
+        assert.strictEqual(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 4', () => {
         initialize([
@@ -109,15 +109,15 @@ describe('command options test', () => {
             '--url', 'https://example.com/schema.json',
         ]);
 
-        assert.equal(opts.configFile, 'dtsgen.json');
-        assert.deepEqual(opts.files, []);
-        assert.deepEqual(opts.urls, ['https://example.com/schema.json']);
-        assert.equal(opts.stdin, undefined);
-        assert.equal(opts.out, './schema.d.ts');
-        assert.equal(opts.target, undefined);
-        assert.equal(opts.info, undefined);
-        assert.equal(opts.outputAST, undefined);
-        assert.equal(opts.isReadFromStdin(), false);
+        assert.strictEqual(opts.configFile, 'dtsgen.json');
+        assert.deepStrictEqual(opts.files, []);
+        assert.deepStrictEqual(opts.urls, ['https://example.com/schema.json']);
+        assert.strictEqual(opts.stdin, undefined);
+        assert.strictEqual(opts.out, './schema.d.ts');
+        assert.strictEqual(opts.target, undefined);
+        assert.strictEqual(opts.info, undefined);
+        assert.strictEqual(opts.outputAST, undefined);
+        assert.strictEqual(opts.isReadFromStdin(), false);
     });
 
     it('should parse arguments 5', () => {
@@ -128,15 +128,15 @@ describe('command options test', () => {
             '--url', 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml',
         ]);
 
-        assert.equal(opts.configFile, 'config.json');
-        assert.deepEqual(opts.files, []);
-        assert.deepEqual(opts.urls, ['https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml']);
-        assert.equal(opts.stdin, undefined);
-        assert.equal(opts.out, './schema.d.ts');
-        assert.equal(opts.target, undefined);
-        assert.equal(opts.info, undefined);
-        assert.equal(opts.outputAST, undefined);
-        assert.equal(opts.isReadFromStdin(), false);
+        assert.strictEqual(opts.configFile, 'config.json');
+        assert.deepStrictEqual(opts.files, []);
+        assert.deepStrictEqual(opts.urls, ['https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml']);
+        assert.strictEqual(opts.stdin, undefined);
+        assert.strictEqual(opts.out, './schema.d.ts');
+        assert.strictEqual(opts.target, undefined);
+        assert.strictEqual(opts.info, undefined);
+        assert.strictEqual(opts.outputAST, undefined);
+        assert.strictEqual(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 6', () => {
         initialize([
@@ -146,15 +146,15 @@ describe('command options test', () => {
             '--url', 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml',
         ]);
 
-        assert.equal(opts.configFile, 'config.json');
-        assert.deepEqual(opts.files, []);
-        assert.deepEqual(opts.urls, ['https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml']);
-        assert.equal(opts.stdin, undefined);
-        assert.equal(opts.out, './schema.d.ts');
-        assert.equal(opts.target, undefined);
-        assert.equal(opts.info, undefined);
-        assert.equal(opts.outputAST, undefined);
-        assert.equal(opts.isReadFromStdin(), false);
+        assert.strictEqual(opts.configFile, 'config.json');
+        assert.deepStrictEqual(opts.files, []);
+        assert.deepStrictEqual(opts.urls, ['https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml']);
+        assert.strictEqual(opts.stdin, undefined);
+        assert.strictEqual(opts.out, './schema.d.ts');
+        assert.strictEqual(opts.target, undefined);
+        assert.strictEqual(opts.info, undefined);
+        assert.strictEqual(opts.outputAST, undefined);
+        assert.strictEqual(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 7', () => {
         initialize([
@@ -164,15 +164,15 @@ describe('command options test', () => {
             './input1.json', './path/input2.json',
         ]);
 
-        assert.equal(opts.configFile, 'dtsgen.json');
-        assert.deepEqual(opts.files, ['./input1.json', './path/input2.json']);
-        assert.deepEqual(opts.urls, []);
-        assert.equal(opts.stdin, undefined);
-        assert.equal(opts.out, undefined);
-        assert.equal(opts.target, 'es5');
-        assert.equal(opts.info, undefined);
-        assert.equal(opts.outputAST, true);
-        assert.equal(opts.isReadFromStdin(), false);
+        assert.strictEqual(opts.configFile, 'dtsgen.json');
+        assert.deepStrictEqual(opts.files, ['./input1.json', './path/input2.json']);
+        assert.deepStrictEqual(opts.urls, []);
+        assert.strictEqual(opts.stdin, undefined);
+        assert.strictEqual(opts.out, undefined);
+        assert.strictEqual(opts.target, 'es5');
+        assert.strictEqual(opts.info, undefined);
+        assert.strictEqual(opts.outputAST, true);
+        assert.strictEqual(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 8', () => {
         initialize([
@@ -181,15 +181,15 @@ describe('command options test', () => {
             '--info',
         ]);
 
-        assert.equal(opts.configFile, 'config.json');
-        assert.deepEqual(opts.files, []);
-        assert.deepEqual(opts.urls, []);
-        assert.equal(opts.stdin, undefined);
-        assert.equal(opts.out, undefined);
-        assert.equal(opts.target, undefined);
-        assert.equal(opts.info, true);
-        assert.equal(opts.outputAST, undefined);
-        assert.equal(opts.isReadFromStdin(), true);
+        assert.strictEqual(opts.configFile, 'config.json');
+        assert.deepStrictEqual(opts.files, []);
+        assert.deepStrictEqual(opts.urls, []);
+        assert.strictEqual(opts.stdin, undefined);
+        assert.strictEqual(opts.out, undefined);
+        assert.strictEqual(opts.target, undefined);
+        assert.strictEqual(opts.info, true);
+        assert.strictEqual(opts.outputAST, undefined);
+        assert.strictEqual(opts.isReadFromStdin(), true);
     });
 
 });

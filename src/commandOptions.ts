@@ -45,6 +45,7 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         return memo;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const pkg = require('../package.json');
 
     // <hoge> is required, [hoge] is optional
@@ -60,7 +61,6 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         .option('--info', 'for developer mode. output loaded config and plugin details only.')
         .option('--output-ast', 'output TypeScript AST instead of d.ts file.')
         .on('--help', () => {
-            /* tslint:disable:no-console */
             console.log('');
             console.log('  Examples:');
             console.log('');
@@ -73,7 +73,7 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         })
         .parse(argv);
 
-    const res = command as any;
+    const res = command;
     o.configFile = res.config;
     o.files = command.args;
     o.urls = res.url;
@@ -84,4 +84,3 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
     o.outputAST = res.outputAst;
     return command;
 }
-
