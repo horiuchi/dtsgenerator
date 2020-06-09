@@ -6,7 +6,6 @@ TypeScript d.ts file generator from JSON Schema file or OpenAPI(Swagger) spec fi
 [![npm version](https://badge.fury.io/js/dtsgenerator.svg)](https://www.npmjs.com/package/dtsgenerator)
 [![build status](https://travis-ci.org/horiuchi/dtsgenerator.svg?branch=master)](https://travis-ci.org/horiuchi/dtsgenerator)
 [![Coverage Status](https://coveralls.io/repos/github/horiuchi/dtsgenerator/badge.svg?branch=master)](https://coveralls.io/github/horiuchi/dtsgenerator?branch=master)
-[![Greenkeeper badge](https://badges.greenkeeper.io/horiuchi/dtsgenerator.svg)](https://greenkeeper.io/)
 [![npm download count](https://img.shields.io/npm/dt/dtsgenerator.svg)](https://www.npmjs.com/package/dtsgenerator)
 [![dtsgenerator Dev Token](https://badge.devtoken.rocks/dtsgenerator)](https://devtoken.rocks/package/dtsgenerator)
 [![MIT license](https://img.shields.io/npm/l/dtsgenerator.svg)](#)
@@ -108,38 +107,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
-### [v2.7.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.7.0) (2020-06-05)
+### [v3.0.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.0.0) (2020-06-09)
 
 - features:
-  - Support the empty response type on Open API by #416. Thank you @alexkar598 :+1:
-
-### [v2.6.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.6.0) (2020-05-14)
-
-- features:
-  - Support nested schema 'allOf' keywords,
-    And added support for accessing the remote schema through a proxy by #405. Thank you @Brian-Kavanagh :+1:
-
-### [v2.5.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.5.1) (2020-04-27)
-
-- fixed:
-  - Fix: the bug of name conversion by #402. Thank you @unclechu :+1:
-  - Fix: Error when spaces included in a 'name' property under paths/parameters by #407. Thank you @scvnathan :+1:
-
-### [v2.5.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.5.0) (2020-02-28)
-
-- features:
-  - Add to support the text media type on Open API Schema by #396. Thank you @silesky :+1:
-
-### [v2.4.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.4.1) (2020-02-05)
-
-- fixed
-  - Fix: the bug of #386. thank you for reporting issue @Oloompa :+1:
-
-### [v2.4.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.4.0) (2020-02-04)
-
-- fixed
-  - Fix: typescript import statement #381. thank you @lupus92 :+1:
-  - Fix: use `export` when given empty namespace #386. Thank you @zregvart :+1:
+  - Support the plug-in for pre-process and post-process.
+  - Change command line options and Support config file.
+  - Use the TypeScript AST for intermediate format.
 
 ### older versions history
 

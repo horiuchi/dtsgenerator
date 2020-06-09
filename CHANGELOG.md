@@ -1,6 +1,39 @@
 # ChangeLog
 
-## Old Versions
+## v2
+
+### [v2.7.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.7.0) (2020-06-05)
+
+- features:
+  - Support the empty response type on Open API by #416. Thank you @alexkar598 :+1:
+
+### [v2.6.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.6.0) (2020-05-14)
+
+- features:
+  - Support nested schema 'allOf' keywords,
+    And added support for accessing the remote schema through a proxy by #405. Thank you @Brian-Kavanagh :+1:
+
+### [v2.5.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.5.1) (2020-04-27)
+
+- fixed:
+  - Fix: the bug of name conversion by #402. Thank you @unclechu :+1:
+  - Fix: Error when spaces included in a 'name' property under paths/parameters by #407. Thank you @scvnathan :+1:
+
+### [v2.5.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.5.0) (2020-02-28)
+
+- features:
+  - Add to support the text media type on Open API Schema by #396. Thank you @silesky :+1:
+
+### [v2.4.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.4.1) (2020-02-05)
+
+- fixed
+  - Fix: the bug of #386. thank you for reporting issue @Oloompa :+1:
+
+### [v2.4.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.4.0) (2020-02-04)
+
+- fixed
+  - Fix: typescript import statement #381. thank you @lupus92 :+1:
+  - Fix: use `export` when given empty namespace #386. Thank you @zregvart :+1:
 
 ### [v2.3.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v2.3.2) (2019-11-21)
 
@@ -66,6 +99,9 @@
 
 - features
   - Add to support emit the Request/Response object schema of OpenAPI by #304.
+
+
+## v1
 
 ### [v1.2.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v1.2.0) (2018-09-12)
 
