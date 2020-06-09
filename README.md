@@ -78,7 +78,25 @@ The dtsgenerator v3 has made the following braking changes from v2.
 
 ## Plug-in
 
-TBD.
+### How to find plug-in
+
+- Search by npm: https://www.npmjs.com/search?q=dtsgenerator%20plugin
+- Find by the @dtsgenerator repositories: https://github.com/dtsgenerator
+    - `@dtsgenerator/replace-namespace` : This plug-in is instead the `--namespace` option on old version.
+    - `@dtsgenerator/decorate-typename` : This plug-in can decorate the output type name.
+    - `@dtsgenerator/single-quote` : This plug-in replace the quote mark to single.
+
+### How to create plug-in
+
+1. Scaffold by the command:
+    - `npm init @dtsgenerator **plugin-name**`
+1. Edit `**plugin-name**/index.ts`
+1. Do test:
+    - `npm test`
+1. Build it:
+    - `npm run build`
+1. Publish to npm:
+    - `npm publish`
 
 ## Development
 
