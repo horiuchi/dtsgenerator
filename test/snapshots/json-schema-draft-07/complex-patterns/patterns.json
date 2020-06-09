@@ -1,0 +1,343 @@
+{
+  "$id": "http://json-schema.org/complex/patterns",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "complex patterns",
+  "definitions": {
+    "primitives": {
+      "type": "object",
+      "properties": {
+        "any": {
+          "type": "any",
+          "readOnly": true
+        },
+        "array": {
+          "type": "array"
+        },
+        "boolean": {
+          "type": "boolean"
+        },
+        "double": {
+          "type": "number",
+          "format": "double"
+        },
+        "int": {
+          "type": "integer",
+          "format": "int"
+        },
+        "integer": {
+          "type": "integer"
+        },
+        "null": {
+          "type": "null"
+        },
+        "number": {
+          "type": "number"
+        },
+        "object": {
+          "type": "object"
+        },
+        "string": {
+          "type": "string"
+        },
+        "undefined": {
+          "type": "undefined"
+        }
+      }
+    },
+    "primitives_required": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/primitives"
+        },
+        {
+          "required": [
+            "any",
+            "array",
+            "boolean",
+            "double",
+            "int",
+            "integer",
+            "null",
+            "number",
+            "object",
+            "string",
+            "undefined"
+          ]
+        }
+      ]
+    },
+    "union_tuple": {
+      "type": "object",
+      "properties": {
+        "s_tuple": {
+          "type": "string",
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        "n_tuple": {
+          "type": "integer",
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "some_types": {
+          "type": [
+            "boolean",
+            "number",
+            "string"
+          ]
+        },
+        "ref_types": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/primitives"
+            },
+            {
+              "$ref": "#/definitions/primitives_required"
+            }
+          ]
+        }
+      }
+    },
+    "array_types": {
+      "type": "object",
+      "properties": {
+        "strings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "numbers": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "arrays": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "array_of_array": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "nested_types": {
+      "type": "object",
+      "properties": {
+        "first": {
+          "type": "object",
+          "properties": {
+            "second": {
+              "type": "object",
+              "properties": {
+                "third": {
+                  "type": "object"
+                }
+              },
+              "required": [
+                "third"
+              ]
+            }
+          },
+          "required": [
+            "second"
+          ]
+        }
+      },
+      "required": [
+        "first"
+      ]
+    },
+    "comment_test": {
+      "type": "object",
+      "title": "comment test type.",
+      "description": "description comment.",
+      "examples": [
+        "  obj = {",
+        "    p1: 'example',",
+        "    p2: true,",
+        "    p3: [ false, 1.23, 'tuple' ],",
+        "  }"
+      ],
+      "properties": {
+        "p1": {
+          "type": "string",
+          "description": "p1 is string type."
+        },
+        "p2": {
+          "type": [
+            "boolean",
+            "integer",
+            "string"
+          ],
+          "title": "p2 is union types.",
+          "example": "true or 1 or 'string'"
+        },
+        "p3": {
+          "type": "array",
+          "items": [
+            {
+              "type": "boolean",
+              "description": "p3 child type 1"
+            },
+            {
+              "type": "number",
+              "format": "double",
+              "description": "p3 child type 2"
+            },
+            {
+              "type": "string",
+              "description": "p3 child type 3"
+            }
+          ],
+          "minItems": 2,
+          "$comment": "p3 is tuple types",
+          "examples": [
+            true,
+            2.5,
+            "p3"
+          ]
+        }
+      },
+      "required": [
+        "p1",
+        "p2",
+        "p3"
+      ]
+    },
+    "type_alias": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/primitives"
+        },
+        {
+          "$ref": "#/definitions/primitives_required"
+        }
+      ]
+    },
+    "type_array": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "string"
+          },
+          "b": {
+            "type": "string"
+          },
+          "n": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "c": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "c"
+              ]
+            }
+          }
+        },
+        "required": [
+          "a"
+        ]
+      }
+    },
+    "math_pi": {
+      "type": "number",
+      "const": 3.1415926536
+    },
+    "is_debug": {
+      "type": "boolean",
+      "const": false
+    },
+    "is_test": {
+      "type": "boolean",
+      "const": true
+    },
+    "project_name": {
+      "type": "string",
+      "const": "dtsgenerator"
+    }
+  },
+  "type": "object",
+  "properties": {
+    "p": {
+      "$ref": "#/definitions/primitives"
+    },
+    "pr": {
+      "$ref": "#/definitions/primitives_required"
+    },
+    "ut": {
+      "$ref": "#/definitions/union_tuple"
+    },
+    "at": {
+      "$ref": "#/definitions/array_types"
+    },
+    "nt": {
+      "$ref": "#/definitions/nested_types"
+    },
+    "ct": {
+      "$ref": "#/definitions/comment_test"
+    },
+    "ta": {
+      "$ref": "#/definitions/type_alias"
+    },
+    "array": {
+      "$ref": "#/definitions/type_array"
+    },
+    "const": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/math_pi"
+        },
+        {
+          "$ref": "#/definitions/is_debug"
+        },
+        {
+          "$ref": "#/definitions/is_test"
+        },
+        {
+          "$ref": "#/definitions/project_name"
+        }
+      ]
+    }
+  },
+  "required": [
+    "p",
+    "pr"
+  ]
+}

@@ -15,7 +15,8 @@ TypeScript d.ts file generator from JSON Schema file or OpenAPI(Swagger) spec fi
 
 - [Install](#install)
 - [Usage](#usage)
-- [Advance Usage](#advance-usage)
+- [Migration from v2](#migration-from-v2)
+- [Plug-in](#plug-in)
 - [Development](#development)
 - [ChangeLog](#changelog)
 - [License](#license)
@@ -30,24 +31,27 @@ TypeScript d.ts file generator from JSON Schema file or OpenAPI(Swagger) spec fi
 
 ```sh
 $ dtsgen --help
-Usage: script [options] <file ... | file patterns using node-glob>
+Usage: dtsgenerator [options] <file ... | file patterns using node-glob>
 
 Options:
-
-  -V, --version                output the version number
-  --url <url>                  input json schema from the url. (default: )
-  --stdin                      read stdin with other files or urls.
-  -o, --out <file>             output d.ts filename.
-  -n, --namespace <namespace>  use root namespace instead of definitions or components.schema from OpenAPI, or -n "" to suppress namespaces.
-  -h, --help                   output usage information
+  -V, --version           output the version number
+  -c, --config <file>     set configuration file path. (default: "dtsgen.json")
+  --url <url>             input json schema from the url. (default: [])
+  --stdin                 read stdin with other files or urls.
+  -o, --out <file>        output filename.
+  -t, --target <version>  Specify ECMAScript target version: 'ES3', 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT' (default).
+  --info                  for developer mode. output loaded config and plugin details only.
+  --output-ast            output TypeScript AST instead of d.ts file.
+  -h, --help              display help for command
 
   Examples:
 
     $ dtsgen --help
     $ dtsgen --out types.d.ts schema/**/*.schema.json
-    $ cat schema1.json | dtsgen
+    $ cat schema1.json | dtsgen -c dtsgenrc.json
     $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
     $ dtsgen -o petstore.d.ts -n PetStore --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
+    $ dtsgen -c dtsgen-test.json --info
 ```
 
 ### Use HTTP/HTTPS Proxy
@@ -61,45 +65,21 @@ export https_proxy=http://proxy.example.com:8080/
 export no_proxy=google.com, yahoo.com
 ```
 
-## Advance Usage
+## Migration from v2
 
-For customize the output type name.
+The dtsgenerator v3 has made the following braking changes from v2.
 
-### Install for library
+- Support Plug-in feature. See the Plug-in section for more information.
+- Change the command line options.
+    - Remove the `--namespace` option. Use the `@dtsgenerator/replace-namespace` plug-in instead.
+    - Add the `--config` option. Mainly for setting up the Plug-in.
+    - And add more options.
+- TypeScript AST is now used internally to generate type definitions.
 
-    npm install -S dtsgenerator
 
-### Usage for library
+## Plug-in
 
-For example, it want to add the `I` prefix to the interface name.
-This is not usual example...
-
-https://github.com/horiuchi/dtsgenerator/blob/master/example/add-prefix/index.ts
-```js
-import dtsGenerator, { DefaultTypeNameConvertor, SchemaId } from 'dtsgenerator';
-import * as fs from 'fs';
-
-const filePath = '../../test/snapshots/json-schema-draft-04/schema/schema.json';
-
-function typeNameConvertor(id: SchemaId): string[] {
-    const names = DefaultTypeNameConvertor(id);
-    if (names.length > 0) {
-        const lastIndex = names.length - 1;
-        names[lastIndex] = 'I' + names[lastIndex];
-    }
-    return names;
-}
-
-async function main(): Promise<void> {
-    const content = JSON.parse( fs.readFileSync(filePath, 'utf-8') );
-    const result = await dtsGenerator({
-        contents: [content],
-        typeNameConvertor,
-    });
-    console.log(result);
-}
-main();
-```
+TBD.
 
 ## Development
 

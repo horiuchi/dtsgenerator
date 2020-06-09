@@ -25,6 +25,6 @@ declare namespace JsonSchemaOrg {
         /**
          * Coordinates of the warehouse with the product
          */
-        warehouseLocation?: Geo;
+        warehouseLocation?: /* A geographical coordinate */ Geo;
     }[];
 }
