@@ -125,6 +125,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.0.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.0.2) (2020-06-11)
+
+- fixed:
+  - Remove old example by #421. Thank you @maapteh :+1:
+
 ### [v3.0.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.0.1) (2020-06-09)
 
 - features:
