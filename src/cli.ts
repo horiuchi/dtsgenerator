@@ -1,24 +1,23 @@
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
-import opts, { initialize, CommandOptions } from './commandOptions';
+import opts, { initialize, CommandOptions, defaultConfigFile } from './commandOptions';
 import dtsgenerator, { Schema, readSchemaFromStdin, readSchemasFromFile, readSchemaFromUrl } from './core';
 import config, { Config, setConfig, showConfig } from './core/config';
 import ts from 'typescript';
 
 function readConfig(options: CommandOptions): Partial<Config> {
     let pc: Partial<Config> = {};
-    if (options.configFile != null) {
-        try {
-            pc = require(options.configFile);
-        } catch (err) {
+    const configFile = options.configFile || defaultConfigFile;
+    try {
+        pc = require(configFile);
+        pc.configFile = configFile;
+    } catch (err) {
+        if (options.configFile != null) {
             console.error('Error to load config file from ' + options.configFile);
         }
     }
 
-    if (options.configFile != null) {
-        pc.configFile = options.configFile;
-    }
     if (pc.input == null) {
         pc.input = {
             files: [],
