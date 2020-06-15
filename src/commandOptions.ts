@@ -1,6 +1,6 @@
 import commander from 'commander';
 
-const defaultConfigFile = 'dtsgen.json'
+export const defaultConfigFile = 'dtsgen.json'
 
 export class CommandOptions {
     public configFile?: string;
@@ -27,7 +27,7 @@ export function initialize(argv: string[]): commander.Command {
 }
 
 export function clear(): void {
-    opts.configFile = defaultConfigFile;
+    opts.configFile = undefined;
     opts.files = [];
     opts.urls = [];
     opts.stdin = undefined;
@@ -53,7 +53,7 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         .name(pkg.name)
         .version(pkg.version)
         .usage('[options] <file ... | file patterns using node-glob>')
-        .option('-c, --config <file>', 'set configuration file path.', defaultConfigFile)
+        .option('-c, --config <file>', 'set configuration file path.')
         .option('--url <url>', 'input json schema from the url.', collectUrl, [])
         .option('--stdin', 'read stdin with other files or urls.')
         .option('-o, --out <file>', 'output filename.')
@@ -66,7 +66,7 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
             console.log('');
             console.log('    $ dtsgen --help');
             console.log('    $ dtsgen --out types.d.ts schema/**/*.schema.json');
-            console.log('    $ cat schema1.json | dtsgen -c dtsgenrc.json');
+            console.log('    $ cat schema1.json | dtsgen -c dtsgen.json');
             console.log('    $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json');
             console.log('    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml');
             console.log('    $ dtsgen -c dtsgen-test.json --info');
