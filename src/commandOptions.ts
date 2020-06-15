@@ -68,7 +68,7 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
             console.log('    $ dtsgen --out types.d.ts schema/**/*.schema.json');
             console.log('    $ cat schema1.json | dtsgen -c dtsgenrc.json');
             console.log('    $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json');
-            console.log('    $ dtsgen -o petstore.d.ts -n PetStore --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml');
+            console.log('    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml');
             console.log('    $ dtsgen -c dtsgen-test.json --info');
         })
         .parse(argv);
