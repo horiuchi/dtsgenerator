@@ -125,6 +125,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.0.3](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.0.3) (2020-06-15)
+
+- fixed:
+  - Fix the command option example by #422. Thank you @maapteh :+1:
+  - Omit load config error on not config option by #425. Thank you @Christian24 :+1:
+
 ### [v3.0.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.0.2) (2020-06-11)
 
 - fixed:
