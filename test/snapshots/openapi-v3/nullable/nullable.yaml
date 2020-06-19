@@ -10,6 +10,29 @@ components:
         field:
           type: string
           nullable: true
+
+    nullableAllOf:
+      type: object
+      properties:
+        field:
+          allOf:
+            - $ref: '#/components/schemas/nullable'
+            - required:
+                - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+          nullable: true
+
+    nullableAnyOf:
+      type: object
+      properties:
+        field:
+          anyOf:
+            - type: string
+            - type: boolean
+          nullable: true
 paths:
   post:
     requestBody:
