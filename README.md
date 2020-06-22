@@ -125,6 +125,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.1.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.1.0) (2020-06-22)
+
+- features:
+  - Add support for nullable anyOf in OpenApi v3 by #426. Thank you @joost-kersjes-webpower :+1:
+
 ### [v3.0.3](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.0.3) (2020-06-15)
 
 - fixed:
