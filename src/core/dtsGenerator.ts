@@ -199,7 +199,10 @@ export default class DtsGenerator {
             }
             if (content.nullable) {
                 const type = content.type;
-                if (type == null) {
+                const anyOf = content.anyOf;
+                if (Array.isArray(anyOf)) {
+                    anyOf.push({ type: 'null' });
+                } else if (type == null) {
                     content.type = 'null';
                 } else if (!Array.isArray(type)) {
                     content.type = [type, 'null'];
