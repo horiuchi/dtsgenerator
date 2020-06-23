@@ -125,6 +125,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.1.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.1.1) (2020-06-23)
+
+- fixed:
+  - Cannot load config file of relative path by #428. Thank you @DamianOsipiuk :+1:
+
 ### [v3.1.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.1.0) (2020-06-22)
 
 - features:
