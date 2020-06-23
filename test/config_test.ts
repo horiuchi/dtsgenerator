@@ -20,6 +20,7 @@ describe('show config test', () => {
     });
     afterEach(() => {
         process.stdout.write = oldWrite;
+        clearToDefault();
     });
 
     it('no config test', async () => {
@@ -172,5 +173,38 @@ describe('config test', () => {
 }
 `;
         assert.strictEqual(result, expected, result);
+    });
+
+    it('error case test', async () => {
+        setConfig({
+            plugins: {
+                '@dtsgenerator/not-exists-plugin': true,
+            },
+        });
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/single-quote',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    items: [
+                        { type: 'string' },
+                        { type: 'integer' },
+                        { type: 'boolean' },
+                        {
+                            type: 'string',
+                            enum: ['NW', 'NE', 'SW', 'SE'],
+                        },
+                    ],
+                },
+            },
+        };
+
+        assert.rejects(() => {
+            return dtsgenerator({ contents: [parseSchema(schema)] });
+        })
     });
 });
