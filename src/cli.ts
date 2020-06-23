@@ -10,7 +10,7 @@ function readConfig(options: CommandOptions): Partial<Config> {
     let pc: Partial<Config> = {};
     const configFile = options.configFile || defaultConfigFile;
     try {
-        pc = require(configFile);
+        pc = loadJSON(configFile);
         pc.configFile = configFile;
     } catch (err) {
         if (options.configFile != null) {
@@ -45,6 +45,10 @@ function readConfig(options: CommandOptions): Partial<Config> {
     }
     pc.outputAST = !!options.outputAST;
     return pc;
+}
+function loadJSON(file: string): Partial<Config> {
+    const content = fs.readFileSync(file, 'utf-8');
+    return JSON.parse(content);
 }
 function convertToScriptTarget(target: string): ts.ScriptTarget {
     switch (target.trim().toLowerCase()) {
