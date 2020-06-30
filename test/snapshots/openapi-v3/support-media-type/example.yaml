@@ -21,6 +21,13 @@ paths:
           $ref: '#/components/responses/500_Error'
         502:
           $ref: '#/components/responses/502_Error'
+  /second-path:
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/uploadFileRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/200_ReturnData'
 components:
   schemas:
     Request:
@@ -80,3 +87,10 @@ components:
         text/plain:
           schema:
             $ref: '#/components/schemas/ErrorText'
+  requestBodies:
+    uploadFileRequest:
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary

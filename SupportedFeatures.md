@@ -110,4 +110,5 @@ The base JSON Schema version is Draft-07
 - `application/json`
 - `application/x-www-form-urlencoded`
 - `application/*+json`
+- `application/octet-stream`
 - `text/*`
