@@ -125,6 +125,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.2.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.2.0) (2020-07-20)
+
+- features:
+  - Add support for application/octet-stream media type by #431. Thank you @MisterChateau :+1:
+
 ### [v3.1.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.1.1) (2020-06-23)
 
 - fixed:
