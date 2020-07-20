@@ -73,7 +73,8 @@ export function parseFileContent(content: string, filename?: string): JsonSchema
         }
     }
 }
-function deepCopy<T>(obj: T): T {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function deepCopy(obj: any): any {
     return JSON.parse(JSON.stringify(obj));
 }
 
