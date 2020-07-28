@@ -796,4 +796,36 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+    it('should work with patternProperties', async () => {
+        const schema: JsonSchemaDraft07.Schema = {
+            $id: '/test/pattern_properties',
+            $schema: 'http://json-schema.org/draft-07/schema#',
+            type: 'object',
+            properties: {
+                name: {
+                    type: 'string',
+                    readOnly: true,
+                },
+            },
+            patternProperties: {
+                '^[0-9]+$': {
+                    type: 'number',
+                },
+                '^[a-z]+$': {
+                    type: 'string',
+                },
+            },
+            required: ['name'],
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface PatternProperties {
+        readonly name: string;
+        [pattern: string]: number | string; /* Patterns: ^[0-9]+$ | ^[a-z]+$ */
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
 });

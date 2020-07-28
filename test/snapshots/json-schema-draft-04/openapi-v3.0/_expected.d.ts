@@ -90,6 +90,7 @@ declare namespace OpenapisOrg {
             security?: /* Lists the required security schemes to execute this operation. The name used for each property MUST correspond to a security scheme declared in the Security Schemes under the Components Object.  Security Requirement Objects that contain multiple schemes require that all schemes MUST be satisfied for a request to be authorized. This enables support for scenarios where multiple query parameters or HTTP headers are required to convey security information.  When a list of Security Requirement Objects is defined on the Open API object or Operation Object, only one of Security Requirement Objects in the list needs to be satisfied to authorize the request. */ SchemaJson.Definitions.SecurityRequirement[];
             tags?: /* Adds metadata to a single tag that is used by the Operation Object. It is not mandatory to have a Tag Object per tag defined in the Operation Object instances. */ SchemaJson.Definitions.Tag[];
             externalDocs?: /* Allows referencing an external resource for extended documentation. */ SchemaJson.Definitions.ExternalDocs;
+            [pattern: string]: /* Any property starting with x- is valid. */ SchemaJson.Definitions.SpecificationExtension; /* Patterns: ^x- */
         }
         namespace SchemaJson {
             namespace Definitions {
@@ -104,6 +105,7 @@ declare namespace OpenapisOrg {
                  * A map of possible out-of band callbacks related to the parent operation. Each value in the map is a Path Item Object that describes a set of requests that may be initiated by the API provider and the expected responses. The key value used to identify the callback object is an expression, evaluated at runtime, that identifies a URL to use for the callback operation.
                  */
                 export interface Callback {
+                    [pattern: string]: /* Describes the operations available on a single path. A Path Item MAY be empty, due to ACL constraints. The path itself is still exposed to the documentation viewer but they will not know which operations and parameters are available. */ PathItem | /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^ | ^x- */
                 }
                 export type CallbackOrReference = /* A map of possible out-of band callbacks related to the parent operation. Each value in the map is a Path Item Object that describes a set of requests that may be initiated by the API provider and the expected responses. The key value used to identify the callback object is an expression, evaluated at runtime, that identifies a URL to use for the callback operation. */ Callback | /* A simple object to allow referencing other components in the specification, internally and externally.  The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.   For this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification. */ Reference;
                 export interface CallbacksOrReferences {
@@ -122,6 +124,7 @@ declare namespace OpenapisOrg {
                     securitySchemes?: SecuritySchemesOrReferences;
                     links?: LinksOrReferences;
                     callbacks?: CallbacksOrReferences;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 /**
                  * Contact information for the exposed API.
@@ -130,6 +133,7 @@ declare namespace OpenapisOrg {
                     name?: string;
                     url?: string; // uri
                     email?: string; // email
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export type DefaultType = null | any[] | {} | number | boolean | string;
                 /**
@@ -148,6 +152,7 @@ declare namespace OpenapisOrg {
                     style?: string;
                     explode?: boolean;
                     allowReserved?: boolean;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export interface Encodings {
                     [name: string]: /* A single encoding definition applied to a single schema property. */ Encoding;
@@ -160,6 +165,7 @@ declare namespace OpenapisOrg {
                     description?: string;
                     value?: Any;
                     externalValue?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export type ExampleOrReference = /*  */ Example | /* A simple object to allow referencing other components in the specification, internally and externally.  The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.   For this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification. */ Reference;
                 export interface ExamplesOrReferences {
@@ -174,6 +180,7 @@ declare namespace OpenapisOrg {
                 export interface ExternalDocs {
                     description?: string;
                     url: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 /**
                  * The Header Object follows the structure of the Parameter Object with the following changes:  1. `name` MUST NOT be specified, it is given in the corresponding `headers` map. 1. `in` MUST NOT be specified, it is implicitly in `header`. 1. All traits that are affected by the location MUST be applicable to a location of `header` (for example, `style`).
@@ -190,6 +197,7 @@ declare namespace OpenapisOrg {
                     example?: Any;
                     examples?: ExamplesOrReferences;
                     content?: MediaTypes;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export type HeaderOrReference = /* The Header Object follows the structure of the Parameter Object with the following changes:  1. `name` MUST NOT be specified, it is given in the corresponding `headers` map. 1. `in` MUST NOT be specified, it is implicitly in `header`. 1. All traits that are affected by the location MUST be applicable to a location of `header` (for example, `style`). */ Header | /* A simple object to allow referencing other components in the specification, internally and externally.  The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.   For this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification. */ Reference;
                 export interface HeadersOrReferences {
@@ -205,6 +213,7 @@ declare namespace OpenapisOrg {
                     contact?: /* Contact information for the exposed API. */ Contact;
                     license?: /* License information for the exposed API. */ License;
                     version: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 /**
                  * License information for the exposed API.
@@ -212,6 +221,7 @@ declare namespace OpenapisOrg {
                 export interface License {
                     name: string;
                     url?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 /**
                  * The `Link object` represents a possible design-time link for a response. The presence of a link does not guarantee the caller's ability to successfully invoke it, rather it provides a known relationship and traversal mechanism between responses and other operations.  Unlike _dynamic_ links (i.e. links provided **in** the response payload), the OAS linking mechanism does not require link information in the runtime response.  For computing links, and providing instructions to execute them, a runtime expression is used for accessing values in an operation and using them as parameters while invoking the linked operation.
@@ -223,6 +233,7 @@ declare namespace OpenapisOrg {
                     requestBody?: AnyOrExpression;
                     description?: string;
                     server?: /* An object representing a Server. */ Server;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export type LinkOrReference = /* The `Link object` represents a possible design-time link for a response. The presence of a link does not guarantee the caller's ability to successfully invoke it, rather it provides a known relationship and traversal mechanism between responses and other operations.  Unlike _dynamic_ links (i.e. links provided **in** the response payload), the OAS linking mechanism does not require link information in the runtime response.  For computing links, and providing instructions to execute them, a runtime expression is used for accessing values in an operation and using them as parameters while invoking the linked operation. */ Link | /* A simple object to allow referencing other components in the specification, internally and externally.  The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.   For this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification. */ Reference;
                 export interface LinksOrReferences {
@@ -236,6 +247,7 @@ declare namespace OpenapisOrg {
                     example?: Any;
                     examples?: ExamplesOrReferences;
                     encoding?: Encodings;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export interface MediaTypes {
                     [name: string]: /* Each Media Type Object provides schema and examples for the media type identified by its key. */ MediaType;
@@ -248,6 +260,7 @@ declare namespace OpenapisOrg {
                     tokenUrl?: string;
                     refreshUrl?: string;
                     scopes?: Strings;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 /**
                  * Allows configuration of the supported OAuth Flows.
@@ -257,6 +270,7 @@ declare namespace OpenapisOrg {
                     password?: /* Configuration details for a supported OAuth Flow */ OauthFlow;
                     clientCredentials?: /* Configuration details for a supported OAuth Flow */ OauthFlow;
                     authorizationCode?: /* Configuration details for a supported OAuth Flow */ OauthFlow;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 /**
                  * Describes a single API operation on a path.
@@ -274,6 +288,7 @@ declare namespace OpenapisOrg {
                     deprecated?: boolean;
                     security?: /* Lists the required security schemes to execute this operation. The name used for each property MUST correspond to a security scheme declared in the Security Schemes under the Components Object.  Security Requirement Objects that contain multiple schemes require that all schemes MUST be satisfied for a request to be authorized. This enables support for scenarios where multiple query parameters or HTTP headers are required to convey security information.  When a list of Security Requirement Objects is defined on the Open API object or Operation Object, only one of Security Requirement Objects in the list needs to be satisfied to authorize the request. */ SecurityRequirement[];
                     servers?: /* An object representing a Server. */ Server[];
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 /**
                  * Describes a single operation parameter.  A unique parameter is defined by a combination of a name and location.
@@ -292,6 +307,7 @@ declare namespace OpenapisOrg {
                     example?: Any;
                     examples?: ExamplesOrReferences;
                     content?: MediaTypes;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export type ParameterOrReference = /* Describes a single operation parameter.  A unique parameter is defined by a combination of a name and location. */ Parameter | /* A simple object to allow referencing other components in the specification, internally and externally.  The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.   For this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification. */ Reference;
                 export interface ParametersOrReferences {
@@ -314,11 +330,13 @@ declare namespace OpenapisOrg {
                     trace?: /* Describes a single API operation on a path. */ Operation;
                     servers?: /* An object representing a Server. */ Server[];
                     parameters?: ParameterOrReference[];
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 /**
                  * Holds the relative paths to the individual endpoints and their operations. The path is appended to the URL from the `Server Object` in order to construct the full URL.  The Paths MAY be empty, due to ACL constraints.
                  */
                 export interface Paths {
+                    [pattern: string]: /* Describes the operations available on a single path. A Path Item MAY be empty, due to ACL constraints. The path itself is still exposed to the documentation viewer but they will not know which operations and parameters are available. */ PathItem | /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^/ | ^x- */
                 }
                 /**
                  * A simple object to allow referencing other components in the specification, internally and externally.  The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.   For this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification.
@@ -336,6 +354,7 @@ declare namespace OpenapisOrg {
                     description?: string;
                     content: MediaTypes;
                     required?: boolean;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export type RequestBodyOrReference = /* Describes a single request body. */ RequestBody | /* A simple object to allow referencing other components in the specification, internally and externally.  The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.   For this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification. */ Reference;
                 /**
@@ -346,6 +365,7 @@ declare namespace OpenapisOrg {
                     headers?: HeadersOrReferences;
                     content?: MediaTypes;
                     links?: LinksOrReferences;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export type ResponseOrReference = /* Describes a single response from an API Operation, including design-time, static  `links` to operations based on the response. */ Response | /* A simple object to allow referencing other components in the specification, internally and externally.  The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.   For this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification. */ Reference;
                 /**
@@ -353,6 +373,7 @@ declare namespace OpenapisOrg {
                  */
                 export interface Responses {
                     default?: ResponseOrReference;
+                    [pattern: string]: ResponseOrReference | /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^([0-9X]{3})$ | ^x- */
                 }
                 export interface ResponsesOrReferences {
                     [name: string]: ResponseOrReference;
@@ -398,6 +419,7 @@ declare namespace OpenapisOrg {
                     default?: DefaultType;
                     description?: string;
                     format?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export type SchemaOrReference = /* The Schema Object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. This object is an extended subset of the JSON Schema Specification Wright Draft 00.  For more information about the properties, see JSON Schema Core and JSON Schema Validation. Unless stated otherwise, the property definitions follow the JSON Schema. */ Schema | /* A simple object to allow referencing other components in the specification, internally and externally.  The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.   For this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification. */ Reference;
                 export interface SchemasOrReferences {
@@ -407,6 +429,7 @@ declare namespace OpenapisOrg {
                  * Lists the required security schemes to execute this operation. The name used for each property MUST correspond to a security scheme declared in the Security Schemes under the Components Object.  Security Requirement Objects that contain multiple schemes require that all schemes MUST be satisfied for a request to be authorized. This enables support for scenarios where multiple query parameters or HTTP headers are required to convey security information.  When a list of Security Requirement Objects is defined on the Open API object or Operation Object, only one of Security Requirement Objects in the list needs to be satisfied to authorize the request.
                  */
                 export interface SecurityRequirement {
+                    [pattern: string]: string[]; /* Patterns: ^[a-zA-Z0-9\.\-_]+$ */
                 }
                 /**
                  * Defines a security scheme that can be used by the operations. Supported schemes are HTTP authentication, an API key (either as a header or as a query parameter), OAuth2's common flows (implicit, password, application and access code) as defined in RFC6749, and OpenID Connect Discovery.
@@ -420,6 +443,7 @@ declare namespace OpenapisOrg {
                     bearerFormat?: string;
                     flows?: /* Allows configuration of the supported OAuth Flows. */ OauthFlows;
                     openIdConnectUrl?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export type SecuritySchemeOrReference = /* Defines a security scheme that can be used by the operations. Supported schemes are HTTP authentication, an API key (either as a header or as a query parameter), OAuth2's common flows (implicit, password, application and access code) as defined in RFC6749, and OpenID Connect Discovery. */ SecurityScheme | /* A simple object to allow referencing other components in the specification, internally and externally.  The Reference Object is defined by JSON Reference and follows the same structure, behavior and rules.   For this specification, reference resolution is accomplished as defined by the JSON Reference specification and not by the JSON Schema specification. */ Reference;
                 export interface SecuritySchemesOrReferences {
@@ -432,6 +456,7 @@ declare namespace OpenapisOrg {
                     url: string;
                     description?: string;
                     variables?: ServerVariables;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 /**
                  * An object representing a Server Variable for server URL template substitution.
@@ -440,6 +465,7 @@ declare namespace OpenapisOrg {
                     enum?: string[];
                     default: string;
                     description?: string;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 export interface ServerVariables {
                     [name: string]: /* An object representing a Server Variable for server URL template substitution. */ ServerVariable;
@@ -458,6 +484,7 @@ declare namespace OpenapisOrg {
                     name: string;
                     description?: string;
                     externalDocs?: /* Allows referencing an external resource for extended documentation. */ ExternalDocs;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
                 /**
                  * A metadata object that allows for more fine-tuned XML model definitions.  When using arrays, XML element names are *not* inferred (for singular/plural forms) and the `name` property SHOULD be used to add that information. See examples for expected behavior.
@@ -468,6 +495,7 @@ declare namespace OpenapisOrg {
                     prefix?: string;
                     attribute?: boolean;
                     wrapped?: boolean;
+                    [pattern: string]: /* Any property starting with x- is valid. */ SpecificationExtension; /* Patterns: ^x- */
                 }
             }
         }
