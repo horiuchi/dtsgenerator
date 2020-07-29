@@ -125,6 +125,14 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.3.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.3.0) (2020-07-29)
+
+- features:
+  - Support the `patternProperties` by #436. Thank you @nfroidure :+1:
+- fixed:
+  - Definition generated improperly when multiple instances of a resource are inherited by #279. Thank you @btg5679 :+1:
+  - Apply the `prettier` config on `.eslintrc.json`.
+
 ### [v3.2.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.2.0) (2020-07-20)
 
 - features:

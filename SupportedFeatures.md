@@ -34,10 +34,10 @@ Supported Features
 |maxProperties|x||
 |minProperties|x||
 |required|o|non nullable type|
-|additionalProperties|o|if true, add the index signatures|
+|additionalProperties|o|if true, add the index signature|
 |definitions|o||
 |properties|o|add some properties in this type|
-|patternProperties|x||
+|patternProperties|o|merge properties and add index signature|
 |dependencies|x|but also search the sub schema types|
 |enum|o|enum type, supported string and integer values|
 |type|o|The type of that property|
@@ -50,7 +50,7 @@ Supported Features
 
 ## Draft-07
 
-### defference from Draft-04
+### deference from Draft-04
 
 |property|status|on TypeScript|
 |--------|:----:|----|
