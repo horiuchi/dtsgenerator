@@ -7,7 +7,10 @@ import SimpleTypes = JsonSchemaDraft04.Schema.Definitions.SimpleTypes;
 
 const debug = Debug('dtsgen');
 
-export function toTSType(type: string, debugSource?: JsonSchemaObject): ts.KeywordTypeNode['kind'] | undefined {
+export function toTSType(
+    type: string,
+    debugSource?: JsonSchemaObject
+): ts.KeywordTypeNode['kind'] | undefined {
     switch (type) {
         case 'any':
             return ts.SyntaxKind.AnyKeyword;
@@ -28,7 +31,13 @@ export function toTSType(type: string, debugSource?: JsonSchemaObject): ts.Keywo
             return undefined;
         default:
             if (debugSource) {
-                debug(`toTSType: unknown type: ${JSON.stringify(debugSource, null, 2)}`);
+                debug(
+                    `toTSType: unknown type: ${JSON.stringify(
+                        debugSource,
+                        null,
+                        2
+                    )}`
+                );
             }
             throw new Error('unknown type: ' + type);
     }

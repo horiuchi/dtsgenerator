@@ -8,20 +8,34 @@ import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 
 type OpenApiSchema = OpenApisV2.SchemaJson | OpenApisV3.SchemaJson;
 
-interface ParameterObject { name: string; in: string; required?: boolean; schema?: JsonSchemaObject; }
-type Parameter = ParameterObject | { $ref?: string; };
+interface ParameterObject {
+    name: string;
+    in: string;
+    required?: boolean;
+    schema?: JsonSchemaObject;
+}
+type Parameter = ParameterObject | { $ref?: string };
 
 export interface NormalizedSchema extends Schema {
     content: JsonSchemaObject;
 }
 
-export function getSubSchema(rootSchema: Schema, pointer: string, id?: SchemaId): Schema {
-    const content = JsonPointer.get(rootSchema.content, JsonPointer.parse(pointer));
+export function getSubSchema(
+    rootSchema: Schema,
+    pointer: string,
+    id?: SchemaId
+): Schema {
+    const content = JsonPointer.get(
+        rootSchema.content,
+        JsonPointer.parse(pointer)
+    );
     if (id == null) {
         const subId = getId(rootSchema.type, content);
         const getParentIds = (s: Schema, result: string[]): string[] => {
             result.push(s.id.getAbsoluteId());
-            return s.rootSchema == null ? result : getParentIds(s.rootSchema, result);
+            return s.rootSchema == null
+                ? result
+                : getParentIds(s.rootSchema, result);
         };
         if (subId) {
             id = new SchemaId(subId, getParentIds(rootSchema, []));
@@ -50,13 +64,23 @@ export function setId(type: SchemaType, content: any, id: string): void {
 }
 function getIdPropertyName(type: SchemaType): string {
     switch (type) {
-        case 'Draft04': return 'id';
-        case 'Draft07': return '$id';
+        case 'Draft04':
+            return 'id';
+        case 'Draft07':
+            return '$id';
     }
 }
 
-export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Schema) => void, onFoundReference: (refId: SchemaId) => void): void {
-    const walkArray = (array: JsonSchema[] | undefined, paths: string[], parentIds: string[]): void => {
+export function searchAllSubSchema(
+    schema: Schema,
+    onFoundSchema: (subSchema: Schema) => void,
+    onFoundReference: (refId: SchemaId) => void
+): void {
+    const walkArray = (
+        array: JsonSchema[] | undefined,
+        paths: string[],
+        parentIds: string[]
+    ): void => {
         if (array == null) {
             return;
         }
@@ -64,7 +88,11 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             walk(item, paths.concat(index.toString()), parentIds);
         });
     };
-    const walkObject = (obj: { [name: string]: JsonSchema; } | undefined, paths: string[], parentIds: string[]): void => {
+    const walkObject = (
+        obj: { [name: string]: JsonSchema } | undefined,
+        paths: string[],
+        parentIds: string[]
+    ): void => {
         if (obj == null) {
             return;
         }
@@ -75,14 +103,22 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             }
         });
     };
-    const walkMaybeArray = (item: JsonSchema | JsonSchema[] | undefined, paths: string[], parentIds: string[]): void => {
+    const walkMaybeArray = (
+        item: JsonSchema | JsonSchema[] | undefined,
+        paths: string[],
+        parentIds: string[]
+    ): void => {
         if (Array.isArray(item)) {
             walkArray(item, paths, parentIds);
         } else {
             walk(item, paths, parentIds);
         }
     };
-    const walk = (s: JsonSchema | undefined, paths: string[], parentIds: string[]) => {
+    const walk = (
+        s: JsonSchema | undefined,
+        paths: string[],
+        parentIds: string[]
+    ) => {
         if (s == null || typeof s !== 'object') {
             return;
         }
@@ -112,10 +148,18 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
 
         walkMaybeArray(s.items, paths.concat('items'), parentIds);
         walk(s.additionalItems, paths.concat('additionalItems'), parentIds);
-        walk(s.additionalProperties, paths.concat('additionalProperties'), parentIds);
+        walk(
+            s.additionalProperties,
+            paths.concat('additionalProperties'),
+            parentIds
+        );
         walkObject(s.definitions, paths.concat('definitions'), parentIds);
         walkObject(s.properties, paths.concat('properties'), parentIds);
-        walkObject(s.patternProperties, paths.concat('patternProperties'), parentIds);
+        walkObject(
+            s.patternProperties,
+            paths.concat('patternProperties'),
+            parentIds
+        );
         walkMaybeArray(s.dependencies, paths.concat('dependencies'), parentIds);
         if (schema.type === 'Draft07') {
             if ('propertyNames' in s) {
@@ -136,10 +180,17 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             key = key.replace(/\/(.)/g, (_match, p1) => {
                 return p1.toUpperCase();
             });
-            return key.replace(/}/g, '').replace(/{/g, '$')
-                    .replace(/^\//, '').replace(/[^0-9A-Za-z_$]+/g, '_');
+            return key
+                .replace(/}/g, '')
+                .replace(/{/g, '$')
+                .replace(/^\//, '')
+                .replace(/[^0-9A-Za-z_$]+/g, '_');
         }
-        function setSubIdToAnyObject<T>(f: (t: T, keys: string[]) => void, obj: { [key: string]: T } | undefined, keys: string[]): void {
+        function setSubIdToAnyObject<T>(
+            f: (t: T, keys: string[]) => void,
+            obj: { [key: string]: T } | undefined,
+            keys: string[]
+        ): void {
             if (obj == null) {
                 return;
             }
@@ -150,13 +201,19 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
         }
 
         // for OpenAPI
-        const setSubIdToParameterObject = (obj: { [name: string]: Parameter; } | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToParameter, obj, keys);
+        const setSubIdToParameterObject = (
+            obj: { [name: string]: Parameter } | undefined,
+            keys: string[]
+        ) => setSubIdToAnyObject(setSubIdToParameter, obj, keys);
         function setSubIdToParameter(param: Parameter, keys: string[]): void {
             if ('schema' in param) {
                 setSubId(param.schema, keys.concat(param.name));
             }
         }
-        function setSubIdToParameters(array: Parameter[] | undefined, keys: string[]): void {
+        function setSubIdToParameters(
+            array: Parameter[] | undefined,
+            keys: string[]
+        ): void {
             if (array == null) {
                 return;
             }
@@ -175,29 +232,53 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             });
             addParameterSchema(map, keys);
         }
-        function addParameterSchema(input: Map<string, ParameterObject[]>, keys: string[]): void {
+        function addParameterSchema(
+            input: Map<string, ParameterObject[]>,
+            keys: string[]
+        ): void {
             for (const [key, params] of input) {
                 const [paths, obj] = buildParameterSchema(key, params, keys);
                 setSubId(obj, paths);
             }
         }
-        function buildParameterSchema(inType: string, params: ParameterObject[], keys: string[]): [string[], JsonSchemaObject] {
-            const paths = keys.slice(0, keys.length - 1).concat(inType + 'Parameters');
+        function buildParameterSchema(
+            inType: string,
+            params: ParameterObject[],
+            keys: string[]
+        ): [string[], JsonSchemaObject] {
+            const paths = keys
+                .slice(0, keys.length - 1)
+                .concat(inType + 'Parameters');
             const properties: { [name: string]: JsonSchemaDraft04.Schema } = {};
             params.forEach((item) => {
-                properties[item.name] = { $ref: createId(keys.concat(item.name)) };
+                properties[item.name] = {
+                    $ref: createId(keys.concat(item.name)),
+                };
             });
-            return [paths, {
-                id: createId(paths),
-                type: 'object',
-                properties,
-                required: params.filter((item) => item.required === true).map((item) => item.name),
-            }];
+            return [
+                paths,
+                {
+                    id: createId(paths),
+                    type: 'object',
+                    properties,
+                    required: params
+                        .filter((item) => item.required === true)
+                        .map((item) => item.name),
+                },
+            ];
         }
 
         /// for OpenAPI V2 only
-        const setSubIdToResponsesV2 = (responses: OpenApisV2.SchemaJson.Definitions.Responses | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToResponseV2, responses, keys);
-        function setSubIdToResponseV2(response: OpenApisV2.SchemaJson.Definitions.ResponseValue | undefined, keys: string[]): void {
+        const setSubIdToResponsesV2 = (
+            responses: OpenApisV2.SchemaJson.Definitions.Responses | undefined,
+            keys: string[]
+        ) => setSubIdToAnyObject(setSubIdToResponseV2, responses, keys);
+        function setSubIdToResponseV2(
+            response:
+                | OpenApisV2.SchemaJson.Definitions.ResponseValue
+                | undefined,
+            keys: string[]
+        ): void {
             if (response == null) {
                 return;
             }
@@ -209,7 +290,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 setSubId(s as JsonSchemaObject, keys);
             }
         }
-        function setSubIdToOperationV2(ops: OpenApisV2.SchemaJson.Definitions.Operation | undefined, keys: string[]): void {
+        function setSubIdToOperationV2(
+            ops: OpenApisV2.SchemaJson.Definitions.Operation | undefined,
+            keys: string[]
+        ): void {
             if (ops == null) {
                 return;
             }
@@ -220,9 +304,18 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             setSubIdToParameters(ops.parameters, keys.concat('parameters'));
             setSubIdToResponsesV2(ops.responses, keys.concat('responses'));
         }
-        const setSubIdToPathsV2 = (paths: OpenApisV2.SchemaJson.Definitions.Paths, keys: string[]) => setSubIdToAnyObject(setSubIdToPathItemV2, paths, keys);
-        function setSubIdToPathItemV2(pathItem: OpenApisV2.SchemaJson.Definitions.PathItem, keys: string[]): void {
-            setSubIdToParameters(pathItem.parameters, keys.concat('parameters'));
+        const setSubIdToPathsV2 = (
+            paths: OpenApisV2.SchemaJson.Definitions.Paths,
+            keys: string[]
+        ) => setSubIdToAnyObject(setSubIdToPathItemV2, paths, keys);
+        function setSubIdToPathItemV2(
+            pathItem: OpenApisV2.SchemaJson.Definitions.PathItem,
+            keys: string[]
+        ): void {
+            setSubIdToParameters(
+                pathItem.parameters,
+                keys.concat('parameters')
+            );
             setSubIdToOperationV2(pathItem.get, keys.concat('get'));
             setSubIdToOperationV2(pathItem.put, keys.concat('put'));
             setSubIdToOperationV2(pathItem.post, keys.concat('post'));
@@ -233,19 +326,36 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
         }
 
         /// for OpenAPI V3 only
-        function setSubIdToMediaTypes(types: OpenApisV3.SchemaJson.Definitions.MediaTypes | undefined, keys: string[]): void {
+        function setSubIdToMediaTypes(
+            types: OpenApisV3.SchemaJson.Definitions.MediaTypes | undefined,
+            keys: string[]
+        ): void {
             if (types == null) {
                 return;
             }
             for (const mime of Object.keys(types)) {
-                if (/^text\/|^(?:application\/x-www-form-urlencoded$|^application\/([a-z0-9-_]+\+)?json)$|^application\/octet-stream$/.test(mime)) {
+                if (
+                    /^text\/|^(?:application\/x-www-form-urlencoded$|^application\/([a-z0-9-_]+\+)?json)$|^application\/octet-stream$/.test(
+                        mime
+                    )
+                ) {
                     const mt = types[mime];
                     setSubId(mt.schema, keys);
                 }
             }
         }
-        const setSubIdToRequestBodies = (bodies: OpenApisV3.SchemaJson.Definitions.RequestBodiesOrReferences | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToRequestBody, bodies, keys);
-        function setSubIdToRequestBody(body: OpenApisV3.SchemaJson.Definitions.RequestBodyOrReference | undefined, keys: string[]): void {
+        const setSubIdToRequestBodies = (
+            bodies:
+                | OpenApisV3.SchemaJson.Definitions.RequestBodiesOrReferences
+                | undefined,
+            keys: string[]
+        ) => setSubIdToAnyObject(setSubIdToRequestBody, bodies, keys);
+        function setSubIdToRequestBody(
+            body:
+                | OpenApisV3.SchemaJson.Definitions.RequestBodyOrReference
+                | undefined,
+            keys: string[]
+        ): void {
             if (body == null) {
                 return;
             }
@@ -254,11 +364,21 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             } else if ('$ref' in body) {
                 setSubId(body, keys);
             } else {
-                setSubId({ type: 'object' }, keys)
+                setSubId({ type: 'object' }, keys);
             }
         }
-        const setSubIdToResponsesV3 = (responses: OpenApisV3.SchemaJson.Definitions.ResponsesOrReferences | undefined, keys: string[]) => setSubIdToAnyObject(setSubIdToResponseV3, responses, keys);
-        function setSubIdToResponseV3(response: OpenApisV3.SchemaJson.Definitions.ResponseOrReference | undefined, keys: string[]): void {
+        const setSubIdToResponsesV3 = (
+            responses:
+                | OpenApisV3.SchemaJson.Definitions.ResponsesOrReferences
+                | undefined,
+            keys: string[]
+        ) => setSubIdToAnyObject(setSubIdToResponseV3, responses, keys);
+        function setSubIdToResponseV3(
+            response:
+                | OpenApisV3.SchemaJson.Definitions.ResponseOrReference
+                | undefined,
+            keys: string[]
+        ): void {
             if (response == null) {
                 return;
             }
@@ -267,10 +387,13 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             } else if ('$ref' in response) {
                 setSubId(response, keys);
             } else {
-                setSubId({ type: 'object' }, keys)
+                setSubId({ type: 'object' }, keys);
             }
         }
-        function setSubIdToOperationV3(ops: OpenApisV3.SchemaJson.Definitions.Operation | undefined, keys: string[]): void {
+        function setSubIdToOperationV3(
+            ops: OpenApisV3.SchemaJson.Definitions.Operation | undefined,
+            keys: string[]
+        ): void {
             if (ops == null) {
                 return;
             }
@@ -282,9 +405,18 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             setSubIdToRequestBody(ops.requestBody, keys.concat('requestBody'));
             setSubIdToResponsesV3(ops.responses, keys.concat('responses'));
         }
-        const setSubIdToPathsV3 = (paths: OpenApisV3.SchemaJson.Definitions.Paths, keys: string[]) => setSubIdToAnyObject(setSubIdToPathItemV3, paths, keys);
-        function setSubIdToPathItemV3(pathItem: OpenApisV3.SchemaJson.Definitions.PathItem, keys: string[]): void {
-            setSubIdToParameters(pathItem.parameters, keys.concat('parameters'));
+        const setSubIdToPathsV3 = (
+            paths: OpenApisV3.SchemaJson.Definitions.Paths,
+            keys: string[]
+        ) => setSubIdToAnyObject(setSubIdToPathItemV3, paths, keys);
+        function setSubIdToPathItemV3(
+            pathItem: OpenApisV3.SchemaJson.Definitions.PathItem,
+            keys: string[]
+        ): void {
+            setSubIdToParameters(
+                pathItem.parameters,
+                keys.concat('parameters')
+            );
             setSubIdToOperationV3(pathItem.get, keys.concat('get'));
             setSubIdToOperationV3(pathItem.put, keys.concat('put'));
             setSubIdToOperationV3(pathItem.post, keys.concat('post'));
@@ -295,7 +427,10 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             setSubIdToOperationV3(pathItem.trace, keys.concat('trace'));
         }
 
-        function setSubIdToObject(obj: { [name: string]: JsonSchema; } | undefined, paths: string[]): void {
+        function setSubIdToObject(
+            obj: { [name: string]: JsonSchema } | undefined,
+            paths: string[]
+        ): void {
             if (obj == null) {
                 return;
             }
@@ -329,9 +464,18 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
             if (openApi.components) {
                 const components = openApi.components;
                 setSubIdToObject(components.schemas, ['components', 'schemas']);
-                setSubIdToResponsesV3(components.responses, ['components', 'responses']);
-                setSubIdToParameterObject(components.parameters, ['components', 'parameters']);
-                setSubIdToRequestBodies(components.requestBodies, ['components', 'requestBodies']);
+                setSubIdToResponsesV3(components.responses, [
+                    'components',
+                    'responses',
+                ]);
+                setSubIdToParameterObject(components.parameters, [
+                    'components',
+                    'parameters',
+                ]);
+                setSubIdToRequestBodies(components.requestBodies, [
+                    'components',
+                    'requestBodies',
+                ]);
             }
             setSubIdToPathsV3(openApi.paths, ['paths']);
         }
@@ -345,11 +489,15 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
     walk(schema.content, ['#'], []);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function selectSchemaType(content: any): { type: SchemaType; openApiVersion?: 2 | 3; } {
+export function selectSchemaType(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    content: any
+): { type: SchemaType; openApiVersion?: 2 | 3 } {
     if (content.$schema) {
         const schema = content.$schema;
-        const match = schema.match(/http:\/\/json-schema\.org\/draft-(\d+)\/schema#?/);
+        const match = schema.match(
+            /http:\/\/json-schema\.org\/draft-(\d+)\/schema#?/
+        );
         if (match) {
             const version = Number(match[1]);
             if (version <= 4) {

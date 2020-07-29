@@ -30,6 +30,9 @@ export function buildAnyKeyword(): ts.KeywordTypeNode {
 export function buildNeverKeyword(): ts.KeywordTypeNode {
     return buildKeyword(ts.SyntaxKind.NeverKeyword);
 }
+export function buildUnknownKeyword(): ts.KeywordTypeNode {
+    return buildKeyword(ts.SyntaxKind.UnknownKeyword);
+}
 export function buildStringKeyword(): ts.KeywordTypeNode {
     return buildKeyword(ts.SyntaxKind.StringKeyword);
 }

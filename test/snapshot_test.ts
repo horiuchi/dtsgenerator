@@ -8,10 +8,7 @@ import { parseFileContent, parseSchema } from '../src/core/type';
 const fixturesDir = path.join(__dirname, 'snapshots');
 const expectedFileName = '_expected.d.ts';
 const configFileName = '_config.json';
-const reservedFiles = [
-    expectedFileName,
-    configFileName,
-];
+const reservedFiles = [expectedFileName, configFileName];
 
 describe('Snapshot testing', () => {
     afterEach(() => {
@@ -24,16 +21,23 @@ describe('Snapshot testing', () => {
             it(`Test ${typeName} ${normalizedTestName}`, async function () {
                 const fixtureDir = path.join(fixturesDir, typeName, caseName);
                 const filePaths = fs.readdirSync(fixtureDir);
-                const expectedFilePath = path.join(fixtureDir, expectedFileName);
+                const expectedFilePath = path.join(
+                    fixtureDir,
+                    expectedFileName
+                );
                 const configFilePath = path.join(fixtureDir, configFileName);
-                const config = fs.existsSync(configFilePath) ? require(configFilePath) : {};
+                const config = fs.existsSync(configFilePath)
+                    ? require(configFilePath)
+                    : {};
 
                 setConfig(config);
                 const contents = filePaths
                     .filter((f) => !reservedFiles.includes(f))
                     .map((f) => path.join(fixtureDir, f))
                     .map((file) => {
-                        const data = fs.readFileSync(file, { encoding: 'utf-8' });
+                        const data = fs.readFileSync(file, {
+                            encoding: 'utf-8',
+                        });
                         const content = parseFileContent(data, file);
                         return parseSchema(content);
                     });
@@ -45,11 +49,17 @@ describe('Snapshot testing', () => {
                     this.skip();
                     return;
                 }
-                const expected = fs.readFileSync(expectedFilePath, { encoding: 'utf-8' });
-                assert.strictEqual(actual, expected, `
+                const expected = fs.readFileSync(expectedFilePath, {
+                    encoding: 'utf-8',
+                });
+                assert.strictEqual(
+                    actual,
+                    expected,
+                    `
 ${fixtureDir}
 ${actual}
-`);
+`
+                );
             });
         });
     });

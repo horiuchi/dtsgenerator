@@ -21,7 +21,9 @@ describe('output command help test', () => {
     it('check output command help ', () => {
         const command = initialize(['node', 'script.js']);
         command.outputHelp();
-        assert.strictEqual(content, `Usage: dtsgenerator [options] <file ... | file patterns using node-glob>
+        assert.strictEqual(
+            content,
+            `Usage: dtsgenerator [options] <file ... | file patterns using node-glob>
 
 Options:
   -V, --version           output the version number
@@ -42,13 +44,12 @@ Options:
     $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
     $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
     $ dtsgen -c dtsgen-test.json --info
-`);
+`
+        );
     });
-
 });
 
 describe('command options test', () => {
-
     afterEach(() => {
         clear();
     });
@@ -68,17 +69,30 @@ describe('command options test', () => {
     });
     it('should parse arguments 2', () => {
         initialize([
-            'node', 'script.js',
-            '--out', 'output.d.ts',
+            'node',
+            'script.js',
+            '--out',
+            'output.d.ts',
             '--stdin',
-            '--url', 'http://example.com/hoge/fuga',
-            '--url', 'http://example.com/hoge/fuga2',
-            './file1.json', '../file2.json', 'file3.json',
+            '--url',
+            'http://example.com/hoge/fuga',
+            '--url',
+            'http://example.com/hoge/fuga2',
+            './file1.json',
+            '../file2.json',
+            'file3.json',
         ]);
 
         assert.strictEqual(opts.configFile, undefined);
-        assert.deepStrictEqual(opts.files, ['./file1.json', '../file2.json', 'file3.json']);
-        assert.deepStrictEqual(opts.urls, ['http://example.com/hoge/fuga', 'http://example.com/hoge/fuga2']);
+        assert.deepStrictEqual(opts.files, [
+            './file1.json',
+            '../file2.json',
+            'file3.json',
+        ]);
+        assert.deepStrictEqual(opts.urls, [
+            'http://example.com/hoge/fuga',
+            'http://example.com/hoge/fuga2',
+        ]);
         assert.strictEqual(opts.stdin, true);
         assert.strictEqual(opts.out, 'output.d.ts');
         assert.strictEqual(opts.target, undefined);
@@ -88,12 +102,17 @@ describe('command options test', () => {
     });
     it('should parse arguments 3', () => {
         initialize([
-            'node', 'script.js',
-            './input1.json', './path/input2.json',
+            'node',
+            'script.js',
+            './input1.json',
+            './path/input2.json',
         ]);
 
         assert.strictEqual(opts.configFile, undefined);
-        assert.deepStrictEqual(opts.files, ['./input1.json', './path/input2.json']);
+        assert.deepStrictEqual(opts.files, [
+            './input1.json',
+            './path/input2.json',
+        ]);
         assert.deepStrictEqual(opts.urls, []);
         assert.strictEqual(opts.stdin, undefined);
         assert.strictEqual(opts.out, undefined);
@@ -104,9 +123,12 @@ describe('command options test', () => {
     });
     it('should parse arguments 4', () => {
         initialize([
-            'node', 'script.js',
-            '--out', './schema.d.ts',
-            '--url', 'https://example.com/schema.json',
+            'node',
+            'script.js',
+            '--out',
+            './schema.d.ts',
+            '--url',
+            'https://example.com/schema.json',
         ]);
 
         assert.strictEqual(opts.configFile, undefined);
@@ -122,15 +144,21 @@ describe('command options test', () => {
 
     it('should parse arguments 5', () => {
         initialize([
-            'node', 'script.js',
-            '--out', './schema.d.ts',
-            '--config', 'config.json',
-            '--url', 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml',
+            'node',
+            'script.js',
+            '--out',
+            './schema.d.ts',
+            '--config',
+            'config.json',
+            '--url',
+            'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml',
         ]);
 
         assert.strictEqual(opts.configFile, 'config.json');
         assert.deepStrictEqual(opts.files, []);
-        assert.deepStrictEqual(opts.urls, ['https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml']);
+        assert.deepStrictEqual(opts.urls, [
+            'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml',
+        ]);
         assert.strictEqual(opts.stdin, undefined);
         assert.strictEqual(opts.out, './schema.d.ts');
         assert.strictEqual(opts.target, undefined);
@@ -140,15 +168,21 @@ describe('command options test', () => {
     });
     it('should parse arguments 6', () => {
         initialize([
-            'node', 'script.js',
-            '--out', './schema.d.ts',
-            '-c', 'config.json',
-            '--url', 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml',
+            'node',
+            'script.js',
+            '--out',
+            './schema.d.ts',
+            '-c',
+            'config.json',
+            '--url',
+            'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml',
         ]);
 
         assert.strictEqual(opts.configFile, 'config.json');
         assert.deepStrictEqual(opts.files, []);
-        assert.deepStrictEqual(opts.urls, ['https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml']);
+        assert.deepStrictEqual(opts.urls, [
+            'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml',
+        ]);
         assert.strictEqual(opts.stdin, undefined);
         assert.strictEqual(opts.out, './schema.d.ts');
         assert.strictEqual(opts.target, undefined);
@@ -158,14 +192,20 @@ describe('command options test', () => {
     });
     it('should parse arguments 7', () => {
         initialize([
-            'node', 'script.js',
-            '-t', 'es5',
+            'node',
+            'script.js',
+            '-t',
+            'es5',
             '--output-ast',
-            './input1.json', './path/input2.json',
+            './input1.json',
+            './path/input2.json',
         ]);
 
         assert.strictEqual(opts.configFile, undefined);
-        assert.deepStrictEqual(opts.files, ['./input1.json', './path/input2.json']);
+        assert.deepStrictEqual(opts.files, [
+            './input1.json',
+            './path/input2.json',
+        ]);
         assert.deepStrictEqual(opts.urls, []);
         assert.strictEqual(opts.stdin, undefined);
         assert.strictEqual(opts.out, undefined);
@@ -175,11 +215,7 @@ describe('command options test', () => {
         assert.strictEqual(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 8', () => {
-        initialize([
-            'node', 'script.js',
-            '-c', 'config.json',
-            '--info',
-        ]);
+        initialize(['node', 'script.js', '-c', 'config.json', '--info']);
 
         assert.strictEqual(opts.configFile, 'config.json');
         assert.deepStrictEqual(opts.files, []);
@@ -191,6 +227,4 @@ describe('command options test', () => {
         assert.strictEqual(opts.outputAST, undefined);
         assert.strictEqual(opts.isReadFromStdin(), true);
     });
-
 });
-

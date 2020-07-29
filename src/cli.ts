@@ -1,8 +1,17 @@
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
-import opts, { initialize, CommandOptions, defaultConfigFile } from './commandOptions';
-import dtsgenerator, { Schema, readSchemaFromStdin, readSchemasFromFile, readSchemaFromUrl } from './core';
+import opts, {
+    initialize,
+    CommandOptions,
+    defaultConfigFile,
+} from './commandOptions';
+import dtsgenerator, {
+    Schema,
+    readSchemaFromStdin,
+    readSchemasFromFile,
+    readSchemaFromUrl,
+} from './core';
 import config, { Config, setConfig, showConfig } from './core/config';
 import ts from 'typescript';
 
@@ -14,7 +23,9 @@ function readConfig(options: CommandOptions): Partial<Config> {
         pc.configFile = configFile;
     } catch (err) {
         if (options.configFile != null) {
-            console.error('Error to load config file from ' + options.configFile);
+            console.error(
+                'Error to load config file from ' + options.configFile
+            );
         }
     }
 
@@ -52,16 +63,26 @@ function loadJSON(file: string): Partial<Config> {
 }
 function convertToScriptTarget(target: string): ts.ScriptTarget {
     switch (target.trim().toLowerCase()) {
-        case 'es3': return ts.ScriptTarget.ES3;
-        case 'es5': return ts.ScriptTarget.ES5;
-        case 'es2015': return ts.ScriptTarget.ES2015;
-        case 'es2016': return ts.ScriptTarget.ES2016;
-        case 'es2017': return ts.ScriptTarget.ES2017;
-        case 'es2018': return ts.ScriptTarget.ES2018;
-        case 'es2019': return ts.ScriptTarget.ES2019;
-        case 'es2020': return ts.ScriptTarget.ES2020;
-        case 'esnext': return ts.ScriptTarget.ESNext;
-        default: return ts.ScriptTarget.Latest;
+        case 'es3':
+            return ts.ScriptTarget.ES3;
+        case 'es5':
+            return ts.ScriptTarget.ES5;
+        case 'es2015':
+            return ts.ScriptTarget.ES2015;
+        case 'es2016':
+            return ts.ScriptTarget.ES2016;
+        case 'es2017':
+            return ts.ScriptTarget.ES2017;
+        case 'es2018':
+            return ts.ScriptTarget.ES2018;
+        case 'es2019':
+            return ts.ScriptTarget.ES2019;
+        case 'es2020':
+            return ts.ScriptTarget.ES2020;
+        case 'esnext':
+            return ts.ScriptTarget.ESNext;
+        default:
+            return ts.ScriptTarget.Latest;
     }
 }
 
@@ -69,13 +90,25 @@ async function loadContents(): Promise<Schema[]> {
     let contents: Schema[] = [];
     const ps: Promise<void>[] = [];
     if (config.input.stdin) {
-        ps.push(readSchemaFromStdin().then(s => { contents.push(s) }));
+        ps.push(
+            readSchemaFromStdin().then((s) => {
+                contents.push(s);
+            })
+        );
     }
     for (const pattern of config.input.files) {
-        ps.push(readSchemasFromFile(pattern).then(ss => { contents = contents.concat(ss) }));
+        ps.push(
+            readSchemasFromFile(pattern).then((ss) => {
+                contents = contents.concat(ss);
+            })
+        );
     }
     for (const url of config.input.urls) {
-        ps.push(readSchemaFromUrl(url).then(s => { contents.push(s) }));
+        ps.push(
+            readSchemaFromUrl(url).then((s) => {
+                contents.push(s);
+            })
+        );
     }
     await Promise.all(ps);
     return contents;
@@ -103,6 +136,6 @@ async function exec(): Promise<void> {
         console.log(result);
     }
 }
-exec().catch(err => {
+exec().catch((err) => {
     console.error(err.stack || err);
 });

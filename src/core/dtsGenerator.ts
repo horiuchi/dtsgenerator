@@ -424,9 +424,9 @@ export default class DtsGenerator {
             return this.generateType(schema, terminate);
         }
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private generateLiteralTypeNode(
         content: JsonSchemaObject,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         value: any
     ): ts.LiteralTypeNode {
         switch (content.type) {
@@ -567,11 +567,15 @@ export default class DtsGenerator {
         terminate: boolean
     ): ts.TypeNode {
         const tsType = utils.toTSType(type, schema.content);
-        // TODO: if文の順番がおかしい？
         if (tsType) {
             return ast.buildKeyword(tsType);
         } else if (type === 'object') {
-            return ast.buildTypeLiteralNode(this.generateProperties(schema));
+            const elements = this.generateProperties(schema);
+            if (elements.length > 0) {
+                return ast.buildTypeLiteralNode(elements);
+            } else {
+                return ast.buildUnknownKeyword();
+            }
         } else if (type === 'array') {
             return this.generateArrayTypeProperty(schema, terminate);
         } else {
