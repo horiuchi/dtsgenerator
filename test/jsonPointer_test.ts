@@ -2,7 +2,6 @@ import assert from 'assert';
 import * as jp from '../src/jsonPointer';
 
 describe('json pointer test', () => {
-
     describe('get function', () => {
         const object = {
             a: 1,
@@ -16,7 +15,7 @@ describe('json pointer test', () => {
             array: [1, 2, 3, 4, 5],
             arr: [
                 { a: 3, b: 4 },
-                { a: 4, b: 5, c: 6},
+                { a: 4, b: 5, c: 6 },
                 { a: 5, c: 7 },
             ],
         };
@@ -31,10 +30,19 @@ describe('json pointer test', () => {
             assert.strictEqual(jp.get(object, ['arr', '2', 'a']), 5);
         });
         it('success to get object', () => {
-            assert.deepStrictEqual(jp.get(object, ['b', 'c']), { d1: 2, d2: 3 });
+            assert.deepStrictEqual(jp.get(object, ['b', 'c']), {
+                d1: 2,
+                d2: 3,
+            });
             assert.deepStrictEqual(jp.get(object, ['array']), [1, 2, 3, 4, 5]);
-            assert.deepStrictEqual(jp.get(object, ['arr', '0']), { a: 3, b: 4 });
-            assert.deepStrictEqual(jp.get(object, ['arr', '2']), { a: 5, c: 7 });
+            assert.deepStrictEqual(jp.get(object, ['arr', '0']), {
+                a: 3,
+                b: 4,
+            });
+            assert.deepStrictEqual(jp.get(object, ['arr', '2']), {
+                a: 5,
+                c: 7,
+            });
         });
         it('fail to get target path', () => {
             assert.strictEqual(jp.get(object, ['z']), undefined);
@@ -59,7 +67,7 @@ describe('json pointer test', () => {
             array: [1, 2, 3, 4, 5],
             arr: [
                 { a: 3, b: 4 },
-                { a: 4, b: 5, c: 6},
+                { a: 4, b: 5, c: 6 },
                 { a: 5, c: 7 },
             ],
         };
@@ -113,16 +121,26 @@ describe('json pointer test', () => {
             assert.deepStrictEqual(jp.parse(''), []);
             assert.deepStrictEqual(jp.parse('/'), ['']);
             assert.deepStrictEqual(jp.parse('/a/b/c'), ['a', 'b', 'c']);
-            assert.deepStrictEqual(jp.parse('/hoge/0/fuga/1'), ['hoge', '0', 'fuga', '1']);
+            assert.deepStrictEqual(jp.parse('/hoge/0/fuga/1'), [
+                'hoge',
+                '0',
+                'fuga',
+                '1',
+            ]);
         });
         it('tilded path case', () => {
-            assert.deepStrictEqual(jp.parse('/~0user/~1/0'), ['~user', '/', '0']);
+            assert.deepStrictEqual(jp.parse('/~0user/~1/0'), [
+                '~user',
+                '/',
+                '0',
+            ]);
         });
 
         it('invalid format', () => {
-            assert.throws(() => jp.parse('hoge'), /^Error: Invalid JSON-Pointer format:/);
+            assert.throws(
+                () => jp.parse('hoge'),
+                /^Error: Invalid JSON-Pointer format:/
+            );
         });
     });
-
 });
-

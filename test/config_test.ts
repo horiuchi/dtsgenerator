@@ -1,6 +1,10 @@
 import assert from 'assert';
 import dtsgenerator from '../src/core';
-import config, { clearToDefault, setConfig, showConfig } from '../src/core/config';
+import config, {
+    clearToDefault,
+    setConfig,
+    showConfig,
+} from '../src/core/config';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { parseSchema } from '../src/core/type';
 import ts from 'typescript';
@@ -26,7 +30,9 @@ describe('show config test', () => {
     it('no config test', async () => {
         setConfig({});
         await showConfig('no_config', config);
-        assert.strictEqual(content, `Version: no_config
+        assert.strictEqual(
+            content,
+            `Version: no_config
 ConfigFile: undefined
 
 Config:
@@ -36,7 +42,8 @@ Config:
 
 Plugins: count=0
 
-`);
+`
+        );
     });
     it('full config test', async () => {
         setConfig({
@@ -53,21 +60,23 @@ Plugins: count=0
                 '@dtsgenerator/do-nothing': false,
                 '@dtsgenerator/single-quote': true,
                 '@dtsgenerator/replace-namespace': {
-                    'map': [
+                    map: [
                         {
-                            'from': ['Components', 'Schemas'],
-                            'to': ['Test', 'PetStore']
+                            from: ['Components', 'Schemas'],
+                            to: ['Test', 'PetStore'],
                         },
                         {
-                            'from': ['Paths'],
-                            'to': ['Test', 'PetStore']
-                        }
-                    ]
+                            from: ['Paths'],
+                            to: ['Test', 'PetStore'],
+                        },
+                    ],
                 },
             },
         });
         await showConfig('full_config', config);
-        assert.strictEqual(content, `Version: full_config
+        assert.strictEqual(
+            content,
+            `Version: full_config
 ConfigFile: test.json
 
 Config:
@@ -86,13 +95,12 @@ Plugins: count=2
   @dtsgenerator/single-quote@1.4.1: change all quotation mark to single
   @dtsgenerator/replace-namespace@1.3.1: replace the namespace names
 
-`);
+`
+        );
     });
-
 });
 
 describe('config test', () => {
-
     afterEach(() => {
         clearToDefault();
     });
@@ -205,6 +213,6 @@ describe('config test', () => {
 
         assert.rejects(() => {
             return dtsgenerator({ contents: [parseSchema(schema)] });
-        })
+        });
     });
 });

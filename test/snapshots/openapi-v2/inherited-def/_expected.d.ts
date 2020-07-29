@@ -3,12 +3,12 @@ declare namespace Definitions {
         /**
          * Other Description
          */
-        _embedded?: {};
+        _embedded?: unknown;
     }
     export interface Resource {
         /**
          * Test Description
          */
-        _embedded?: {};
+        _embedded?: unknown;
     }
 }

@@ -61,7 +61,7 @@ export async function showConfig(version: string, c: Config): Promise<void> {
     if (c.outputAST) {
         console.log('  outputAST: true');
     }
-    console.log('  plugins:')
+    console.log('  plugins:');
     for (const [name, option] of Object.entries(c.plugins)) {
         console.log(`    ${name}: ${JSON.stringify(option)}`);
     }
@@ -76,22 +76,34 @@ export async function showConfig(version: string, c: Config): Promise<void> {
     }
     console.log('Plugins: count=' + plugins.length);
     for (const p of plugins) {
-        console.log(`  ${p.meta.name}@${p.meta.version}: ${p.meta.description}`);
+        console.log(
+            `  ${p.meta.name}@${p.meta.version}: ${p.meta.description}`
+        );
     }
     console.log();
 }
 function showScriptTarget(target: ts.ScriptTarget): string {
     switch (target) {
-        case ts.ScriptTarget.ES3: return 'ES3';
-        case ts.ScriptTarget.ES5: return 'ES5';
-        case ts.ScriptTarget.ES2015: return 'ES2015';
-        case ts.ScriptTarget.ES2016: return 'ES2016';
-        case ts.ScriptTarget.ES2017: return 'ES2017';
-        case ts.ScriptTarget.ES2018: return 'ES2018';
-        case ts.ScriptTarget.ES2019: return 'ES2019';
-        case ts.ScriptTarget.ES2020: return 'ES2020';
-        case ts.ScriptTarget.ESNext: return 'ESNext';
-        default: return 'Latest';
+        case ts.ScriptTarget.ES3:
+            return 'ES3';
+        case ts.ScriptTarget.ES5:
+            return 'ES5';
+        case ts.ScriptTarget.ES2015:
+            return 'ES2015';
+        case ts.ScriptTarget.ES2016:
+            return 'ES2016';
+        case ts.ScriptTarget.ES2017:
+            return 'ES2017';
+        case ts.ScriptTarget.ES2018:
+            return 'ES2018';
+        case ts.ScriptTarget.ES2019:
+            return 'ES2019';
+        case ts.ScriptTarget.ES2020:
+            return 'ES2020';
+        case ts.ScriptTarget.ESNext:
+            return 'ESNext';
+        default:
+            return 'Latest';
     }
 }
 

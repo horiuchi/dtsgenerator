@@ -19,7 +19,11 @@ export default class SchemaId {
         if (absoluteId.indexOf('#') < 0) {
             absoluteId += '#';
         }
-        if (absoluteId.indexOf('://') < 0 && absoluteId[0] !== '/' && absoluteId[0] !== '#') {
+        if (
+            absoluteId.indexOf('://') < 0 &&
+            absoluteId[0] !== '/' &&
+            absoluteId[0] !== '#'
+        ) {
             absoluteId = '/' + absoluteId;
         }
         this.id = url.parse(absoluteId);
@@ -73,4 +77,3 @@ export default class SchemaId {
         return ids.map(toTypeName);
     }
 }
-

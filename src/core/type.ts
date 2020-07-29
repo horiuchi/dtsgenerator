@@ -11,7 +11,9 @@ import { getId, selectSchemaType, setId } from './jsonSchema';
 // Schema types
 
 export type JsonSchema = JsonSchemaDraft04.Schema | JsonSchemaDraft07.Schema;
-export type JsonSchemaObject = JsonSchemaDraft04.Schema | JsonSchemaDraft07.SchemaObject;
+export type JsonSchemaObject =
+    | JsonSchemaDraft04.Schema
+    | JsonSchemaDraft07.SchemaObject;
 
 export type SchemaType = 'Draft04' | 'Draft07';
 
@@ -44,11 +46,15 @@ export async function readSchemaFromStdin(): Promise<Schema> {
 }
 export async function readSchemasFromFile(pattern: string): Promise<Schema[]> {
     const files = await globFiles(pattern);
-    return Promise.all(files.map(async (file) => {
-        const data = await fs.promises.readFile(file, { encoding: 'utf-8' });
-        const content = parseFileContent(data);
-        return parseSchema(content);
-    }));
+    return Promise.all(
+        files.map(async (file) => {
+            const data = await fs.promises.readFile(file, {
+                encoding: 'utf-8',
+            });
+            const content = parseFileContent(data);
+            return parseSchema(content);
+        })
+    );
 }
 export async function readSchemaFromUrl(url: string): Promise<Schema> {
     const data = await readUrl(url);
@@ -56,7 +62,10 @@ export async function readSchemaFromUrl(url: string): Promise<Schema> {
     return parseSchema(content, url);
 }
 
-export function parseFileContent(content: string, filename?: string): JsonSchema {
+export function parseFileContent(
+    content: string,
+    filename?: string
+): JsonSchema {
     const ext = filename ? path.extname(filename).toLowerCase() : '';
     const maybeYaml = ext === '.yaml' || ext === '.yml';
     try {
@@ -93,27 +102,43 @@ export type Plugin = {
         version: string;
         description?: string;
     };
-    preProcess?: (context: PluginContext) => Promise<PreProcessHandler | undefined>;
-    postProcess?: (context: PluginContext) => Promise<TransformerFactory<SourceFile> | undefined>;
-}
+    preProcess?: (
+        context: PluginContext
+    ) => Promise<PreProcessHandler | undefined>;
+    postProcess?: (
+        context: PluginContext
+    ) => Promise<TransformerFactory<SourceFile> | undefined>;
+};
 
-export async function loadPlugin(name: string, option: boolean | Record<string, unknown>): Promise<Plugin | undefined> {
+export async function loadPlugin(
+    name: string,
+    option: boolean | Record<string, unknown>
+): Promise<Plugin | undefined> {
     if (!option) {
         return undefined;
     }
 
     const mod = await import(name);
     if (!('default' in mod)) {
-        console.warn(`The plugin (${name}) is invalid module. That is not default export format.`);
+        console.warn(
+            `The plugin (${name}) is invalid module. That is not default export format.`
+        );
         return undefined;
     }
     const plugin: Plugin = mod.default;
     if (plugin.preProcess != null && typeof plugin.preProcess !== 'function') {
-        console.warn(`The plugin (${name}) is invalid module. The 'preProcess' is not a function.`);
+        console.warn(
+            `The plugin (${name}) is invalid module. The 'preProcess' is not a function.`
+        );
         return undefined;
     }
-    if (plugin.postProcess != null && typeof plugin.postProcess !== 'function') {
-        console.warn(`The plugin (${name}) is invalid module. The 'postProcess' is not a function.`);
+    if (
+        plugin.postProcess != null &&
+        typeof plugin.postProcess !== 'function'
+    ) {
+        console.warn(
+            `The plugin (${name}) is invalid module. The 'postProcess' is not a function.`
+        );
         return undefined;
     }
     return plugin;

@@ -4,9 +4,7 @@ import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { parseSchema } from '../src/core/type';
 
-
 describe('error schema test', () => {
-
     it('no id schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             type: 'object',
@@ -15,7 +13,10 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
         } catch (e) {
-            assert.strictEqual(e.message, 'There is no schema in the input contents.');
+            assert.strictEqual(
+                e.message,
+                'There is no schema in the input contents.'
+            );
         }
     });
     it('unknown type schema', async () => {
@@ -62,7 +63,10 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
         } catch (e) {
-            assert.strictEqual(e.message, 'The $ref target is not found: /notFound/id#');
+            assert.strictEqual(
+                e.message,
+                'The $ref target is not found: /notFound/id#'
+            );
         }
     });
     it('target of $ref is invalid path', async () => {
@@ -79,7 +83,10 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
         } catch (e) {
-            assert.strictEqual(e.message, 'The $ref target is not found: /test/target_not_found#hogefuga');
+            assert.strictEqual(
+                e.message,
+                'The $ref target is not found: /test/target_not_found#hogefuga'
+            );
         }
     });
     it('invalid format schema', async () => {
@@ -88,9 +95,10 @@ describe('error schema test', () => {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
         } catch (e) {
-            assert.strictEqual(e.message, 'There is no schema in the input contents.');
+            assert.strictEqual(
+                e.message,
+                'There is no schema in the input contents.'
+            );
         }
     });
-
 });
-

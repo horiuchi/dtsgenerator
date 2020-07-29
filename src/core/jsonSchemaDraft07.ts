@@ -46,7 +46,9 @@ export namespace JsonSchemaDraft07 {
         propertyNames?: Schema;
         const?: any;
         enum?: any[];
-        type?: Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
+        type?:
+            | Schema.Definitions.SimpleTypes
+            | Schema.Definitions.SimpleTypes[];
         format?: string;
         contentMediaType?: string;
         contentEncoding?: string;
@@ -57,14 +59,23 @@ export namespace JsonSchemaDraft07 {
         anyOf?: Schema.Definitions.SchemaArray;
         oneOf?: Schema.Definitions.SchemaArray;
         not?: Schema;
-    }
+    };
     export type Schema = SchemaObject | boolean;
     export namespace Schema {
         export namespace Definitions {
             export type NonNegativeInteger = number;
             export type NonNegativeIntegerDefault0 = number;
             export type SchemaArray = Schema[];
-            export type SimpleTypes = 'array' | 'boolean' | 'integer' | 'null' | 'number' | 'object' | 'string' | 'any' | 'undefined';
+            export type SimpleTypes =
+                | 'array'
+                | 'boolean'
+                | 'integer'
+                | 'null'
+                | 'number'
+                | 'object'
+                | 'string'
+                | 'any'
+                | 'undefined';
             export type StringArray = string[];
         }
     }

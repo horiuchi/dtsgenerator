@@ -30,8 +30,7 @@ export namespace OpenApisV3 {
             /**
              * A map of possible out-of band callbacks related to the parent operation. Each value in the map is a Path Item Object that describes a set of requests that may be initiated by the API provider and the expected responses. The key value used to identify the callback object is an expression, evaluated at runtime, that identifies a URL to use for the callback operation.
              */
-            export interface Callback {
-            }
+            export interface Callback {}
             export type CallbackOrReference = Callback | Reference;
             export interface CallbacksOrReferences {
                 [name: string]: CallbackOrReference;
@@ -58,8 +57,13 @@ export namespace OpenApisV3 {
                 url?: string; // uri
                 email?: string; // email
             }
-            export type DefaultType = null | any[] | {
-            } | number | boolean | string;
+            export type DefaultType =
+                | null
+                | any[]
+                | unknown
+                | number
+                | boolean
+                | string;
             /**
              * When request bodies or response payloads may be one of a number of different schemas, a `discriminator` object can be used to aid in serialization, deserialization, and validation.  The discriminator is a specific object in a schema which is used to inform the consumer of the specification of an alternative schema based on the value associated with it.  When using the discriminator, _inline_ schemas will not be considered.
              */
@@ -284,15 +288,16 @@ export namespace OpenApisV3 {
             export interface ResponsesOrReferences {
                 [name: string]: ResponseOrReference;
             }
-            export type SchemaOrReference = JsonSchemaDraft07.SchemaObject | Reference;
+            export type SchemaOrReference =
+                | JsonSchemaDraft07.SchemaObject
+                | Reference;
             export interface SchemasOrReferences {
                 [name: string]: SchemaOrReference;
             }
             /**
              * Lists the required security schemes to execute this operation. The name used for each property MUST correspond to a security scheme declared in the Security Schemes under the Components Object.  Security Requirement Objects that contain multiple schemes require that all schemes MUST be satisfied for a request to be authorized. This enables support for scenarios where multiple query parameters or HTTP headers are required to convey security information.  When a list of Security Requirement Objects is defined on the Open API object or Operation Object, only one of Security Requirement Objects in the list needs to be satisfied to authorize the request.
              */
-            export interface SecurityRequirement {
-            }
+            export interface SecurityRequirement {}
             /**
              * Defines a security scheme that can be used by the operations. Supported schemes are HTTP authentication, an API key (either as a header or as a query parameter), OAuth2's common flows (implicit, password, application and access code) as defined in RFC6749, and OpenID Connect Discovery.
              */
@@ -332,8 +337,13 @@ export namespace OpenApisV3 {
             /**
              * Any property starting with x- is valid.
              */
-            export type SpecificationExtension = null | number | boolean | string | {
-            } | any[];
+            export type SpecificationExtension =
+                | null
+                | number
+                | boolean
+                | string
+                | unknown
+                | any[];
             export interface Strings {
                 [name: string]: string;
             }

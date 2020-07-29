@@ -44,7 +44,9 @@ export namespace JsonSchemaDraft04 {
             [name: string]: Schema | Schema.Definitions.StringArray;
         };
         enum?: any[];
-        type?: Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
+        type?:
+            | Schema.Definitions.SimpleTypes
+            | Schema.Definitions.SimpleTypes[];
         format?: string;
         allOf?: Schema.Definitions.SchemaArray;
         anyOf?: Schema.Definitions.SchemaArray;
@@ -56,7 +58,16 @@ export namespace JsonSchemaDraft04 {
             export type PositiveInteger = number;
             export type PositiveIntegerDefault0 = number;
             export type SchemaArray = Schema[];
-            export type SimpleTypes = 'array' | 'boolean' | 'integer' | 'null' | 'number' | 'object' | 'string' | 'any' | 'undefined';
+            export type SimpleTypes =
+                | 'array'
+                | 'boolean'
+                | 'integer'
+                | 'null'
+                | 'number'
+                | 'object'
+                | 'string'
+                | 'any'
+                | 'undefined';
             export type StringArray = string[];
         }
         export namespace Properties {
@@ -77,7 +88,9 @@ export namespace JsonSchemaDraft04 {
             export type Pattern = string; // regex
             export type Required = Definitions.StringArray;
             export type Title = string;
-            export type Type = Definitions.SimpleTypes | Definitions.SimpleTypes[];
+            export type Type =
+                | Definitions.SimpleTypes
+                | Definitions.SimpleTypes[];
             export type UniqueItems = boolean;
         }
     }

@@ -72,7 +72,12 @@ export namespace OpenApisV2 {
                 schema: JsonSchemaDraft04.Schema;
             }
             export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes';
-            export type CollectionFormatWithMulti = 'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';
+            export type CollectionFormatWithMulti =
+                | 'csv'
+                | 'ssv'
+                | 'tsv'
+                | 'pipes'
+                | 'multi';
             /**
              * Contact information for the owners of the API.
              */
@@ -145,7 +150,13 @@ export namespace OpenApisV2 {
                  * allows sending a parameter by name only or with an empty value.
                  */
                 allowEmptyValue?: boolean;
-                type?: 'string' | 'number' | 'boolean' | 'integer' | 'array' | 'file';
+                type?:
+                    | 'string'
+                    | 'number'
+                    | 'boolean'
+                    | 'integer'
+                    | 'array'
+                    | 'file';
                 format?: string;
                 items?: PrimitivesItems;
                 collectionFormat?: CollectionFormatWithMulti;
@@ -269,8 +280,7 @@ export namespace OpenApisV2 {
             export type MinLength = JsonSchemaDraft04.Schema.Definitions.PositiveIntegerDefault0;
             export type Minimum = JsonSchemaDraft04.Schema.Properties.Minimum;
             export type MultipleOf = JsonSchemaDraft04.Schema.Properties.MultipleOf;
-            export interface NonBodyParameter {
-            }
+            export interface NonBodyParameter {}
             export interface Oauth2AccessCodeSecurity {
                 type: 'oauth2';
                 flow: 'accessCode';
@@ -482,7 +492,13 @@ export namespace OpenApisV2 {
             export type SchemesList = ('http' | 'https' | 'ws' | 'wss')[];
             export type Security = SecurityRequirement[];
             export interface SecurityDefinitions {
-                [name: string]: BasicAuthenticationSecurity | ApiKeySecurity | Oauth2ImplicitSecurity | Oauth2PasswordSecurity | Oauth2ApplicationSecurity | Oauth2AccessCodeSecurity;
+                [name: string]:
+                    | BasicAuthenticationSecurity
+                    | ApiKeySecurity
+                    | Oauth2ImplicitSecurity
+                    | Oauth2PasswordSecurity
+                    | Oauth2ApplicationSecurity
+                    | Oauth2AccessCodeSecurity;
             }
             export interface SecurityRequirement {
                 [name: string]: string[];

@@ -5,7 +5,6 @@ import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { parseSchema } from '../src/core/type';
 
 describe('tuple test', () => {
-
     afterEach(() => {
         clear();
     });
@@ -143,8 +142,7 @@ describe('tuple test', () => {
                 },
                 array: {
                     type: 'array',
-                    items: [
-                    ],
+                    items: [],
                 },
             },
         };
@@ -296,8 +294,7 @@ describe('tuple test', () => {
                 array: {
                     type: 'array',
                     minItems: 2,
-                    items: [
-                    ],
+                    items: [],
                 },
             },
         };
@@ -323,8 +320,7 @@ describe('tuple test', () => {
                 array: {
                     type: 'array',
                     maxItems: 2,
-                    items: [
-                    ],
+                    items: [],
                 },
             },
         };
