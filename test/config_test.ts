@@ -74,6 +74,16 @@ Plugins: count=0
             },
         });
         await showConfig('full_config', config);
+
+        function getVersion(key: string): string {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const pkg = require('../package.json');
+            const version: string = pkg.devDependencies[key];
+            if (/^[^\d]/.test(version)) {
+                return version.substr(1);
+            }
+            return version;
+        }
         assert.strictEqual(
             content,
             `Version: full_config
@@ -92,8 +102,12 @@ Config:
     @dtsgenerator/replace-namespace: {"map":[{"from":["Components","Schemas"],"to":["Test","PetStore"]},{"from":["Paths"],"to":["Test","PetStore"]}]}
 
 Plugins: count=2
-  @dtsgenerator/single-quote@1.4.1: change all quotation mark to single
-  @dtsgenerator/replace-namespace@1.3.1: replace the namespace names
+  @dtsgenerator/single-quote@${getVersion(
+      '@dtsgenerator/single-quote'
+  )}: change all quotation mark to single
+  @dtsgenerator/replace-namespace@${getVersion(
+      '@dtsgenerator/replace-namespace'
+  )}: replace the namespace names
 
 `
         );
