@@ -1,0 +1,28 @@
+swagger: '2.0'
+info:
+  title: Example
+  version: 0.1.0
+paths:
+  /tasks:
+    get:
+      summary: Return a collection of tasks
+      operationId: getTasks
+      responses:
+        '200':
+          description: OK
+
+definitions:
+  resource:
+    allOf:
+    - $ref: '#/definitions/createResource'
+    properties:
+       _embedded:
+        description: >-
+          Test Description
+        type: object
+  createResource:
+    properties:
+       _embedded:
+        description: >-
+          Other Description
+        type: object

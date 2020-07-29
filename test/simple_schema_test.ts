@@ -618,28 +618,24 @@ describe('simple schema test', () => {
                 FirstChild: {
                     allOf: [
                         { $ref: '#/definitions/Parent' },
-                        {
-                            type: 'object',
-                            properties: {
-                                first: {
-                                    type: 'string',
-                                },
-                            },
-                        },
                     ],
+                    type: 'object',
+                    properties: {
+                        first: {
+                            type: 'string',
+                        },
+                    },
                 },
                 SecondChild: {
                     allOf: [
                         { $ref: '#/definitions/FirstChild' },
-                        {
-                            type: 'object',
-                            properties: {
-                                second: {
-                                    type: 'string',
-                                },
-                            },
-                        },
                     ],
+                    type: 'object',
+                    properties: {
+                        second: {
+                            type: 'string',
+                        },
+                    },
                 },
             },
         };
@@ -682,28 +678,24 @@ describe('simple schema test', () => {
                 FirstChild: {
                     allOf: [
                         { $ref: '#/definitions/SecondChild' },
-                        {
-                            type: 'object',
-                            properties: {
-                                first: {
-                                    type: 'string',
-                                },
-                            },
-                        },
                     ],
+                    type: 'object',
+                    properties: {
+                        first: {
+                            type: 'string',
+                        },
+                    },
                 },
                 SecondChild: {
                     allOf: [
                         { $ref: '#/definitions/Parent' },
-                        {
-                            type: 'object',
-                            properties: {
-                                second: {
-                                    type: 'string',
-                                },
-                            },
-                        },
                     ],
+                    type: 'object',
+                    properties: {
+                        second: {
+                            type: 'string',
+                        },
+                    },
                 },
             },
         };
@@ -764,7 +756,6 @@ describe('simple schema test', () => {
             id: 'http://test/combined',
             type: 'object',
             allOf: [
-                { $ref: '/zzz/allOf/base' },
                 { $ref: '/zzz/allOf/extended' },
                 { $ref: '/separate' },
             ],
@@ -787,8 +778,62 @@ describe('simple schema test', () => {
                 id: string;
             }
             export interface Extended {
-                value: number;
                 id: string;
+                value: number;
+            }
+        }
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+    it('should inherited allOf schemas', async () => {
+        const baseSchema: JsonSchemaDraft04.Schema = {
+            id: 'http://inherited/allOf/base',
+            type: 'object',
+            properties: {
+                id: { type: 'string' },
+                value: { type: 'any' }
+            },
+            required: ['id', 'value'],
+        };
+        const numberSchema: JsonSchemaDraft04.Schema = {
+            id: 'http://inherited/allOf/extended/number',
+            type: 'object',
+            allOf: [
+                { $ref: '/allOf/base' },
+            ],
+            properties: {
+                value: { type: 'number' },
+            },
+        };
+        const stringSchema: JsonSchemaDraft04.Schema = {
+            id: 'http://inherited/allOf/extended/string',
+            type: 'object',
+            allOf: [
+                { $ref: '/allOf/base' },
+            ],
+            properties: {
+                value: { type: 'string' },
+            },
+        };
+
+        const result = await dtsgenerator({ contents: [baseSchema, numberSchema, stringSchema].map(s => parseSchema(s)) });
+
+        const expected = `declare namespace Inherited {
+    namespace AllOf {
+        export interface Base {
+            id: string;
+            value: any;
+        }
+        namespace Extended {
+            export interface Number {
+                id: string;
+                value: number;
+            }
+            export interface String {
+                id: string;
+                value: string;
             }
         }
     }
