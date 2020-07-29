@@ -209,8 +209,8 @@ export default class DtsGenerator {
         if (pointer != null) {
             schema = getSubSchema(schema, pointer);
         }
-        const content = this.normalizeSchemaContent(schema.content);
-        return Object.assign({}, schema, { content });
+        schema.content = this.normalizeSchemaContent(schema.content);
+        return Object.assign({}, schema as NormalizedSchema);
     }
 
     private normalizeSchemaContent(content: JsonSchema): JsonSchemaObject {
@@ -218,20 +218,20 @@ export default class DtsGenerator {
             content = content ? {} : { not: {} };
         } else {
             if (content.allOf) {
-                const work = content;
-                for (const sub of content.allOf) {
+                const work = {};
+                const allOf = content.allOf;
+                delete content.allOf;
+                for (const sub of allOf) {
                     if (typeof sub === 'object' && sub.$ref) {
                         const ref = this.resolver.dereference(sub.$ref);
                         const normalized = this.normalizeContent(ref).content;
                         utils.mergeSchema(work, normalized);
-                    } else if (typeof sub === 'object') {
+                    } else {
                         const normalized = this.normalizeSchemaContent(sub);
                         utils.mergeSchema(work, normalized);
-                    } else {
-                        utils.mergeSchema(work, sub);
                     }
                 }
-                delete content.allOf;
+                utils.mergeSchema(work, content);
                 content = work;
             }
             if (

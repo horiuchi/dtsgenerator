@@ -333,14 +333,12 @@ export function searchAllSubSchema(schema: Schema, onFoundSchema: (subSchema: Sc
                 setSubIdToParameterObject(components.parameters, ['components', 'parameters']);
                 setSubIdToRequestBodies(components.requestBodies, ['components', 'requestBodies']);
             }
-            if (openApi.paths) {
-                setSubIdToPathsV3(openApi.paths, ['paths']);
-            }
+            setSubIdToPathsV3(openApi.paths, ['paths']);
         }
     }
 
     if (schema.openApiVersion != null) {
-        const obj = schema.content as OpenApisV3.SchemaJson;
+        const obj = schema.content as OpenApiSchema;
         searchOpenApiSubSchema(obj);
         return;
     }
