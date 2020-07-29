@@ -108,7 +108,7 @@ declare namespace Components {
                             /**
                              * the current user making the request
                              */
-                            currentuserscope?: {};
+                            currentuserscope?: unknown;
                         };
                     };
                 } | {
@@ -150,7 +150,7 @@ declare namespace Components {
                             /**
                              * Scope:All
                              */
-                            all?: {};
+                            all?: unknown;
                         };
                     };
                 } | {

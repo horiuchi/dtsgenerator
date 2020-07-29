@@ -174,7 +174,7 @@ describe('simple schema test', () => {
         integer: number;
         null?: null;
         number?: number;
-        object?: {};
+        object?: unknown;
         string?: string;
         any?: any;
         undefined?: undefined;
@@ -615,9 +615,7 @@ describe('simple schema test', () => {
                     },
                 },
                 FirstChild: {
-                    allOf: [
-                        { $ref: '#/definitions/Parent' },
-                    ],
+                    allOf: [{ $ref: '#/definitions/Parent' }],
                     type: 'object',
                     properties: {
                         first: {
@@ -626,9 +624,7 @@ describe('simple schema test', () => {
                     },
                 },
                 SecondChild: {
-                    allOf: [
-                        { $ref: '#/definitions/FirstChild' },
-                    ],
+                    allOf: [{ $ref: '#/definitions/FirstChild' }],
                     type: 'object',
                     properties: {
                         second: {
@@ -675,9 +671,7 @@ describe('simple schema test', () => {
                     },
                 },
                 FirstChild: {
-                    allOf: [
-                        { $ref: '#/definitions/SecondChild' },
-                    ],
+                    allOf: [{ $ref: '#/definitions/SecondChild' }],
                     type: 'object',
                     properties: {
                         first: {
@@ -686,9 +680,7 @@ describe('simple schema test', () => {
                     },
                 },
                 SecondChild: {
-                    allOf: [
-                        { $ref: '#/definitions/Parent' },
-                    ],
+                    allOf: [{ $ref: '#/definitions/Parent' }],
                     type: 'object',
                     properties: {
                         second: {
@@ -752,10 +744,7 @@ describe('simple schema test', () => {
         const combinedSchema: JsonSchemaDraft04.Schema = {
             id: 'http://test/combined',
             type: 'object',
-            allOf: [
-                { $ref: '/zzz/allOf/extended' },
-                { $ref: '/separate' },
-            ],
+            allOf: [{ $ref: '/zzz/allOf/extended' }, { $ref: '/separate' }],
         };
 
         const result = await dtsgenerator({
@@ -797,16 +786,14 @@ describe('simple schema test', () => {
             type: 'object',
             properties: {
                 id: { type: 'string' },
-                value: { type: 'any' }
+                value: { type: 'any' },
             },
             required: ['id', 'value'],
         };
         const numberSchema: JsonSchemaDraft04.Schema = {
             id: 'http://inherited/allOf/extended/number',
             type: 'object',
-            allOf: [
-                { $ref: '/allOf/base' },
-            ],
+            allOf: [{ $ref: '/allOf/base' }],
             properties: {
                 value: { type: 'number' },
             },
@@ -814,15 +801,17 @@ describe('simple schema test', () => {
         const stringSchema: JsonSchemaDraft04.Schema = {
             id: 'http://inherited/allOf/extended/string',
             type: 'object',
-            allOf: [
-                { $ref: '/allOf/base' },
-            ],
+            allOf: [{ $ref: '/allOf/base' }],
             properties: {
                 value: { type: 'string' },
             },
         };
 
-        const result = await dtsgenerator({ contents: [baseSchema, numberSchema, stringSchema].map(s => parseSchema(s)) });
+        const result = await dtsgenerator({
+            contents: [baseSchema, numberSchema, stringSchema].map((s) =>
+                parseSchema(s)
+            ),
+        });
 
         const expected = `declare namespace Inherited {
     namespace AllOf {

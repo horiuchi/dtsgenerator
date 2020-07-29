@@ -57,7 +57,7 @@ export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 export function mergeSchema(a: any, b: any): any {
     if ('$ref' in a || '$ref' in b) {
-        return { '$ref': b['$ref'] || a['$ref'] };
+        return { $ref: b['$ref'] || a['$ref'] };
     }
     Object.keys(b).forEach((key: string) => {
         const value = b[key];
