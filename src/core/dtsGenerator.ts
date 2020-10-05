@@ -232,7 +232,7 @@ export default class DtsGenerator {
                     }
                 }
                 utils.mergeSchema(work, content);
-                content = work;
+                content = Object.assign(content, work);
             }
             if (
                 content.type === undefined &&
