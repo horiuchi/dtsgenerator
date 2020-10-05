@@ -125,6 +125,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.3.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.3.1) (2020-10-05)
+
+- fixed:
+  - Elements get type "any" instead of the correct one by #448. Thank you for your report @nachtigall-83 :+1:
+
 ### [v3.3.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.3.0) (2020-07-29)
 
 - features:
