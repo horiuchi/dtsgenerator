@@ -140,4 +140,64 @@ describe("nested 'allOf' test", () => {
             "Nested 'allOf' definitions should result in all properties being included in the output interface."
         );
     });
+
+    it("refed 'allOf' nested schema", async () => {
+        const schema: JsonSchemaDraft07.Schema = {
+            $id: '/test/nested/allOf',
+            $schema: 'http://json-schema.org/draft-07/schema#',
+            type: 'object',
+            definitions: {
+                A: {
+                    properties: {
+                        s: {
+                            allOf: [
+                                {
+                                    type: 'string',
+                                },
+                            ],
+                        },
+                    },
+                },
+                B: {
+                    properties: {
+                        ref: {
+                            allOf: [
+                                {
+                                    $ref: '#/definitions/A',
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
+            properties: {
+                bref: {
+                    $ref: '#/definitions/B',
+                },
+            },
+        };
+        const result = await dtsGenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    namespace Nested {
+        export interface AllOf {
+            bref?: AllOf.Definitions.B;
+        }
+        namespace AllOf {
+            namespace Definitions {
+                export interface A {
+                    s?: string;
+                }
+                export interface B {
+                    ref?: {
+                        s?: string;
+                    };
+                }
+            }
+        }
+    }
+}
+`;
+        assert.strictEqual(result, expected);
+    });
 });
