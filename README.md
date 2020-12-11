@@ -28,6 +28,7 @@ TypeScript d.ts file generator from JSON Schema file or OpenAPI(Swagger) spec fi
 
 ## Usage
 
+### CLI
 ```sh
 $ dtsgen --help
 Usage: dtsgenerator [options] <file ... | file patterns using node-glob>
@@ -51,6 +52,20 @@ Options:
     $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
     $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
     $ dtsgen -c dtsgen-test.json --info
+```
+
+### NodeJS API
+```js
+const { default: dtsgenerator, parseSchema } = require('dtsgenerator');
+
+dtsgenerator({
+    contents: [parseSchema({/* JsonSchema object */})],
+    config: {/* Config object */},
+}).then(content => {
+  /* Do someting with parsed content */
+}).catch(err => {
+  /* Handle errors */
+});
 ```
 
 ### Use HTTP/HTTPS Proxy
