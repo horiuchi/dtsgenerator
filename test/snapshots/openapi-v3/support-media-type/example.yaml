@@ -24,7 +24,14 @@ paths:
   /second-path:
     post:
       requestBody:
-        $ref: '#/components/requestBodies/uploadFileRequest'
+        $ref: '#/components/requestBodies/uploadFileStreamRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/200_ReturnData'
+  /third-path:
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/uploadFileMultipartRequest'
       responses:
         200:
           $ref: '#/components/responses/200_ReturnData'
@@ -88,9 +95,15 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorText'
   requestBodies:
-    uploadFileRequest:
+    uploadFileStreamRequest:
       content:
         application/octet-stream:
+          schema:
+            type: string
+            format: binary
+    uploadFileMultipartRequest:
+      content:
+        multipart/form-data:
           schema:
             type: string
             format: binary
