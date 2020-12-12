@@ -1,28 +1,70 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "prettier/@typescript-eslint"
-  ],
-  "plugins": [
-    "@typescript-eslint"
-  ],
-  "env": {
-    "node": true,
-    "es2020": true,
-    "mocha": true
-  },
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "sourceType": "module",
-    "project": "./tsconfig.json"
-  },
-  "rules": {
-    "@typescript-eslint/no-unused-vars": [
-      "error", { "argsIgnorePattern": "^_" }
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript",
+        "plugin:prettier/recommended",
+        "prettier/@typescript-eslint"
     ],
-    "@typescript-eslint/no-use-before-define": "off"
-  }
+    "env": {
+        "node": true,
+        "es2021": true
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            { "argsIgnorePattern": "^_" }
+        ],
+        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-explicit-any": 0,
+        "@typescript-eslint/prefer-optional-chain": 2,
+        "@typescript-eslint/prefer-nullish-coalescing": 2,
+        "@typescript-eslint/no-floating-promises": [
+            "error",
+            { "ignoreIIFE": true, "ignoreVoid": true }
+        ],
+        // recommended configs from the typescript eslint repo - turn off conflicting import rules
+        "import/named": 0,
+        "import/namespace": 0,
+        "import/default": 0,
+        "import/no-named-as-default-member": 0
+    },
+    "overrides": [
+        {
+            "files": ["test/**/*"],
+            "env": {
+                "mocha": true
+            },
+            "extends": [
+                "eslint:recommended",
+                "plugin:@typescript-eslint/recommended",
+                "plugin:@typescript-eslint/recommended-requiring-type-checking",
+                "plugin:import/errors",
+                "plugin:import/warnings",
+                "plugin:import/typescript",
+                "plugin:prettier/recommended",
+                "prettier/@typescript-eslint"
+            ],
+            "rules": {
+                "@typescript-eslint/ban-ts-comment": 0,
+                "@typescript-eslint/no-explicit-any": 0,
+                "@typescript-eslint/no-floating-promises": 0,
+                "@typescript-eslint/no-implied-eval": 0,
+                "@typescript-eslint/no-misused-promises": 0,
+                "@typescript-eslint/no-unsafe-assignment": 0,
+                "@typescript-eslint/no-unsafe-call": 0,
+                "@typescript-eslint/no-unsafe-member-access": 0,
+                "@typescript-eslint/no-unsafe-return": 0,
+                "@typescript-eslint/no-var-requires": 0,
+                "@typescript-eslint/unbound-method": 0
+            }
+        }
+    ]
 }
