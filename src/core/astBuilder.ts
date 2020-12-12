@@ -196,7 +196,7 @@ export function buildTupleTypeNode(
 ): ts.TypeNode {
     const nodes: ts.TypeNode[] = [];
     const itemCount =
-        maxItems != null ? maxItems : Math.max(types.length, minItems || 0);
+        maxItems != null ? maxItems : Math.max(types.length, minItems ?? 0);
     for (let i = 0; i < itemCount; i++) {
         let node = i < types.length ? types[i] : buildAnyKeyword();
         if (minItems == null || i >= minItems) {

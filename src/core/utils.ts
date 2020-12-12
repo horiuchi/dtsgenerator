@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Debug from 'debug';
 import ts from 'typescript';
+import { OpenApiSchema } from './jsonSchema';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
-import { JsonSchemaObject } from './type';
+import { $Ref, JsonSchemaObject } from './type';
 
 import SimpleTypes = JsonSchemaDraft04.Schema.Definitions.SimpleTypes;
 
@@ -10,7 +12,7 @@ const debug = Debug('dtsgen');
 export function toTSType(
     type: string,
     debugSource?: JsonSchemaObject
-): ts.KeywordTypeNode['kind'] | undefined {
+): ts.KeywordSyntaxKind | undefined {
     switch (type) {
         case 'any':
             return ts.SyntaxKind.AnyKeyword;
@@ -54,23 +56,38 @@ export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
     return Array.from(set.values());
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
-export function mergeSchema(a: any, b: any): any {
-    if ('$ref' in a || '$ref' in b) {
-        return { $ref: b['$ref'] || a['$ref'] };
+export function mergeSchema(
+    firstSchema: Partial<OpenApiSchema> | Partial<$Ref>,
+    secondSchema: Partial<OpenApiSchema> | Partial<$Ref>
+): Partial<OpenApiSchema> | $Ref {
+    if (Reflect.has(secondSchema, '$ref') || Reflect.has(firstSchema, '$ref')) {
+        return {
+            $ref: (secondSchema as $Ref).$ref ?? (firstSchema as $Ref).$ref,
+        };
     }
-    Object.keys(b).forEach((key: string) => {
-        const value = b[key];
-        if (a[key] != null && typeof value !== typeof a[key]) {
-            debug(`mergeSchema warning: type is mismatched, key=${key}`);
+    Object.entries(secondSchema).forEach(([key, value]) => {
+        const firstSchemaValue = (firstSchema as OpenApiSchema)[
+            key as keyof OpenApiSchema
+        ];
+        if (!!firstSchemaValue && typeof value !== typeof firstSchemaValue) {
+            debug(`mergeSchema warning: type mismatched, key=${key}`);
         }
         if (Array.isArray(value)) {
-            a[key] = (a[key] || []).concat(value);
+            Object.assign(firstSchema, {
+                [key]: Array.isArray(firstSchemaValue)
+                    ? [...firstSchemaValue, ...value]
+                    : value,
+            });
         } else if (typeof value === 'object') {
-            a[key] = mergeSchema(a[key] || {}, value);
+            Object.assign(firstSchema, {
+                [key]: mergeSchema(
+                    (firstSchemaValue ?? {}) as Partial<OpenApiSchema>,
+                    value
+                ),
+            });
         } else {
-            a[key] = value;
+            Object.assign(firstSchema, { [key]: value });
         }
     });
-    return a;
+    return firstSchema as OpenApiSchema;
 }

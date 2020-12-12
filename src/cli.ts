@@ -17,7 +17,7 @@ import ts from 'typescript';
 
 function readConfig(options: CommandOptions): Partial<Config> {
     let pc: Partial<Config> = {};
-    const configFile = options.configFile || defaultConfigFile;
+    const configFile = options.configFile ?? defaultConfigFile;
     try {
         pc = loadJSON(configFile);
         pc.configFile = configFile;
@@ -59,7 +59,7 @@ function readConfig(options: CommandOptions): Partial<Config> {
 }
 function loadJSON(file: string): Partial<Config> {
     const content = fs.readFileSync(file, 'utf-8');
-    return JSON.parse(content);
+    return JSON.parse(content) as Partial<Config>;
 }
 function convertToScriptTarget(target: string): ts.ScriptTarget {
     switch (target.trim().toLowerCase()) {
@@ -120,7 +120,7 @@ async function exec(): Promise<void> {
     setConfig(pc);
 
     if (opts.info) {
-        const version = command.opts().version;
+        const version = command.opts().version as string;
         await showConfig(version, config);
         return;
     }
@@ -136,6 +136,6 @@ async function exec(): Promise<void> {
         console.log(result);
     }
 }
-exec().catch((err) => {
-    console.error(err.stack || err);
+exec().catch((err: Error) => {
+    console.error(err.stack ?? err);
 });

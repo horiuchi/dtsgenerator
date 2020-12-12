@@ -40,7 +40,6 @@ export namespace OpenApisV2 {
         externalDocs?: SchemaJson.Definitions.ExternalDocs;
     }
     export namespace SchemaJson {
-        // eslint-disable-next-line @typescript-eslint/no-namespace
         export namespace Definitions {
             export interface ApiKeySecurity {
                 type: 'apiKey';

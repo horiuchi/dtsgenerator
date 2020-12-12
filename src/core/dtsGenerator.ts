@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Debug from 'debug';
-import ts from 'typescript';
+import ts, { factory } from 'typescript';
 import { get, set, tilde } from '../jsonPointer';
 import {
     Plugin,
@@ -26,8 +28,10 @@ interface PluginConfig {
 export default class DtsGenerator {
     private resolver = new ReferenceResolver();
     private currentSchema!: NormalizedSchema;
-
-    constructor(private contents: Schema[]) {}
+    private contents: Schema[];
+    constructor(contents: Schema[]) {
+        this.contents = contents;
+    }
 
     public async generate(): Promise<string> {
         const plugins = await this.getPlugins();
@@ -51,7 +55,8 @@ export default class DtsGenerator {
             false,
             ts.ScriptKind.TS
         );
-        file.statements = ts.createNodeArray(root);
+
+        Object.assign(file, { statements: factory.createNodeArray(root) });
 
         const postProcess = await this.getPostProcess(plugins.post);
         const result = ts.transform(file, postProcess);
@@ -65,10 +70,10 @@ export default class DtsGenerator {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private buildSchemaMergedMap(schemas: IterableIterator<Schema>): any {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const map: any = {};
+    private buildSchemaMergedMap(
+        schemas: IterableIterator<Schema>
+    ): Record<string, any> {
+        const map: Record<string, any> = {};
         const paths: { path: string[]; type: Schema }[] = [];
         for (const type of schemas) {
             const path = type.id.toNames();
@@ -78,10 +83,10 @@ export default class DtsGenerator {
         for (const item of paths) {
             const path = item.path;
             const parent = get(map, path, true);
-            if (parent == null) {
+            if (!parent) {
                 set(map, path, { [typeMarker]: item.type });
             } else {
-                parent[typeMarker] = item.type;
+                Object.assign(parent, { [typeMarker]: item.type });
             }
         }
         if (Object.keys(map).length === 0) {
@@ -157,13 +162,15 @@ export default class DtsGenerator {
         return result;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private walk(map: any, root: boolean): ts.Statement[] {
         const result: ts.Statement[] = [];
         const keys = Object.keys(map).sort();
         for (const key of keys) {
             const value = map[key];
-            if (Object.prototype.hasOwnProperty.call(value, typeMarker)) {
+            if (
+                typeof value === 'object' &&
+                Object.prototype.hasOwnProperty.call(value, typeMarker)
+            ) {
                 const schema = value[typeMarker] as Schema;
                 debug(
                     `  walk doProcess: key=${key} schemaId=${schema.id.getAbsoluteId()}`
@@ -426,13 +433,12 @@ export default class DtsGenerator {
     }
     private generateLiteralTypeNode(
         content: JsonSchemaObject,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         value: any
     ): ts.LiteralTypeNode {
         switch (content.type) {
             case 'integer':
             case 'number':
-                return ast.buildNumericLiteralTypeNode('' + value);
+                return ast.buildNumericLiteralTypeNode(String(value));
             case 'boolean':
                 return ast.buildBooleanLiteralTypeNode(value);
             default:
@@ -453,7 +459,7 @@ export default class DtsGenerator {
                     (_, index) => {
                         const schema = this.normalizeContent(
                             baseSchema,
-                            path + index
+                            path + index.toString()
                         );
                         if (schema.id.isEmpty()) {
                             return ast.addOptionalInformation(
@@ -512,7 +518,10 @@ export default class DtsGenerator {
         } else {
             const types: ts.TypeNode[] = [];
             for (let i = 0; i < items.length; i++) {
-                const type = this.normalizeContent(schema, '/items/' + i);
+                const type = this.normalizeContent(
+                    schema,
+                    '/items/' + i.toString()
+                );
                 if (type.id.isEmpty()) {
                     types.push(this.generateTypeProperty(type, false));
                 } else {
@@ -568,7 +577,7 @@ export default class DtsGenerator {
     ): ts.TypeNode {
         const tsType = utils.toTSType(type, schema.content);
         if (tsType) {
-            return ast.buildKeyword(tsType);
+            return ast.buildKeyword(tsType as ts.KeywordTypeNode['kind']);
         } else if (type === 'object') {
             const elements = this.generateProperties(schema);
             if (elements.length > 0) {
