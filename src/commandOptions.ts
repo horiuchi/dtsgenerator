@@ -38,7 +38,7 @@ export function clear(): void {
     opts.outputAST = undefined;
 }
 
-function parse(o: CommandOptions, argv: string[]): commander.Command {
+function parse(options: CommandOptions, argv: string[]): commander.Command {
     const command = new commander.Command();
 
     function collectUrl(val: string, memo: string[]): string[] {
@@ -46,8 +46,8 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         return memo;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const pkg = require('../package.json');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const pkg: Record<string, any> = require('../package.json');
 
     // <hoge> is required, [hoge] is optional
     command
@@ -91,14 +91,13 @@ function parse(o: CommandOptions, argv: string[]): commander.Command {
         })
         .parse(argv);
 
-    const res = command;
-    o.configFile = res.config;
-    o.files = command.args;
-    o.urls = res.url;
-    o.stdin = res.stdin;
-    o.out = res.out;
-    o.target = res.target;
-    o.info = res.info;
-    o.outputAST = res.outputAst;
+    options['configFile'] = command.config as string;
+    options['files'] = command.args;
+    options['urls'] = command.url as string[];
+    options['stdin'] = command.stdin as boolean;
+    options['out'] = command.out as string;
+    options['target'] = command.target as string;
+    options['info'] = command.info as boolean;
+    options['outputAST'] = command.outputAst as boolean;
     return command;
 }

@@ -7,6 +7,8 @@ import SchemaId from './schemaId';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from './jsonSchemaDraft07';
 import { getId, selectSchemaType, setId } from './jsonSchema';
+import { OpenApisV2 } from './openApiV2';
+import { OpenApisV3 } from './openApiV3';
 
 // export `ts` for using the same version of TypeScript in all plugins.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,20 +20,24 @@ export type JsonSchema = JsonSchemaDraft04.Schema | JsonSchemaDraft07.Schema;
 export type JsonSchemaObject =
     | JsonSchemaDraft04.Schema
     | JsonSchemaDraft07.SchemaObject;
-
-export type SchemaType = 'Draft04' | 'Draft07';
-
+export type JsonSchemaObjectKey = keyof JsonSchemaObject;
+export type SchemaTypeDraft04 = 'Draft04';
+export type SchemaTypeDraft07 = 'Draft07';
+export type SchemaType = SchemaTypeDraft04 | SchemaTypeDraft07;
+export type $Ref =
+    | OpenApisV3.SchemaJson.Definitions.Reference
+    | OpenApisV2.SchemaJson.Definitions.JsonReference;
 export interface Schema {
     type: SchemaType;
     openApiVersion?: 2 | 3;
     id: SchemaId;
-    content: JsonSchema;
+    content: JsonSchemaObject;
     rootSchema?: Schema;
 }
 
-export function parseSchema(content: JsonSchema, url?: string): Schema {
+export function parseSchema(content: JsonSchemaObject, url?: string): Schema {
     const { type, openApiVersion } = selectSchemaType(content);
-    if (url != null) {
+    if (url) {
         setId(type, content, url);
     }
     const id = getId(type, content);
@@ -86,9 +92,8 @@ export function parseFileContent(
         }
     }
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function deepCopy(obj: any): any {
-    return JSON.parse(JSON.stringify(obj));
+    return JSON.parse(JSON.stringify(obj)) as Record<string, any>;
 }
 
 // Plugin Types
@@ -122,14 +127,14 @@ export async function loadPlugin(
         return undefined;
     }
 
-    const mod = await import(name);
-    if (!('default' in mod)) {
+    const mod = (await import(name)) as { default?: Plugin };
+    if (!mod?.default) {
         console.warn(
             `The plugin (${name}) is invalid module. That is not default export format.`
         );
         return undefined;
     }
-    const plugin: Plugin = mod.default;
+    const plugin = mod.default;
     if (plugin.preProcess != null && typeof plugin.preProcess !== 'function') {
         console.warn(
             `The plugin (${name}) is invalid module. The 'preProcess' is not a function.`

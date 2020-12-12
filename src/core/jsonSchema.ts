@@ -6,7 +6,7 @@ import { OpenApisV2 } from './openApiV2';
 import { OpenApisV3 } from './openApiV3';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 
-type OpenApiSchema = OpenApisV2.SchemaJson | OpenApisV3.SchemaJson;
+export type OpenApiSchema = OpenApisV2.SchemaJson | OpenApisV3.SchemaJson;
 
 interface ParameterObject {
     name: string;
@@ -28,7 +28,7 @@ export function getSubSchema(
     const content = JsonPointer.get(
         rootSchema.content,
         JsonPointer.parse(pointer)
-    );
+    ) as JsonSchemaObject;
     if (id == null) {
         const subId = getId(rootSchema.type, content);
         const getParentIds = (s: Schema, result: string[]): string[] => {
@@ -51,18 +51,21 @@ export function getSubSchema(
     };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getId(type: SchemaType, content: any): string | undefined {
-    return content[getIdPropertyName(type)];
+export function getId(type: SchemaType, content: JsonSchemaObject): string {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return content[getIdPropertyName(type) as keyof JsonSchemaObject] ?? '';
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function setId(type: SchemaType, content: any, id: string): void {
+export function setId(
+    type: SchemaType,
+    content: JsonSchemaObject,
+    id: string
+): void {
     const key = getIdPropertyName(type);
-    if (content[key] == null) {
-        content[key] = id;
+    if (!Reflect.has(content, key)) {
+        content[key as keyof JsonSchemaObject] = id;
     }
 }
-function getIdPropertyName(type: SchemaType): string {
+function getIdPropertyName(type: SchemaType) {
     switch (type) {
         case 'Draft04':
             return 'id';
@@ -177,7 +180,7 @@ export function searchAllSubSchema(
             return '#/' + paths.join('/');
         }
         function convertKeyToTypeName(key: string): string {
-            key = key.replace(/\/(.)/g, (_match, p1) => {
+            key = key.replace(/\/(.)/g, (_match: string, p1: string) => {
                 return p1.toUpperCase();
             });
             return key
@@ -490,13 +493,12 @@ export function searchAllSubSchema(
 }
 
 export function selectSchemaType(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    content: any
+    content: JsonSchemaObject | OpenApiSchema
 ): { type: SchemaType; openApiVersion?: 2 | 3 } {
-    if (content.$schema) {
-        const schema = content.$schema;
-        const match = schema.match(
-            /http:\/\/json-schema\.org\/draft-(\d+)\/schema#?/
+    if (Reflect.has(content, '$schema')) {
+        const { $schema: schema } = content as JsonSchemaObject;
+        const match = /http:\/\/json-schema\.org\/draft-(\d+)\/schema#?/.exec(
+            schema ?? ''
         );
         if (match) {
             const version = Number(match[1]);
@@ -507,14 +509,20 @@ export function selectSchemaType(
             }
         }
     }
-    if (content.swagger === '2.0') {
+    if (
+        Reflect.has(content, 'swagger') &&
+        (content as OpenApisV2.SchemaJson).swagger === '2.0'
+    ) {
         return {
             type: 'Draft04',
             openApiVersion: 2,
         };
     }
-    if (content.openapi) {
-        const openapi = content.openapi;
+    if (
+        Reflect.has(content, 'openapi') &&
+        (content as OpenApisV3.SchemaJson).openapi
+    ) {
+        const { openapi } = content as OpenApisV3.SchemaJson;
         if (/^3\.\d+\.\d+$/.test(openapi)) {
             return {
                 type: 'Draft07',

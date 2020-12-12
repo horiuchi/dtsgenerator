@@ -9,6 +9,7 @@
         "plugin:prettier/recommended",
         "prettier/@typescript-eslint"
     ],
+    "plugins": ["sort-imports-es6-autofix"],
     "env": {
         "node": true,
         "es2021": true
@@ -22,7 +23,7 @@
             "error",
             { "argsIgnorePattern": "^_" }
         ],
-        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": 0,
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/prefer-optional-chain": 2,
         "@typescript-eslint/prefer-nullish-coalescing": 2,

@@ -64,7 +64,7 @@ export function globFiles(
     options?: glob.IOptions
 ): Promise<string[]> {
     return new Promise((resolve, reject) => {
-        glob(pattern, options || {}, (err, matches) => {
+        glob(pattern, options ?? {}, (err, matches) => {
             if (err) {
                 reject(err);
             } else {

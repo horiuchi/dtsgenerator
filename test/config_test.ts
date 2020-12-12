@@ -76,7 +76,6 @@ Plugins: count=0
         await showConfig('full_config', config);
 
         function getVersion(key: string): string {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const pkg = require('../package.json');
             const version: string = pkg.devDependencies[key];
             if (/^[^\d]/.test(version)) {
@@ -213,7 +212,12 @@ describe('config test', () => {
         assert.strictEqual(result, expected, result);
     });
 
-    it('error case test', async () => {
+    it('error case test', () => {
+        setConfig({
+            plugins: {
+                '@dtsgenerator/not-exists-plugin': true,
+            },
+        });
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/single-quote',
             type: 'object',
