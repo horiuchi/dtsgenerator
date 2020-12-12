@@ -52,14 +52,7 @@ describe('Snapshot testing', () => {
                 const expected = fs.readFileSync(expectedFilePath, {
                     encoding: 'utf-8',
                 });
-                assert.strictEqual(
-                    actual,
-                    expected,
-                    `
-${fixtureDir}
-${actual}
-`
-                );
+                assert.strictEqual(actual, expected, `${fixtureDir} ${actual}`);
             });
         });
     });

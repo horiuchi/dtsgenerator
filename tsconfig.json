@@ -68,7 +68,5 @@
   "include": [
     "**/*.ts",
   ],
-  "exclude": [
-    "test/snapshots/"
-  ]
+  "exclude": ["test/snapshots/**/*.ts"]
 }
