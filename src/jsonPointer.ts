@@ -9,7 +9,7 @@ export function get(
     obj: Record<string, any>,
     path: string[],
     isCreateOnNotExists = false
-): Record<any, any> | undefined {
+): any | undefined {
     if (!path.length) {
         return obj;
     }

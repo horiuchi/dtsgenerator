@@ -8,19 +8,19 @@
   "main": "dist/core/",
   "typings": "dist/core/index.d.ts",
   "scripts": {
-    "clean": "rimraf dist/ build/ {src,test}/**/*.{js,js.map} *.tsbuildinfo",
     "build": "tsc -p ./tsconfig-build.json",
-    "prepublishOnly": "npm run build",
-    "lint": "eslint --ext ts src/ test/",
-    "lint:fix": "npm run lint -- --fix",
-    "precompile": "npm run lint",
+    "clean": "rimraf dist/ build/ {src,test}/**/*.{js,js.map} *.tsbuildinfo",
     "compile": "tsc -p .",
-    "watch": "npm run compile -- -w",
-    "pretest": "npm run compile",
-    "do-test": "cross-env TS_NODE_FILES=true mocha --exit --require ts-node/register --colors test/*_test.ts",
-    "test": "nyc npm run do-test",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test"
+    "do-test": "cross-env TS_NODE_FILES=true mocha --exit --require ts-node/register --colors test/*_test.ts",
+    "lint:fix": "npm run lint -- --fix",
+    "lint": "eslint --ext ts src/ test/",
+    "precompile": "npm run lint",
+    "prepublishOnly": "npm run build",
+    "pretest": "npm run compile",
+    "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test",
+    "test": "nyc npm run do-test",
+    "watch": "npm run compile -- -w"
   },
   "directories": {
     "test": "test/"
@@ -44,6 +44,7 @@
     "node": ">= 8.0"
   },
   "dependencies": {
+    "@types/prettier": "^2.1.5",
     "commander": "^6.2.0",
     "cross-fetch": "^3.0.6",
     "debug": "^4.3.1",
@@ -58,6 +59,7 @@
     "@dtsgenerator/do-nothing": "^2.2.2",
     "@dtsgenerator/replace-namespace": "^1.3.2",
     "@dtsgenerator/single-quote": "^1.4.2",
+    "@types/chai": "^4.2.14",
     "@types/debug": "^4.1.5",
     "@types/glob": "^7.1.3",
     "@types/js-yaml": "^3.12.5",
@@ -71,7 +73,6 @@
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-prettier": "^3.2.0",
     "eslint-plugin-sort-imports-es6-autofix": "^0.5.0",
     "husky": "^4.3.5",

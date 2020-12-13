@@ -97,7 +97,7 @@ describe('error schema test', () => {
         } catch (e) {
             assert.strictEqual(
                 e.message,
-                'There is no schema in the input contents.'
+                'expect parameter of type object, received string'
             );
         }
     });
