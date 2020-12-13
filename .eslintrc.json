@@ -39,20 +39,10 @@
     },
     "overrides": [
         {
-            "files": ["test/**/*"],
+            "files": ["**/*_test.ts"],
             "env": {
                 "mocha": true
             },
-            "extends": [
-                "eslint:recommended",
-                "plugin:@typescript-eslint/recommended",
-                "plugin:@typescript-eslint/recommended-requiring-type-checking",
-                "plugin:import/errors",
-                "plugin:import/warnings",
-                "plugin:import/typescript",
-                "plugin:prettier/recommended",
-                "prettier/@typescript-eslint"
-            ],
             "rules": {
                 "@typescript-eslint/ban-ts-comment": 0,
                 "@typescript-eslint/no-empty-interface": 0,

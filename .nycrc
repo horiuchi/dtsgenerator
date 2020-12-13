@@ -5,10 +5,10 @@
     ".ts"
   ],
   "include": [
-    "**/*.js",
     "**/*.ts"
   ],
   "exclude": [
+    "**/*.js",
     "coverage/**",
     "node_modules/**",
     "**/*.d.ts",

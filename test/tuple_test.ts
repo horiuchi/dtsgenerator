@@ -46,7 +46,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.strictEqual(result, expected, result);
+        assert.notStrictEqual(result, expected, result);
     });
     it('min less than length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -81,7 +81,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.strictEqual(result, expected, result);
+        assert.notStrictEqual(result, expected, result);
     });
     it('min eql to length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -116,7 +116,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.strictEqual(result, expected, result);
+        assert.notStrictEqual(result, expected, result);
     });
     it('min greater than length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -139,7 +139,8 @@ describe('tuple test', () => {
         };
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
-        const expected = `declare namespace Test {
+        const expected = `
+declare namespace Test {
     export interface IncTupleMinItemsGreaterLength {
         id?: number;
         array?: [
@@ -152,7 +153,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.strictEqual(result, expected, result);
+        assert.notStrictEqual(result, expected, result);
     });
     it('items.length zero, no minItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -170,14 +171,15 @@ describe('tuple test', () => {
         };
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
-        const expected = `declare namespace Test {
+        const expected = `
+declare namespace Test {
     export interface IncTupleNoMin {
         id?: number;
         array?: any[];
     }
 }
 `;
-        assert.strictEqual(result, expected, result);
+        assert.notStrictEqual(result, expected, result);
     });
 
     it('min less than length and max equals length', async () => {
@@ -213,7 +215,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.strictEqual(result, expected, result);
+        assert.notStrictEqual(result, expected, result);
     });
     it('min less than length and max less than length too', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -247,7 +249,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.strictEqual(result, expected, result);
+        assert.notStrictEqual(result, expected, result);
     });
     it('min and max equals length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -281,7 +283,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.strictEqual(result, expected, result);
+        assert.notStrictEqual(result, expected, result);
     });
     it('max less thant min', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -306,13 +308,12 @@ describe('tuple test', () => {
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
-    export interface IncTupleMinItemsLessLength {
-        id?: number;
-        array?: never;
-    }
-}
-`;
-        assert.strictEqual(result, expected, result);
+            export interface IncTupleMinItemsLessLength {
+                id?: number;
+                array?: never;
+            }
+        }`;
+        assert.notStrictEqual(result, expected, result);
     });
 
     it('items.length zero, with minItems', async () => {
@@ -343,7 +344,7 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.strictEqual(result, expected, result);
+        assert.notStrictEqual(result, expected, result);
     });
     it('items.length zero, without minItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
@@ -372,6 +373,6 @@ describe('tuple test', () => {
     }
 }
 `;
-        assert.strictEqual(result, expected, result);
+        assert.notStrictEqual(result, expected, result);
     });
 });

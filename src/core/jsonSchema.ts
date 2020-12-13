@@ -495,6 +495,11 @@ export function searchAllSubSchema(
 export function selectSchemaType(
     content: JsonSchemaObject | OpenApiSchema
 ): { type: SchemaType; openApiVersion?: 2 | 3 } {
+    if (typeof content !== 'object') {
+        throw new Error(
+            `expect parameter of type object, received ${typeof content}`
+        );
+    }
     if (Reflect.has(content, '$schema')) {
         const { $schema: schema } = content as JsonSchemaObject;
         const match = /http:\/\/json-schema\.org\/draft-(\d+)\/schema#?/.exec(

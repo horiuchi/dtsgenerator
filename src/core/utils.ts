@@ -60,6 +60,11 @@ export function mergeSchema(
     firstSchema: Partial<OpenApiSchema> | Partial<$Ref>,
     secondSchema: Partial<OpenApiSchema> | Partial<$Ref>
 ): Partial<OpenApiSchema> | $Ref {
+    if (typeof firstSchema !== 'object' || typeof secondSchema !== 'object') {
+        throw new Error(
+            `invalid parameter passed to mergeSchema, expected both parameters to be of type object but received ${typeof firstSchema}, ${typeof secondSchema}.`
+        );
+    }
     if (Reflect.has(secondSchema, '$ref') || Reflect.has(firstSchema, '$ref')) {
         return {
             $ref: (secondSchema as $Ref).$ref ?? (firstSchema as $Ref).$ref,
