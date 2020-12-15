@@ -36,7 +36,13 @@ describe('tuple test', () => {
         const expected = `declare namespace Test {
     export interface IncTupleNoMin {
         id?: number;
-        array?: [string?, number?, boolean?, ("NW" | "NE" | "SW" | "SE")?, ...any[]];
+        array?: [
+            string?,
+            number?,
+            boolean?,
+            ("NW" | "NE" | "SW" | "SE")?,
+            ...any[]
+        ];
     }
 }
 `;
@@ -66,7 +72,12 @@ describe('tuple test', () => {
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsLessLength {
         id?: number;
-        array?: [string, number, boolean?, ...any[]];
+        array?: [
+            string,
+            number,
+            boolean?,
+            ...any[]
+        ];
     }
 }
 `;
@@ -96,7 +107,12 @@ describe('tuple test', () => {
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsEqlLength {
         id?: number;
-        array?: [string, number, boolean, ...any[]];
+        array?: [
+            string,
+            number,
+            boolean,
+            ...any[]
+        ];
     }
 }
 `;
@@ -126,7 +142,13 @@ describe('tuple test', () => {
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsGreaterLength {
         id?: number;
-        array?: [string, number, boolean, any, ...any[]];
+        array?: [
+            string,
+            number,
+            boolean,
+            any,
+            ...any[]
+        ];
     }
 }
 `;
@@ -183,7 +205,11 @@ describe('tuple test', () => {
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsLessLength {
         id?: number;
-        array?: [string, number, boolean?];
+        array?: [
+            string,
+            number,
+            boolean?
+        ];
     }
 }
 `;
@@ -214,7 +240,10 @@ describe('tuple test', () => {
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsLessLength {
         id?: number;
-        array?: [string, number?];
+        array?: [
+            string,
+            number?
+        ];
     }
 }
 `;
@@ -245,7 +274,10 @@ describe('tuple test', () => {
         const expected = `declare namespace Test {
     export interface IncTupleMinItemsLessLength {
         id?: number;
-        array?: [string, number];
+        array?: [
+            string,
+            number
+        ];
     }
 }
 `;
@@ -303,7 +335,11 @@ describe('tuple test', () => {
         const expected = `declare namespace Test {
     export interface IncTupleNoMin {
         id?: number;
-        array?: [any, any, ...any[]];
+        array?: [
+            any,
+            any,
+            ...any[]
+        ];
     }
 }
 `;
@@ -329,7 +365,10 @@ describe('tuple test', () => {
         const expected = `declare namespace Test {
     export interface IncTupleNoMin {
         id?: number;
-        array?: [any?, any?];
+        array?: [
+            any?,
+            any?
+        ];
     }
 }
 `;

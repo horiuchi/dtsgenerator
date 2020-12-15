@@ -51,7 +51,9 @@ export default class DtsGenerator {
             false,
             ts.ScriptKind.TS
         );
-        file.statements = ts.createNodeArray(root);
+        Object.assign(file, {
+            statements: ts.createNodeArray(root),
+        });
 
         const postProcess = await this.getPostProcess(plugins.post);
         const result = ts.transform(file, postProcess);
@@ -568,7 +570,13 @@ export default class DtsGenerator {
     ): ts.TypeNode {
         const tsType = utils.toTSType(type, schema.content);
         if (tsType) {
-            return ast.buildKeyword(tsType);
+            if (tsType !== ts.SyntaxKind.NullKeyword) {
+                return ast.buildKeyword(tsType);
+            } else {
+                return ts.factory.createLiteralTypeNode(
+                    ts.factory.createToken(ts.SyntaxKind.NullKeyword)
+                );
+            }
         } else if (type === 'object') {
             const elements = this.generateProperties(schema);
             if (elements.length > 0) {
