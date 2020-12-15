@@ -1,4 +1,4 @@
-import ts from 'typescript';
+import { ScriptTarget } from 'typescript';
 import { Plugin, loadPlugin } from './type';
 
 export interface Config {
@@ -9,7 +9,7 @@ export interface Config {
         stdin: boolean;
     };
     outputFile?: string;
-    target: ts.ScriptTarget;
+    target: ScriptTarget;
     outputAST: boolean;
 
     plugins: {
@@ -24,7 +24,7 @@ const defaultConfig: Config = {
         stdin: false,
     },
     outputAST: false,
-    target: ts.ScriptTarget.Latest,
+    target: ScriptTarget.Latest,
     plugins: {},
 };
 
@@ -82,25 +82,25 @@ export async function showConfig(version: string, c: Config): Promise<void> {
     }
     console.log();
 }
-function showScriptTarget(target: ts.ScriptTarget): string {
+function showScriptTarget(target: ScriptTarget): string {
     switch (target) {
-        case ts.ScriptTarget.ES3:
+        case ScriptTarget.ES3:
             return 'ES3';
-        case ts.ScriptTarget.ES5:
+        case ScriptTarget.ES5:
             return 'ES5';
-        case ts.ScriptTarget.ES2015:
+        case ScriptTarget.ES2015:
             return 'ES2015';
-        case ts.ScriptTarget.ES2016:
+        case ScriptTarget.ES2016:
             return 'ES2016';
-        case ts.ScriptTarget.ES2017:
+        case ScriptTarget.ES2017:
             return 'ES2017';
-        case ts.ScriptTarget.ES2018:
+        case ScriptTarget.ES2018:
             return 'ES2018';
-        case ts.ScriptTarget.ES2019:
+        case ScriptTarget.ES2019:
             return 'ES2019';
-        case ts.ScriptTarget.ES2020:
+        case ScriptTarget.ES2020:
             return 'ES2020';
-        case ts.ScriptTarget.ESNext:
+        case ScriptTarget.ESNext:
             return 'ESNext';
         default:
             return 'Latest';
