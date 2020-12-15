@@ -62,9 +62,9 @@ dtsgenerator({
     contents: [parseSchema({/* JsonSchema object */})],
     config: {/* Config object */},
 }).then(content => {
-  /* Do someting with parsed content */
+    /* Do someting with parsed content */
 }).catch(err => {
-  /* Handle errors */
+    /* Handle errors */
 });
 ```
 
@@ -139,6 +139,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 - [supported features in these spec](https://github.com/horiuchi/dtsgenerator/blob/master/SupportedFeatures.md)
 
 ## ChangeLog
+
+### [v3.4.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.4.0) (2020-12-15)
+
+- features:
+  - Add support for multipart media type by #455. Thank you @wszydlak :+1:
+  - Add support for passing config object with NodeJS API usage by #456. Thank you @wszydlak :+1:
 
 ### [v3.3.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.3.1) (2020-10-05)
 
