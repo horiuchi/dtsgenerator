@@ -120,11 +120,6 @@ describe('config test', () => {
     });
 
     it('apply plugin test', async () => {
-        setConfig({
-            plugins: {
-                '@dtsgenerator/do-nothing': true,
-            },
-        });
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/plugin-test',
             type: 'object',
@@ -146,7 +141,14 @@ describe('config test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: {
+                plugins: {
+                    '@dtsgenerator/do-nothing': true,
+                },
+            },
+        });
 
         const expected = `declare namespace Test {
     export interface PluginTest {
@@ -159,11 +161,6 @@ describe('config test', () => {
     });
 
     it('apply single-quote plugin test', async () => {
-        setConfig({
-            plugins: {
-                '@dtsgenerator/single-quote': true,
-            },
-        });
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/single-quote',
             type: 'object',
@@ -185,7 +182,14 @@ describe('config test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: {
+                plugins: {
+                    '@dtsgenerator/single-quote': true,
+                },
+            },
+        });
 
         const expected = `declare namespace Test {
     export interface SingleQuote {
@@ -198,11 +202,6 @@ describe('config test', () => {
     });
 
     it('error case test', async () => {
-        setConfig({
-            plugins: {
-                '@dtsgenerator/not-exists-plugin': true,
-            },
-        });
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/single-quote',
             type: 'object',
@@ -226,7 +225,14 @@ describe('config test', () => {
         };
 
         assert.rejects(() => {
-            return dtsgenerator({ contents: [parseSchema(schema)] });
+            return dtsgenerator({
+                contents: [parseSchema(schema)],
+                config: {
+                    plugins: {
+                        '@dtsgenerator/not-exists-plugin': true,
+                    },
+                },
+            });
         });
     });
 });
