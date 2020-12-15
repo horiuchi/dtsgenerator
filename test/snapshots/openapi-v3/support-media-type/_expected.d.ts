@@ -1,6 +1,7 @@
 declare namespace Components {
     namespace RequestBodies {
-        export type UploadFileRequest = string; // binary
+        export type UploadFileMultipartRequest = string; // binary
+        export type UploadFileStreamRequest = string; // binary
     }
     namespace Responses {
         export type $200ReturnData = Schemas.Data[];
@@ -39,7 +40,15 @@ declare namespace Paths {
     }
     namespace SecondPath {
         namespace Post {
-            export type RequestBody = Components.RequestBodies.UploadFileRequest /* binary */;
+            export type RequestBody = Components.RequestBodies.UploadFileStreamRequest /* binary */;
+            namespace Responses {
+                export type $200 = Components.Responses.$200ReturnData;
+            }
+        }
+    }
+    namespace ThirdPath {
+        namespace Post {
+            export type RequestBody = Components.RequestBodies.UploadFileMultipartRequest /* binary */;
             namespace Responses {
                 export type $200 = Components.Responses.$200ReturnData;
             }
