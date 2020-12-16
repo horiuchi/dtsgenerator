@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises';
+import * as fs from 'fs';
 import { safeLoad } from 'js-yaml';
 import { extname } from 'path';
 import { TransformerFactory, SourceFile } from 'typescript';
@@ -48,8 +48,8 @@ export async function readSchemasFromFile(pattern: string): Promise<Schema[]> {
     const files = await globFiles(pattern);
     return Promise.all(
         files.map(async (file) => {
-            const data = await readFile(file, {
-                encoding: 'utf-8',
+            const data = await fs.promises.readFile(file, {
+                encoding: 'utf8',
             });
             const content = parseFileContent(data);
             return parseSchema(content);
