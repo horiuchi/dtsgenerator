@@ -214,6 +214,35 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+    it('other type enum schema', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/enum_other_type',
+            type: 'object',
+            properties: {
+                nullEnum: {
+                    type: 'null',
+                    enum: [null],
+                },
+                nonTypeNum: {
+                    enum: [1, 2, 3],
+                },
+                mixed: {
+                    enum: [true, 1, 'OK'],
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface EnumOtherType {
+        nullEnum?: null;
+        nonTypeNum?: 1 | 2 | 3;
+        mixed?: true | 1 | "OK";
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
     it('string and integer const schema', async () => {
         const schema: JsonSchemaDraft07.Schema = {
             $id: '/test/const_string_vs_integer',
