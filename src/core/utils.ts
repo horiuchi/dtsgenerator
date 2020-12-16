@@ -10,7 +10,7 @@ const debug = Debug('dtsgen');
 export function toTSType(
     type: string,
     debugSource?: JsonSchemaObject
-): ts.KeywordTypeNode['kind'] | undefined {
+): ts.KeywordTypeNode['kind'] | ts.SyntaxKind.NullKeyword | undefined {
     switch (type) {
         case 'any':
             return ts.SyntaxKind.AnyKeyword;

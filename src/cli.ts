@@ -1,5 +1,4 @@
 import fs from 'fs';
-import mkdirp from 'mkdirp';
 import path from 'path';
 import opts, {
     initialize,
@@ -130,7 +129,7 @@ async function exec(): Promise<void> {
         contents,
     });
     if (opts.out) {
-        mkdirp.sync(path.dirname(opts.out));
+        fs.mkdirSync(path.dirname(opts.out), { recursive: true });
         fs.writeFileSync(opts.out, result, { encoding: 'utf-8' });
     } else {
         console.log(result);

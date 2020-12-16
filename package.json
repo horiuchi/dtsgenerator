@@ -50,9 +50,8 @@
     "glob": "^7.1.6",
     "https-proxy-agent": "^5.0.0",
     "js-yaml": "^3.14.1",
-    "mkdirp": "^1.0.4",
     "tslib": "^2.0.3",
-    "typescript": "^3.9.7"
+    "typescript": "~4.1.0"
   },
   "devDependencies": {
     "@dtsgenerator/do-nothing": "^2.2.2",

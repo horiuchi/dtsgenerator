@@ -153,7 +153,13 @@ describe('config test', () => {
         const expected = `declare namespace Test {
     export interface PluginTest {
         id?: number;
-        array?: [string?, number?, boolean?, ("NW" | "NE" | "SW" | "SE")?, ...any[]];
+        array?: [
+            string?,
+            number?,
+            boolean?,
+            ("NW" | "NE" | "SW" | "SE")?,
+            ...any[]
+        ];
     }
 }
 `;
@@ -194,7 +200,13 @@ describe('config test', () => {
         const expected = `declare namespace Test {
     export interface SingleQuote {
         id?: number;
-        array?: [string?, number?, boolean?, ('NW' | 'NE' | 'SW' | 'SE')?, ...any[]];
+        array?: [
+            string?,
+            number?,
+            boolean?,
+            ('NW' | 'NE' | 'SW' | 'SE')?,
+            ...any[]
+        ];
     }
 }
 `;
