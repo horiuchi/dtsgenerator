@@ -6,23 +6,23 @@ import { toValidIdentifier, checkInvalidCharacter } from './validateIdentifier';
 import { Schema } from './type';
 
 function buildTypeNameIdentifier(name: string): ts.Identifier {
-    return ts.createIdentifier(toValidIdentifier(name, config.target));
+    return ts.factory.createIdentifier(toValidIdentifier(name, config.target));
 }
 function buildPropertyNameIdentifier(name: string): ts.PropertyName {
     if (/^\d/.test(name)) {
         name = '$' + name;
     }
     if (checkInvalidCharacter(name, config.target)) {
-        return ts.createIdentifier(name);
+        return ts.factory.createIdentifier(name);
     } else {
-        return ts.createStringLiteral(name);
+        return ts.factory.createStringLiteral(name);
     }
 }
 
 export function buildKeyword(
-    kind: ts.KeywordTypeNode['kind']
+    kind: ts.KeywordTypeSyntaxKind
 ): ts.KeywordTypeNode {
-    return ts.createKeywordTypeNode(kind);
+    return ts.factory.createKeywordTypeNode(kind);
 }
 export function buildAnyKeyword(): ts.KeywordTypeNode {
     return buildKeyword(ts.SyntaxKind.AnyKeyword);
@@ -33,22 +33,29 @@ export function buildNeverKeyword(): ts.KeywordTypeNode {
 export function buildUnknownKeyword(): ts.KeywordTypeNode {
     return buildKeyword(ts.SyntaxKind.UnknownKeyword);
 }
+export function buildNullKeyword(): ts.TypeNode {
+    return ts.factory.createLiteralTypeNode(
+        ts.factory.createToken(ts.SyntaxKind.NullKeyword)
+    );
+}
 export function buildStringKeyword(): ts.KeywordTypeNode {
     return buildKeyword(ts.SyntaxKind.StringKeyword);
 }
 export function buildSimpleArrayNode(element: ts.TypeNode): ts.ArrayTypeNode {
-    return ts.createArrayTypeNode(element);
+    return ts.factory.createArrayTypeNode(element);
 }
 
 // TODO
 export function buildStringLiteralTypeNode(s: string): ts.LiteralTypeNode {
-    return ts.createLiteralTypeNode(ts.createStringLiteral(s));
+    return ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral(s));
 }
 export function buildNumericLiteralTypeNode(n: string): ts.LiteralTypeNode {
-    return ts.createLiteralTypeNode(ts.createNumericLiteral(n));
+    return ts.factory.createLiteralTypeNode(ts.factory.createNumericLiteral(n));
 }
 export function buildBooleanLiteralTypeNode(b: boolean): ts.LiteralTypeNode {
-    return ts.createLiteralTypeNode(b ? ts.createTrue() : ts.createFalse());
+    return ts.factory.createLiteralTypeNode(
+        b ? ts.factory.createTrue() : ts.factory.createFalse()
+    );
 }
 
 export function buildNamespaceNode(
@@ -57,13 +64,13 @@ export function buildNamespaceNode(
     root: boolean
 ): ts.ModuleDeclaration {
     const modifiers = root
-        ? [ts.createModifier(ts.SyntaxKind.DeclareKeyword)]
+        ? [ts.factory.createModifier(ts.SyntaxKind.DeclareKeyword)]
         : undefined;
-    return ts.createModuleDeclaration(
+    return ts.factory.createModuleDeclaration(
         undefined,
         modifiers,
         buildTypeNameIdentifier(name),
-        ts.createModuleBlock(statements),
+        ts.factory.createModuleBlock(statements),
         ts.NodeFlags.Namespace |
             ts.NodeFlags.ExportContext |
             ts.NodeFlags.ContextFlags
@@ -77,9 +84,9 @@ export function buildInterfaceNode(
 ): ts.InterfaceDeclaration {
     const name = getLastTypeName(id);
     const modifiers = root
-        ? [ts.createModifier(ts.SyntaxKind.DeclareKeyword)]
-        : [ts.createModifier(ts.SyntaxKind.ExportKeyword)];
-    return ts.createInterfaceDeclaration(
+        ? [ts.factory.createModifier(ts.SyntaxKind.DeclareKeyword)]
+        : [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)];
+    return ts.factory.createInterfaceDeclaration(
         undefined,
         modifiers,
         buildTypeNameIdentifier(name),
@@ -96,9 +103,9 @@ export function buildTypeAliasNode(
 ): ts.TypeAliasDeclaration {
     const name = getLastTypeName(id);
     const modifiers = root
-        ? [ts.createModifier(ts.SyntaxKind.DeclareKeyword)]
-        : [ts.createModifier(ts.SyntaxKind.ExportKeyword)];
-    return ts.createTypeAliasDeclaration(
+        ? [ts.factory.createModifier(ts.SyntaxKind.DeclareKeyword)]
+        : [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)];
+    return ts.factory.createTypeAliasDeclaration(
         undefined,
         modifiers,
         buildTypeNameIdentifier(name),
@@ -117,36 +124,35 @@ export function buildPropertySignature(
     const content = schema.content;
     const modifiers =
         'readOnly' in content && content.readOnly
-            ? [ts.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
+            ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
             : undefined;
     const questionToken =
         required == null || required.indexOf(propertyName) < 0
-            ? ts.createToken(ts.SyntaxKind.QuestionToken)
+            ? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
             : undefined;
     if (isPattern) {
-        return ts.createIndexSignature(
+        return ts.factory.createIndexSignature(
             undefined,
             modifiers,
             [
-                ts.createParameter(
+                ts.factory.createParameterDeclaration(
                     [],
                     [],
                     undefined,
-                    ts.createIdentifier('pattern'),
+                    ts.factory.createIdentifier('pattern'),
                     undefined,
-                    ts.createTypeReferenceNode('string', []),
+                    ts.factory.createTypeReferenceNode('string', []),
                     undefined
                 ),
             ],
             valueType
         );
     }
-    return ts.createPropertySignature(
+    return ts.factory.createPropertySignature(
         modifiers,
         buildPropertyNameIdentifier(propertyName),
         questionToken,
-        valueType,
-        undefined
+        valueType
     );
 }
 
@@ -155,11 +161,11 @@ export function buildIndexSignatureNode(
     indexType: ts.TypeNode,
     valueType: ts.TypeNode
 ): ts.IndexSignatureDeclaration {
-    return ts.createIndexSignature(
+    return ts.factory.createIndexSignature(
         undefined,
         undefined,
         [
-            ts.createParameter(
+            ts.factory.createParameterDeclaration(
                 undefined,
                 undefined,
                 undefined,
@@ -174,7 +180,7 @@ export function buildIndexSignatureNode(
 }
 
 export function buildTypeLiteralNode(elements: ts.TypeElement[]): ts.TypeNode {
-    return ts.createTypeLiteralNode(elements);
+    return ts.factory.createTypeLiteralNode(elements);
 }
 
 export function buildUnionTypeNode<T>(
@@ -182,11 +188,11 @@ export function buildUnionTypeNode<T>(
     builder: (t: T, index: number) => ts.TypeNode,
     terminate: boolean
 ): ts.TypeNode {
-    const node = ts.createUnionTypeNode(types.map(builder));
+    const node = ts.factory.createUnionTypeNode(types.map(builder));
     if (terminate) {
         return node;
     }
-    return ts.createParenthesizedType(node);
+    return ts.factory.createParenthesizedType(node);
 }
 
 export function buildTupleTypeNode(
@@ -200,16 +206,18 @@ export function buildTupleTypeNode(
     for (let i = 0; i < itemCount; i++) {
         let node = i < types.length ? types[i] : buildAnyKeyword();
         if (minItems == null || i >= minItems) {
-            node = ts.createOptionalTypeNode(node);
+            node = ts.factory.createOptionalTypeNode(node);
         }
         nodes.push(node);
     }
     if (maxItems == null) {
         nodes.push(
-            ts.createRestTypeNode(ts.createArrayTypeNode(buildAnyKeyword()))
+            ts.factory.createRestTypeNode(
+                ts.factory.createArrayTypeNode(buildAnyKeyword())
+            )
         );
     }
-    return ts.createTupleTypeNode(nodes);
+    return ts.factory.createTupleTypeNode(nodes);
 }
 
 export function buildTypeReferenceNode(
@@ -222,12 +230,12 @@ export function buildTypeReferenceNode(
     }
     let node: ts.EntityName = buildTypeNameIdentifier(typeName[0]);
     for (let i = 1; i < typeName.length; i++) {
-        node = ts.createQualifiedName(
+        node = ts.factory.createQualifiedName(
             node,
             buildTypeNameIdentifier(typeName[i])
         );
     }
-    return ts.createTypeReferenceNode(node, undefined);
+    return ts.factory.createTypeReferenceNode(node, undefined);
 }
 function getTypename(id: SchemaId, baseSchema: Schema): string[] {
     const result = id.toNames();

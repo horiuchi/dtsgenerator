@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import { dirname } from 'path';
 import opts, {
     initialize,
     CommandOptions,
@@ -12,7 +12,7 @@ import dtsgenerator, {
     readSchemaFromUrl,
 } from './core';
 import config, { Config, setConfig, showConfig } from './core/config';
-import ts from 'typescript';
+import { ScriptTarget } from 'typescript';
 
 function readConfig(options: CommandOptions): Partial<Config> {
     let pc: Partial<Config> = {};
@@ -60,28 +60,28 @@ function loadJSON(file: string): Partial<Config> {
     const content = fs.readFileSync(file, 'utf-8');
     return JSON.parse(content);
 }
-function convertToScriptTarget(target: string): ts.ScriptTarget {
+function convertToScriptTarget(target: string): ScriptTarget {
     switch (target.trim().toLowerCase()) {
         case 'es3':
-            return ts.ScriptTarget.ES3;
+            return ScriptTarget.ES3;
         case 'es5':
-            return ts.ScriptTarget.ES5;
+            return ScriptTarget.ES5;
         case 'es2015':
-            return ts.ScriptTarget.ES2015;
+            return ScriptTarget.ES2015;
         case 'es2016':
-            return ts.ScriptTarget.ES2016;
+            return ScriptTarget.ES2016;
         case 'es2017':
-            return ts.ScriptTarget.ES2017;
+            return ScriptTarget.ES2017;
         case 'es2018':
-            return ts.ScriptTarget.ES2018;
+            return ScriptTarget.ES2018;
         case 'es2019':
-            return ts.ScriptTarget.ES2019;
+            return ScriptTarget.ES2019;
         case 'es2020':
-            return ts.ScriptTarget.ES2020;
+            return ScriptTarget.ES2020;
         case 'esnext':
-            return ts.ScriptTarget.ESNext;
+            return ScriptTarget.ESNext;
         default:
-            return ts.ScriptTarget.Latest;
+            return ScriptTarget.Latest;
     }
 }
 
@@ -129,7 +129,7 @@ async function exec(): Promise<void> {
         contents,
     });
     if (opts.out) {
-        fs.mkdirSync(path.dirname(opts.out), { recursive: true });
+        fs.mkdirSync(dirname(opts.out), { recursive: true });
         fs.writeFileSync(opts.out, result, { encoding: 'utf-8' });
     } else {
         console.log(result);

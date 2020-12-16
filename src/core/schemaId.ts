@@ -27,7 +27,7 @@ export default class SchemaId {
             absoluteId = '/' + absoluteId;
         }
         this.id = url.parse(absoluteId);
-        this.absoluteId = this.id.href;
+        this.absoluteId = this.id.href ?? '';
     }
 
     public getAbsoluteId(): string {

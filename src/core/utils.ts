@@ -1,5 +1,5 @@
 import Debug from 'debug';
-import ts from 'typescript';
+import * as ts from 'typescript';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 import { JsonSchemaObject } from './type';
 
@@ -10,7 +10,7 @@ const debug = Debug('dtsgen');
 export function toTSType(
     type: string,
     debugSource?: JsonSchemaObject
-): ts.KeywordTypeNode['kind'] | ts.SyntaxKind.NullKeyword | undefined {
+): ts.KeywordTypeSyntaxKind | ts.SyntaxKind.NullKeyword | undefined {
     switch (type) {
         case 'any':
             return ts.SyntaxKind.AnyKeyword;

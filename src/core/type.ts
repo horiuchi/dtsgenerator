@@ -1,6 +1,6 @@
-import fs from 'fs';
-import YAML from 'js-yaml';
-import path from 'path';
+import * as fs from 'fs';
+import { safeLoad } from 'js-yaml';
+import { extname } from 'path';
 import { TransformerFactory, SourceFile } from 'typescript';
 import { globFiles, readStream, readUrl } from '../utils';
 import SchemaId from './schemaId';
@@ -49,7 +49,7 @@ export async function readSchemasFromFile(pattern: string): Promise<Schema[]> {
     return Promise.all(
         files.map(async (file) => {
             const data = await fs.promises.readFile(file, {
-                encoding: 'utf-8',
+                encoding: 'utf8',
             });
             const content = parseFileContent(data);
             return parseSchema(content);
@@ -66,11 +66,11 @@ export function parseFileContent(
     content: string,
     filename?: string
 ): JsonSchema {
-    const ext = filename ? path.extname(filename).toLowerCase() : '';
+    const ext = filename ? extname(filename).toLowerCase() : '';
     const maybeYaml = ext === '.yaml' || ext === '.yml';
     try {
         if (maybeYaml) {
-            return deepCopy(YAML.safeLoad(content));
+            return deepCopy(safeLoad(content));
         } else {
             return JSON.parse(content);
         }
@@ -78,7 +78,7 @@ export function parseFileContent(
         if (maybeYaml) {
             return JSON.parse(content);
         } else {
-            return deepCopy(YAML.safeLoad(content));
+            return deepCopy(safeLoad(content));
         }
     }
 }
