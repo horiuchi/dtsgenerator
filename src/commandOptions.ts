@@ -1,4 +1,4 @@
-import commander from 'commander';
+import * as commander from 'commander';
 
 export const defaultConfigFile = 'dtsgen.json';
 

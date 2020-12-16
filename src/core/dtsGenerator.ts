@@ -1,5 +1,5 @@
 import Debug from 'debug';
-import ts from 'typescript';
+import * as ts from 'typescript';
 import { get, set, tilde } from '../jsonPointer';
 import {
     Plugin,
@@ -52,7 +52,7 @@ export default class DtsGenerator {
             ts.ScriptKind.TS
         );
         Object.assign(file, {
-            statements: ts.createNodeArray(root),
+            statements: ts.factory.createNodeArray(root),
         });
 
         const postProcess = await this.getPostProcess(plugins.post);
@@ -570,12 +570,10 @@ export default class DtsGenerator {
     ): ts.TypeNode {
         const tsType = utils.toTSType(type, schema.content);
         if (tsType) {
-            if (tsType !== ts.SyntaxKind.NullKeyword) {
-                return ast.buildKeyword(tsType);
+            if (tsType === ts.SyntaxKind.NullKeyword) {
+                return ast.buildNullKeyword();
             } else {
-                return ts.factory.createLiteralTypeNode(
-                    ts.factory.createToken(ts.SyntaxKind.NullKeyword)
-                );
+                return ast.buildKeyword(tsType);
             }
         } else if (type === 'object') {
             const elements = this.generateProperties(schema);
