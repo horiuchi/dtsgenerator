@@ -437,9 +437,23 @@ export default class DtsGenerator {
                 return ast.buildNumericLiteralTypeNode('' + value);
             case 'boolean':
                 return ast.buildBooleanLiteralTypeNode(value);
-            default:
+            case 'null':
+                return ast.buildNullKeyword();
+            case 'string':
                 return ast.buildStringLiteralTypeNode(value);
         }
+        if (value === null) {
+            return ast.buildNullKeyword();
+        }
+        switch (typeof value) {
+            case 'number':
+                return ast.buildNumericLiteralTypeNode('' + value);
+            case 'boolean':
+                return ast.buildBooleanLiteralTypeNode(value);
+            case 'string':
+                return ast.buildStringLiteralTypeNode(value);
+        }
+        return ast.buildStringLiteralTypeNode(value.toString());
     }
 
     private generateArrayedType(

@@ -33,19 +33,17 @@ export function buildNeverKeyword(): ts.KeywordTypeNode {
 export function buildUnknownKeyword(): ts.KeywordTypeNode {
     return buildKeyword(ts.SyntaxKind.UnknownKeyword);
 }
-export function buildNullKeyword(): ts.TypeNode {
-    return ts.factory.createLiteralTypeNode(
-        ts.factory.createToken(ts.SyntaxKind.NullKeyword)
-    );
-}
 export function buildStringKeyword(): ts.KeywordTypeNode {
     return buildKeyword(ts.SyntaxKind.StringKeyword);
 }
 export function buildSimpleArrayNode(element: ts.TypeNode): ts.ArrayTypeNode {
     return ts.factory.createArrayTypeNode(element);
 }
-
-// TODO
+export function buildNullKeyword(): ts.LiteralTypeNode {
+    return ts.factory.createLiteralTypeNode(
+        ts.factory.createToken(ts.SyntaxKind.NullKeyword)
+    );
+}
 export function buildStringLiteralTypeNode(s: string): ts.LiteralTypeNode {
     return ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral(s));
 }
