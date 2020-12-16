@@ -140,6 +140,13 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.4.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.4.1) (2020-12-16)
+
+- fixed:
+  - Fix using package without esModuleInterop setting on tsconfig by #460. Thank you @wszydlak :+1:
+  - Update TypeScript v4 by #462. Thank you @wszydlak :+1:
+  - Add to support the null type enum value by #464. Thank you for your report @Goldziher :+1:
+
 ### [v3.4.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.4.0) (2020-12-15)
 
 - features:
