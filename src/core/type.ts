@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import * as fs from 'fs';
 import { safeLoad } from 'js-yaml';
 import { extname } from 'path';
@@ -20,27 +21,35 @@ export type JsonSchema = JsonSchemaDraft04.Schema | JsonSchemaDraft07.Schema;
 export type JsonSchemaObject =
     | JsonSchemaDraft04.Schema
     | JsonSchemaDraft07.SchemaObject;
-export type JsonSchemaObjectKey = keyof JsonSchemaObject;
-export type SchemaTypeDraft04 = 'Draft04';
-export type SchemaTypeDraft07 = 'Draft07';
-export type SchemaType = SchemaTypeDraft04 | SchemaTypeDraft07;
+export type SchemaType = 'Draft04' | 'Draft07';
+export function isJsonSchemaDraft04(
+    _content: JsonSchemaObject,
+    type: SchemaType
+): _content is JsonSchemaDraft04.Schema {
+    return type === 'Draft04';
+}
+
 export type $Ref =
     | OpenApisV3.SchemaJson.Definitions.Reference
     | OpenApisV2.SchemaJson.Definitions.JsonReference;
+
 export interface Schema {
     type: SchemaType;
     openApiVersion?: 2 | 3;
     id: SchemaId;
-    content: JsonSchemaObject;
+    content: JsonSchema;
     rootSchema?: Schema;
 }
 
-export function parseSchema(content: JsonSchemaObject, url?: string): Schema {
+export function parseSchema(content: JsonSchema, url?: string): Schema {
     const { type, openApiVersion } = selectSchemaType(content);
-    if (url) {
-        setId(type, content, url);
+    let id: string | undefined;
+    if (typeof content !== 'boolean') {
+        if (url != null) {
+            setId(type, content, url);
+        }
+        id = getId(type, content);
     }
-    const id = getId(type, content);
     return {
         type,
         openApiVersion,
@@ -93,7 +102,7 @@ export function parseFileContent(
     }
 }
 function deepCopy(obj: any): any {
-    return JSON.parse(JSON.stringify(obj)) as Record<string, any>;
+    return JSON.parse(JSON.stringify(obj));
 }
 
 // Plugin Types

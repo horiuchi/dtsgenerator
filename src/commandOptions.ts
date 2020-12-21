@@ -46,7 +46,7 @@ function parse(options: CommandOptions, argv: string[]): commander.Command {
         return memo;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-unsafe-assignment
     const pkg: Record<string, any> = require('../package.json');
 
     // <hoge> is required, [hoge] is optional
@@ -91,13 +91,13 @@ function parse(options: CommandOptions, argv: string[]): commander.Command {
         })
         .parse(argv);
 
-    options['configFile'] = command.config as string;
-    options['files'] = command.args;
-    options['urls'] = command.url as string[];
-    options['stdin'] = command.stdin as boolean;
-    options['out'] = command.out as string;
-    options['target'] = command.target as string;
-    options['info'] = command.info as boolean;
-    options['outputAST'] = command.outputAst as boolean;
+    options.configFile = command.config as string;
+    options.files = command.args;
+    options.urls = command.url as string[];
+    options.stdin = command.stdin as boolean;
+    options.out = command.out as string;
+    options.target = command.target as string;
+    options.info = command.info as boolean;
+    options.outputAST = command.outputAst as boolean;
     return command;
 }

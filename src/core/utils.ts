@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Debug from 'debug';
 import * as ts from 'typescript';
-import { OpenApiSchema } from './jsonSchema';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
-import { $Ref, JsonSchemaObject } from './type';
+import { JsonSchemaObject } from './type';
 
 import SimpleTypes = JsonSchemaDraft04.Schema.Definitions.SimpleTypes;
 
@@ -56,43 +56,24 @@ export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
     return Array.from(set.values());
 }
 
-export function mergeSchema(
-    firstSchema: Partial<OpenApiSchema> | Partial<$Ref>,
-    secondSchema: Partial<OpenApiSchema> | Partial<$Ref>
-): Partial<OpenApiSchema> | $Ref {
-    if (typeof firstSchema !== 'object' || typeof secondSchema !== 'object') {
-        throw new Error(
-            `invalid parameter passed to mergeSchema, expected both parameters to be of type object but received ${typeof firstSchema}, ${typeof secondSchema}.`
-        );
+export function mergeSchema(a: any, b: any): any {
+    if ('$ref' in a || '$ref' in b) {
+        return { $ref: b['$ref'] || a['$ref'] };
     }
-    if (Reflect.has(secondSchema, '$ref') || Reflect.has(firstSchema, '$ref')) {
-        return {
-            $ref: (secondSchema as $Ref).$ref ?? (firstSchema as $Ref).$ref,
-        };
-    }
-    Object.entries(secondSchema).forEach(([key, value]) => {
-        const firstSchemaValue = (firstSchema as OpenApiSchema)[
-            key as keyof OpenApiSchema
-        ];
-        if (!!firstSchemaValue && typeof value !== typeof firstSchemaValue) {
-            debug(`mergeSchema warning: type mismatched, key=${key}`);
+    Object.keys(b).forEach((key: string) => {
+        const value = b[key];
+        if (a[key] != null && typeof value !== typeof a[key]) {
+            debug(`mergeSchema warning: type is mismatched, key=${key}`);
         }
         if (Array.isArray(value)) {
-            Object.assign(firstSchema, {
-                [key]: Array.isArray(firstSchemaValue)
-                    ? [...firstSchemaValue, ...value]
-                    : value,
-            });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            a[key] = (a[key] ?? []).concat(value);
         } else if (typeof value === 'object') {
-            Object.assign(firstSchema, {
-                [key]: mergeSchema(
-                    (firstSchemaValue ?? {}) as Partial<OpenApiSchema>,
-                    value
-                ),
-            });
+            a[key] = mergeSchema(a[key] || {}, value);
         } else {
-            Object.assign(firstSchema, { [key]: value });
+            a[key] = value;
         }
     });
-    return firstSchema as Partial<OpenApiSchema>;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return a;
 }

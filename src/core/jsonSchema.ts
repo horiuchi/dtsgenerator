@@ -1,12 +1,18 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import * as JsonPointer from '../jsonPointer';
 import SchemaId from './schemaId';
-import { Schema, JsonSchemaObject, SchemaType, JsonSchema } from './type';
+import {
+    Schema,
+    JsonSchemaObject,
+    SchemaType,
+    JsonSchema,
+    isJsonSchemaDraft04,
+} from './type';
 import { OpenApisV2 } from './openApiV2';
 import { OpenApisV3 } from './openApiV3';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 
-export type OpenApiSchema = OpenApisV2.SchemaJson | OpenApisV3.SchemaJson;
+type OpenApiSchema = OpenApisV2.SchemaJson | OpenApisV3.SchemaJson;
 
 interface ParameterObject {
     name: string;
@@ -28,9 +34,12 @@ export function getSubSchema(
     const content = JsonPointer.get(
         rootSchema.content,
         JsonPointer.parse(pointer)
-    ) as JsonSchemaObject;
+    ) as JsonSchema;
     if (id == null) {
-        const subId = getId(rootSchema.type, content);
+        const subId =
+            typeof content === 'boolean'
+                ? undefined
+                : getId(rootSchema.type, content);
         const getParentIds = (s: Schema, result: string[]): string[] => {
             result.push(s.id.getAbsoluteId());
             return s.rootSchema == null
@@ -51,26 +60,25 @@ export function getSubSchema(
     };
 }
 
+const Draft04Id = 'id';
+const Draft07Id = '$id';
+
 export function getId(type: SchemaType, content: JsonSchemaObject): string {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return content[getIdPropertyName(type) as keyof JsonSchemaObject] ?? '';
+    if (isJsonSchemaDraft04(content, type)) {
+        return content[Draft04Id] ?? '';
+    } else {
+        return content[Draft07Id] ?? '';
+    }
 }
 export function setId(
     type: SchemaType,
     content: JsonSchemaObject,
     id: string
 ): void {
-    const key = getIdPropertyName(type);
-    if (!Reflect.has(content, key)) {
-        content[key as keyof JsonSchemaObject] = id;
-    }
-}
-function getIdPropertyName(type: SchemaType) {
-    switch (type) {
-        case 'Draft04':
-            return 'id';
-        case 'Draft07':
-            return '$id';
+    if (isJsonSchemaDraft04(content, type)) {
+        content[Draft04Id] ??= id;
+    } else {
+        content[Draft07Id] ??= id;
     }
 }
 
@@ -493,15 +501,15 @@ export function searchAllSubSchema(
 }
 
 export function selectSchemaType(
-    content: JsonSchemaObject | OpenApiSchema
+    content: JsonSchema | OpenApiSchema
 ): { type: SchemaType; openApiVersion?: 2 | 3 } {
     if (typeof content !== 'object') {
         throw new Error(
             `expect parameter of type object, received ${typeof content}`
         );
     }
-    if (Reflect.has(content, '$schema')) {
-        const { $schema: schema } = content as JsonSchemaObject;
+    if ('$schema' in content) {
+        const { $schema: schema } = content;
         const match = /http:\/\/json-schema\.org\/draft-(\d+)\/schema#?/.exec(
             schema ?? ''
         );
@@ -514,20 +522,14 @@ export function selectSchemaType(
             }
         }
     }
-    if (
-        Reflect.has(content, 'swagger') &&
-        (content as OpenApisV2.SchemaJson).swagger === '2.0'
-    ) {
+    if ('swagger' in content && content.swagger === '2.0') {
         return {
             type: 'Draft04',
             openApiVersion: 2,
         };
     }
-    if (
-        Reflect.has(content, 'openapi') &&
-        (content as OpenApisV3.SchemaJson).openapi
-    ) {
-        const { openapi } = content as OpenApisV3.SchemaJson;
+    if ('openapi' in content && content.openapi) {
+        const { openapi } = content;
         if (/^3\.\d+\.\d+$/.test(openapi)) {
             return {
                 type: 'Draft07',

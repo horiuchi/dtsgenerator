@@ -1,42 +1,34 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { JsonSchemaObject } from './core';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 
 export function get(
-    obj: Record<string, any>,
+    obj: any,
     path: string[],
     isCreateOnNotExists = false
-): any | undefined {
-    if (!path.length) {
+): any {
+    if (path.length === 0) {
         return obj;
     }
     let o = obj;
     const lastKey = path[path.length - 1];
     for (let i = 0; i < path.length - 1; i++) {
         const key = path[i];
-        let next: JsonSchemaObject | undefined =
-            o[key as keyof JsonSchemaObject];
-        if (!next) {
+        let next = o[key];
+        if (next == null) {
             if (isCreateOnNotExists) {
                 next = {};
-                o[key as keyof JsonSchemaObject] = next;
+                o[key] = next;
             } else {
                 return undefined;
             }
         }
         o = next;
     }
-    return o[lastKey as keyof JsonSchemaObject];
+    return o[lastKey];
 }
 
-export function set(
-    obj: Record<string, any>,
-    path: string[],
-    value: any
-): void {
+export function set(obj: any, path: string[], value: any): void {
     if (path.length === 0) {
         return;
     }

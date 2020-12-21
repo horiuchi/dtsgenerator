@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Debug from 'debug';
 import * as ts from 'typescript';
 import { get, set, tilde } from '../jsonPointer';
@@ -44,6 +42,7 @@ export default class DtsGenerator {
         this.contents.forEach((schema) => this.resolver.registerSchema(schema));
         await this.resolver.resolve();
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const map = this.buildSchemaMergedMap(
             this.resolver.getAllRegisteredSchema()
         );
@@ -71,10 +70,8 @@ export default class DtsGenerator {
         }
     }
 
-    private buildSchemaMergedMap(
-        schemas: IterableIterator<Schema>
-    ): Record<string, any> {
-        const map: Record<string, any> = {};
+    private buildSchemaMergedMap(schemas: IterableIterator<Schema>): any {
+        const map: any = {};
         const paths: { path: string[]; type: Schema }[] = [];
         for (const type of schemas) {
             const path = type.id.toNames();
@@ -83,8 +80,9 @@ export default class DtsGenerator {
 
         for (const item of paths) {
             const path = item.path;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const parent = get(map, path, true);
-            if (!parent) {
+            if (parent == null) {
                 set(map, path, { [typeMarker]: item.type });
             } else {
                 Object.assign(parent, { [typeMarker]: item.type });
@@ -93,6 +91,7 @@ export default class DtsGenerator {
         if (Object.keys(map).length === 0) {
             throw new Error('There is no schema in the input contents.');
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return map;
     }
 
@@ -167,11 +166,13 @@ export default class DtsGenerator {
         const result: ts.Statement[] = [];
         const keys = Object.keys(map).sort();
         for (const key of keys) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
             const value = map[key];
             if (
                 typeof value === 'object' &&
                 Object.prototype.hasOwnProperty.call(value, typeMarker)
             ) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 const schema = value[typeMarker] as Schema;
                 debug(
                     `  walk doProcess: key=${key} schemaId=${schema.id.getAbsoluteId()}`
@@ -452,13 +453,13 @@ export default class DtsGenerator {
         }
         switch (typeof value) {
             case 'number':
-                return ast.buildNumericLiteralTypeNode('' + value);
+                return ast.buildNumericLiteralTypeNode(`${value}`);
             case 'boolean':
                 return ast.buildBooleanLiteralTypeNode(value);
             case 'string':
                 return ast.buildStringLiteralTypeNode(value);
         }
-        return ast.buildStringLiteralTypeNode(value.toString());
+        return ast.buildStringLiteralTypeNode(String(value));
     }
 
     private generateArrayedType(
