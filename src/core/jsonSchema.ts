@@ -503,6 +503,9 @@ export function searchAllSubSchema(
 export function selectSchemaType(
     content: JsonSchema | OpenApiSchema
 ): { type: SchemaType; openApiVersion?: 2 | 3 } {
+    if (typeof content === 'boolean') {
+        return { type: 'Draft07' };
+    }
     if (typeof content !== 'object') {
         throw new Error(
             `expect parameter of type object, received ${typeof content}`
