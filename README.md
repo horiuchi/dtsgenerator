@@ -140,6 +140,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.5.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.5.0) (2020-12-21)
+
+- features:
+  - Add to export `ts` object for to use the same version TypeScript in all plugins by #465.
+
 ### [v3.4.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.4.1) (2020-12-16)
 
 - fixed:
