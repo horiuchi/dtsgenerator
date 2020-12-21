@@ -8,6 +8,10 @@ import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from './jsonSchemaDraft07';
 import { getId, selectSchemaType, setId } from './jsonSchema';
 
+// export `ts` for using the same version of TypeScript in all plugins.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export import ts = require('typescript');
+
 // Schema types
 
 export type JsonSchema = JsonSchemaDraft04.Schema | JsonSchemaDraft07.Schema;
