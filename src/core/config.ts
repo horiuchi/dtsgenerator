@@ -40,7 +40,7 @@ export function clearToDefault(): void {
 
 export async function showConfig(version: string, c: Config): Promise<void> {
     console.log('Version: ' + version);
-    console.log('ConfigFile: ' + (c.configFile?.toString() ?? ''));
+    console.log('ConfigFile: ' + (c.configFile?.toString() ?? '"not set"'));
     console.log();
 
     console.log('Config:');

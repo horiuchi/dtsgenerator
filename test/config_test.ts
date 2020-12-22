@@ -6,8 +6,7 @@ import config, {
     showConfig,
 } from '../src/core/config';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
-import { parseSchema } from '../src/core/type';
-import ts from 'typescript';
+import { ts, parseSchema } from '../src/core/type';
 
 describe('show config test', () => {
     let content: string;
@@ -30,10 +29,10 @@ describe('show config test', () => {
     it('no config test', async () => {
         setConfig({});
         await showConfig('no_config', config);
-        assert.notStrictEqual(
+        assert.strictEqual(
             content,
             `Version: no_config
-ConfigFile: undefined
+ConfigFile: "not set"
 
 Config:
   input:
@@ -84,29 +83,30 @@ Plugins: count=0
             return version;
         }
         const expected = `Version: full_config
-        ConfigFile: test.json
-        
-        Config:
-          input:
-            files: ["./input.json","./foo/bar.json"]
-            urls: ["http://www.example.com/schema.json"]
-            stdin: true
-          outputFile: "output.d.ts"
-          target: ES2015
-          plugins:
-            @dtsgenerator/do-nothing: false
-            @dtsgenerator/single-quote: true
-            @dtsgenerator/replace-namespace: {"map":[{"from":["Components","Schemas"],"to":["Test","PetStore"]},{"from":["Paths"],"to":["Test","PetStore"]}]}
-        
-        Plugins: count=2
-          @dtsgenerator/single-quote@${getVersion(
-              '@dtsgenerator/single-quote'
-          )}: change all quotation mark to single
-          @dtsgenerator/replace-namespace@${getVersion(
-              '@dtsgenerator/replace-namespace'
-          )}: replace the namespace names
-        `;
-        assert.notStrictEqual(content, expected, content);
+ConfigFile: test.json
+
+Config:
+  input:
+    files: ["./input.json","./foo/bar.json"]
+    urls: ["http://www.example.com/schema.json"]
+    stdin: true
+  outputFile: "output.d.ts"
+  target: ES2015
+  plugins:
+    @dtsgenerator/do-nothing: false
+    @dtsgenerator/single-quote: true
+    @dtsgenerator/replace-namespace: {"map":[{"from":["Components","Schemas"],"to":["Test","PetStore"]},{"from":["Paths"],"to":["Test","PetStore"]}]}
+
+Plugins: count=2
+  @dtsgenerator/single-quote@${getVersion(
+      '@dtsgenerator/single-quote'
+  )}: change all quotation mark to single
+  @dtsgenerator/replace-namespace@${getVersion(
+      '@dtsgenerator/replace-namespace'
+  )}: replace the namespace names
+
+`;
+        assert.strictEqual(content, expected, content);
     });
 });
 
@@ -159,7 +159,7 @@ describe('config test', () => {
     }
 }
 `;
-        assert.notStrictEqual(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
 
     it('apply single-quote plugin test', async () => {
@@ -206,7 +206,7 @@ describe('config test', () => {
     }
 }
 `;
-        assert.notStrictEqual(result, expected, result);
+        assert.strictEqual(result, expected, result);
     });
 
     it('error case test', () => {
