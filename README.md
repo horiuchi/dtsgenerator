@@ -140,6 +140,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.6.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.6.0) (2020-12-25)
+
+- features:
+  - Improve the type result of oneOf/anyOf property by #467. Thank you for your report @crizo23 by #452 :+1:
+  - Improve the internal eslint configuration by #466. Thank you @Goldziher :+1:
+
 ### [v3.5.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.5.0) (2020-12-21)
 
 - features:
