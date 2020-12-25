@@ -44,18 +44,20 @@ export default class ReferenceResolver {
             if (result == null) {
                 const refSchema = this.schemaCache.get(fileId);
                 debug(
-                    `get from schema cache, fileId=${fileId}, exists=${
-                        refSchema != null
-                    }, ${id.getAbsoluteId()}`
+                    `get from schema cache, fileId=${fileId}, exists=${String(
+                        !!refSchema
+                    )}, ${id.getAbsoluteId()}`
                 );
                 if (refSchema == null && id.isFetchable()) {
                     try {
                         debug(`fetch remote schema: id=[${fileId}].`);
                         const s = await readSchemaFromUrl(fileId);
-                        await this.registerSchema(s);
+                        this.registerSchema(s);
                     } catch (e) {
                         error.push(
-                            `Fail to fetch the $ref target: ${id.getAbsoluteId()}, ${e}`
+                            `Fail to fetch the $ref target: ${id.getAbsoluteId()}, ${String(
+                                e
+                            )}`
                         );
                         continue;
                     }
@@ -106,7 +108,7 @@ export default class ReferenceResolver {
         for (const k of this.schemaCache.keys()) {
             if (key.startsWith(k)) {
                 const s = this.schemaCache.get(k);
-                if (s != null && s.rootSchema != null) {
+                if (s?.rootSchema) {
                     return s.rootSchema;
                 }
             }

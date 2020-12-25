@@ -1,7 +1,13 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import * as JsonPointer from '../jsonPointer';
 import SchemaId from './schemaId';
-import { Schema, JsonSchemaObject, SchemaType, JsonSchema } from './type';
+import {
+    Schema,
+    JsonSchemaObject,
+    SchemaType,
+    JsonSchema,
+    isJsonSchemaDraft04,
+} from './type';
 import { OpenApisV2 } from './openApiV2';
 import { OpenApisV3 } from './openApiV3';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
@@ -28,9 +34,12 @@ export function getSubSchema(
     const content = JsonPointer.get(
         rootSchema.content,
         JsonPointer.parse(pointer)
-    );
+    ) as JsonSchema;
     if (id == null) {
-        const subId = getId(rootSchema.type, content);
+        const subId =
+            typeof content === 'boolean'
+                ? undefined
+                : getId(rootSchema.type, content);
         const getParentIds = (s: Schema, result: string[]): string[] => {
             result.push(s.id.getAbsoluteId());
             return s.rootSchema == null
@@ -51,23 +60,25 @@ export function getSubSchema(
     };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getId(type: SchemaType, content: any): string | undefined {
-    return content[getIdPropertyName(type)];
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function setId(type: SchemaType, content: any, id: string): void {
-    const key = getIdPropertyName(type);
-    if (content[key] == null) {
-        content[key] = id;
+const Draft04Id = 'id';
+const Draft07Id = '$id';
+
+export function getId(type: SchemaType, content: JsonSchemaObject): string {
+    if (isJsonSchemaDraft04(content, type)) {
+        return content[Draft04Id] ?? '';
+    } else {
+        return content[Draft07Id] ?? '';
     }
 }
-function getIdPropertyName(type: SchemaType): string {
-    switch (type) {
-        case 'Draft04':
-            return 'id';
-        case 'Draft07':
-            return '$id';
+export function setId(
+    type: SchemaType,
+    content: JsonSchemaObject,
+    id: string
+): void {
+    if (isJsonSchemaDraft04(content, type)) {
+        content[Draft04Id] ??= id;
+    } else {
+        content[Draft07Id] ??= id;
     }
 }
 
@@ -177,7 +188,7 @@ export function searchAllSubSchema(
             return '#/' + paths.join('/');
         }
         function convertKeyToTypeName(key: string): string {
-            key = key.replace(/\/(.)/g, (_match, p1) => {
+            key = key.replace(/\/(.)/g, (_match: string, p1: string) => {
                 return p1.toUpperCase();
             });
             return key
@@ -490,13 +501,20 @@ export function searchAllSubSchema(
 }
 
 export function selectSchemaType(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    content: any
+    content: JsonSchema | OpenApiSchema
 ): { type: SchemaType; openApiVersion?: 2 | 3 } {
-    if (content.$schema) {
-        const schema = content.$schema;
-        const match = schema.match(
-            /http:\/\/json-schema\.org\/draft-(\d+)\/schema#?/
+    if (typeof content === 'boolean') {
+        return { type: 'Draft07' };
+    }
+    if (typeof content !== 'object') {
+        throw new Error(
+            `expect parameter of type object, received ${typeof content}`
+        );
+    }
+    if ('$schema' in content) {
+        const { $schema: schema } = content;
+        const match = /http:\/\/json-schema\.org\/draft-(\d+)\/schema#?/.exec(
+            schema ?? ''
         );
         if (match) {
             const version = Number(match[1]);
@@ -507,14 +525,14 @@ export function selectSchemaType(
             }
         }
     }
-    if (content.swagger === '2.0') {
+    if ('swagger' in content && content.swagger === '2.0') {
         return {
             type: 'Draft04',
             openApiVersion: 2,
         };
     }
-    if (content.openapi) {
-        const openapi = content.openapi;
+    if ('openapi' in content && content.openapi) {
+        const { openapi } = content;
         if (/^3\.\d+\.\d+$/.test(openapi)) {
             return {
                 type: 'Draft07',

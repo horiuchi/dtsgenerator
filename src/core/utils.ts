@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Debug from 'debug';
 import * as ts from 'typescript';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
@@ -54,7 +56,7 @@ export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
     return Array.from(set.values());
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function mergeSchema(a: any, b: any): any {
     if ('$ref' in a || '$ref' in b) {
         return { $ref: b['$ref'] || a['$ref'] };
@@ -65,12 +67,14 @@ export function mergeSchema(a: any, b: any): any {
             debug(`mergeSchema warning: type is mismatched, key=${key}`);
         }
         if (Array.isArray(value)) {
-            a[key] = (a[key] || []).concat(value);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            a[key] = (a[key] ?? []).concat(value);
         } else if (typeof value === 'object') {
             a[key] = mergeSchema(a[key] || {}, value);
         } else {
             a[key] = value;
         }
     });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return a;
 }

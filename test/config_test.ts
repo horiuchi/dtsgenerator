@@ -6,8 +6,7 @@ import config, {
     showConfig,
 } from '../src/core/config';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
-import { parseSchema } from '../src/core/type';
-import ts from 'typescript';
+import { ts, parseSchema } from '../src/core/type';
 
 describe('show config test', () => {
     let content: string;
@@ -33,7 +32,7 @@ describe('show config test', () => {
         assert.strictEqual(
             content,
             `Version: no_config
-ConfigFile: undefined
+ConfigFile: "not set"
 
 Config:
   input:
@@ -76,7 +75,6 @@ Plugins: count=0
         await showConfig('full_config', config);
 
         function getVersion(key: string): string {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const pkg = require('../package.json');
             const version: string = pkg.devDependencies[key];
             if (/^[^\d]/.test(version)) {
@@ -84,9 +82,7 @@ Plugins: count=0
             }
             return version;
         }
-        assert.strictEqual(
-            content,
-            `Version: full_config
+        const expected = `Version: full_config
 ConfigFile: test.json
 
 Config:
@@ -109,8 +105,8 @@ Plugins: count=2
       '@dtsgenerator/replace-namespace'
   )}: replace the namespace names
 
-`
-        );
+`;
+        assert.strictEqual(content, expected, content);
     });
 });
 
@@ -213,7 +209,12 @@ describe('config test', () => {
         assert.strictEqual(result, expected, result);
     });
 
-    it('error case test', async () => {
+    it('error case test', () => {
+        setConfig({
+            plugins: {
+                '@dtsgenerator/not-exists-plugin': true,
+            },
+        });
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/single-quote',
             type: 'object',

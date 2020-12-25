@@ -40,7 +40,7 @@ export function clearToDefault(): void {
 
 export async function showConfig(version: string, c: Config): Promise<void> {
     console.log('Version: ' + version);
-    console.log('ConfigFile: ' + c.configFile);
+    console.log('ConfigFile: ' + (c.configFile?.toString() ?? '"not set"'));
     console.log();
 
     console.log('Config:');
@@ -74,10 +74,10 @@ export async function showConfig(version: string, c: Config): Promise<void> {
             plugins.push(p);
         }
     }
-    console.log('Plugins: count=' + plugins.length);
+    console.log('Plugins: count=' + plugins.length.toString());
     for (const p of plugins) {
         console.log(
-            `  ${p.meta.name}@${p.meta.version}: ${p.meta.description}`
+            `  ${p.meta.name}@${p.meta.version}: ${p.meta.description ?? ''}`
         );
     }
     console.log();
