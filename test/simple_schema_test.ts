@@ -863,6 +863,35 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+    it('should work with oneOf', async () => {
+        const schema: JsonSchemaDraft07.Schema = {
+            $id: '/test/oneOf',
+            $schema: 'http://json-schema.org/draft-07/schema#',
+            type: 'object',
+            oneOf: [{ required: ['s1'] }, { required: ['s2'] }],
+            properties: {
+                s1: {
+                    type: 'string',
+                },
+                s2: {
+                    type: 'string',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export type OneOf = {
+        s1: string;
+        s2?: string;
+    } | {
+        s1?: string;
+        s2: string;
+    };
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
     it('should work with patternProperties', async () => {
         const schema: JsonSchemaDraft07.Schema = {
             $id: '/test/pattern_properties',
