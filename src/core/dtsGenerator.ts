@@ -218,8 +218,9 @@ export default class DtsGenerator {
         if (pointer != null) {
             schema = getSubSchema(schema, pointer);
         }
-        schema.content = this.normalizeSchemaContent(schema.content);
-        return Object.assign({}, schema as NormalizedSchema);
+        return Object.assign(schema, {
+            content: this.normalizeSchemaContent(schema.content),
+        });
     }
 
     private normalizeSchemaContent(content: JsonSchema): JsonSchemaObject {
@@ -407,6 +408,7 @@ export default class DtsGenerator {
             return this.generateArrayedType(
                 schema,
                 content.anyOf,
+                Object.assign({}, content, { anyOf: undefined }),
                 '/anyOf/',
                 terminate
             );
@@ -415,6 +417,7 @@ export default class DtsGenerator {
             return this.generateArrayedType(
                 schema,
                 content.oneOf,
+                Object.assign({}, content, { oneOf: undefined }),
                 '/oneOf/',
                 terminate
             );
@@ -465,6 +468,7 @@ export default class DtsGenerator {
     private generateArrayedType(
         baseSchema: NormalizedSchema,
         contents: JsonSchema[],
+        mergeContent: JsonSchema,
         path: string,
         terminate: boolean
     ): ts.TypeNode {
@@ -477,6 +481,7 @@ export default class DtsGenerator {
                             baseSchema,
                             path + index.toString()
                         );
+                        utils.mergeSchema(schema.content, mergeContent);
                         if (schema.id.isEmpty()) {
                             return ast.addOptionalInformation(
                                 this.generateTypeProperty(schema, false),
