@@ -451,18 +451,26 @@ export function searchAllSubSchema(
             });
         }
         function setSubId(s: JsonSchema | undefined, paths: string[]): void {
-            if (typeof s !== 'object') {
-                return;
+            switch (typeof s) {
+                case 'object': {
+                    const id = createId(paths);
+                    setId(schema.type, s, id);
+                    walk(s, paths, []);
+                    break;
+                }
+                case 'boolean': {
+                    const id = createId(paths);
+                    const schemaId = new SchemaId(id, []);
+                    const subSchema: Schema = {
+                        type: schema.type,
+                        id: schemaId,
+                        content: s,
+                        rootSchema: schema,
+                    };
+                    onFoundSchema(subSchema);
+                    break;
+                }
             }
-
-            if (typeof s.$ref === 'string') {
-                const schemaId = new SchemaId(s.$ref);
-                s.$ref = schemaId.getAbsoluteId();
-                onFoundReference(schemaId);
-            }
-            const id = createId(paths);
-            setId(schema.type, s, id);
-            walk(s, paths, []);
         }
 
         if ('swagger' in openApi) {

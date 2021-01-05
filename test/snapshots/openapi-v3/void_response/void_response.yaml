@@ -1,0 +1,20 @@
+openapi: "3.0.2"
+info:
+  title: void response
+  version: v0.1
+paths:
+  "/Create":
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+      responses:
+        204:
+          content:
+            application/json:
+              schema: false
