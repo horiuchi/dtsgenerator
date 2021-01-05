@@ -140,6 +140,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.7.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.7.0) (2021-01-05)
+
+- features:
+  - Add the `void` type support by #468. Thank you for your propose @henhal by #445 :+1:
+
 ### [v3.6.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.6.0) (2020-12-25)
 
 - features:
