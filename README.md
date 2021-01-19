@@ -35,23 +35,24 @@ Usage: dtsgenerator [options] <file ... | file patterns using node-glob>
 
 Options:
   -V, --version           output the version number
-  -c, --config <file>     set configuration file path. (default: "dtsgen.json")
+  -c, --config <file>     set configuration file path.
   --url <url>             input json schema from the url. (default: [])
   --stdin                 read stdin with other files or urls.
   -o, --out <file>        output filename.
-  -t, --target <version>  Specify ECMAScript target version: 'ES3', 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT' (default).
+  -t, --target <version>  Specify ECMAScript target version: 'ES3', 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018',
+                          'ES2019', 'ES2020', or 'ESNEXT' (default).
   --info                  for developer mode. output loaded config and plugin details only.
   --output-ast            output TypeScript AST instead of d.ts file.
   -h, --help              display help for command
 
-  Examples:
+Examples:
+  $ dtsgen --help
+  $ dtsgen --out types.d.ts schema/**/*.schema.json
+  $ cat schema1.json | dtsgen -c dtsgen.json
+  $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
+  $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
+  $ dtsgen -c dtsgen-test.json --info
 
-    $ dtsgen --help
-    $ dtsgen --out types.d.ts schema/**/*.schema.json
-    $ cat schema1.json | dtsgen -c dtsgen.json
-    $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
-    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
-    $ dtsgen -c dtsgen-test.json --info
 ```
 
 ### NodeJS API

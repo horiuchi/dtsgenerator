@@ -39,7 +39,7 @@ export function clear(): void {
 }
 
 function parse(options: CommandOptions, argv: string[]): commander.Command {
-    const command = new commander.Command();
+    const program = new commander.Command();
 
     function collectUrl(val: string, memo: string[]): string[] {
         memo.push(val);
@@ -50,7 +50,7 @@ function parse(options: CommandOptions, argv: string[]): commander.Command {
     const pkg: Record<string, any> = require('../package.json');
 
     // <hoge> is required, [hoge] is optional
-    command
+    program
         .name(pkg.name)
         .version(pkg.version)
         .usage('[options] <file ... | file patterns using node-glob>')
@@ -72,32 +72,28 @@ function parse(options: CommandOptions, argv: string[]): commander.Command {
             'for developer mode. output loaded config and plugin details only.'
         )
         .option('--output-ast', 'output TypeScript AST instead of d.ts file.')
-        .on('--help', () => {
-            console.log('');
-            console.log('  Examples:');
-            console.log('');
-            console.log('    $ dtsgen --help');
-            console.log(
-                '    $ dtsgen --out types.d.ts schema/**/*.schema.json'
-            );
-            console.log('    $ cat schema1.json | dtsgen -c dtsgen.json');
-            console.log(
-                '    $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json'
-            );
-            console.log(
-                '    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml'
-            );
-            console.log('    $ dtsgen -c dtsgen-test.json --info');
-        })
+        .addHelpText(
+            'afterAll',
+            `
+Examples:
+  $ dtsgen --help
+  $ dtsgen --out types.d.ts schema/**/*.schema.json
+  $ cat schema1.json | dtsgen -c dtsgen.json
+  $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
+  $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
+  $ dtsgen -c dtsgen-test.json --info
+`
+        )
         .parse(argv);
 
-    options.configFile = command.config as string;
-    options.files = command.args;
-    options.urls = command.url as string[];
-    options.stdin = command.stdin as boolean;
-    options.out = command.out as string;
-    options.target = command.target as string;
-    options.info = command.info as boolean;
-    options.outputAST = command.outputAst as boolean;
-    return command;
+    const opts = program.opts();
+    options.files = program.args;
+    options.configFile = opts.config as string;
+    options.urls = opts.url as string[];
+    options.stdin = opts.stdin as boolean;
+    options.out = opts.out as string;
+    options.target = opts.target as string;
+    options.info = opts.info as boolean;
+    options.outputAST = opts.outputAst as boolean;
+    return program;
 }
