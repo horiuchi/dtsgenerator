@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import * as fs from 'fs';
-import { safeLoad } from 'js-yaml';
+import { load } from 'js-yaml';
 import { extname } from 'path';
 import { TransformerFactory, SourceFile } from 'typescript';
 import { globFiles, readStream, readUrl } from '../utils';
@@ -89,7 +89,7 @@ export function parseFileContent(
     const maybeYaml = ext === '.yaml' || ext === '.yml';
     try {
         if (maybeYaml) {
-            return deepCopy(safeLoad(content));
+            return deepCopy(load(content));
         } else {
             return JSON.parse(content);
         }
@@ -97,7 +97,7 @@ export function parseFileContent(
         if (maybeYaml) {
             return JSON.parse(content);
         } else {
-            return deepCopy(safeLoad(content));
+            return deepCopy(load(content));
         }
     }
 }

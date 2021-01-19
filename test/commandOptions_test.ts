@@ -2,27 +2,19 @@ import assert from 'assert';
 import opts, { clear, initialize } from '../src/commandOptions';
 
 describe('output command help test', () => {
-    let content: string;
-    let oldWrite: typeof process.stdout.write;
-
-    beforeEach(() => {
-        oldWrite = process.stdout.write;
-        content = '';
-        process.stdout.write = (str: string): boolean => {
-            content += str;
-            return true;
-        };
-        process.stdout.columns = 160;
-    });
-    afterEach(() => {
-        process.stdout.write = oldWrite;
-    });
-
     it('check output command help ', () => {
         const command = initialize(['node', 'script.js']);
-        command.outputHelp();
+        let output = '';
+        command
+            .configureHelp({ helpWidth: 160 })
+            .configureOutput({
+                writeOut: (str) => {
+                    output += str;
+                },
+            })
+            .outputHelp();
         assert.strictEqual(
-            content,
+            output,
             `Usage: dtsgenerator [options] <file ... | file patterns using node-glob>
 
 Options:
@@ -36,14 +28,14 @@ Options:
   --output-ast            output TypeScript AST instead of d.ts file.
   -h, --help              display help for command
 
-  Examples:
+Examples:
+  $ dtsgen --help
+  $ dtsgen --out types.d.ts schema/**/*.schema.json
+  $ cat schema1.json | dtsgen -c dtsgen.json
+  $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
+  $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
+  $ dtsgen -c dtsgen-test.json --info
 
-    $ dtsgen --help
-    $ dtsgen --out types.d.ts schema/**/*.schema.json
-    $ cat schema1.json | dtsgen -c dtsgen.json
-    $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
-    $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
-    $ dtsgen -c dtsgen-test.json --info
 `
         );
     });
