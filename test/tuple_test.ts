@@ -290,7 +290,7 @@ describe('tuple test', () => {
         assert.strictEqual(result, expected, result);
     });
 
-    it('max less thant min', async () => {
+    it('max less than min', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
             type: 'object',
