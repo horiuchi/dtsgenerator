@@ -48,6 +48,7 @@ describe('tuple test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+
     it('min less than length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
@@ -83,6 +84,7 @@ describe('tuple test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+
     it('min eql to length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_eql_length',
@@ -118,6 +120,7 @@ describe('tuple test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+
     it('min greater than length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_greater_length',
@@ -154,6 +157,7 @@ describe('tuple test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+
     it('items.length zero, no minItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_no_min',
@@ -215,6 +219,7 @@ describe('tuple test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+
     it('min less than length and max less than length too', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
@@ -249,6 +254,7 @@ describe('tuple test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+
     it('min and max equals length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
@@ -283,6 +289,7 @@ describe('tuple test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+
     it('max less thant min', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
@@ -345,6 +352,7 @@ describe('tuple test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+
     it('items.length zero, without minItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_no_min',
