@@ -353,9 +353,9 @@ describe('tuple test', () => {
         assert.strictEqual(result, expected, result);
     });
 
-    it('items.length zero, without minItems', async () => {
+    it('items.length zero, with maxItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_tuple_no_min',
+            id: '/test/inc_tuple_with_max',
             type: 'object',
             properties: {
                 id: {
@@ -371,11 +371,66 @@ describe('tuple test', () => {
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
-    export interface IncTupleNoMin {
+    export interface IncTupleWithMax {
         id?: number;
         array?: [
             any?,
             any?
+        ];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
+    it('items.length zero, with minItems zero', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_min_zero',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    minItems: 0,
+                    items: [],
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleMinZero {
+        id?: number;
+        array?: any[];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
+    it('items.length zero, with maxItems zero', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_max_zero',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    maxItems: 0,
+                    items: [],
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleMaxZero {
+        id?: number;
+        array?: [
         ];
     }
 }
