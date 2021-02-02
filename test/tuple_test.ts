@@ -222,7 +222,7 @@ describe('tuple test', () => {
 
     it('min less than length and max less than length too', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_tuple_min_items_less_length',
+            id: '/test/inc_tuple_min_max_items_less_length',
             type: 'object',
             properties: {
                 id: {
@@ -243,7 +243,7 @@ describe('tuple test', () => {
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
-    export interface IncTupleMinItemsLessLength {
+    export interface IncTupleMinMaxItemsLessLength {
         id?: number;
         array?: [
             string,
@@ -257,7 +257,7 @@ describe('tuple test', () => {
 
     it('min and max equals length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_tuple_min_items_less_length',
+            id: '/test/inc_tuple_min_max_items_equal_length',
             type: 'object',
             properties: {
                 id: {
@@ -278,7 +278,7 @@ describe('tuple test', () => {
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
-    export interface IncTupleMinItemsLessLength {
+    export interface IncTupleMinMaxItemsEqualLength {
         id?: number;
         array?: [
             string,
@@ -292,7 +292,7 @@ describe('tuple test', () => {
 
     it('max less than min', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_tuple_min_items_less_length',
+            id: '/test/inc_tuple_max_items_less_min',
             type: 'object',
             properties: {
                 id: {
@@ -313,7 +313,7 @@ describe('tuple test', () => {
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
-    export interface IncTupleMinItemsLessLength {
+    export interface IncTupleMaxItemsLessMin {
         id?: number;
         array?: never;
     }
@@ -324,7 +324,7 @@ describe('tuple test', () => {
 
     it('items.length zero, with minItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_tuple_no_min',
+            id: '/test/inc_tuple_with_min',
             type: 'object',
             properties: {
                 id: {
@@ -340,7 +340,7 @@ describe('tuple test', () => {
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
-    export interface IncTupleNoMin {
+    export interface IncTupleWithMin {
         id?: number;
         array?: [
             any,
