@@ -528,7 +528,7 @@ export default class DtsGenerator {
             );
         } else if (
             items.length === 0 &&
-            minItems === undefined &&
+            (minItems === undefined || minItems === 0) &&
             maxItems === undefined
         ) {
             return ast.buildSimpleArrayNode(ast.buildAnyKeyword());
