@@ -356,9 +356,9 @@ describe('tuple test', () => {
                 array: {
                     type: 'array',
                     items: [],
-                },
-                additionalItems: {
-                    type: 'integer',
+                    additionalItems: {
+                        type: 'integer',
+                    },
                 },
             },
         };
@@ -555,9 +555,9 @@ describe('tuple test', () => {
                     type: 'array',
                     minItems: 2,
                     items: [],
-                },
-                additionalItems: {
-                    type: 'integer',
+                    additionalItems: {
+                        type: 'integer',
+                    },
                 },
             },
         };
@@ -619,9 +619,9 @@ describe('tuple test', () => {
                     type: 'array',
                     maxItems: 2,
                     items: [],
-                },
-                additionalItems: {
-                    type: 'integer',
+                    additionalItems: {
+                        type: 'integer',
+                    },
                 },
             },
         };
@@ -679,9 +679,9 @@ describe('tuple test', () => {
                     type: 'array',
                     minItems: 0,
                     items: [],
-                },
-                additionalItems: {
-                    type: 'integer',
+                    additionalItems: {
+                        type: 'integer',
+                    },
                 },
             },
         };
@@ -737,9 +737,9 @@ describe('tuple test', () => {
                     type: 'array',
                     maxItems: 0,
                     items: [],
-                },
-                additionalItems: {
-                    type: 'integer',
+                    additionalItems: {
+                        type: 'integer',
+                    },
                 },
             },
         };
