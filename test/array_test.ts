@@ -91,7 +91,11 @@ describe('array test', () => {
         const expected = `declare namespace Test {
     export interface IncArrayMinItemsGreaterZero {
         id?: number;
-        array?: ["NW" | "NE" | "SW" | "SE", "NW" | "NE" | "SW" | "SE", ...("NW" | "NE" | "SW" | "SE")[]];
+        array?: [
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE"),
+            ...("NW" | "NE" | "SW" | "SE")[]
+        ];
     }
 }
 `;
@@ -122,7 +126,11 @@ describe('array test', () => {
         const expected = `declare namespace Test {
     export interface IncArrayMinItemsLessMax {
         id?: number;
-        array?: ["NW" | "NE" | "SW" | "SE", "NW" | "NE" | "SW" | "SE", ("NW" | "NE" | "SW" | "SE")?];
+        array?: [
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE")?
+        ];
     }
 }
 `;
@@ -153,7 +161,10 @@ describe('array test', () => {
         const expected = `declare namespace Test {
     export interface IncArrayMinItemsEqualMax {
         id?: number;
-        array?: ["NW" | "NE" | "SW" | "SE", "NW" | "NE" | "SW" | "SE"];
+        array?: [
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE")
+        ];
     }
 }
 `;
