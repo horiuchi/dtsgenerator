@@ -28,8 +28,8 @@ Supported Features
 |pattern|x||
 |additionalItems|x||
 |items|o|Array type or Tuple type|
-|maxItems|p|on using Tuple type definition|
-|minItems|p|on using Tuple type definition|
+|maxItems|o||
+|minItems|o||
 |uniqueItems|x||
 |maxProperties|x||
 |minProperties|x||
