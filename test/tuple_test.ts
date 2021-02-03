@@ -49,6 +49,49 @@ describe('tuple test', () => {
         assert.strictEqual(result, expected, result);
     });
 
+    it('no min, additionalItems', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_no_min_additional_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    items: [
+                        { type: 'string' },
+                        { type: 'integer' },
+                        { type: 'boolean' },
+                        {
+                            type: 'string',
+                            enum: ['NW', 'NE', 'SW', 'SE'],
+                        },
+                    ],
+                    additionalItems: {
+                        type: 'integer',
+                    },
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleNoMinAdditionalItems {
+        id?: number;
+        array?: [
+            string?,
+            number?,
+            boolean?,
+            ("NW" | "NE" | "SW" | "SE")?,
+            ...number[]
+        ];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
     it('min less than length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_less_length',
@@ -85,6 +128,45 @@ describe('tuple test', () => {
         assert.strictEqual(result, expected, result);
     });
 
+    it('min less than length, additionalItems', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_min_items_less_length_additional_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    minItems: 2,
+                    items: [
+                        { type: 'string' },
+                        { type: 'integer' },
+                        { type: 'boolean' },
+                    ],
+                    additionalItems: {
+                        type: 'integer',
+                    },
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleMinItemsLessLengthAdditionalItems {
+        id?: number;
+        array?: [
+            string,
+            number,
+            boolean?,
+            ...number[]
+        ];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
     it('min eql to length', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_min_items_eql_length',
@@ -114,6 +196,45 @@ describe('tuple test', () => {
             number,
             boolean,
             ...any[]
+        ];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
+    it('min eql to length, additionalItems', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_min_items_eql_length_additional_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    minItems: 3,
+                    items: [
+                        { type: 'string' },
+                        { type: 'integer' },
+                        { type: 'boolean' },
+                    ],
+                    additionalItems: {
+                        type: 'integer',
+                    },
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleMinItemsEqlLengthAdditionalItems {
+        id?: number;
+        array?: [
+            string,
+            number,
+            boolean,
+            ...number[]
         ];
     }
 }
@@ -158,6 +279,46 @@ describe('tuple test', () => {
         assert.strictEqual(result, expected, result);
     });
 
+    it('min greater than length, additionalItems', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_min_items_greater_length_additional_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    minItems: 4,
+                    items: [
+                        { type: 'string' },
+                        { type: 'integer' },
+                        { type: 'boolean' },
+                    ],
+                    additionalItems: {
+                        type: 'integer',
+                    },
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleMinItemsGreaterLengthAdditionalItems {
+        id?: number;
+        array?: [
+            string,
+            number,
+            boolean,
+            number,
+            ...number[]
+        ];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
     it('items.length zero, no minItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_no_min',
@@ -178,6 +339,35 @@ describe('tuple test', () => {
     export interface IncTupleNoMin {
         id?: number;
         array?: any[];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
+    it('items.length zero, no minItems, additionalItems', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_no_min_additional_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    items: [],
+                },
+                additionalItems: {
+                    type: 'integer',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleNoMinAdditionalItems {
+        id?: number;
+        array?: number[];
     }
 }
 `;
@@ -353,6 +543,40 @@ describe('tuple test', () => {
         assert.strictEqual(result, expected, result);
     });
 
+    it('items.length zero, with minItems, additionalItems', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_with_min_additional_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    minItems: 2,
+                    items: [],
+                },
+                additionalItems: {
+                    type: 'integer',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleWithMinAdditionalItems {
+        id?: number;
+        array?: [
+            number,
+            number,
+            ...number[]
+        ];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
     it('items.length zero, with maxItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_with_max',
@@ -376,6 +600,39 @@ describe('tuple test', () => {
         array?: [
             any?,
             any?
+        ];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
+    it('items.length zero, with maxItems, additionalItems', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_with_max_additional_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    maxItems: 2,
+                    items: [],
+                },
+                additionalItems: {
+                    type: 'integer',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleWithMaxAdditionalItems {
+        id?: number;
+        array?: [
+            number?,
+            number?
         ];
     }
 }
@@ -410,6 +667,36 @@ describe('tuple test', () => {
         assert.strictEqual(result, expected, result);
     });
 
+    it('items.length zero, with minItems zero, additionalItems', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_min_zero_additional_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    minItems: 0,
+                    items: [],
+                },
+                additionalItems: {
+                    type: 'integer',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleMinZeroAdditionalItems {
+        id?: number;
+        array?: number[];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
     it('items.length zero, with maxItems zero', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_max_zero',
@@ -429,6 +716,37 @@ describe('tuple test', () => {
 
         const expected = `declare namespace Test {
     export interface IncTupleMaxZero {
+        id?: number;
+        array?: [
+        ];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
+    it('items.length zero, with maxItems zero, additionalItems', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_tuple_max_zero_additional_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    maxItems: 0,
+                    items: [],
+                },
+                additionalItems: {
+                    type: 'integer',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncTupleMaxZeroAdditionalItems {
         id?: number;
         array?: [
         ];
