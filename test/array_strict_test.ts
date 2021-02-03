@@ -4,14 +4,14 @@ import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { parseSchema } from '../src/core/type';
 
-describe('array test', () => {
+describe('array strict size test', () => {
     afterEach(() => {
         clear();
     });
 
     it('no min', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_no_min',
+            id: '/test/inc_array_strict_no_min',
             type: 'object',
             properties: {
                 id: {
@@ -26,10 +26,13 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayNoMin {
+    export interface IncArrayStrictNoMin {
         id?: number;
         array?: ("NW" | "NE" | "SW" | "SE")[];
     }
@@ -40,7 +43,7 @@ describe('array test', () => {
 
     it('min equal to zero', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_min_items_zero',
+            id: '/test/inc_array_strict_min_items_zero',
             type: 'object',
             properties: {
                 id: {
@@ -56,10 +59,13 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayMinItemsZero {
+    export interface IncArrayStrictMinItemsZero {
         id?: number;
         array?: ("NW" | "NE" | "SW" | "SE")[];
     }
@@ -70,7 +76,7 @@ describe('array test', () => {
 
     it('min greater than zero', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_min_items_greater_zero',
+            id: '/test/inc_array_strict_min_items_greater_zero',
             type: 'object',
             properties: {
                 id: {
@@ -86,12 +92,19 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayMinItemsGreaterZero {
+    export interface IncArrayStrictMinItemsGreaterZero {
         id?: number;
-        array?: ("NW" | "NE" | "SW" | "SE")[];
+        array?: [
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE"),
+            ...("NW" | "NE" | "SW" | "SE")[]
+        ];
     }
 }
 `;
@@ -100,7 +113,7 @@ describe('array test', () => {
 
     it('min less than max', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_min_items_less_max',
+            id: '/test/inc_array_strict_min_items_less_max',
             type: 'object',
             properties: {
                 id: {
@@ -117,12 +130,19 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayMinItemsLessMax {
+    export interface IncArrayStrictMinItemsLessMax {
         id?: number;
-        array?: ("NW" | "NE" | "SW" | "SE")[];
+        array?: [
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE")?
+        ];
     }
 }
 `;
@@ -131,7 +151,7 @@ describe('array test', () => {
 
     it('min equal to max', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_min_items_equal_max',
+            id: '/test/inc_array_strict_min_items_equal_max',
             type: 'object',
             properties: {
                 id: {
@@ -148,12 +168,18 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayMinItemsEqualMax {
+    export interface IncArrayStrictMinItemsEqualMax {
         id?: number;
-        array?: ("NW" | "NE" | "SW" | "SE")[];
+        array?: [
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE")
+        ];
     }
 }
 `;
@@ -162,7 +188,7 @@ describe('array test', () => {
 
     it('min greater than max', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_min_items_greater_max',
+            id: '/test/inc_array_strict_min_items_greater_max',
             type: 'object',
             properties: {
                 id: {
@@ -179,10 +205,13 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayMinItemsGreaterMax {
+    export interface IncArrayStrictMinItemsGreaterMax {
         id?: number;
         array?: never;
     }
@@ -193,7 +222,7 @@ describe('array test', () => {
 
     it('items object empty, no minItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_object_empty_no_min',
+            id: '/test/inc_array_strict_object_empty_no_min',
             type: 'object',
             properties: {
                 id: {
@@ -205,10 +234,13 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayObjectEmptyNoMin {
+    export interface IncArrayStrictObjectEmptyNoMin {
         id?: number;
         array?: any[];
     }
@@ -219,7 +251,7 @@ describe('array test', () => {
 
     it('items object empty, with minItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_with_min',
+            id: '/test/inc_array_strict_with_min',
             type: 'object',
             properties: {
                 id: {
@@ -232,12 +264,19 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayWithMin {
+    export interface IncArrayStrictWithMin {
         id?: number;
-        array?: any[];
+        array?: [
+            any,
+            any,
+            ...any[]
+        ];
     }
 }
 `;
@@ -246,7 +285,7 @@ describe('array test', () => {
 
     it('items object empty, with maxItems', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_with_max',
+            id: '/test/inc_array_strict_with_max',
             type: 'object',
             properties: {
                 id: {
@@ -259,12 +298,18 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayWithMax {
+    export interface IncArrayStrictWithMax {
         id?: number;
-        array?: any[];
+        array?: [
+            any?,
+            any?
+        ];
     }
 }
 `;
@@ -273,7 +318,7 @@ describe('array test', () => {
 
     it('items object empty, with minItems zero', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_min_zero',
+            id: '/test/inc_array_strict_min_zero',
             type: 'object',
             properties: {
                 id: {
@@ -286,10 +331,13 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayMinZero {
+    export interface IncArrayStrictMinZero {
         id?: number;
         array?: any[];
     }
@@ -300,7 +348,7 @@ describe('array test', () => {
 
     it('items object empty, with maxItems zero', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/inc_array_max_zero',
+            id: '/test/inc_array_strict_max_zero',
             type: 'object',
             properties: {
                 id: {
@@ -313,10 +361,13 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: { strictArraySize: true },
+        });
 
         const expected = `declare namespace Test {
-    export interface IncArrayMaxZero {
+    export interface IncArrayStrictMaxZero {
         id?: number;
         array?: [
         ];
