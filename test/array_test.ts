@@ -1,12 +1,12 @@
 import assert from 'assert';
-import { clear } from '../src/commandOptions';
+import { clearToDefault } from '../src/core/config';
 import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { parseSchema } from '../src/core/type';
 
 describe('array test', () => {
     afterEach(() => {
-        clear();
+        clearToDefault();
     });
 
     it('no min', async () => {
