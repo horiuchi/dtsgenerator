@@ -8,6 +8,7 @@ export class CommandOptions {
     public urls: string[] = [];
     public stdin?: boolean;
     public out?: string;
+    public strictArraySize?: boolean;
     public target?: string;
     public info?: boolean;
     public outputAST?: boolean;
@@ -33,6 +34,7 @@ export function clear(): void {
     opts.urls = [];
     opts.stdin = undefined;
     opts.out = undefined;
+    opts.strictArraySize = false;
     opts.target = undefined;
     opts.info = undefined;
     opts.outputAST = undefined;
