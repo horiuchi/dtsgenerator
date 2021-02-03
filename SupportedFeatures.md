@@ -26,7 +26,7 @@ Supported Features
 |maxLength|x||
 |minLength|x||
 |pattern|x||
-|additionalItems|x||
+|additionalItems|o||
 |items|o|Array type or Tuple type|
 |maxItems|o||
 |minItems|o||
