@@ -60,14 +60,21 @@ export default class DtsGenerator {
 
         const postProcess = await this.getPostProcess(plugins.post);
         const result = ts.transform(file, postProcess);
-        result.dispose();
+        const transformedNodes = result.transformed[0];
 
-        if (config.outputAST) {
-            return JSON.stringify(file, null, 2);
-        } else {
-            const printer = ts.createPrinter();
-            return printer.printFile(file);
-        }
+        const transformedContent = config.outputAST
+            ? JSON.stringify(transformedNodes, null, 2)
+            : (function () {
+                  const printer = ts.createPrinter();
+                  return printer.printNode(
+                      ts.EmitHint.SourceFile,
+                      transformedNodes,
+                      file
+                  );
+              })();
+
+        result.dispose();
+        return transformedContent;
     }
 
     private buildSchemaMergedMap(schemas: IterableIterator<Schema>): any {
