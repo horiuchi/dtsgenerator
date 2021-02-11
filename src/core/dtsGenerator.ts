@@ -412,19 +412,23 @@ export default class DtsGenerator {
             );
         }
         if (content.anyOf) {
+            const mergeContent = Object.assign({}, content);
+            delete mergeContent.anyOf;
             return this.generateArrayedType(
                 schema,
                 content.anyOf,
-                Object.assign({}, content, { anyOf: undefined }),
+                mergeContent,
                 '/anyOf/',
                 terminate
             );
         }
         if (content.oneOf) {
+            const mergeContent = Object.assign({}, content);
+            delete mergeContent.oneOf;
             return this.generateArrayedType(
                 schema,
                 content.oneOf,
-                Object.assign({}, content, { oneOf: undefined }),
+                mergeContent,
                 '/oneOf/',
                 terminate
             );
