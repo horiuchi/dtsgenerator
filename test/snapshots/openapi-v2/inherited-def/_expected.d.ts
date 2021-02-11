@@ -3,12 +3,18 @@ declare namespace Definitions {
         /**
          * Other Description
          */
-        _embedded?: unknown;
+        _embedded?: {
+            [key: string]: any;
+            [key: number]: any;
+        };
     }
     export interface Resource {
         /**
          * Test Description
          */
-        _embedded?: unknown;
+        _embedded?: {
+            [key: string]: any;
+            [key: number]: any;
+        };
     }
 }

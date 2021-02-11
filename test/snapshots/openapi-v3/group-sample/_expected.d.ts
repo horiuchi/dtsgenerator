@@ -108,7 +108,10 @@ declare namespace Components {
                             /**
                              * the current user making the request
                              */
-                            currentuserscope?: unknown;
+                            currentuserscope?: {
+                                [key: string]: any;
+                                [key: number]: any;
+                            };
                         };
                     };
                 } | {
@@ -150,7 +153,10 @@ declare namespace Components {
                             /**
                              * Scope:All
                              */
-                            all?: unknown;
+                            all?: {
+                                [key: string]: any;
+                                [key: number]: any;
+                            };
                         };
                     };
                 } | {
