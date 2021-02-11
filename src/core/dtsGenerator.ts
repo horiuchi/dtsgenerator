@@ -3,7 +3,7 @@ import * as ts from 'typescript';
 import { get, set, tilde } from '../jsonPointer';
 import * as ast from './astBuilder';
 import config from './config';
-import { getSubSchema, NormalizedSchema } from './jsonSchema';
+import { getSubSchema, NormalizedSchema, NormalizedSchemaWithoutContentFalse } from './jsonSchema';
 import ReferenceResolver from './referenceResolver';
 import {
     Plugin,
@@ -200,15 +200,27 @@ export default class DtsGenerator {
         this.currentSchema = normalized;
 
         const getNode = () => {
+            if (normalized.content === false) {
+                return this.generateDeclareType(normalized, root);
+            }
             const type = normalized.content.type;
             switch (type) {
                 case 'any':
-                    return this.generateAnyTypeModel(normalized, root);
+                    return this.generateAnyTypeModel(
+                        normalized as NormalizedSchemaWithoutContentFalse,
+                        root
+                    );
                 case 'array':
-                    return this.generateTypeCollection(normalized, root);
+                    return this.generateTypeCollection(
+                        normalized as NormalizedSchemaWithoutContentFalse,
+                        root
+                    );
                 case 'object':
                 default:
-                    return this.generateDeclareType(normalized, root);
+                    return this.generateDeclareType(
+                        normalized as NormalizedSchemaWithoutContentFalse,
+                        root
+                    );
             }
         };
         return ast.addOptionalInformation(
@@ -230,9 +242,11 @@ export default class DtsGenerator {
         });
     }
 
-    private normalizeSchemaContent(content: JsonSchema): JsonSchemaObject {
+    private normalizeSchemaContent(
+        content: JsonSchema
+    ): NormalizedSchema['content'] {
         if (typeof content === 'boolean') {
-            content = content ? {} : { not: {} };
+            content = content ? {} : false;
         } else {
             if (content.allOf) {
                 const work = {};
@@ -284,6 +298,7 @@ export default class DtsGenerator {
     ): ts.DeclarationStatement {
         const content = schema.content;
         if (
+            content === false ||
             content.$ref ||
             content.oneOf ||
             content.anyOf ||
@@ -294,7 +309,9 @@ export default class DtsGenerator {
             const type = this.generateTypeProperty(schema);
             return ast.buildTypeAliasNode(schema.id, type, root);
         } else {
-            const members = this.generateProperties(schema);
+            const members = this.generateProperties(
+                schema as NormalizedSchemaWithoutContentFalse
+            );
             return ast.buildInterfaceNode(schema.id, members, root);
         }
     }
@@ -312,14 +329,16 @@ export default class DtsGenerator {
     }
 
     private generateTypeCollection(
-        schema: NormalizedSchema,
+        schema: NormalizedSchemaWithoutContentFalse,
         root: boolean
     ): ts.DeclarationStatement {
         const type = this.generateArrayTypeProperty(schema);
         return ast.buildTypeAliasNode(schema.id, type, root);
     }
 
-    private generateProperties(baseSchema: NormalizedSchema): ts.TypeElement[] {
+    private generateProperties(
+        baseSchema: NormalizedSchemaWithoutContentFalse
+    ): ts.TypeElement[] {
         const result: ts.TypeElement[] = [];
         const content = baseSchema.content;
         if (content.additionalProperties) {
@@ -345,7 +364,7 @@ export default class DtsGenerator {
                     '/properties/' + tilde(propertyName)
                 );
                 const node = ast.buildPropertySignature(
-                    schema,
+                    schema as NormalizedSchemaWithoutContentFalse,
                     propertyName,
                     this.generateTypeProperty(schema),
                     baseSchema.content.required,
@@ -370,7 +389,9 @@ export default class DtsGenerator {
                 schemasTypes.push(this.generateTypeProperty(schema));
             }
             const node = ast.buildPropertySignature(
-                { content: { readOnly: false } } as NormalizedSchema,
+                {
+                    content: { readOnly: false },
+                } as NormalizedSchemaWithoutContentFalse,
                 'pattern',
                 ts.createUnionTypeNode(schemasTypes),
                 baseSchema.content.required,
@@ -393,6 +414,9 @@ export default class DtsGenerator {
         terminate = true
     ): ts.TypeNode {
         const content = schema.content;
+        if (content === false) {
+            return ast.buildVoidKeyword();
+        }
         if (content.$ref) {
             const ref = this.resolver.dereference(content.$ref);
             if (ref.id == null) {
@@ -415,7 +439,7 @@ export default class DtsGenerator {
             const mergeContent = Object.assign({}, content);
             delete mergeContent.anyOf;
             return this.generateArrayedType(
-                schema,
+                schema as NormalizedSchemaWithoutContentFalse,
                 content.anyOf,
                 mergeContent,
                 '/anyOf/',
@@ -426,7 +450,7 @@ export default class DtsGenerator {
             const mergeContent = Object.assign({}, content);
             delete mergeContent.oneOf;
             return this.generateArrayedType(
-                schema,
+                schema as NormalizedSchemaWithoutContentFalse,
                 content.oneOf,
                 mergeContent,
                 '/oneOf/',
@@ -441,12 +465,13 @@ export default class DtsGenerator {
                 },
                 terminate
             );
-        } else if (content.not) {
-            return ast.buildVoidKeyword();
         } else if ('const' in content) {
             return this.generateLiteralTypeNode(content, content.const);
         } else {
-            return this.generateType(schema, terminate);
+            return this.generateType(
+                schema as NormalizedSchemaWithoutContentFalse,
+                terminate
+            );
         }
     }
     private generateLiteralTypeNode(
@@ -479,7 +504,7 @@ export default class DtsGenerator {
     }
 
     private generateArrayedType(
-        baseSchema: NormalizedSchema,
+        baseSchema: NormalizedSchemaWithoutContentFalse,
         contents: JsonSchema[],
         mergeContent: JsonSchema,
         path: string,
@@ -523,7 +548,7 @@ export default class DtsGenerator {
     }
 
     private generateArrayTypeProperty(
-        schema: NormalizedSchema,
+        schema: NormalizedSchemaWithoutContentFalse,
         terminate = true
     ): ts.TypeNode {
         const items = schema.content.items;
@@ -621,7 +646,7 @@ export default class DtsGenerator {
     }
 
     private generateType(
-        schema: NormalizedSchema,
+        schema: NormalizedSchemaWithoutContentFalse,
         terminate: boolean
     ): ts.TypeNode {
         const type = schema.content.type;
@@ -646,7 +671,7 @@ export default class DtsGenerator {
         }
     }
     private generateTypeName(
-        schema: NormalizedSchema,
+        schema: NormalizedSchemaWithoutContentFalse,
         type: string,
         terminate: boolean
     ): ts.TypeNode {

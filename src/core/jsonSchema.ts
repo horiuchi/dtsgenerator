@@ -24,6 +24,9 @@ interface ParameterObject {
 type Parameter = ParameterObject | { $ref?: string };
 
 export interface NormalizedSchema extends Schema {
+    content: JsonSchemaObject | false;
+}
+export interface NormalizedSchemaWithoutContentFalse extends Schema {
     content: JsonSchemaObject;
 }
 
