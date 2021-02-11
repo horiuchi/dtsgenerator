@@ -5,7 +5,6 @@ declare namespace Definitions {
          */
         _embedded?: {
             [key: string]: any;
-            [key: number]: any;
         };
     }
     export interface Resource {
@@ -14,7 +13,6 @@ declare namespace Definitions {
          */
         _embedded?: {
             [key: string]: any;
-            [key: number]: any;
         };
     }
 }

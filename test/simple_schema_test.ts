@@ -176,7 +176,6 @@ describe('simple schema test', () => {
         number?: number;
         object?: {
             [key: string]: any;
-            [key: number]: any;
         };
         string?: string;
         any?: any;

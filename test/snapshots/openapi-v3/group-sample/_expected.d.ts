@@ -110,7 +110,6 @@ declare namespace Components {
                              */
                             currentuserscope?: {
                                 [key: string]: any;
-                                [key: number]: any;
                             };
                         };
                     };
@@ -155,7 +154,6 @@ declare namespace Components {
                              */
                             all?: {
                                 [key: string]: any;
-                                [key: number]: any;
                             };
                         };
                     };

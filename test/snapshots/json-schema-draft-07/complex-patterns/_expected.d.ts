@@ -75,7 +75,6 @@ declare namespace JsonSchemaOrg {
                         second: {
                             third: {
                                 [key: string]: any;
-                                [key: number]: any;
                             };
                         };
                     };
@@ -91,7 +90,6 @@ declare namespace JsonSchemaOrg {
                     number?: number;
                     object?: {
                         [key: string]: any;
-                        [key: number]: any;
                     };
                     string?: string;
                     undefined?: undefined;
@@ -107,7 +105,6 @@ declare namespace JsonSchemaOrg {
                     number: number;
                     object: {
                         [key: string]: any;
-                        [key: number]: any;
                     };
                     string: string;
                     undefined: undefined;
