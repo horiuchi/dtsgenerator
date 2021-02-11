@@ -39,6 +39,9 @@ export function buildVoidKeyword(): ts.KeywordTypeNode {
 export function buildStringKeyword(): ts.KeywordTypeNode {
     return buildKeyword(ts.SyntaxKind.StringKeyword);
 }
+export function buildNumberKeyword(): ts.KeywordTypeNode {
+    return buildKeyword(ts.SyntaxKind.NumberKeyword);
+}
 export function buildSimpleArrayNode(element: ts.TypeNode): ts.ArrayTypeNode {
     return ts.factory.createArrayTypeNode(element);
 }
@@ -182,6 +185,13 @@ export function buildIndexSignatureNode(
 
 export function buildTypeLiteralNode(elements: ts.TypeElement[]): ts.TypeNode {
     return ts.factory.createTypeLiteralNode(elements);
+}
+
+export function buildFreeFormObjectTypeLiteralNode(): ts.TypeNode {
+    return ts.factory.createTypeLiteralNode([
+        buildIndexSignatureNode('key', buildStringKeyword(), buildAnyKeyword()),
+        buildIndexSignatureNode('key', buildNumberKeyword(), buildAnyKeyword()),
+    ]);
 }
 
 export function buildUnionTypeNode<T>(
