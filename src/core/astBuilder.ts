@@ -190,7 +190,6 @@ export function buildTypeLiteralNode(elements: ts.TypeElement[]): ts.TypeNode {
 export function buildFreeFormObjectTypeLiteralNode(): ts.TypeNode {
     return ts.factory.createTypeLiteralNode([
         buildIndexSignatureNode('key', buildStringKeyword(), buildAnyKeyword()),
-        buildIndexSignatureNode('key', buildNumberKeyword(), buildAnyKeyword()),
     ]);
 }
 
