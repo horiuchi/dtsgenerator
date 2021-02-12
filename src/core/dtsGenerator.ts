@@ -465,7 +465,7 @@ export default class DtsGenerator {
                 },
                 terminate
             );
-        } else if (content.not) {
+        } else if (config.strictNot && content.not) {
             return ast.buildVoidKeyword();
         } else if ('const' in content) {
             return this.generateLiteralTypeNode(content, content.const);
