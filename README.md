@@ -141,6 +141,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.7.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.7.1) (2021-02-18)
+
+- fixed:
+  - add truthy check for value in `mergeSchema` by #474. Thank you @ricokahler :+1:
+
 ### [v3.7.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.7.0) (2021-01-05)
 
 - features:
