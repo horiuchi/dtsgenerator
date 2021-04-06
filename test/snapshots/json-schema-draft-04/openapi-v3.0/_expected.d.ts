@@ -39,7 +39,10 @@ declare namespace JsonSchemaOrg {
                 [name: string]: /* Core schema meta-schema */ Schema | Schema.Definitions.StringArray;
             };
             enum?: any[];
-            type?: Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
+            type?: Schema.Definitions.SimpleTypes | [
+                Schema.Definitions.SimpleTypes,
+                ...Schema.Definitions.SimpleTypes[]
+            ];
             format?: string;
             allOf?: Schema.Definitions.SchemaArray;
             anyOf?: Schema.Definitions.SchemaArray;
@@ -50,9 +53,15 @@ declare namespace JsonSchemaOrg {
             namespace Definitions {
                 export type PositiveInteger = number;
                 export type PositiveIntegerDefault0 = number;
-                export type SchemaArray = /* Core schema meta-schema */ Schema[];
+                export type SchemaArray = [
+                    /* Core schema meta-schema */ Schema,
+                    .../* Core schema meta-schema */ Schema[]
+                ];
                 export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
-                export type StringArray = string[];
+                export type StringArray = [
+                    string,
+                    ...string[]
+                ];
             }
             namespace Properties {
                 export type Enum = any[];
@@ -407,11 +416,23 @@ declare namespace OpenapisOrg {
                     required?: JsonSchemaOrg.Draft04.Schema.Properties.Required;
                     enum?: JsonSchemaOrg.Draft04.Schema.Properties.Enum;
                     type?: string;
-                    allOf?: SchemaOrReference[];
-                    oneOf?: SchemaOrReference[];
-                    anyOf?: SchemaOrReference[];
+                    allOf?: [
+                        SchemaOrReference,
+                        ...SchemaOrReference[]
+                    ];
+                    oneOf?: [
+                        SchemaOrReference,
+                        ...SchemaOrReference[]
+                    ];
+                    anyOf?: [
+                        SchemaOrReference,
+                        ...SchemaOrReference[]
+                    ];
                     not?: /* The Schema Object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. This object is an extended subset of the JSON Schema Specification Wright Draft 00.  For more information about the properties, see JSON Schema Core and JSON Schema Validation. Unless stated otherwise, the property definitions follow the JSON Schema. */ Schema;
-                    items?: SchemaOrReference | SchemaOrReference[];
+                    items?: SchemaOrReference | [
+                        SchemaOrReference,
+                        ...SchemaOrReference[]
+                    ];
                     properties?: {
                         [name: string]: SchemaOrReference;
                     };
