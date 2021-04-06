@@ -526,9 +526,8 @@ export default class DtsGenerator {
             if (minItems != null && maxItems != null && maxItems < minItems) {
                 return ast.buildNeverKeyword();
             } else if (
-                (!config.strictArraySize && maxItems !== 0) ||
-                ((minItems === undefined || minItems === 0) &&
-                    maxItems === undefined)
+                (minItems === undefined || minItems === 0) &&
+                maxItems === undefined
             ) {
                 return ast.buildSimpleArrayNode(
                     ast.addOptionalInformation(node, subSchema, false)

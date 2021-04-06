@@ -11,7 +11,6 @@ export interface Config {
     outputFile?: string;
     target: ScriptTarget;
     outputAST: boolean;
-    strictArraySize: boolean;
 
     plugins: {
         [pluginName: string]: boolean | Record<string, unknown>;
@@ -25,7 +24,6 @@ const defaultConfig: Config = {
         stdin: false,
     },
     outputAST: false,
-    strictArraySize: false,
     target: ScriptTarget.Latest,
     plugins: {},
 };
