@@ -26,7 +26,9 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayNoMin {
@@ -56,7 +58,9 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayMinItemsZero {
@@ -86,12 +90,18 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayMinItemsGreaterZero {
         id?: number;
-        array?: ("NW" | "NE" | "SW" | "SE")[];
+        array?: [
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE"),
+            ...("NW" | "NE" | "SW" | "SE")[]
+        ];
     }
 }
 `;
@@ -117,12 +127,18 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayMinItemsLessMax {
         id?: number;
-        array?: ("NW" | "NE" | "SW" | "SE")[];
+        array?: [
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE")?
+        ];
     }
 }
 `;
@@ -148,12 +164,17 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayMinItemsEqualMax {
         id?: number;
-        array?: ("NW" | "NE" | "SW" | "SE")[];
+        array?: [
+            ("NW" | "NE" | "SW" | "SE"),
+            ("NW" | "NE" | "SW" | "SE")
+        ];
     }
 }
 `;
@@ -179,7 +200,9 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayMinItemsGreaterMax {
@@ -205,7 +228,9 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayObjectEmptyNoMin {
@@ -232,12 +257,18 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayWithMin {
         id?: number;
-        array?: any[];
+        array?: [
+            any,
+            any,
+            ...any[]
+        ];
     }
 }
 `;
@@ -259,12 +290,17 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayWithMax {
         id?: number;
-        array?: any[];
+        array?: [
+            any?,
+            any?
+        ];
     }
 }
 `;
@@ -286,7 +322,9 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayMinZero {
@@ -313,7 +351,9 @@ describe('array test', () => {
                 },
             },
         };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+        });
 
         const expected = `declare namespace Test {
     export interface IncArrayMaxZero {
