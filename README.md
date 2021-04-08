@@ -141,6 +141,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.8.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.8.0) (2021-04-08)
+
+- features:
+  - full support for minItems & maxItems properties by #476. Thank you @medfreeman :+1:
+
 ### [v3.7.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.7.1) (2021-02-18)
 
 - fixed:
