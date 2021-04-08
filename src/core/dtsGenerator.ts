@@ -523,12 +523,25 @@ export default class DtsGenerator {
         } else if (!Array.isArray(items)) {
             const subSchema = this.normalizeContent(schema, '/items');
             const node = this.generateTypeProperty(subSchema, false);
-            return ast.buildSimpleArrayNode(
-                ast.addOptionalInformation(node, subSchema, false)
-            );
+            if (minItems != null && maxItems != null && maxItems < minItems) {
+                return ast.buildNeverKeyword();
+            } else if (
+                (minItems === undefined || minItems === 0) &&
+                maxItems === undefined
+            ) {
+                return ast.buildSimpleArrayNode(
+                    ast.addOptionalInformation(node, subSchema, false)
+                );
+            } else {
+                return ast.addOptionalInformation(
+                    ast.buildTupleTypeNode(node, minItems, maxItems),
+                    schema,
+                    terminate
+                );
+            }
         } else if (
             items.length === 0 &&
-            minItems === undefined &&
+            (minItems === undefined || minItems === 0) &&
             maxItems === undefined
         ) {
             return ast.buildSimpleArrayNode(ast.buildAnyKeyword());

@@ -45,8 +45,14 @@ declare namespace JsonSchemaOrg {
             };
             propertyNames?: /* Core schema meta-schema */ Schema;
             const?: any;
-            enum?: any[];
-            type?: Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
+            enum?: [
+                any,
+                ...any[]
+            ];
+            type?: Schema.Definitions.SimpleTypes | [
+                Schema.Definitions.SimpleTypes,
+                ...Schema.Definitions.SimpleTypes[]
+            ];
             format?: string;
             contentMediaType?: string;
             contentEncoding?: string;
@@ -62,7 +68,10 @@ declare namespace JsonSchemaOrg {
             namespace Definitions {
                 export type NonNegativeInteger = number;
                 export type NonNegativeIntegerDefault0 = number;
-                export type SchemaArray = /* Core schema meta-schema */ Schema[];
+                export type SchemaArray = [
+                    /* Core schema meta-schema */ Schema,
+                    .../* Core schema meta-schema */ Schema[]
+                ];
                 export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
                 export type StringArray = string[];
             }

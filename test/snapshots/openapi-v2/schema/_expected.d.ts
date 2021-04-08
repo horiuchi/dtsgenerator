@@ -39,7 +39,10 @@ declare namespace JsonSchemaOrg {
                 [name: string]: /* Core schema meta-schema */ Schema | Schema.Definitions.StringArray;
             };
             enum?: any[];
-            type?: Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
+            type?: Schema.Definitions.SimpleTypes | [
+                Schema.Definitions.SimpleTypes,
+                ...Schema.Definitions.SimpleTypes[]
+            ];
             format?: string;
             allOf?: Schema.Definitions.SchemaArray;
             anyOf?: Schema.Definitions.SchemaArray;
@@ -50,9 +53,15 @@ declare namespace JsonSchemaOrg {
             namespace Definitions {
                 export type PositiveInteger = number;
                 export type PositiveIntegerDefault0 = number;
-                export type SchemaArray = /* Core schema meta-schema */ Schema[];
+                export type SchemaArray = [
+                    /* Core schema meta-schema */ Schema,
+                    .../* Core schema meta-schema */ Schema[]
+                ];
                 export type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
-                export type StringArray = string[];
+                export type StringArray = [
+                    string,
+                    ...string[]
+                ];
             }
             namespace Properties {
                 export type Default = any;
@@ -65,7 +74,10 @@ declare namespace JsonSchemaOrg {
                 export type MultipleOf = number;
                 export type Pattern = string; // regex
                 export type Title = string;
-                export type Type = Definitions.SimpleTypes | Definitions.SimpleTypes[];
+                export type Type = Definitions.SimpleTypes | [
+                    Definitions.SimpleTypes,
+                    ...Definitions.SimpleTypes[]
+                ];
                 export type UniqueItems = boolean;
             }
         }
@@ -588,8 +600,14 @@ declare namespace SwaggerIo {
                     enum?: JsonSchemaOrg.Draft04.Schema.Properties.Enum;
                     additionalProperties?: /* A deterministic version of a JSON Schema object. */ Schema | boolean;
                     type?: JsonSchemaOrg.Draft04.Schema.Properties.Type;
-                    items?: /* A deterministic version of a JSON Schema object. */ Schema | /* A deterministic version of a JSON Schema object. */ Schema[];
-                    allOf?: /* A deterministic version of a JSON Schema object. */ Schema[];
+                    items?: /* A deterministic version of a JSON Schema object. */ Schema | [
+                        /* A deterministic version of a JSON Schema object. */ Schema,
+                        .../* A deterministic version of a JSON Schema object. */ Schema[]
+                    ];
+                    allOf?: [
+                        /* A deterministic version of a JSON Schema object. */ Schema,
+                        .../* A deterministic version of a JSON Schema object. */ Schema[]
+                    ];
                     properties?: {
                         [name: string]: /* A deterministic version of a JSON Schema object. */ Schema;
                     };
