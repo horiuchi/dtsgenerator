@@ -201,21 +201,20 @@ export function buildTupleTypeNode(
     minItems?: number,
     maxItems?: number
 ): ts.TypeNode {
+    function typesIsArray<T>(types: T | T[]): types is T[] {
+        return Array.isArray(types);
+    }
     const nodes: ts.TypeNode[] = [];
-    const typesIsArray = Array.isArray(types);
     const itemCount =
         maxItems != null
             ? maxItems
-            : Math.max(
-                  typesIsArray ? (<ts.TypeNode[]>types).length : 1,
-                  minItems ?? 0
-              );
+            : Math.max(typesIsArray(types) ? types.length : 1, minItems ?? 0);
     for (let i = 0; i < itemCount; i++) {
-        let node = typesIsArray
-            ? i < (<ts.TypeNode[]>types).length
-                ? (<ts.TypeNode[]>types)[i]
+        let node = typesIsArray(types)
+            ? i < types.length
+                ? types[i]
                 : buildAnyKeyword()
-            : <ts.TypeNode>types;
+            : types;
         if (minItems == null || i >= minItems) {
             node = ts.factory.createOptionalTypeNode(node);
         }
@@ -225,7 +224,7 @@ export function buildTupleTypeNode(
         nodes.push(
             ts.factory.createRestTypeNode(
                 ts.factory.createArrayTypeNode(
-                    typesIsArray ? buildAnyKeyword() : <ts.TypeNode>types
+                    typesIsArray(types) ? buildAnyKeyword() : types
                 )
             )
         );
