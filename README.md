@@ -141,6 +141,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.9.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.9.0) (2021-04-13)
+
+- features:
+  - support for additionalItems property by #481. Thank you again @medfreeman :+1:
+
 ### [v3.8.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.8.0) (2021-04-08)
 
 - features:
