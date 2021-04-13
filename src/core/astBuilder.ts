@@ -199,20 +199,32 @@ export function buildUnionTypeNode<T>(
 export function buildTupleTypeNode(
     types: ts.TypeNode | ts.TypeNode[],
     minItems?: number,
-    maxItems?: number
+    maxItems?: number,
+    additionalItems?: ts.TypeNode | false
 ): ts.TypeNode {
     function typesIsArray<T>(types: T | T[]): types is T[] {
         return Array.isArray(types);
     }
+    const typesLength = typesIsArray(types) ? types.length : 1;
+
     const nodes: ts.TypeNode[] = [];
+    if (additionalItems === false && (minItems ?? 0) > typesLength) {
+        return buildNeverKeyword();
+    }
     const itemCount =
         maxItems != null
-            ? maxItems
-            : Math.max(typesIsArray(types) ? types.length : 1, minItems ?? 0);
+            ? additionalItems === false
+                ? typesLength
+                : maxItems
+            : Math.max(typesLength, minItems ?? 0);
     for (let i = 0; i < itemCount; i++) {
         let node = typesIsArray(types)
             ? i < types.length
                 ? types[i]
+                : additionalItems !== undefined
+                ? additionalItems === false
+                    ? buildNeverKeyword()
+                    : additionalItems
                 : buildAnyKeyword()
             : types;
         if (minItems == null || i >= minItems) {
@@ -220,11 +232,18 @@ export function buildTupleTypeNode(
         }
         nodes.push(node);
     }
-    if (maxItems == null) {
+    if (
+        maxItems == null &&
+        (!typesIsArray(types) || additionalItems !== false)
+    ) {
         nodes.push(
             ts.factory.createRestTypeNode(
                 ts.factory.createArrayTypeNode(
-                    typesIsArray(types) ? buildAnyKeyword() : types
+                    typesIsArray(types)
+                        ? additionalItems !== undefined
+                            ? (additionalItems as ts.TypeNode)
+                            : buildAnyKeyword()
+                        : types
                 )
             )
         );

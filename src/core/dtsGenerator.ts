@@ -544,7 +544,26 @@ export default class DtsGenerator {
             (minItems === undefined || minItems === 0) &&
             maxItems === undefined
         ) {
-            return ast.buildSimpleArrayNode(ast.buildAnyKeyword());
+            const additionalItems = schema.content.additionalItems
+                ? this.normalizeContent(schema, '/additionalItems')
+                : schema.content.additionalItems === false
+                ? false
+                : undefined;
+
+            const additionalItemsNode =
+                additionalItems !== undefined
+                    ? additionalItems === false
+                        ? false
+                        : this.generateTypeProperty(additionalItems, false)
+                    : undefined;
+
+            return additionalItemsNode !== false
+                ? ast.buildSimpleArrayNode(
+                      additionalItemsNode !== undefined
+                          ? additionalItemsNode
+                          : ast.buildAnyKeyword()
+                  )
+                : ast.buildTupleTypeNode([], 0, 0, additionalItemsNode);
         } else if (
             minItems != null &&
             maxItems != null &&
@@ -552,6 +571,19 @@ export default class DtsGenerator {
         ) {
             return ast.buildNeverKeyword();
         } else {
+            const additionalItems = schema.content.additionalItems
+                ? this.normalizeContent(schema, '/additionalItems')
+                : schema.content.additionalItems === false
+                ? false
+                : undefined;
+
+            const additionalItemsNode =
+                additionalItems !== undefined
+                    ? additionalItems === false
+                        ? false
+                        : this.generateTypeProperty(additionalItems, false)
+                    : undefined;
+
             const types: ts.TypeNode[] = [];
             for (let i = 0; i < items.length; i++) {
                 const type = this.normalizeContent(
@@ -574,7 +606,12 @@ export default class DtsGenerator {
                 }
             }
             return ast.addOptionalInformation(
-                ast.buildTupleTypeNode(types, minItems, maxItems),
+                ast.buildTupleTypeNode(
+                    types,
+                    minItems,
+                    maxItems,
+                    additionalItemsNode
+                ),
                 schema,
                 terminate
             );

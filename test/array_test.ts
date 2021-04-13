@@ -40,6 +40,38 @@ describe('array test', () => {
         assert.strictEqual(result, expected, result);
     });
 
+    it('no min, invalid additionalItems usage', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/inc_array_no_min_invalid_additional_items',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        enum: ['NW', 'NE', 'SW', 'SE'],
+                    },
+                    additionalItems: {
+                        type: 'integer',
+                    },
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface IncArrayNoMinInvalidAdditionalItems {
+        id?: number;
+        array?: ("NW" | "NE" | "SW" | "SE")[];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+
     it('min equal to zero', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_array_min_items_zero',
