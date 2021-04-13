@@ -518,6 +518,20 @@ export default class DtsGenerator {
         const items = schema.content.items;
         const minItems = schema.content.minItems;
         const maxItems = schema.content.maxItems;
+        const getAdditionalItemNode = () => {
+            const additionalItems = schema.content.additionalItems
+                ? this.normalizeContent(schema, '/additionalItems')
+                : schema.content.additionalItems === false
+                ? false
+                : undefined;
+
+            return additionalItems === undefined
+                ? undefined
+                : additionalItems === false
+                ? false
+                : this.generateTypeProperty(additionalItems, false);
+        };
+
         if (items == null) {
             return ast.buildSimpleArrayNode(ast.buildAnyKeyword());
         } else if (!Array.isArray(items)) {
@@ -544,26 +558,14 @@ export default class DtsGenerator {
             (minItems === undefined || minItems === 0) &&
             maxItems === undefined
         ) {
-            const additionalItems = schema.content.additionalItems
-                ? this.normalizeContent(schema, '/additionalItems')
-                : schema.content.additionalItems === false
-                ? false
-                : undefined;
-
-            const additionalItemsNode =
-                additionalItems !== undefined
-                    ? additionalItems === false
-                        ? false
-                        : this.generateTypeProperty(additionalItems, false)
-                    : undefined;
-
-            return additionalItemsNode !== false
-                ? ast.buildSimpleArrayNode(
-                      additionalItemsNode !== undefined
-                          ? additionalItemsNode
-                          : ast.buildAnyKeyword()
-                  )
-                : ast.buildTupleTypeNode([], 0, 0, additionalItemsNode);
+            const additionalItemsNode = getAdditionalItemNode();
+            return additionalItemsNode === false
+                ? ast.buildTupleTypeNode([], 0, 0, additionalItemsNode)
+                : ast.buildSimpleArrayNode(
+                      additionalItemsNode === undefined
+                          ? ast.buildAnyKeyword()
+                          : additionalItemsNode
+                  );
         } else if (
             minItems != null &&
             maxItems != null &&
@@ -571,19 +573,6 @@ export default class DtsGenerator {
         ) {
             return ast.buildNeverKeyword();
         } else {
-            const additionalItems = schema.content.additionalItems
-                ? this.normalizeContent(schema, '/additionalItems')
-                : schema.content.additionalItems === false
-                ? false
-                : undefined;
-
-            const additionalItemsNode =
-                additionalItems !== undefined
-                    ? additionalItems === false
-                        ? false
-                        : this.generateTypeProperty(additionalItems, false)
-                    : undefined;
-
             const types: ts.TypeNode[] = [];
             for (let i = 0; i < items.length; i++) {
                 const type = this.normalizeContent(
@@ -605,6 +594,8 @@ export default class DtsGenerator {
                     );
                 }
             }
+
+            const additionalItemsNode = getAdditionalItemNode();
             return ast.addOptionalInformation(
                 ast.buildTupleTypeNode(
                     types,
