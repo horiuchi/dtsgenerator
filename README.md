@@ -141,6 +141,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.9.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.9.1) (2021-04-16)
+
+- fixed:
+  - Update `generate` function to use recommended immutable approach for typescript transforms by #483. Thank you again @medfreeman :+1:
+
 ### [v3.9.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.9.0) (2021-04-13)
 
 - features:
