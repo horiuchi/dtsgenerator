@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import * as fs from 'fs';
-import { load } from 'js-yaml';
 import { extname } from 'path';
+import { load } from 'js-yaml';
 import { TransformerFactory, SourceFile } from 'typescript';
 import { globFiles, readStream, readUrl } from '../utils';
-import SchemaId from './schemaId';
+import { getId, selectSchemaType, setId } from './jsonSchema';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from './jsonSchemaDraft07';
-import { getId, selectSchemaType, setId } from './jsonSchema';
 import { OpenApisV2 } from './openApiV2';
 import { OpenApisV3 } from './openApiV3';
+import SchemaId from './schemaId';
 
 // export `ts` for using the same version of TypeScript in all plugins.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

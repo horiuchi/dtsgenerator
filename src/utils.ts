@@ -1,6 +1,6 @@
+import { URL } from 'url';
 import glob from 'glob';
 import proxy from 'https-proxy-agent';
-import { URL } from 'url';
 
 export function readStream(
     stream: NodeJS.ReadStream,

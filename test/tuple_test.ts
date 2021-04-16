@@ -1,6 +1,6 @@
 import assert from 'assert';
-import { clearToDefault } from '../src/core/config';
 import dtsgenerator from '../src/core';
+import { clearToDefault } from '../src/core/config';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { parseSchema } from '../src/core/type';
 

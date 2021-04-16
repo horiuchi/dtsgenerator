@@ -2,8 +2,8 @@ import * as ts from 'typescript';
 import config from './config';
 import { NormalizedSchema } from './jsonSchema';
 import SchemaId from './schemaId';
-import { toValidIdentifier, checkInvalidCharacter } from './validateIdentifier';
 import { Schema } from './type';
+import { toValidIdentifier, checkInvalidCharacter } from './validateIdentifier';
 
 function buildTypeNameIdentifier(name: string): ts.Identifier {
     return ts.factory.createIdentifier(toValidIdentifier(name, config.target));

@@ -2,8 +2,8 @@ import assert from 'assert';
 import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from '../src/core/jsonSchemaDraft07';
-import { parseSchema, JsonSchema } from '../src/core/type';
 import { OpenApisV2 } from '../src/core/openApiV2';
+import { parseSchema, JsonSchema } from '../src/core/type';
 
 describe('simple schema test', () => {
     it('no property schema', async () => {
