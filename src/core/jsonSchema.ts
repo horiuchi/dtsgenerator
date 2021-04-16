@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import * as JsonPointer from '../jsonPointer';
+import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
+import { OpenApisV2 } from './openApiV2';
+import { OpenApisV3 } from './openApiV3';
 import SchemaId from './schemaId';
 import {
     Schema,
@@ -8,9 +11,6 @@ import {
     JsonSchema,
     isJsonSchemaDraft04,
 } from './type';
-import { OpenApisV2 } from './openApiV2';
-import { OpenApisV3 } from './openApiV3';
-import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 
 type OpenApiSchema = OpenApisV2.SchemaJson | OpenApisV3.SchemaJson;
 

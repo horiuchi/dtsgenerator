@@ -1,6 +1,10 @@
 import Debug from 'debug';
 import * as ts from 'typescript';
 import { get, set, tilde } from '../jsonPointer';
+import * as ast from './astBuilder';
+import config from './config';
+import { getSubSchema, NormalizedSchema } from './jsonSchema';
+import ReferenceResolver from './referenceResolver';
 import {
     Plugin,
     Schema,
@@ -9,10 +13,6 @@ import {
     PreProcessHandler,
     loadPlugin,
 } from './type';
-import * as ast from './astBuilder';
-import config from './config';
-import { getSubSchema, NormalizedSchema } from './jsonSchema';
-import ReferenceResolver from './referenceResolver';
 import * as utils from './utils';
 
 const debug = Debug('dtsgen');

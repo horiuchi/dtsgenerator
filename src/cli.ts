@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { dirname } from 'path';
+import { ScriptTarget } from 'typescript';
 import opts, {
     initialize,
     CommandOptions,
@@ -12,7 +13,6 @@ import dtsgenerator, {
     readSchemaFromUrl,
 } from './core';
 import config, { Config, setConfig, showConfig } from './core/config';
-import { ScriptTarget } from 'typescript';
 
 function readConfig(options: CommandOptions): Partial<Config> {
     let pc: Partial<Config> = {};
