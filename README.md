@@ -141,6 +141,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.9.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.9.2) (2021-04-19)
+
+- fixed:
+  - Fix nested `oneOf` & `anyOf` keywords by #486. Thank you @medfreeman :+1:
+
 ### [v3.9.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.9.1) (2021-04-16)
 
 - fixed:
