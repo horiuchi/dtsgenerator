@@ -39,9 +39,6 @@ export function buildVoidKeyword(): ts.KeywordTypeNode {
 export function buildStringKeyword(): ts.KeywordTypeNode {
     return buildKeyword(ts.SyntaxKind.StringKeyword);
 }
-export function buildNumberKeyword(): ts.KeywordTypeNode {
-    return buildKeyword(ts.SyntaxKind.NumberKeyword);
-}
 export function buildSimpleArrayNode(element: ts.TypeNode): ts.ArrayTypeNode {
     return ts.factory.createArrayTypeNode(element);
 }
