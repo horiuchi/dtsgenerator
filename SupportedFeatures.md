@@ -99,6 +99,7 @@ The base JSON Schema version is Draft-07
 |/components/responses/*/content/[Media Type]|
 |/components/responses/*/$ref|
 |/paths/\*/parameters/*/schema|
+|/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/parameters/*/content/[Media Type]/schema|
 |/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/parameters/*/schema|
 |/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/requestBodies/*/content/[Media Type]|
 |/paths/\*/(get\|put\|post\|delete\|options\|head\|patch\|trace)/requestBodies/*/$ref|
