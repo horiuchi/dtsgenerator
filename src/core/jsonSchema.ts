@@ -19,6 +19,7 @@ interface ParameterObject {
     in: string;
     required?: boolean;
     schema?: JsonSchemaObject;
+    content?: OpenApisV3.SchemaJson.Definitions.MediaTypes;
 }
 type Parameter = ParameterObject | { $ref?: string };
 
@@ -229,16 +230,22 @@ export function searchAllSubSchema(
                 return;
             }
             const map = new Map<string, ParameterObject[]>();
+            const pushItem = (key: string, po: ParameterObject) => {
+                let work = map.get(key);
+                if (work == null) {
+                    work = [];
+                    map.set(key, work);
+                }
+                work.push(po);
+            };
             array.forEach((item) => {
                 if ('schema' in item) {
                     setSubIdToParameter(item, keys);
-
-                    let work = map.get(item.in);
-                    if (work == null) {
-                        work = [];
-                        map.set(item.in, work);
-                    }
-                    work.push(item);
+                    pushItem(item.in, item);
+                }
+                if ('content' in item) {
+                    setSubIdToMediaTypes(item.content, [...keys, item.name]);
+                    pushItem(item.in, item);
                 }
             });
             addParameterSchema(map, keys);
