@@ -141,6 +141,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.10.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.10.0) (2021-04-26)
+
+- features:
+  - Support freeform objects w/ index signature instead of `unknown` keyword by #488. Thank you @medfreeman :+1:
+  - Support the `content` property in `Parameters` by #472. Thank you for report @npdev453 :+1:
+
 ### [v3.9.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.9.2) (2021-04-19)
 
 - fixed:
