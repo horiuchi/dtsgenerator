@@ -184,6 +184,12 @@ export function buildTypeLiteralNode(elements: ts.TypeElement[]): ts.TypeNode {
     return ts.factory.createTypeLiteralNode(elements);
 }
 
+export function buildFreeFormObjectTypeLiteralNode(): ts.TypeNode {
+    return ts.factory.createTypeLiteralNode([
+        buildIndexSignatureNode('key', buildStringKeyword(), buildAnyKeyword()),
+    ]);
+}
+
 export function buildUnionTypeNode<T>(
     types: T[],
     builder: (t: T, index: number) => ts.TypeNode,

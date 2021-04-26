@@ -73,7 +73,9 @@ declare namespace JsonSchemaOrg {
                 export interface NestedTypes {
                     first: {
                         second: {
-                            third: unknown;
+                            third: {
+                                [key: string]: any;
+                            };
                         };
                     };
                 }
@@ -86,7 +88,9 @@ declare namespace JsonSchemaOrg {
                     integer?: number;
                     null?: null;
                     number?: number;
-                    object?: unknown;
+                    object?: {
+                        [key: string]: any;
+                    };
                     string?: string;
                     undefined?: undefined;
                 }
@@ -99,7 +103,9 @@ declare namespace JsonSchemaOrg {
                     integer: number;
                     null: null;
                     number: number;
-                    object: unknown;
+                    object: {
+                        [key: string]: any;
+                    };
                     string: string;
                     undefined: undefined;
                 }

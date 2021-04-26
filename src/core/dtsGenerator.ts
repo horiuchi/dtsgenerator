@@ -662,7 +662,7 @@ export default class DtsGenerator {
             if (elements.length > 0) {
                 return ast.buildTypeLiteralNode(elements);
             } else {
-                return ast.buildUnknownKeyword();
+                return ast.buildFreeFormObjectTypeLiteralNode();
             }
         } else if (type === 'array') {
             return this.generateArrayTypeProperty(schema, terminate);
