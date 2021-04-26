@@ -107,7 +107,7 @@ describe("'not' keyword test", () => {
 
     it('should work with not in oneOf with strictNot disabled', async () => {
         const schema: JsonSchemaDraft07.Schema = {
-            $id: '/test/not/oneOfStrictNot',
+            $id: '/test/not/oneOfStrictNotDisabled',
             $schema: 'http://json-schema.org/draft-07/schema#',
             type: 'object',
             oneOf: [
@@ -134,7 +134,7 @@ describe("'not' keyword test", () => {
 
         const expected = `declare namespace Test {
     namespace Not {
-        export type OneOfStrictNot = {
+        export type OneOfStrictNotDisabled = {
             readonly name: string;
         } | {
             [key: string]: any;
