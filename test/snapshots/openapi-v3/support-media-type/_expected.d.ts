@@ -29,6 +29,14 @@ declare namespace Components {
 declare namespace Paths {
     namespace Path {
         namespace Post {
+            namespace Parameters {
+                export type Age = number;
+                export type Name = string;
+            }
+            export interface QueryParameters {
+                name?: Parameters.Name;
+                age?: Parameters.Age;
+            }
             namespace Responses {
                 export type $200 = Components.Responses.$200ReturnData;
                 export type $400 = Components.Responses.$400BadRequest;
