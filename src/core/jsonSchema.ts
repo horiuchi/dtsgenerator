@@ -353,7 +353,7 @@ export function searchAllSubSchema(
             }
             for (const mime of Object.keys(types)) {
                 if (
-                    /^text\/|^(?:application\/x-www-form-urlencoded$|^application\/([a-z0-9-_]+\+)?json)$|^application\/octet-stream$|^multipart\/form-data$/.test(
+                    /^text\/|^(?:application\/x-www-form-urlencoded$|^application\/([a-z0-9-_.]+\+)?json)$|^application\/octet-stream$|^multipart\/form-data$/.test(
                         mime
                     )
                 ) {
