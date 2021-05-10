@@ -27,6 +27,14 @@ declare namespace Components {
     }
 }
 declare namespace Paths {
+    namespace FourthPath {
+        namespace Post {
+            export type RequestBody = Components.Schemas.Request;
+            namespace Responses {
+                export type $200 = Components.Responses.$200ReturnData;
+            }
+        }
+    }
     namespace Path {
         namespace Post {
             namespace Parameters {

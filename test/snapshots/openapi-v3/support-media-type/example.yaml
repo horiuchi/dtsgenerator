@@ -46,6 +46,18 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/200_ReturnData'
+  # Vendor media types.
+  /fourth-path:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/vnd.company.v1+json:
+            schema:
+              $ref: '#/components/schemas/Request'
+      responses:
+        200:
+          $ref: '#/components/responses/200_ReturnData'
 components:
   schemas:
     Request:
