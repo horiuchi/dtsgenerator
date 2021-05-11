@@ -52,34 +52,6 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
-    it('two line readonly schema', async () => {
-        const schema: JsonSchemaDraft07.Schema = {
-            $id: '/test/one_line',
-            $schema: 'http://json-schema.org/draft-07/schema#',
-            type: 'object',
-            properties: {
-                name: {
-                    type: 'string',
-                    readOnly: true,
-                },
-                type: {
-                    type: 'integer',
-                    readOnly: false,
-                },
-            },
-            required: ['name', 'type'],
-        };
-        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
-
-        const expected = `declare namespace Test {
-    export interface OneLine {
-        readonly name: string;
-        type: number;
-    }
-}
-`;
-        assert.strictEqual(result, expected, result);
-    });
     it('no type schema', async () => {
         const schema: JsonSchema = {
             id: '/test/no_type',
@@ -902,7 +874,6 @@ describe('simple schema test', () => {
             properties: {
                 name: {
                     type: 'string',
-                    readOnly: true,
                 },
             },
             patternProperties: {
@@ -919,7 +890,7 @@ describe('simple schema test', () => {
 
         const expected = `declare namespace Test {
     export interface PatternProperties {
-        readonly name: string;
+        name: string;
         [pattern: string]: number | string; /* Patterns: ^[0-9]+$ | ^[a-z]+$ */
     }
 }

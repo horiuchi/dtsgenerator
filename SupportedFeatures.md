@@ -56,8 +56,8 @@ Supported Features
 |--------|:----:|----|
 |$id|o|replaces `id`|
 |$comment|o|comment string|
-|readOnly|o|readonly property|
-|writeOnly|x|TypeScript is not support the `writeOnly` property|
+|readOnly|x||
+|writeOnly|x||
 |examples|o|comment string|
 |contains|x||
 |propertyNames|x||
