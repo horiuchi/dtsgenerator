@@ -141,6 +141,13 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.11.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.11.0) (2021-05-11)
+
+- features:
+  - Support vendor media types (allow periods in application/*+json) by #497. Thank you @glen-84 :+1:
+- fixed:
+  - Remove to support the `readOnly` property, because of wrong interpretation by #498. Thank you @hallsbyra :+1:
+
 ### [v3.10.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.10.0) (2021-04-26)
 
 - features:
