@@ -9,7 +9,6 @@ test/
 
 # misc
 .coveralls.yml
-.editorconfig
 .eslintcache
 .travis.yml
 .nyc_output/
