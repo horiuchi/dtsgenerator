@@ -80,7 +80,7 @@ declare namespace JsonSchemaOrg {
                     };
                 }
                 export interface Primitives {
-                    readonly any?: any;
+                    any?: any;
                     array?: any[];
                     boolean?: boolean;
                     double?: number; // double
@@ -95,7 +95,7 @@ declare namespace JsonSchemaOrg {
                     undefined?: undefined;
                 }
                 export interface PrimitivesRequired {
-                    readonly any: any;
+                    any: any;
                     array: any[];
                     boolean: boolean;
                     double: number; // double

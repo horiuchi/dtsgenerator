@@ -116,17 +116,13 @@ export function buildTypeAliasNode(
 }
 
 export function buildPropertySignature(
-    schema: NormalizedSchema,
+    _schema: NormalizedSchema,
     propertyName: string,
     valueType: ts.TypeNode,
     required: string[] | undefined,
     isPattern: boolean | undefined
 ): ts.PropertySignature | ts.IndexSignatureDeclaration {
-    const content = schema.content;
-    const modifiers =
-        'readOnly' in content && content.readOnly
-            ? [ts.factory.createModifier(ts.SyntaxKind.ReadonlyKeyword)]
-            : undefined;
+    const modifiers = undefined;
     const questionToken =
         required == null || required.indexOf(propertyName) < 0
             ? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
