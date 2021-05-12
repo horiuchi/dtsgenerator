@@ -25,7 +25,7 @@ describe("'not' keyword test", () => {
         const expected = `declare namespace Test {
     namespace Not {
         export interface TopLevel {
-            readonly name: string;
+            name: string;
         }
     }
 }
@@ -62,7 +62,7 @@ describe("'not' keyword test", () => {
         const expected = `declare namespace Test {
     namespace Not {
         export interface AllOf {
-            readonly name: string;
+            name: string;
         }
     }
 }
@@ -97,7 +97,7 @@ describe("'not' keyword test", () => {
         const expected = `declare namespace Test {
     namespace Not {
         export type OneOf = {
-            readonly name: string;
+            name: string;
         } | void;
     }
 }
@@ -135,7 +135,7 @@ describe("'not' keyword test", () => {
         const expected = `declare namespace Test {
     namespace Not {
         export type OneOfStrictNotDisabled = {
-            readonly name: string;
+            name: string;
         } | {
             [key: string]: any;
         };
