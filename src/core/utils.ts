@@ -31,6 +31,8 @@ export function toTSType(
         case 'object':
         case 'array':
             return undefined;
+        case 'file': // 'file' is a valid type only in OpenAPI v2.
+            return ts.SyntaxKind.UnknownKeyword;
         default:
             if (debugSource) {
                 debug(
