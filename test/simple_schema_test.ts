@@ -897,4 +897,53 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+    it('support file type in OpenAPI v2', async () => {
+        const schema: OpenApisV2.SchemaJson = {
+            swagger: '2.0',
+            info: {
+                title: 'test for file type.',
+                version: '1.0.0',
+            },
+            paths: {
+                '/file': {
+                    post: {
+                        consumes: ['multipart/form-data'],
+                        parameters: [{
+                            in: 'formData',
+                            name: 'file',
+                            type: 'file',
+                            required: true,
+                        }],
+                        responses: {
+                            '200': {
+                                description: 'success',
+                                schema: {
+                                    type: 'string',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        };
+
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const expected = `declare namespace Paths {
+    namespace File {
+        namespace Post {
+            export interface FormDataParameters {
+                file: Parameters.File;
+            }
+            namespace Parameters {
+                export type File = unknown;
+            }
+            namespace Responses {
+                export type $200 = string;
+            }
+        }
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
 });

@@ -12,7 +12,7 @@ export namespace OpenApisV2 {
          * The Swagger version of this document.
          */
         swagger: '2.0';
-        info: SchemaJson.Definitions.Info;
+        info: /* General information about the API. */ SchemaJson.Definitions.Info;
         /**
          * The host (name or ip) of the API. Example: 'swagger.io'
          */
@@ -21,23 +21,23 @@ export namespace OpenApisV2 {
          * The base path to the API. Example: '/api'.
          */
         basePath?: string; // ^/
-        schemes?: SchemaJson.Definitions.SchemesList;
+        schemes?: /* The transfer protocol of the API. */ SchemaJson.Definitions.SchemesList;
         /**
          * A list of MIME types accepted by the API.
          */
-        consumes?: SchemaJson.Definitions.MimeType[];
+        consumes?: /* The MIME type of the HTTP message. */ SchemaJson.Definitions.MimeType[];
         /**
          * A list of MIME types the API can produce.
          */
-        produces?: SchemaJson.Definitions.MimeType[];
-        paths: SchemaJson.Definitions.Paths;
-        definitions?: SchemaJson.Definitions.Definitions;
-        parameters?: SchemaJson.Definitions.ParameterDefinitions;
-        responses?: SchemaJson.Definitions.ResponseDefinitions;
+        produces?: /* The MIME type of the HTTP message. */ SchemaJson.Definitions.MimeType[];
+        paths: /* Relative paths to the individual endpoints. They must be relative to the 'basePath'. */ SchemaJson.Definitions.Paths;
+        definitions?: /* One or more JSON objects describing the schemas being consumed and produced by the API. */ SchemaJson.Definitions.Definitions;
+        parameters?: /* One or more JSON representations for parameters */ SchemaJson.Definitions.ParameterDefinitions;
+        responses?: /* One or more JSON representations for responses */ SchemaJson.Definitions.ResponseDefinitions;
         security?: SchemaJson.Definitions.Security;
         securityDefinitions?: SchemaJson.Definitions.SecurityDefinitions;
         tags?: SchemaJson.Definitions.Tag[];
-        externalDocs?: SchemaJson.Definitions.ExternalDocs;
+        externalDocs?: /* information about external documentation */ SchemaJson.Definitions.ExternalDocs;
     }
     export namespace SchemaJson {
         export namespace Definitions {
@@ -68,7 +68,7 @@ export namespace OpenApisV2 {
                  * Determines whether or not this parameter is required or optional.
                  */
                 required?: boolean;
-                schema: JsonSchemaDraft04.Schema;
+                schema: /* A deterministic version of a JSON Schema object. */ Schema;
             }
             export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes';
             export type CollectionFormatWithMulti =
@@ -99,14 +99,18 @@ export namespace OpenApisV2 {
              * One or more JSON objects describing the schemas being consumed and produced by the API.
              */
             export interface Definitions {
-                [name: string]: JsonSchemaDraft04.Schema;
+                [
+                    name: string
+                ]: /* A deterministic version of a JSON Schema object. */ Schema;
             }
             export type Enum = JsonSchemaDraft04.Schema.Properties.Enum;
             export interface Examples {
                 [name: string]: any;
             }
-            export type ExclusiveMaximum = JsonSchemaDraft04.Schema.Properties.ExclusiveMaximum;
-            export type ExclusiveMinimum = JsonSchemaDraft04.Schema.Properties.ExclusiveMinimum;
+            export type ExclusiveMaximum =
+                JsonSchemaDraft04.Schema.Properties.ExclusiveMaximum;
+            export type ExclusiveMinimum =
+                JsonSchemaDraft04.Schema.Properties.ExclusiveMinimum;
             /**
              * information about external documentation
              */
@@ -125,7 +129,7 @@ export namespace OpenApisV2 {
                 required?: JsonSchemaDraft04.Schema.Definitions.StringArray;
                 type: 'file';
                 readOnly?: boolean;
-                externalDocs?: ExternalDocs;
+                externalDocs?: /* information about external documentation */ ExternalDocs;
                 example?: any;
             }
             export interface FormDataParameterSubSchema {
@@ -136,7 +140,7 @@ export namespace OpenApisV2 {
                 /**
                  * Determines the location of the parameter.
                  */
-                in?: 'formData';
+                in: 'formData';
                 /**
                  * A brief description of the parameter. This could contain examples of use.  GitHub Flavored Markdown is allowed.
                  */
@@ -144,7 +148,7 @@ export namespace OpenApisV2 {
                 /**
                  * The name of the parameter.
                  */
-                name?: string;
+                name: string;
                 /**
                  * allows sending a parameter by name only or with an empty value.
                  */
@@ -201,7 +205,7 @@ export namespace OpenApisV2 {
                 /**
                  * Determines the location of the parameter.
                  */
-                in?: 'header';
+                in: 'header';
                 /**
                  * A brief description of the parameter. This could contain examples of use.  GitHub Flavored Markdown is allowed.
                  */
@@ -209,7 +213,7 @@ export namespace OpenApisV2 {
                 /**
                  * The name of the parameter.
                  */
-                name?: string;
+                name: string;
                 type?: 'string' | 'number' | 'boolean' | 'integer' | 'array';
                 format?: string;
                 items?: PrimitivesItems;
@@ -251,7 +255,7 @@ export namespace OpenApisV2 {
                  * The terms of service for the API.
                  */
                 termsOfService?: string;
-                contact?: Contact;
+                contact?: /* Contact information for the owners of the API. */ Contact;
                 license?: License;
             }
             export interface JsonReference {
@@ -267,19 +271,29 @@ export namespace OpenApisV2 {
                  */
                 url?: string; // uri
             }
-            export type MaxItems = JsonSchemaDraft04.Schema.Definitions.PositiveInteger;
-            export type MaxLength = JsonSchemaDraft04.Schema.Definitions.PositiveInteger;
+            export type MaxItems =
+                JsonSchemaDraft04.Schema.Definitions.PositiveInteger;
+            export type MaxLength =
+                JsonSchemaDraft04.Schema.Definitions.PositiveInteger;
             export type Maximum = JsonSchemaDraft04.Schema.Properties.Maximum;
-            export type MediaTypeList = MimeType[];
+            export type MediaTypeList =
+                /* The MIME type of the HTTP message. */ MimeType[];
             /**
              * The MIME type of the HTTP message.
              */
             export type MimeType = string;
-            export type MinItems = JsonSchemaDraft04.Schema.Definitions.PositiveIntegerDefault0;
-            export type MinLength = JsonSchemaDraft04.Schema.Definitions.PositiveIntegerDefault0;
+            export type MinItems =
+                JsonSchemaDraft04.Schema.Definitions.PositiveIntegerDefault0;
+            export type MinLength =
+                JsonSchemaDraft04.Schema.Definitions.PositiveIntegerDefault0;
             export type Minimum = JsonSchemaDraft04.Schema.Properties.Minimum;
-            export type MultipleOf = JsonSchemaDraft04.Schema.Properties.MultipleOf;
-            export interface NonBodyParameter {}
+            export type MultipleOf =
+                JsonSchemaDraft04.Schema.Properties.MultipleOf;
+            export type NonBodyParameter =
+                | HeaderParameterSubSchema
+                | FormDataParameterSubSchema
+                | QueryParameterSubSchema
+                | PathParameterSubSchema;
             export interface Oauth2AccessCodeSecurity {
                 type: 'oauth2';
                 flow: 'accessCode';
@@ -322,7 +336,7 @@ export namespace OpenApisV2 {
                  * A longer description of the operation, GitHub Flavored Markdown is allowed.
                  */
                 description?: string;
-                externalDocs?: ExternalDocs;
+                externalDocs?: /* information about external documentation */ ExternalDocs;
                 /**
                  * A unique identifier of the operation.
                  */
@@ -330,14 +344,14 @@ export namespace OpenApisV2 {
                 /**
                  * A list of MIME types the API can produce.
                  */
-                produces?: MimeType[];
+                produces?: /* The MIME type of the HTTP message. */ MimeType[];
                 /**
                  * A list of MIME types the API can consume.
                  */
-                consumes?: MimeType[];
-                parameters?: ParametersList;
-                responses: Responses;
-                schemes?: SchemesList;
+                consumes?: /* The MIME type of the HTTP message. */ MimeType[];
+                parameters?: /* The parameters needed to send a valid API call. */ ParametersList;
+                responses: /* Response objects names can either be any valid HTTP status code or 'default'. */ Responses;
+                schemes?: /* The transfer protocol of the API. */ SchemesList;
                 deprecated?: boolean;
                 security?: Security;
             }
@@ -361,17 +375,17 @@ export namespace OpenApisV2 {
                 options?: Operation;
                 head?: Operation;
                 patch?: Operation;
-                parameters?: ParametersList;
+                parameters?: /* The parameters needed to send a valid API call. */ ParametersList;
             }
             export interface PathParameterSubSchema {
                 /**
                  * Determines whether or not this parameter is required or optional.
                  */
-                required: 'true';
+                required: true;
                 /**
                  * Determines the location of the parameter.
                  */
-                in?: 'path';
+                in: 'path';
                 /**
                  * A brief description of the parameter. This could contain examples of use.  GitHub Flavored Markdown is allowed.
                  */
@@ -379,7 +393,7 @@ export namespace OpenApisV2 {
                 /**
                  * The name of the parameter.
                  */
-                name?: string;
+                name: string;
                 type?: 'string' | 'number' | 'boolean' | 'integer' | 'array';
                 format?: string;
                 items?: PrimitivesItems;
@@ -402,9 +416,10 @@ export namespace OpenApisV2 {
              * Relative paths to the individual endpoints. They must be relative to the 'basePath'.
              */
             export interface Paths {
-                [path: string]: PathItem;
+                [pattern: string]: PathItem;
             }
-            export type Pattern = JsonSchemaDraft04.Schema.Properties.Pattern; // regex
+            export type Pattern =
+                JsonSchemaDraft04.Schema.Properties.Pattern /* regex */;
             export interface PrimitivesItems {
                 type?: 'string' | 'number' | 'integer' | 'boolean' | 'array';
                 format?: string;
@@ -432,7 +447,7 @@ export namespace OpenApisV2 {
                 /**
                  * Determines the location of the parameter.
                  */
-                in?: 'query';
+                in: 'query';
                 /**
                  * A brief description of the parameter. This could contain examples of use.  GitHub Flavored Markdown is allowed.
                  */
@@ -440,7 +455,7 @@ export namespace OpenApisV2 {
                 /**
                  * The name of the parameter.
                  */
-                name?: string;
+                name: string;
                 /**
                  * allows sending a parameter by name only or with an empty value.
                  */
@@ -465,7 +480,9 @@ export namespace OpenApisV2 {
             }
             export interface Response {
                 description: string;
-                schema?: JsonSchemaDraft04.Schema | FileSchema;
+                schema?: /* A deterministic version of a JSON Schema object. */
+                | Schema
+                    | /* A deterministic version of a JSON Schema object. */ FileSchema;
                 headers?: Headers;
                 examples?: Examples;
             }
@@ -480,11 +497,58 @@ export namespace OpenApisV2 {
              * Response objects names can either be any valid HTTP status code or 'default'.
              */
             export interface Responses {
-                [name: string]: ResponseValue;
+                [
+                    pattern: string
+                ]: ResponseValue /* Patterns: ^([0-9]{3})$|^(default)$ | ^x- */;
             }
             /**
              * A deterministic version of a JSON Schema object.
              */
+            export interface Schema {
+                $ref?: string;
+                format?: string;
+                title?: JsonSchemaDraft04.Schema.Properties.Title;
+                description?: JsonSchemaDraft04.Schema.Properties.Description;
+                default?: JsonSchemaDraft04.Schema.Properties.Default;
+                multipleOf?: JsonSchemaDraft04.Schema.Properties.MultipleOf;
+                maximum?: JsonSchemaDraft04.Schema.Properties.Maximum;
+                exclusiveMaximum?: JsonSchemaDraft04.Schema.Properties.ExclusiveMaximum;
+                minimum?: JsonSchemaDraft04.Schema.Properties.Minimum;
+                exclusiveMinimum?: JsonSchemaDraft04.Schema.Properties.ExclusiveMinimum;
+                maxLength?: JsonSchemaDraft04.Schema.Definitions.PositiveInteger;
+                minLength?: JsonSchemaDraft04.Schema.Definitions.PositiveIntegerDefault0;
+                pattern?: JsonSchemaDraft04.Schema.Properties.Pattern /* regex */;
+                maxItems?: JsonSchemaDraft04.Schema.Definitions.PositiveInteger;
+                minItems?: JsonSchemaDraft04.Schema.Definitions.PositiveIntegerDefault0;
+                uniqueItems?: JsonSchemaDraft04.Schema.Properties.UniqueItems;
+                maxProperties?: JsonSchemaDraft04.Schema.Definitions.PositiveInteger;
+                minProperties?: JsonSchemaDraft04.Schema.Definitions.PositiveIntegerDefault0;
+                required?: JsonSchemaDraft04.Schema.Definitions.StringArray;
+                enum?: JsonSchemaDraft04.Schema.Properties.Enum;
+                additionalProperties?: /* A deterministic version of a JSON Schema object. */
+                Schema | boolean;
+                type?: JsonSchemaDraft04.Schema.Properties.Type;
+                items?: /* A deterministic version of a JSON Schema object. */
+                | Schema
+                    | [
+                          /* A deterministic version of a JSON Schema object. */ Schema,
+                          .../* A deterministic version of a JSON Schema object. */ Schema[]
+                      ];
+                allOf?: [
+                    /* A deterministic version of a JSON Schema object. */ Schema,
+                    .../* A deterministic version of a JSON Schema object. */ Schema[]
+                ];
+                properties?: {
+                    [
+                        name: string
+                    ]: /* A deterministic version of a JSON Schema object. */ Schema;
+                };
+                discriminator?: string;
+                readOnly?: boolean;
+                xml?: Xml;
+                externalDocs?: /* information about external documentation */ ExternalDocs;
+                example?: any;
+            }
             /**
              * The transfer protocol of the API.
              */
@@ -505,15 +569,10 @@ export namespace OpenApisV2 {
             export interface Tag {
                 name: string;
                 description?: string;
-                externalDocs?: ExternalDocs;
+                externalDocs?: /* information about external documentation */ ExternalDocs;
             }
-            export type UniqueItems = JsonSchemaDraft04.Schema.Properties.UniqueItems;
-            /**
-             * Any property starting with x- is valid.
-             */
-            export interface VendorExtension {
-                [name: string]: any;
-            }
+            export type UniqueItems =
+                JsonSchemaDraft04.Schema.Properties.UniqueItems;
             export interface Xml {
                 name?: string;
                 namespace?: string;
