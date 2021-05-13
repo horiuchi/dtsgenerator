@@ -141,6 +141,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.12.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.12.0) (2021-05-13)
+
+- features:
+  - Support input type `file` by #496. Thank you @Christian24 :+1:
+  - Improve the conversion results of parameters property on OpenAPI by #501.
+
 ### [v3.11.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.11.0) (2021-05-11)
 
 - features:
