@@ -433,8 +433,7 @@ describe('tuple test', () => {
 
     it('min greater than length, additionalItems false', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id:
-                '/test/inc_tuple_min_items_greater_length_additional_items_false',
+            id: '/test/inc_tuple_min_items_greater_length_additional_items_false',
             type: 'object',
             properties: {
                 id: {
