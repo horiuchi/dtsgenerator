@@ -15,7 +15,8 @@
     "do-test": "cross-env TS_NODE_FILES=true mocha --exit --require ts-node/register --colors test/*_test.ts",
     "lint:fix": "npm run lint -- --fix",
     "lint": "eslint --ext ts src/ test/",
-    "precompile": "npm run lint",
+    "format": "prettier --write 'src/**/*.ts' 'test/*.ts' 'test/core/*.ts'",
+    "precompile": "npm run lint:fix && npm run format",
     "prepublishOnly": "npm run build",
     "pretest": "npm run compile",
     "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test",
@@ -62,16 +63,16 @@
     "@types/js-yaml": "^4.0.1",
     "@types/mkdirp": "^1.0.1",
     "@types/mocha": "^8.2.2",
-    "@types/node": "^10.17.59",
+    "@types/node": "^10.17.60",
     "@types/prettier": "^2.2.3",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "@typescript-eslint/parser": "^4.23.0",
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/parser": "^4.24.0",
     "coveralls": "^3.1.0",
     "cross-env": "^7.0.3",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "husky": "^6.0.0",
@@ -88,6 +89,6 @@
     }
   },
   "lint-staged": {
-    "*.ts": "eslint --cache --fix"
+    "*.ts": "npm run precompile"
   }
 }

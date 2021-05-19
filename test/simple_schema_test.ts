@@ -910,8 +910,8 @@ describe('simple schema test', () => {
                     post: {
                         consumes: ['multipart/form-data'],
                         parameters: [
-                            { '$ref': '#/parameters/File' },
-                            { '$ref': '#/parameters/Note' },
+                            { $ref: '#/parameters/File' },
+                            { $ref: '#/parameters/Note' },
                         ],
                         responses: {
                             '200': {
