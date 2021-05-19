@@ -3,6 +3,7 @@ import dtsgenerator from '../src/core';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
 import { JsonSchemaDraft07 } from '../src/core/jsonSchemaDraft07';
 import { OpenApisV2 } from '../src/core/openApiV2';
+import { OpenApisV3 } from '../src/core/openApiV3';
 import { parseSchema, JsonSchema } from '../src/core/type';
 
 describe('simple schema test', () => {
@@ -908,12 +909,10 @@ describe('simple schema test', () => {
                 '/file': {
                     post: {
                         consumes: ['multipart/form-data'],
-                        parameters: [{
-                            in: 'formData',
-                            name: 'file',
-                            type: 'file',
-                            required: true,
-                        }],
+                        parameters: [
+                            { '$ref': '#/parameters/File' },
+                            { '$ref': '#/parameters/Note' },
+                        ],
                         responses: {
                             '200': {
                                 description: 'success',
@@ -925,21 +924,130 @@ describe('simple schema test', () => {
                     },
                 },
             },
+            parameters: {
+                File: {
+                    in: 'formData',
+                    name: 'file',
+                    type: 'file',
+                    required: true,
+                },
+                Note: {
+                    in: 'formData',
+                    name: 'note',
+                    type: 'string',
+                },
+            },
         };
 
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
-        const expected = `declare namespace Paths {
+        const expected = `declare interface FormDataParameters {
+    File?: Parameters.File;
+    Note?: Parameters.Note;
+}
+declare namespace Parameters {
+    export type File = unknown;
+    export type Note = string;
+}
+declare namespace Paths {
     namespace File {
         namespace Post {
-            export interface FormDataParameters {
-                file: Parameters.File;
-            }
             namespace Parameters {
-                export type File = unknown;
+                export type $0 = Parameters.File;
+                export type $1 = Parameters.Note;
             }
             namespace Responses {
                 export type $200 = string;
             }
+        }
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+    it('support components property in OpenAPI v3', async () => {
+        const schema: OpenApisV3.SchemaJson = {
+            openapi: '3.0.3',
+            info: {
+                title: 'Test',
+                version: '0.4.0',
+            },
+            paths: {
+                '/geographies/{geographyId}': {
+                    get: {
+                        operationId: 'getGeography',
+                        description: 'Get a single geography',
+                        parameters: [
+                            { $ref: '#/components/parameters/GeographyId' },
+                        ],
+                        tags: ['Geography'],
+                        responses: {
+                            '200': {
+                                description: 'OK',
+                                content: {
+                                    'application/json': {
+                                        schema: {
+                                            $ref: '#/components/schemas/Geography',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            components: {
+                schemas: {
+                    Geography: {
+                        description: 'Information about a geography',
+                        type: 'object',
+                        properties: {
+                            name: {
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
+                parameters: {
+                    GeographyId: {
+                        name: 'geographyId',
+                        in: 'path',
+                        description: 'unique id of geography',
+                        required: true,
+                        schema: {
+                            type: 'string',
+                            format: 'uuid',
+                        },
+                    },
+                },
+            },
+        };
+
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema as JsonSchema)],
+        });
+        const expected = `declare namespace Components {
+    namespace Parameters {
+        export type GeographyId = string; // uuid
+    }
+    export interface PathParameters {
+        GeographyId?: Parameters.GeographyId /* uuid */;
+    }
+    namespace Schemas {
+        /**
+         * Information about a geography
+         */
+        export interface Geography {
+            name?: string;
+        }
+    }
+}
+declare namespace Paths {
+    namespace GetGeography {
+        namespace Parameters {
+            export type $0 = Components.Parameters.GeographyId /* uuid */;
+        }
+        namespace Responses {
+            export type $200 = /* Information about a geography */ Components.Schemas.Geography;
         }
     }
 }
