@@ -141,6 +141,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.12.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.12.1) (2021-05-19)
+
+- fixed:
+  - Fix referenced parameters not resolved error by #471. Thank you @jschirrmacher :+1:
+
 ### [v3.12.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.12.0) (2021-05-13)
 
 - features:
