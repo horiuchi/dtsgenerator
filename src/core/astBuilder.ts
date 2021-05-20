@@ -1,6 +1,9 @@
 import * as ts from 'typescript';
 import config from './config';
-import { NormalizedSchema } from './jsonSchema';
+import {
+    NormalizedSchema,
+    NormalizedSchemaWithoutContentFalse,
+} from './jsonSchema';
 import SchemaId from './schemaId';
 import { Schema } from './type';
 import { toValidIdentifier, checkInvalidCharacter } from './validateIdentifier';
@@ -116,7 +119,7 @@ export function buildTypeAliasNode(
 }
 
 export function buildPropertySignature(
-    _schema: NormalizedSchema,
+    _schema: NormalizedSchemaWithoutContentFalse,
     propertyName: string,
     valueType: ts.TypeNode,
     required: string[] | undefined,
@@ -294,7 +297,10 @@ export function addComment<T extends ts.Node>(
     schema: NormalizedSchema,
     terminate: boolean
 ): T {
-    const comments = getComment(schema);
+    const comments =
+        schema.content === false
+            ? []
+            : getComment(schema as NormalizedSchemaWithoutContentFalse);
     if (comments.length === 0) {
         return node;
     } else if (!terminate && comments.length === 1) {
@@ -319,7 +325,7 @@ export function addComment<T extends ts.Node>(
     }
 }
 
-function getComment(schema: NormalizedSchema): string[] {
+function getComment(schema: NormalizedSchemaWithoutContentFalse): string[] {
     const content = schema.content;
     let comments: string[] = [];
     function protectComment(str: string): string {
@@ -361,27 +367,30 @@ export function addOptionalInformation<T extends ts.Node>(
     schema: NormalizedSchema,
     terminate: boolean
 ): T {
-    const format = schema.content.format;
-    const pattern = schema.content.pattern;
-    if (!format && !pattern) {
+    const comment = (function () {
+        if (schema.content === false) {
+            return 'false';
+        } else if (schema.content.format) {
+            return `${schema.content.format}`;
+        } else if (schema.content.pattern) {
+            return `${schema.content.pattern}`;
+        }
+        return undefined;
+    })();
+
+    if (comment === undefined) {
         return node;
     }
 
-    let comment = '';
-    if (format) {
-        comment += ' ' + format;
-    }
-    if (pattern) {
-        comment += ' ' + pattern;
-    }
-
-    if (!terminate) {
-        comment += ' ';
-    }
     const kind = terminate
         ? ts.SyntaxKind.SingleLineCommentTrivia
         : ts.SyntaxKind.MultiLineCommentTrivia;
-    return ts.addSyntheticTrailingComment(node, kind, comment, false);
+    return ts.addSyntheticTrailingComment(
+        node,
+        kind,
+        ` ${comment}${terminate ? '' : ' '}`,
+        false
+    );
 }
 
 function getLastTypeName(id: SchemaId): string {

@@ -5,7 +5,7 @@ declare namespace Paths {
                 id?: string;
             }
             namespace Responses {
-                export type $204 = void;
+                export type $204 = void; // false
             }
         }
     }

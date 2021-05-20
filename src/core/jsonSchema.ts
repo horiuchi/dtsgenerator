@@ -25,6 +25,9 @@ type Parameter =
     | OpenApisV3.SchemaJson.Definitions.Parameter;
 
 export interface NormalizedSchema extends Schema {
+    content: JsonSchemaObject | false;
+}
+export interface NormalizedSchemaWithoutContentFalse extends Schema {
     content: JsonSchemaObject;
 }
 

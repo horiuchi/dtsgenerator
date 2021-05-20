@@ -11,6 +11,7 @@ export interface Config {
     outputFile?: string;
     target: ScriptTarget;
     outputAST: boolean;
+    strictNot: boolean;
 
     plugins: {
         [pluginName: string]: boolean | Record<string, unknown>;
@@ -24,6 +25,7 @@ const defaultConfig: Config = {
         stdin: false,
     },
     outputAST: false,
+    strictNot: true,
     target: ScriptTarget.Latest,
     plugins: {},
 };
