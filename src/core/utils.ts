@@ -18,6 +18,7 @@ export function toTSType(
             return ts.SyntaxKind.AnyKeyword;
         case 'boolean':
             return ts.SyntaxKind.BooleanKeyword;
+        case 'int':
         case 'integer':
             return ts.SyntaxKind.NumberKeyword;
         case 'null':
