@@ -1,12 +1,12 @@
 import assert from 'assert';
-import dtsgenerator from '../src/core';
+import dtsgenerator from '../../src/core';
 import config, {
     clearToDefault,
     setConfig,
     showConfig,
-} from '../src/core/config';
-import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
-import { ts, parseSchema } from '../src/core/type';
+} from '../../src/core/config';
+import { JsonSchemaDraft04 } from '../../src/core/jsonSchemaDraft04';
+import { ts, parseSchema } from '../../src/core/type';
 
 describe('show config test', () => {
     let content: string;
