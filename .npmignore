@@ -11,6 +11,7 @@ test/
 .coveralls.yml
 .eslintcache
 .travis.yml
+.github/
 .nyc_output/
 build/
 coverage/
