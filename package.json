@@ -11,15 +11,15 @@
     "build": "tsc -p ./tsconfig-build.json",
     "clean": "rimraf dist/ build/ {src,test}/**/*.{js,js.map} *.tsbuildinfo",
     "compile": "tsc -p .",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "do-test": "cross-env TS_NODE_FILES=true mocha --exit --require ts-node/register --colors test/*_test.ts",
     "lint": "eslint --fix --ext ts src/ test/",
     "format": "prettier --write 'src/**/*.ts' 'test/*.ts' 'test/core/*.ts'",
     "precompile": "npm run lint && npm run format",
     "prepublishOnly": "npm run build",
     "pretest": "npm run compile",
-    "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test",
+    "do-test": "cross-env TS_NODE_FILES=true mocha --exit --require ts-node/register --require source-map-support/register --colors test/*_test.ts",
     "test": "nyc npm run do-test",
+    "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test",
+    "coverage": "nyc report --reporter=lcov",
     "prepare": "husky install"
   },
   "directories": {
@@ -57,6 +57,7 @@
     "@dtsgenerator/do-nothing": "^2.5.0",
     "@dtsgenerator/replace-namespace": "^1.5.0",
     "@dtsgenerator/single-quote": "^1.6.0",
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/debug": "^4.1.7",
     "@types/glob": "^7.1.4",
     "@types/js-yaml": "^4.0.2",
@@ -80,6 +81,7 @@
     "nyc": "^15.1.0",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
+    "source-map-support": "^0.5.19",
     "ts-node": "^10.2.0"
   },
   "lint-staged": {
