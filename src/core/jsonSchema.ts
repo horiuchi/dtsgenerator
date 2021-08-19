@@ -234,13 +234,15 @@ export function searchAllSubSchema(
                 return;
             }
             addParameterSchema(
-                array.map((item: ParameterOrReference, index: number): [
-                    string,
-                    ParameterOrReference
-                ] => {
-                    const key = 'name' in item ? item.name : `${index}`;
-                    return [key, item];
-                }),
+                array.map(
+                    (
+                        item: ParameterOrReference,
+                        index: number
+                    ): [string, ParameterOrReference] => {
+                        const key = 'name' in item ? item.name : `${index}`;
+                        return [key, item];
+                    }
+                ),
                 keys
             );
         }

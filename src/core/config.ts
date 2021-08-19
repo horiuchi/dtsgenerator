@@ -18,13 +18,15 @@ export interface Config {
 }
 
 const defaultConfig: Config = {
+    configFile: undefined,
     input: {
         files: [],
         urls: [],
         stdin: false,
     },
-    outputAST: false,
+    outputFile: undefined,
     target: ScriptTarget.Latest,
+    outputAST: false,
     plugins: {},
 };
 
