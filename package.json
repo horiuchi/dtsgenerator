@@ -16,7 +16,7 @@
     "precompile": "npm run lint && npm run format",
     "prepublishOnly": "npm run build",
     "pretest": "npm run compile",
-    "do-test": "cross-env TS_NODE_FILES=true mocha --exit --require ts-node/register --require source-map-support/register --colors test/*_test.ts",
+    "do-test": "cross-env TS_NODE_FILES=true mocha --exit --require ts-node/register --require source-map-support/register --colors test/*_test.ts test/**/*_test.ts",
     "test": "nyc npm run do-test",
     "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test",
     "coverage": "nyc report --reporter=lcov",
@@ -63,10 +63,10 @@
     "@types/js-yaml": "^4.0.2",
     "@types/mkdirp": "^1.0.2",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.6.1",
+    "@types/node": "^16.6.2",
     "@types/prettier": "^2.3.2",
-    "@typescript-eslint/eslint-plugin": "^4.29.1",
-    "@typescript-eslint/parser": "^4.29.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/parser": "^4.29.2",
     "coveralls": "^3.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
@@ -82,7 +82,7 @@
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
     "source-map-support": "^0.5.19",
-    "ts-node": "^10.2.0"
+    "ts-node": "^10.2.1"
   },
   "lint-staged": {
     "**/*.ts": [
