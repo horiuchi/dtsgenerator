@@ -4,10 +4,10 @@ TypeScript d.ts file generator from JSON Schema file or OpenAPI(Swagger) spec fi
 
 [![nodejs version](https://img.shields.io/node/v/dtsgenerator.svg)](#)
 [![npm version](https://badge.fury.io/js/dtsgenerator.svg)](https://www.npmjs.com/package/dtsgenerator)
-[![build status](https://travis-ci.org/horiuchi/dtsgenerator.svg?branch=master)](https://travis-ci.org/horiuchi/dtsgenerator)
+[![Build Status](https://github.com/horiuchi/dtsgenerator/actions/workflows/workflow-ci.yaml/badge.svg)](https://github.com/horiuchi/dtsgenerator/actions/workflows/workflow-ci.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/horiuchi/dtsgenerator/badge.svg?branch=master)](https://coveralls.io/github/horiuchi/dtsgenerator?branch=master)
 [![npm download count](https://img.shields.io/npm/dt/dtsgenerator.svg)](https://www.npmjs.com/package/dtsgenerator)
-[![dtsgenerator Dev Token](https://badge.devtoken.rocks/dtsgenerator)](https://devtoken.rocks/package/dtsgenerator)
+[![Stake to support us](https://badge.devprotocol.xyz/0x68c824db5A1634940BB838468Ff2aee2bDa5794B/descriptive)](https://stakes.social/0x68c824db5A1634940BB838468Ff2aee2bDa5794B)
 [![MIT license](https://img.shields.io/npm/l/dtsgenerator.svg)](#)
 
 ## Table of Contents
