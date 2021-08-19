@@ -126,7 +126,6 @@ describe('root utils test', () => {
                     target: expected,
                 });
             }
-
         });
 
         it('read not config file', () => {
