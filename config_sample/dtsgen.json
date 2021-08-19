@@ -1,0 +1,10 @@
+{
+  "input": {
+    "files": [],
+    "urls": [],
+    "stdin": true
+  },
+  "target": "esnext",
+  "outputAST": false,
+  "plugins": {}
+}

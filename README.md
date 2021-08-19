@@ -55,6 +55,8 @@ Examples:
 
 ```
 
+For the configuration file, please refer to the file in the [config_sample](https://github.com/horiuchi/dtsgenerator/tree/master/config_sample/) directory.
+
 ### NodeJS API
 ```js
 const { default: dtsgenerator, parseSchema } = require('dtsgenerator');

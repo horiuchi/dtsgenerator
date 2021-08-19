@@ -1,0 +1,25 @@
+{
+  "input": {
+    "files": ["./schema.json", "./schema/additional.yaml"],
+    "urls": ["http://www.example.com/schema.json"],
+    "stdin": false
+  },
+  "target": "es2020",
+  "outputAST": false,
+  "outputFile": "./types.d.ts",
+  "plugins": {
+    "@dtsgenerator/single-quote": true,
+    "@dtsgenerator/replace-namespace": {
+      "map": [
+        {
+          "from": ["Components", "Schemas"],
+          "to": ["Test", "PetStore"]
+        },
+        {
+          "from": ["Paths"],
+          "to": ["Test", "PetStore"]
+        }
+      ]
+    }
+  }
+}
