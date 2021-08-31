@@ -1,41 +1,11 @@
 {
+  "root": true,
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
-    "prettier"
+    "@dtsgenerator"
   ],
-  "plugins": [
-    "sort-imports-es6-autofix"
-  ],
-  "env": {
-    "node": true,
-    "es2021": true
-  },
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "settings": {
-    "import/resolver": {
-      "typescript": {
-        "alwaysTryTypes": true
-      }
-    }
-  },
   "rules": {
-    "@typescript-eslint/no-unused-vars": ["error", {"argsIgnorePattern": "^_"}],
-    "@typescript-eslint/no-use-before-define": 0,
     "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/prefer-optional-chain": 2,
-    "@typescript-eslint/prefer-nullish-coalescing": 2,
-    "@typescript-eslint/no-floating-promises": ["error", {"ignoreIIFE": true, "ignoreVoid": true}],
-    "import/order": ["error", { "alphabetize": { "order": "asc" } }],
-    "import/no-named-as-default": 0,
-    "import/no-named-as-default-member": 0
+    "import/order": ["error", { "alphabetize": { "order": "asc" } }]
   },
   "overrides": [
     {
