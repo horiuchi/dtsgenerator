@@ -143,6 +143,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.13.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.13.0) (2021-08-31)
+
+- features:
+  - Support new `$schema` types for #507.
+
 ### [v3.12.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.12.1) (2021-05-19)
 
 - fixed:
