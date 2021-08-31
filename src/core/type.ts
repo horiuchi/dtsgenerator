@@ -21,7 +21,12 @@ export type JsonSchema = JsonSchemaDraft04.Schema | JsonSchemaDraft07.Schema;
 export type JsonSchemaObject =
     | JsonSchemaDraft04.Schema
     | JsonSchemaDraft07.SchemaObject;
-export type SchemaType = 'Draft04' | 'Draft07';
+export type SchemaType =
+    | 'Draft04'
+    | 'Draft07'
+    | '2019-09'
+    | '2020-12'
+    | 'Latest';
 export function isJsonSchemaDraft04(
     _content: JsonSchemaObject,
     type: SchemaType
