@@ -554,12 +554,24 @@ export function selectSchemaType(content: JsonSchema | OpenApiSchema): {
         );
     }
     if ('$schema' in content) {
-        const { $schema: schema } = content;
-        const match = /http:\/\/json-schema\.org\/draft-(\d+)\/schema#?/.exec(
-            schema ?? ''
-        );
+        const schema = content['$schema'] ?? '';
+        if (schema === 'http://json-schema.org/schema') {
+            return { type: 'Latest' };
+        }
+        const match =
+            /https?:\/\/json-schema\.org\/(?:draft\/(\d{4}-\d{2})|draft-(\d+))\/schema#?/.exec(
+                schema
+            );
         if (match) {
-            const version = Number(match[1]);
+            if (match[1] != null) {
+                switch (match[1]) {
+                    case '2019-09':
+                        return { type: '2019-09' };
+                    case '2020-12':
+                        return { type: '2020-12' };
+                }
+            }
+            const version = Number(match[2]);
             if (version <= 4) {
                 return { type: 'Draft04' };
             } else {
