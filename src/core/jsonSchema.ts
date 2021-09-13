@@ -555,11 +555,11 @@ export function selectSchemaType(content: JsonSchema | OpenApiSchema): {
     }
     if ('$schema' in content) {
         const schema = content['$schema'] ?? '';
-        if (schema === 'http://json-schema.org/schema') {
+        if (/^https?:\/\/json-schema.org\/schema#?$/.test(schema)) {
             return { type: 'Latest' };
         }
         const match =
-            /https?:\/\/json-schema\.org\/(?:draft\/(\d{4}-\d{2})|draft-(\d+))\/schema#?/.exec(
+            /^https?:\/\/json-schema\.org\/(?:draft\/(\d{4}-\d{2})|draft-(\d+))\/schema#?$/.exec(
                 schema
             );
         if (match) {
