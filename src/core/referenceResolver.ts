@@ -21,7 +21,7 @@ export default class ReferenceResolver {
     public getAllRegisteredSchema(): IterableIterator<Schema> {
         return this.schemaCache.values();
     }
-    public getAllRegisteredIdAndSchema(): Iterator<[string, Schema]> {
+    public getAllRegisteredIdAndSchema(): IterableIterator<[string, Schema]> {
         return this.schemaCache.entries();
     }
 
