@@ -114,7 +114,7 @@ function deepCopy(obj: any): any {
 
 export interface PluginContext {
     option: boolean | Record<string, unknown>;
-    inputSchemas: Iterator<[string, Schema]>;
+    inputSchemas: IterableIterator<[string, Schema]>;
 }
 
 export type PreProcessHandler = (contents: Schema[]) => Schema[];
