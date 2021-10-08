@@ -143,6 +143,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.13.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.13.2) (2021-10-08)
+
+- features:
+  - Fix the type generation malformed objects with number-like keys for #523. Thank you for your report @DamianOsipiuk :+1:
+
 ### [v3.13.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.13.1) (2021-09-29)
 
 - features:
