@@ -9,9 +9,6 @@ function buildTypeNameIdentifier(name: string): ts.Identifier {
     return ts.factory.createIdentifier(toValidIdentifier(name, config.target));
 }
 function buildPropertyNameIdentifier(name: string): ts.PropertyName {
-    if (/^\d/.test(name)) {
-        name = '$' + name;
-    }
     if (checkInvalidCharacter(name, config.target)) {
         return ts.factory.createIdentifier(name);
     } else {

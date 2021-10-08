@@ -4,17 +4,13 @@
     "@dtsgenerator"
   ],
   "rules": {
-    "@typescript-eslint/no-explicit-any": 0,
-    "import/order": ["error", { "alphabetize": { "order": "asc" } }]
+    "@typescript-eslint/no-explicit-any": 0
   },
   "overrides": [
     {
       "files": [
         "**/*_test.ts"
       ],
-      "env": {
-        "mocha": true
-      },
       "rules": {
         "@typescript-eslint/ban-ts-comment": 0,
         "@typescript-eslint/no-empty-interface": 0,
