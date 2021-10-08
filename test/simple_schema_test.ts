@@ -538,6 +538,31 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+    it('include numeric properties schema', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/include/123',
+            type: 'object',
+            properties: {
+                1: { type: 'number' },
+                2: { type: 'string' },
+                3: { type: 'boolean' },
+            },
+            required: ['1', '3'],
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    namespace Include {
+        export interface $123 {
+            "1": number;
+            "2"?: string;
+            "3": boolean;
+        }
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
     it(' model in multiple allOf', async () => {
         const schema: OpenApisV2.SchemaJson = {
             swagger: '2.0',
