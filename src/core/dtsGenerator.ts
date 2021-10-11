@@ -1,6 +1,6 @@
 import Debug from 'debug';
 import * as ts from 'typescript';
-import { get, set, tilde } from '../jsonPointer';
+import { tilde } from '../jsonPointer';
 import * as ast from './astBuilder';
 import config from './config';
 import { getSubSchema, NormalizedSchema } from './jsonSchema';
@@ -13,10 +13,10 @@ import {
     PreProcessHandler,
     loadPlugin,
 } from './type';
+import { buildTypeTree, TypeTree } from './typeTree';
 import * as utils from './utils';
 
 const debug = Debug('dtsgen');
-const typeMarker = Symbol();
 
 interface PluginConfig {
     plugin: Plugin;
@@ -42,11 +42,8 @@ export default class DtsGenerator {
         this.contents.forEach((schema) => this.resolver.registerSchema(schema));
         await this.resolver.resolve();
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const map = this.buildSchemaMergedMap(
-            this.resolver.getAllRegisteredSchema()
-        );
-        const root = this.walk(map, true);
+        const tree = buildTypeTree(this.resolver.getAllRegisteredSchema());
+        const root = this.walk(tree);
         const file = ts.createSourceFile(
             '_.d.ts',
             '',
@@ -75,31 +72,6 @@ export default class DtsGenerator {
 
         result.dispose();
         return transformedContent;
-    }
-
-    private buildSchemaMergedMap(schemas: IterableIterator<Schema>): any {
-        const map: any = {};
-        const paths: { path: string[]; type: Schema }[] = [];
-        for (const type of schemas) {
-            const path = type.id.toNames();
-            paths.push({ path, type });
-        }
-
-        for (const item of paths) {
-            const path = item.path;
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            const parent = get(map, path, true);
-            if (parent == null) {
-                set(map, path, { [typeMarker]: item.type });
-            } else {
-                Object.assign(parent, { [typeMarker]: item.type });
-            }
-        }
-        if (Object.keys(map).length === 0) {
-            throw new Error('There is no schema in the input contents.');
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return map;
     }
 
     private async getPlugins(): Promise<{
@@ -169,24 +141,22 @@ export default class DtsGenerator {
         return result;
     }
 
-    private walk(map: any, root: boolean): ts.Statement[] {
+    private walk(tree: TypeTree, root = true): ts.Statement[] {
         const result: ts.Statement[] = [];
-        const keys = Object.keys(map).sort();
+        const keys = [...tree.children.keys()].sort();
         for (const key of keys) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-            const value = map[key];
-            if (
-                typeof value === 'object' &&
-                Object.prototype.hasOwnProperty.call(value, typeMarker)
-            ) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                const schema = value[typeMarker] as Schema;
+            const value = tree.children.get(key);
+            if (value === undefined) {
+                continue;
+            }
+            if (value.schema !== undefined) {
+                const schema = value.schema;
                 debug(
                     `  walk doProcess: key=${key} schemaId=${schema.id.getAbsoluteId()}`
                 );
                 result.push(this.walkSchema(schema, root));
             }
-            if (typeof value === 'object' && Object.keys(value).length > 0) {
+            if (value.children.size > 0) {
                 result.push(
                     ast.buildNamespaceNode(key, this.walk(value, false), root)
                 );
