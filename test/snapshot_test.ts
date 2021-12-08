@@ -2,7 +2,7 @@ import assert from 'assert';
 import fs from 'fs';
 import path from 'path';
 import dtsgenerator from '../src/core';
-import { clearToDefault, setConfig } from '../src/core/config';
+import { clearToDefault, Config, setConfig } from '../src/core/config';
 import { parseFileContent, parseSchema } from '../src/core/type';
 
 const fixturesDir = path.join(__dirname, 'snapshots');
@@ -26,7 +26,7 @@ describe('Snapshot testing', () => {
                     expectedFileName
                 );
                 const configFilePath = path.join(fixtureDir, configFileName);
-                const config = fs.existsSync(configFilePath)
+                const config: Partial<Config> = fs.existsSync(configFilePath)
                     ? require(configFilePath)
                     : {};
 

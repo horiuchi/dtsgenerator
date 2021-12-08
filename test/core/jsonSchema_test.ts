@@ -1,4 +1,5 @@
 import assert from 'assert';
+import { JsonSchema } from '../../src/core';
 import { selectSchemaType } from '../../src/core/jsonSchema';
 
 describe('selectSchemaType test', () => {
@@ -90,7 +91,7 @@ describe('selectSchemaType test', () => {
     });
     it('schema is invalid', () => {
         assert.throws(() => {
-            selectSchemaType('invalid schema' as any);
+            selectSchemaType('invalid schema' as JsonSchema);
         });
     });
 });

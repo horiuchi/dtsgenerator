@@ -52,7 +52,7 @@ declare namespace JsonSchemaOrg {
                      * example:
                      * true or 1 or 'string'
                      */
-                    p2: boolean | string | number;
+                    p2: boolean | number | string;
                     /**
                      * p3 is tuple types
                      * example:

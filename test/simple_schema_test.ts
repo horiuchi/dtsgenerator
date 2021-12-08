@@ -86,7 +86,7 @@ describe('simple schema test', () => {
         const expected = `declare namespace Test {
     export interface IncArray {
         id?: number;
-        array?: (string | boolean | null | number)[];
+        array?: (string | number | boolean | null)[];
     }
 }
 `;
@@ -195,7 +195,7 @@ describe('simple schema test', () => {
             type: 'object',
             properties: {
                 nullEnum: {
-                    type: 'null',
+                    type: ['null'],
                     enum: [null],
                 },
                 nonTypeNum: {
@@ -218,9 +218,9 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
-    it('string and integer const schema', async () => {
+    it('include const schema', async () => {
         const schema: JsonSchemaDraft07.Schema = {
-            $id: '/test/const_string_vs_integer',
+            $id: '/test/include_const',
             $schema: 'http://json-schema.org/draft-07/schema#',
             type: 'object',
             properties: {
@@ -232,14 +232,23 @@ describe('simple schema test', () => {
                     type: 'string',
                     const: 'NE',
                 },
+                isActive: {
+                    type: 'boolean',
+                    const: true,
+                },
+                debug: {
+                    const: null,
+                },
             },
         };
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
         const expected = `declare namespace Test {
-    export interface ConstStringVsInteger {
+    export interface IncludeConst {
         port?: 1;
         direction?: "NE";
+        isActive?: true;
+        debug?: null;
     }
 }
 `;
@@ -331,11 +340,32 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+    it('root no type schema', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: 'test/root/no_type',
+            description: 'This is any type schema',
+            additionalProperties: true,
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    namespace Root {
+        /**
+         * This is any type schema
+         */
+        export interface NoType {
+            [name: string]: any;
+        }
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
     it('root any schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: 'test/root/root_any',
             description: 'This is any type schema',
-            additionalProperties: true,
+            type: 'any',
         };
         const result = await dtsgenerator({ contents: [parseSchema(schema)] });
 
@@ -423,6 +453,37 @@ describe('simple schema test', () => {
          */
         export interface Root {
             name?: string | null;
+        }
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+    it('include nullable schema', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: 'test/nullable/root',
+            properties: {
+                id: {
+                    type: 'integer',
+                    nullable: true,
+                },
+                n: {
+                    nullable: true,
+                },
+                sb: {
+                    type: ['string', 'boolean'],
+                    nullable: true,
+                },
+            },
+        };
+
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        const expected = `declare namespace Test {
+    namespace Nullable {
+        export interface Root {
+            id?: number | null;
+            n?: null;
+            sb?: string | boolean | null;
         }
     }
 }
