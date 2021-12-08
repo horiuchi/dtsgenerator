@@ -68,7 +68,7 @@ describe('root utils test', () => {
             ]);
         });
         it('throw error on getting files', () => {
-            assert.rejects(() => globFiles(null as any));
+            assert.rejects(() => globFiles(null as unknown as string));
         });
     });
 

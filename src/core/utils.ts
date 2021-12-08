@@ -63,7 +63,7 @@ export function mergeSchema(a: any, b: any): any {
     if ('$ref' in a || '$ref' in b) {
         return { $ref: b['$ref'] || a['$ref'] };
     }
-    Object.keys(b).forEach((key: string) => {
+    Object.keys(b as object).forEach((key: string) => {
         const value = b[key];
         if (a[key] != null && typeof value !== typeof a[key]) {
             debug(`mergeSchema warning: type is mismatched, key=${key}`);

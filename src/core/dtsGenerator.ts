@@ -428,11 +428,11 @@ export default class DtsGenerator {
             case 'number':
                 return ast.buildNumericLiteralTypeNode(String(value));
             case 'boolean':
-                return ast.buildBooleanLiteralTypeNode(value);
+                return ast.buildBooleanLiteralTypeNode(Boolean(value));
             case 'null':
                 return ast.buildNullKeyword();
             case 'string':
-                return ast.buildStringLiteralTypeNode(value);
+                return ast.buildStringLiteralTypeNode(String(value));
         }
         if (value === null) {
             return ast.buildNullKeyword();

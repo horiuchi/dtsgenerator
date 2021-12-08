@@ -47,7 +47,7 @@ function parse(options: CommandOptions, argv: string[]): commander.Command {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-unsafe-assignment
-    const pkg: Record<string, any> = require('../package.json');
+    const pkg: Record<string, string> = require('../package.json');
 
     // <hoge> is required, [hoge] is optional
     program

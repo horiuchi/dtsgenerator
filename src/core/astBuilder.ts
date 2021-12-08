@@ -322,7 +322,7 @@ function getComment(schema: NormalizedSchema): string[] {
     function protectComment(str: string): string {
         return str.replace(/\*\//g, '*\u200B/'); // Unicode [ZERO WIDTH SPACE]
     }
-    function appendComment(value?: string): void {
+    function appendComment(value?: any): void {
         if (value == null) {
             return;
         }

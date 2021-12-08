@@ -25,10 +25,10 @@ describe('error schema test', () => {
         }
     });
     it('unknown type schema', async () => {
-        const schema: any = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/unknown_type',
             type: 'hoge',
-        };
+        } as any;
         try {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
@@ -38,7 +38,7 @@ describe('error schema test', () => {
         }
     });
     it('unknown type property', async () => {
-        const schema: any = {
+        const schema: JsonSchemaDraft04.Schema = {
             id: '/test/unknown_property',
             type: 'object',
             properties: {
@@ -46,7 +46,7 @@ describe('error schema test', () => {
                     type: 'fuga',
                 },
             },
-        };
+        } as any;
         try {
             await dtsgenerator({ contents: [parseSchema(schema)] });
             assert.fail();
@@ -99,7 +99,7 @@ describe('error schema test', () => {
         }
     });
     it('invalid format schema', async () => {
-        const schema =
+        const schema: JsonSchemaDraft04.Schema =
             'This string is not schema data and invalid JSON format {.' as any;
         try {
             await dtsgenerator({ contents: [parseSchema(schema)] });
