@@ -22,11 +22,7 @@ declare namespace JsonSchemaOrg {
             Patterns.Definitions.CommentTest;
             ta?: Patterns.Definitions.TypeAlias;
             array?: Patterns.Definitions.TypeArray;
-            const?:
-                | Patterns.Definitions.MathPi
-                | Patterns.Definitions.IsDebug
-                | Patterns.Definitions.IsTest
-                | Patterns.Definitions.ProjectName;
+            const?: Patterns.Definitions.MathPi | Patterns.Definitions.IsDebug | Patterns.Definitions.IsTest | Patterns.Definitions.ProjectName;
         }
         namespace Patterns {
             namespace Definitions {
@@ -64,7 +60,12 @@ declare namespace JsonSchemaOrg {
                      * 2.5
                      * p3
                      */
-                    p3: [boolean, number, string?, ...any[]];
+                    p3: [
+                        boolean,
+                        number,
+                        string?,
+                        ...any[]
+                    ];
                 }
                 export type IsDebug = false;
                 export type IsTest = true;
@@ -108,7 +109,7 @@ declare namespace JsonSchemaOrg {
                     string: string;
                     undefined: undefined;
                 }
-                export type ProjectName = 'dtsgenerator';
+                export type ProjectName = "dtsgenerator";
                 export type TypeAlias = Primitives | PrimitivesRequired;
                 export type TypeArray = {
                     a: string;
@@ -118,7 +119,7 @@ declare namespace JsonSchemaOrg {
                     }[];
                 }[];
                 export interface UnionTuple {
-                    s_tuple?: 'A' | 'B' | 'C';
+                    s_tuple?: "A" | "B" | "C";
                     n_tuple?: 1 | 2 | 3 | 4 | 5;
                     some_types?: boolean | number | string;
                     ref_types?: Primitives | PrimitivesRequired;
