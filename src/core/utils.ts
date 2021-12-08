@@ -52,9 +52,6 @@ export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
         return types;
     }
     const set = new Set<SimpleTypes>(types);
-    if (set.delete('integer')) {
-        set.add('number');
-    }
     return Array.from(set.values());
 }
 
