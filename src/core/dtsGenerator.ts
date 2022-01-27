@@ -169,23 +169,31 @@ export default class DtsGenerator {
         const normalized = this.normalizeContent(schema);
         this.currentSchema = normalized;
 
-        const getNode = () => {
-            const type = normalized.content.type;
-            switch (type) {
-                case 'any':
-                    return this.generateAnyTypeModel(normalized, root);
-                case 'array':
-                    return this.generateTypeCollection(normalized, root);
-                case 'object':
-                default:
-                    return this.generateDeclareType(normalized, root);
-            }
-        };
         return ast.addOptionalInformation(
-            ast.addComment(getNode(), normalized, true),
+            ast.addComment(
+                this.parseSchema(normalized, root),
+                normalized,
+                true
+            ),
             normalized,
             true
         );
+    }
+
+    private parseSchema(
+        schema: NormalizedSchema,
+        root = false
+    ): ts.DeclarationStatement {
+        const type = schema.content.type;
+        switch (type) {
+            case 'any':
+                return this.generateAnyTypeModel(schema, root);
+            case 'array':
+                return this.generateTypeCollection(schema, root);
+            case 'object':
+            default:
+                return this.generateDeclareType(schema, root);
+        }
     }
 
     private normalizeContent(
@@ -371,15 +379,16 @@ export default class DtsGenerator {
                 );
             }
             const refSchema = this.normalizeContent(ref);
-            const node = ast.buildTypeReferenceNode(
-                refSchema,
-                this.currentSchema
-            );
-            return ast.addOptionalInformation(
-                ast.addComment(node, refSchema, false),
+            const node = ast.addOptionalInformation(
+                ast.addComment(
+                    ast.buildTypeReferenceNode(refSchema, this.currentSchema),
+                    refSchema,
+                    false
+                ),
                 refSchema,
                 false
             );
+            return node;
         }
         if (content.anyOf) {
             const mergeContent = Object.assign({}, content);
@@ -403,6 +412,13 @@ export default class DtsGenerator {
                 terminate
             );
         }
+        return this.generateLiteralTypeProperty(schema, terminate);
+    }
+    private generateLiteralTypeProperty(
+        schema: NormalizedSchema,
+        terminate = true
+    ): ts.TypeNode {
+        const content = schema.content;
         if (content.enum) {
             return ast.buildUnionTypeNode(
                 content.enum,
@@ -418,6 +434,25 @@ export default class DtsGenerator {
         } else {
             return this.generateType(schema, terminate);
         }
+    }
+    private checkExistOtherType(
+        content: JsonSchemaObject,
+        base: NormalizedSchema
+    ): ts.TypeNode | undefined {
+        const schema = Object.assign({}, base, { content });
+        const result = this.generateLiteralTypeProperty(schema, false);
+        if (result.kind === ts.SyntaxKind.AnyKeyword) {
+            return undefined;
+        } else if (result.kind === ts.SyntaxKind.TypeLiteral) {
+            const node = result as ts.TypeLiteralNode;
+            if (
+                node.members.length === 1 &&
+                node.members[0].kind === ts.SyntaxKind.IndexSignature
+            ) {
+                return undefined;
+            }
+        }
+        return result;
     }
     private generateLiteralTypeNode(
         content: JsonSchemaObject,
@@ -451,36 +486,48 @@ export default class DtsGenerator {
     private generateArrayedType(
         baseSchema: NormalizedSchema,
         contents: JsonSchema[],
-        mergeContent: JsonSchema,
+        mergeContent: JsonSchemaObject,
         path: string,
         terminate: boolean
     ): ts.TypeNode {
-        return ast.addOptionalInformation(
+        const merged: boolean[] = [];
+        const children = contents.map((_, index) => {
+            const schema = this.normalizeContent(
+                baseSchema,
+                path + index.toString()
+            );
+            merged.push(utils.mergeSchema(schema.content, mergeContent));
+            return schema;
+        });
+        const allRef = merged.every((b) => !b);
+        const baseType = this.checkExistOtherType(mergeContent, baseSchema);
+
+        const result = ast.addOptionalInformation(
             ast.addComment(
                 ast.buildUnionTypeNode(
-                    contents,
-                    (_, index) => {
-                        const schema = this.normalizeContent(
-                            baseSchema,
-                            path + index.toString()
-                        );
-                        utils.mergeSchema(schema.content, mergeContent);
-                        if (schema.id.isEmpty()) {
-                            return ast.addOptionalInformation(
-                                this.generateTypeProperty(schema, false),
-                                schema,
-                                false
-                            );
-                        } else {
-                            return ast.addOptionalInformation(
-                                ast.buildTypeReferenceNode(
-                                    schema,
-                                    this.currentSchema
-                                ),
-                                schema,
+                    children,
+                    (schema, index) => {
+                        const node = schema.id.isEmpty()
+                            ? ast.addOptionalInformation(
+                                  this.generateTypeProperty(schema, false),
+                                  schema,
+                                  false
+                              )
+                            : ast.addOptionalInformation(
+                                  ast.buildTypeReferenceNode(
+                                      schema,
+                                      this.currentSchema
+                                  ),
+                                  schema,
+                                  false
+                              );
+                        if (baseType != null && !allRef && !merged[index]) {
+                            return ast.buildIntersectionTypeNode(
+                                [baseType, node],
                                 false
                             );
                         }
+                        return node;
                     },
                     terminate
                 ),
@@ -490,6 +537,10 @@ export default class DtsGenerator {
             baseSchema,
             terminate
         );
+        if (baseType != null && allRef) {
+            return ast.buildIntersectionTypeNode([baseType, result], terminate);
+        }
+        return result;
     }
 
     private generateArrayTypeProperty(

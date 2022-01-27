@@ -56,9 +56,10 @@ export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function mergeSchema(a: any, b: any): any {
+export function mergeSchema(a: any, b: any): boolean {
     if ('$ref' in a || '$ref' in b) {
-        return { $ref: b['$ref'] || a['$ref'] };
+        a.$ref = b.$ref || a.$ref;
+        return false;
     }
     Object.keys(b as object).forEach((key: string) => {
         const value = b[key];
@@ -69,11 +70,11 @@ export function mergeSchema(a: any, b: any): any {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             a[key] = (a[key] ?? []).concat(value);
         } else if (value != null && typeof value === 'object') {
-            a[key] = mergeSchema(a[key] || {}, value);
+            a[key] ??= {};
+            mergeSchema(a[key], value);
         } else {
             a[key] = value;
         }
     });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return a;
+    return true;
 }
