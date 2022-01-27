@@ -143,6 +143,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.14.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.13.2) (2022-01-27)
+
+- features:
+  - Support the nested `allOf` and `oneOf` schema for #513. Thank you for your report @Cry0nicS :+1:
+
 ### [v3.13.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.13.2) (2021-10-08)
 
 - features:
