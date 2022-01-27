@@ -195,6 +195,17 @@ export function buildUnionTypeNode<T>(
     return ts.factory.createParenthesizedType(node);
 }
 
+export function buildIntersectionTypeNode(
+    types: readonly ts.TypeNode[],
+    terminate: boolean
+): ts.TypeNode {
+    const node = ts.factory.createIntersectionTypeNode(types);
+    if (terminate) {
+        return node;
+    }
+    return ts.factory.createParenthesizedType(node);
+}
+
 export function buildTupleTypeNode(
     types: ts.TypeNode | ts.TypeNode[],
     minItems?: number,
