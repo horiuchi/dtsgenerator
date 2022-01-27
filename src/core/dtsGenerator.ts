@@ -339,18 +339,21 @@ export default class DtsGenerator {
             }
         }
         if (content.patternProperties) {
-            const schemasTypes = [];
-            for (const propertyName of Object.keys(content.patternProperties)) {
-                const schema = this.normalizeContent(
-                    baseSchema,
-                    '/patternProperties/' + tilde(propertyName)
-                );
-                schemasTypes.push(this.generateTypeProperty(schema));
-            }
+            const properties = Object.keys(content.patternProperties);
             const node = ast.buildPropertySignature(
                 { content: { readOnly: false } } as NormalizedSchema,
                 'pattern',
-                ts.createUnionTypeNode(schemasTypes),
+                ast.buildUnionTypeNode(
+                    properties,
+                    (propertyName) =>
+                        this.generateTypeProperty(
+                            this.normalizeContent(
+                                baseSchema,
+                                '/patternProperties/' + tilde(propertyName)
+                            )
+                        ),
+                    true
+                ),
                 baseSchema.content.required,
                 true
             );
@@ -358,9 +361,7 @@ export default class DtsGenerator {
                 ts.addSyntheticTrailingComment(
                     node,
                     ts.SyntaxKind.MultiLineCommentTrivia,
-                    ` Patterns: ${Object.keys(content.patternProperties).join(
-                        ' | '
-                    )} `
+                    ` Patterns: ${properties.join(' | ')} `
                 )
             );
         }
