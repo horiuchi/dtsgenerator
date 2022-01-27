@@ -394,7 +394,7 @@ export default class DtsGenerator {
         if (content.anyOf) {
             const mergeContent = Object.assign({}, content);
             delete mergeContent.anyOf;
-            return this.generateArrayedType(
+            return this.generateUnionType(
                 schema,
                 content.anyOf,
                 mergeContent,
@@ -405,7 +405,7 @@ export default class DtsGenerator {
         if (content.oneOf) {
             const mergeContent = Object.assign({}, content);
             delete mergeContent.oneOf;
-            return this.generateArrayedType(
+            return this.generateUnionType(
                 schema,
                 content.oneOf,
                 mergeContent,
@@ -484,7 +484,7 @@ export default class DtsGenerator {
         return ast.buildStringLiteralTypeNode(String(value));
     }
 
-    private generateArrayedType(
+    private generateUnionType(
         baseSchema: NormalizedSchema,
         contents: JsonSchema[],
         mergeContent: JsonSchemaObject,
