@@ -58,6 +58,12 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/200_ReturnData'
+  # String-like media types.
+  /fifth-path:
+    get:
+      responses:
+        200:
+          $ref: '#/components/responses/200_ReturnString'
 components:
   schemas:
     Request:
@@ -97,6 +103,15 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Data'
+    200_ReturnString:
+      content:
+        application/jwt:
+          schema:
+            type: string
+        application/vnd.apple.pkpass:
+          schema:
+            type: string
+            format: binary
     400_BadRequest:
       content:
         application/problem+json:

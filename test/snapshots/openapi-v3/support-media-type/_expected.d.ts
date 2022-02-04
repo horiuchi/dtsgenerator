@@ -5,6 +5,7 @@ declare namespace Components {
     }
     namespace Responses {
         export type $200ReturnData = Schemas.Data[];
+        export type $200ReturnString = string;
         export type $400BadRequest = Schemas.Error;
         export type $403Forbidden = Schemas.Error;
         export type $500Error = Schemas.Error;
@@ -27,6 +28,13 @@ declare namespace Components {
     }
 }
 declare namespace Paths {
+    namespace FifthPath {
+        namespace Get {
+            namespace Responses {
+                export type $200 = Components.Responses.$200ReturnString;
+            }
+        }
+    }
     namespace FourthPath {
         namespace Post {
             export type RequestBody = Components.Schemas.Request;

@@ -112,5 +112,7 @@ The base JSON Schema version is Draft-07
 - `application/x-www-form-urlencoded`
 - `application/*+json`
 - `application/octet-stream`
+- `application/jwt`
+- `application/vnd.apple.pkpass`
 - `multipart/form-data`
 - `text/*`
