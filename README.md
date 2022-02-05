@@ -143,7 +143,12 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
-### [v3.14.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.13.2) (2022-01-27)
+### [v3.15.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.15.0) (2022-02-06)
+
+- features:
+  - Support mobile wallet media types(`application/jwt` and `application/vnd.apple.pkpass`) for #530. Thank you @eostrom :+1:
+
+### [v3.14.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.14.0) (2022-01-27)
 
 - features:
   - Support the nested `allOf` and `oneOf` schema for #513. Thank you for your report @Cry0nicS :+1:
