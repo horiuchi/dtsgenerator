@@ -109,7 +109,13 @@ export function readConfig(options: CommandOptions): Partial<Config> {
     } else if (pc.input.urls == null) {
         pc.input.urls = [];
     }
-    pc.input.stdin = options.isReadFromStdin();
+    if (options.stdin != null) {
+        pc.input.stdin = options.stdin;
+    } else {
+        pc.input.stdin =
+            pc.input.stdin ||
+            (pc.input.files.length === 0 && pc.input.urls.length === 0);
+    }
 
     if (options.out != null) {
         pc.outputFile = options.out;

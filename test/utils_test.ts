@@ -146,5 +146,31 @@ describe('root utils test', () => {
                 plugins: {},
             });
         });
+
+        describe('setting `stdin` option correctly', () => {
+            it('prioritizes value from command line', () => {
+                const path = __dirname + '/test_config.json';
+                const options = new CommandOptions();
+                options.configFile = path;
+                options.stdin = false;
+
+                const actual = readConfig(options);
+                assert.equal(actual.input?.stdin, false);
+            });
+
+            it('defaults to `true` when its not set, but also no urls of files are set', () => {
+                const options = new CommandOptions();
+
+                const actual = readConfig(options);
+                assert.deepEqual(actual, {
+                    input: {
+                        files: [],
+                        urls: [],
+                        stdin: true,
+                    },
+                    outputAST: false,
+                });
+            });
+        });
     });
 });
