@@ -143,6 +143,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.15.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.15.1) (2022-03-10)
+
+- fixed:
+  - Fix handling of stdin option with config file for #534. Thank you @arnestaphorsius :+1:
+
 ### [v3.15.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.15.0) (2022-02-06)
 
 - features:
