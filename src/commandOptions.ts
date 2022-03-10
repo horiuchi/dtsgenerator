@@ -11,12 +11,6 @@ export class CommandOptions {
     public target?: string;
     public info?: boolean;
     public outputAST?: boolean;
-
-    public isReadFromStdin(): boolean {
-        return (
-            this.stdin || (this.files.length === 0 && this.urls.length === 0)
-        );
-    }
 }
 
 const opts = new CommandOptions();
