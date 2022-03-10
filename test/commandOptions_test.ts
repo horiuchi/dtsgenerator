@@ -57,7 +57,6 @@ describe('command options test', () => {
         assert.strictEqual(opts.target, undefined);
         assert.strictEqual(opts.info, undefined);
         assert.strictEqual(opts.outputAST, undefined);
-        assert.strictEqual(opts.isReadFromStdin(), true);
     });
     it('should parse arguments 2', () => {
         initialize([
@@ -90,7 +89,6 @@ describe('command options test', () => {
         assert.strictEqual(opts.target, undefined);
         assert.strictEqual(opts.info, undefined);
         assert.strictEqual(opts.outputAST, undefined);
-        assert.strictEqual(opts.isReadFromStdin(), true);
     });
     it('should parse arguments 3', () => {
         initialize([
@@ -111,7 +109,6 @@ describe('command options test', () => {
         assert.strictEqual(opts.target, undefined);
         assert.strictEqual(opts.info, undefined);
         assert.strictEqual(opts.outputAST, undefined);
-        assert.strictEqual(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 4', () => {
         initialize([
@@ -131,7 +128,6 @@ describe('command options test', () => {
         assert.strictEqual(opts.target, undefined);
         assert.strictEqual(opts.info, undefined);
         assert.strictEqual(opts.outputAST, undefined);
-        assert.strictEqual(opts.isReadFromStdin(), false);
     });
 
     it('should parse arguments 5', () => {
@@ -156,7 +152,6 @@ describe('command options test', () => {
         assert.strictEqual(opts.target, undefined);
         assert.strictEqual(opts.info, undefined);
         assert.strictEqual(opts.outputAST, undefined);
-        assert.strictEqual(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 6', () => {
         initialize([
@@ -180,7 +175,6 @@ describe('command options test', () => {
         assert.strictEqual(opts.target, undefined);
         assert.strictEqual(opts.info, undefined);
         assert.strictEqual(opts.outputAST, undefined);
-        assert.strictEqual(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 7', () => {
         initialize([
@@ -204,7 +198,6 @@ describe('command options test', () => {
         assert.strictEqual(opts.target, 'es5');
         assert.strictEqual(opts.info, undefined);
         assert.strictEqual(opts.outputAST, true);
-        assert.strictEqual(opts.isReadFromStdin(), false);
     });
     it('should parse arguments 8', () => {
         initialize(['node', 'script.js', '-c', 'config.json', '--info']);
@@ -217,6 +210,5 @@ describe('command options test', () => {
         assert.strictEqual(opts.target, undefined);
         assert.strictEqual(opts.info, true);
         assert.strictEqual(opts.outputAST, undefined);
-        assert.strictEqual(opts.isReadFromStdin(), true);
     });
 });
