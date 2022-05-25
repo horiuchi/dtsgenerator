@@ -116,3 +116,4 @@ The base JSON Schema version is Draft-07
 - `application/vnd.apple.pkpass`
 - `multipart/form-data`
 - `text/*`
+- `image/*`
