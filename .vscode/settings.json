@@ -11,6 +11,9 @@
   "editor.quickSuggestions": {
     "strings": true
   },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
   "cSpell.words": [
     "tilded",
     "untilde"

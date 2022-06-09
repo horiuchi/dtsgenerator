@@ -29,6 +29,7 @@ TypeScript d.ts file generator from JSON Schema file or OpenAPI(Swagger) spec fi
 ## Usage
 
 ### CLI
+
 ```sh
 $ dtsgen --help
 Usage: dtsgenerator [options] <file ... | file patterns using node-glob>
@@ -58,6 +59,7 @@ Examples:
 For the configuration file, please refer to the file in the [config_sample](https://github.com/horiuchi/dtsgenerator/tree/master/config_sample/) directory.
 
 ### NodeJS API
+
 ```js
 const { default: dtsgenerator, parseSchema } = require('dtsgenerator');
 
@@ -88,21 +90,20 @@ The dtsgenerator v3 has made the following braking changes from v2.
 
 - Support Plug-in feature. See the Plug-in section for more information.
 - Change the command line options.
-    - Remove the `--namespace` option. Use the `@dtsgenerator/replace-namespace` plug-in instead.
-    - Add the `--config` option. Mainly for setting up the Plug-in.
-    - And add more options.
+  - Remove the `--namespace` option. Use the `@dtsgenerator/replace-namespace` plug-in instead.
+  - Add the `--config` option. Mainly for setting up the Plug-in.
+  - And add more options.
 - TypeScript AST is now used internally to generate type definitions.
-
 
 ## Plug-in
 
 ### How to find plug-in
 
-- Search by npm: https://www.npmjs.com/search?q=dtsgenerator%20plugin
-- Find by the @dtsgenerator repositories: https://github.com/dtsgenerator
-    - `@dtsgenerator/replace-namespace` : This plug-in is instead the `--namespace` option on old version.
-    - `@dtsgenerator/decorate-typename` : This plug-in can decorate the output type name.
-    - `@dtsgenerator/single-quote` : This plug-in replace the quote mark to single.
+- Search by npm: <https://www.npmjs.com/search?q=dtsgenerator%20plugin>
+- Find by the @dtsgenerator repositories: <https://github.com/dtsgenerator>
+  - `@dtsgenerator/replace-namespace` : This plug-in is instead the `--namespace` option on old version.
+  - `@dtsgenerator/decorate-typename` : This plug-in can decorate the output type name.
+  - `@dtsgenerator/single-quote` : This plug-in replace the quote mark to single.
 
 ### How to create plug-in
 
@@ -122,8 +123,7 @@ The dtsgenerator v3 has made the following braking changes from v2.
 
 Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
-    $ DEBUG=dtsgen dtsgen schema/news.json
-
+    DEBUG=dtsgen dtsgen schema/news.json
 
 ### Links about JSON Schema and Swagger
 
@@ -142,6 +142,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 - [supported features in these spec](https://github.com/horiuchi/dtsgenerator/blob/master/SupportedFeatures.md)
 
 ## ChangeLog
+
+### [v3.16.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.16.0) (2022-06-10)
+
+- features:
+  - Support 'image/*' media types for #539. Thank you @Geloosa :+1:
 
 ### [v3.15.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.15.1) (2022-03-10)
 
