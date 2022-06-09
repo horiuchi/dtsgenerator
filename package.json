@@ -1,85 +1,85 @@
 {
-  "name": "dtsgenerator",
-  "version": "3.15.1",
-  "description": "TypeScript d.ts file generator for JSON Schema file",
-  "bin": {
-    "dtsgen": "bin/dtsgen"
-  },
-  "main": "dist/core/",
-  "typings": "dist/core/index.d.ts",
-  "scripts": {
-    "build": "tsc -p ./tsconfig-build.json",
-    "clean": "rimraf dist/ build/ {src,test}/**/*.{js,js.map} *.tsbuildinfo",
-    "compile": "tsc -p .",
-    "lint": "eslint --fix --ext ts src/ test/",
-    "format": "prettier --write 'src/**/*.ts' 'test/*.ts' 'test/core/*.ts'",
-    "precompile": "npm run lint && npm run format",
-    "prepublishOnly": "npm run build",
-    "pretest": "npm run compile",
-    "do-test": "cross-env TS_NODE_FILES=true mocha --exit --require ts-node/register --require source-map-support/register --colors test/*_test.ts test/**/*_test.ts",
-    "test": "nyc npm run do-test",
-    "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test",
-    "coverage": "nyc report --reporter=lcov",
-    "prepare": "husky install"
-  },
-  "directories": {
-    "test": "test/"
-  },
-  "keywords": [
-    "TypeScript",
-    "JSON Schema",
-    "OpenAPI"
-  ],
-  "author": "horiuchi",
-  "license": "MIT",
-  "homepage": "https://github.com/horiuchi/dtsgenerator",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:horiuchi/dtsgenerator.git"
-  },
-  "bugs": {
-    "url": "https://github.com/horiuchi/dtsgenerator/issues"
-  },
-  "engines": {
-    "node": ">= 10.0"
-  },
-  "dependencies": {
-    "commander": "^9.0.0",
-    "cross-fetch": "^3.1.5",
-    "debug": "^4.3.3",
-    "glob": "^7.2.0",
-    "https-proxy-agent": "^5.0.0",
-    "js-yaml": "^4.1.0",
-    "tslib": "^2.3.1",
-    "typescript": "^4.6.2"
-  },
-  "devDependencies": {
-    "@dtsgenerator/do-nothing": "^2.5.1",
-    "@dtsgenerator/eslint-config": "^0.5.0",
-    "@dtsgenerator/replace-namespace": "^1.5.1",
-    "@dtsgenerator/single-quote": "^1.6.1",
-    "@istanbuljs/nyc-config-typescript": "^1.0.2",
-    "@types/debug": "^4.1.7",
-    "@types/glob": "^7.2.0",
-    "@types/js-yaml": "^4.0.5",
-    "@types/mkdirp": "^1.0.2",
-    "@types/mocha": "^9.1.0",
-    "@types/node": "^16.11.26",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.10.0",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.3.5",
-    "mocha": "^9.2.1",
-    "nyc": "^15.1.0",
-    "prettier": "^2.5.1",
-    "rimraf": "^3.0.2",
-    "source-map-support": "^0.5.21",
-    "ts-node": "^10.7.0"
-  },
-  "lint-staged": {
-    "**/*.ts": [
-      "prettier --write",
-      "eslint --fix"
-    ]
-  }
+    "name": "dtsgenerator",
+    "version": "3.15.1",
+    "description": "TypeScript d.ts file generator for JSON Schema file",
+    "bin": {
+        "dtsgen": "bin/dtsgen"
+    },
+    "main": "dist/core/",
+    "typings": "dist/core/index.d.ts",
+    "scripts": {
+        "build": "tsc -p ./tsconfig-build.json",
+        "clean": "rimraf dist/ build/ {src,test}/**/*.{js,js.map} *.tsbuildinfo",
+        "compile": "tsc -p .",
+        "lint": "eslint --fix --ext ts src/ test/",
+        "format": "prettier --write 'src/**/*.ts' 'test/*.ts' 'test/core/*.ts'",
+        "precompile": "npm run lint && npm run format",
+        "prepublishOnly": "npm run build",
+        "pretest": "npm run compile",
+        "do-test": "cross-env TS_NODE_FILES=true mocha --exit --require ts-node/register --require source-map-support/register --colors test/*_test.ts test/**/*_test.ts",
+        "test": "nyc npm run do-test",
+        "test:update-snapshot": "UPDATE_SNAPSHOT=1 npm run test",
+        "coverage": "nyc report --reporter=lcov",
+        "prepare": "husky install"
+    },
+    "directories": {
+        "test": "test/"
+    },
+    "keywords": [
+        "TypeScript",
+        "JSON Schema",
+        "OpenAPI"
+    ],
+    "author": "horiuchi",
+    "license": "MIT",
+    "homepage": "https://github.com/horiuchi/dtsgenerator",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:horiuchi/dtsgenerator.git"
+    },
+    "bugs": {
+        "url": "https://github.com/horiuchi/dtsgenerator/issues"
+    },
+    "engines": {
+        "node": ">= 10.0"
+    },
+    "dependencies": {
+        "commander": "^9.3.0",
+        "cross-fetch": "^3.1.5",
+        "debug": "^4.3.4",
+        "glob": "^8.0.3",
+        "https-proxy-agent": "^5.0.1",
+        "js-yaml": "^4.1.0",
+        "tslib": "^2.4.0",
+        "typescript": "^4.7.3"
+    },
+    "devDependencies": {
+        "@dtsgenerator/do-nothing": "^2.5.2",
+        "@dtsgenerator/eslint-config": "^0.6.1",
+        "@dtsgenerator/replace-namespace": "^1.5.2",
+        "@dtsgenerator/single-quote": "^1.6.2",
+        "@istanbuljs/nyc-config-typescript": "^1.0.2",
+        "@types/debug": "^4.1.7",
+        "@types/glob": "^7.2.0",
+        "@types/js-yaml": "^4.0.5",
+        "@types/mkdirp": "^1.0.2",
+        "@types/mocha": "^9.1.1",
+        "@types/node": "^16.11.39",
+        "cross-env": "^7.0.3",
+        "eslint": "^8.17.0",
+        "husky": "^8.0.1",
+        "lint-staged": "^13.0.1",
+        "mocha": "^10.0.0",
+        "nyc": "^15.1.0",
+        "prettier": "^2.6.2",
+        "rimraf": "^3.0.2",
+        "source-map-support": "^0.5.21",
+        "ts-node": "^10.8.1"
+    },
+    "lint-staged": {
+        "**/*.ts": [
+            "prettier --write",
+            "eslint --fix"
+        ]
+    }
 }
