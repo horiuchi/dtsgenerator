@@ -15,18 +15,18 @@ export default class SchemaId {
                 }
             });
         }
-        if (absoluteId.indexOf('#') < 0) {
+        if (!absoluteId.includes('#')) {
             absoluteId += '#';
         }
         if (
-            absoluteId.indexOf('://') < 0 &&
-            absoluteId[0] !== '/' &&
-            absoluteId[0] !== '#'
+            !absoluteId.includes('://') &&
+            !absoluteId.startsWith('/') &&
+            !absoluteId.startsWith('#')
         ) {
             absoluteId = '/' + absoluteId;
         }
         this.id = url.parse(absoluteId);
-        this.absoluteId = this.id.href ?? '';
+        this.absoluteId = this.id.href;
     }
 
     public getAbsoluteId(): string {
@@ -42,11 +42,11 @@ export default class SchemaId {
         return this.absoluteId.replace(/#.*$/, '#');
     }
     public existsJsonPointerHash(): boolean {
-        return this.absoluteId === '#' || /#\//.test(this.absoluteId);
+        return this.absoluteId === '#' || this.absoluteId.includes('#/');
     }
     public getJsonPointerHash(): string {
         const m = /(#\/.*)$/.exec(this.absoluteId);
-        if (m == null) {
+        if (m?.[1] == null) {
             return '#';
         }
         return decodeURIComponent(m[1]);

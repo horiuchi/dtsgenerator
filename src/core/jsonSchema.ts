@@ -209,7 +209,9 @@ export function searchAllSubSchema(
             }
             Object.keys(obj).forEach((key) => {
                 const item = obj[key];
-                f(item, keys.concat(convertKeyToTypeName(key)));
+                if (item != null) {
+                    f(item, keys.concat(convertKeyToTypeName(key)));
+                }
             });
         }
 
@@ -272,6 +274,7 @@ export function searchAllSubSchema(
                 if ('$ref' in item) {
                     setSubId(item, keys.concat(key));
                 }
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if ('type' in item && item.in !== undefined) {
                     setSubId(
                         item as JsonSchemaDraft04.Schema,
@@ -343,7 +346,8 @@ export function searchAllSubSchema(
             }
             const operationId = ops.operationId;
             if (operationId) {
-                keys = [keys[0], convertKeyToTypeName(operationId)];
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                keys = [keys[0]!, convertKeyToTypeName(operationId)];
             }
             setSubIdToParameters(ops.parameters, keys.concat('parameters'));
             setSubIdToResponsesV2(ops.responses, keys.concat('responses'));
@@ -384,7 +388,9 @@ export function searchAllSubSchema(
                     )
                 ) {
                     const mt = types[mime];
-                    setSubId(mt.schema, keys);
+                    if (mt != null) {
+                        setSubId(mt.schema, keys);
+                    }
                 }
             }
         }
@@ -443,7 +449,8 @@ export function searchAllSubSchema(
             }
             const operationId = ops.operationId;
             if (operationId) {
-                keys = [keys[0], convertKeyToTypeName(operationId)];
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                keys = [keys[0]!, convertKeyToTypeName(operationId)];
             }
             setSubIdToParameters(ops.parameters, keys.concat('parameters'));
             setSubIdToRequestBody(ops.requestBody, keys.concat('requestBody'));
@@ -579,6 +586,7 @@ export function selectSchemaType(content: JsonSchema | OpenApiSchema): {
             }
         }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if ('swagger' in content && content.swagger === '2.0') {
         return {
             type: 'Draft04',

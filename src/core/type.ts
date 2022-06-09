@@ -142,7 +142,7 @@ export async function loadPlugin(
     }
 
     const mod = (await import(name)) as { default?: Plugin };
-    if (!mod?.default) {
+    if (!mod.default) {
         console.warn(
             `The plugin (${name}) is invalid module. That is not default export format.`
         );

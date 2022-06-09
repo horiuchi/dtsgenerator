@@ -57,7 +57,8 @@ export default class DtsGenerator {
 
         const postProcess = await this.getPostProcess(plugins.post);
         const result = ts.transform(file, postProcess);
-        const transformedNodes = result.transformed[0];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const transformedNodes = result.transformed[0]!;
 
         const transformedContent = config.outputAST
             ? JSON.stringify(transformedNodes, null, 2)
@@ -374,11 +375,6 @@ export default class DtsGenerator {
         const content = schema.content;
         if (content.$ref) {
             const ref = this.resolver.dereference(content.$ref);
-            if (ref.id == null) {
-                throw new Error(
-                    'target referenced id is nothing: ' + content.$ref
-                );
-            }
             const refSchema = this.normalizeContent(ref);
             const node = ast.addOptionalInformation(
                 ast.addComment(
@@ -448,7 +444,7 @@ export default class DtsGenerator {
             const node = result as ts.TypeLiteralNode;
             if (
                 node.members.length === 1 &&
-                node.members[0].kind === ts.SyntaxKind.IndexSignature
+                node.members[0]?.kind === ts.SyntaxKind.IndexSignature
             ) {
                 return undefined;
             }

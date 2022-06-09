@@ -121,7 +121,7 @@ export function buildPropertySignature(
 ): ts.PropertySignature | ts.IndexSignatureDeclaration {
     const modifiers = undefined;
     const questionToken =
-        required == null || required.indexOf(propertyName) < 0
+        required == null || !required.includes(propertyName)
             ? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
             : undefined;
     if (isPattern) {
@@ -230,7 +230,8 @@ export function buildTupleTypeNode(
     for (let i = 0; i < itemCount; i++) {
         let node = typesIsArray(types)
             ? i < types.length
-                ? types[i]
+                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  types[i]!
                 : additionalItems !== undefined
                 ? additionalItems === false
                     ? buildNeverKeyword()
@@ -266,32 +267,34 @@ export function buildTypeReferenceNode(
     currentSchema: Schema
 ): ts.TypeReferenceNode {
     const typeName = getTypename(schema.id, currentSchema);
-    if (typeName.length === 0) {
-        throw new Error('TypeName array must not be empty.');
+    let node: ts.EntityName | undefined;
+    for (const name of typeName) {
+        if (node == null) {
+            node = buildTypeNameIdentifier(name);
+        } else {
+            node = ts.factory.createQualifiedName(
+                node,
+                buildTypeNameIdentifier(name)
+            );
+        }
     }
-    let node: ts.EntityName = buildTypeNameIdentifier(typeName[0]);
-    for (let i = 1; i < typeName.length; i++) {
-        node = ts.factory.createQualifiedName(
-            node,
-            buildTypeNameIdentifier(typeName[i])
-        );
+    if (node == null) {
+        throw new Error('TypeName array must not be empty.');
     }
     return ts.factory.createTypeReferenceNode(node, undefined);
 }
 function getTypename(id: SchemaId, baseSchema: Schema): string[] {
     const result = id.toNames();
     const baseId = baseSchema.id;
-    if (baseId) {
-        const baseTypes = baseId.toNames().slice(0, -1);
-        for (const type of baseTypes) {
-            if (result.length === 1) {
-                break;
-            }
-            if (result[0] === type) {
-                result.shift();
-            } else {
-                break;
-            }
+    const baseTypes = baseId.toNames().slice(0, -1);
+    for (const type of baseTypes) {
+        if (result.length === 1) {
+            break;
+        }
+        if (result[0] === type) {
+            result.shift();
+        } else {
+            break;
         }
     }
     return result;
@@ -309,7 +312,7 @@ export function addComment<T extends ts.Node>(
         return ts.addSyntheticLeadingComment(
             node,
             ts.SyntaxKind.MultiLineCommentTrivia,
-            ` ${comments[0]} `,
+            ` ${comments[0] ?? ''} `,
             false
         );
     } else {
@@ -394,9 +397,5 @@ export function addOptionalInformation<T extends ts.Node>(
 
 function getLastTypeName(id: SchemaId): string {
     const names = id.toNames();
-    if (names.length > 0) {
-        return names[names.length - 1];
-    } else {
-        return '';
-    }
+    return names[names.length - 1] ?? '';
 }

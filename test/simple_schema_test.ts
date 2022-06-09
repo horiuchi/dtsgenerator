@@ -218,6 +218,42 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+    it('number type enum schema', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/number_type',
+            type: 'object',
+            properties: {
+                numbers: {
+                    enum: [
+                        '001',
+                        '002',
+                        '003',
+                        '004',
+                        '005',
+                        '006',
+                        '007',
+                        '008',
+                        '009',
+                        '010',
+                    ],
+                    example: '001',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface NumberType {
+        /**
+         * example:
+         * 001
+         */
+        numbers?: "001" | "002" | "003" | "004" | "005" | "006" | "007" | "008" | "009" | "010";
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
     it('include const schema', async () => {
         const schema: JsonSchemaDraft07.Schema = {
             $id: '/test/include_const',
