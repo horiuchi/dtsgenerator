@@ -30,6 +30,8 @@ paths:
           $ref: '#/components/responses/403_Forbidden'
         500:
           $ref: '#/components/responses/500_Error'
+        501:
+          $ref: '#/components/responses/501_Error'
         502:
           $ref: '#/components/responses/502_Error'
   /second-path:
@@ -95,6 +97,9 @@ components:
         - description
     ErrorText:
       type: string
+    ErrorImage:
+      type: string
+      format: binary
   responses:
     200_ReturnData:
       content:
@@ -127,6 +132,11 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    501_Error:
+      content:
+        image/png:
+          schema:
+            $ref: '#/components/schemas/ErrorImage'
     502_Error:
       content:
         text/plain:
