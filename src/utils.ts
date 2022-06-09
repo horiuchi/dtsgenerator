@@ -4,7 +4,7 @@ import glob from 'glob';
 import proxy from 'https-proxy-agent';
 import { ScriptTarget } from 'typescript';
 import { CommandOptions, defaultConfigFile } from './commandOptions';
-import { Config } from './core/config';
+import { PartialConfig } from './core/config';
 
 export function readStream(
     stream: NodeJS.ReadableStream,
@@ -78,8 +78,8 @@ export function globFiles(
     });
 }
 
-export function readConfig(options: CommandOptions): Partial<Config> {
-    let pc: Partial<Config> = {};
+export function readConfig(options: CommandOptions): PartialConfig {
+    let pc: PartialConfig = {};
     const configFile = options.configFile ?? defaultConfigFile;
     try {
         pc = loadJSON(configFile);
@@ -128,9 +128,9 @@ export function readConfig(options: CommandOptions): Partial<Config> {
     pc.outputAST = !!options.outputAST;
     return pc;
 }
-function loadJSON(file: string): Partial<Config> {
+function loadJSON(file: string): PartialConfig {
     const content = fs.readFileSync(file, 'utf-8');
-    return JSON.parse(content) as Partial<Config>;
+    return JSON.parse(content) as PartialConfig;
 }
 function convertToScriptTarget(target: string): ScriptTarget {
     switch (target.trim().toLowerCase()) {

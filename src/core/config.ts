@@ -3,11 +3,7 @@ import { Plugin, loadPlugin } from './type';
 
 export interface Config {
     configFile?: string;
-    input: {
-        files: string[];
-        urls: string[];
-        stdin: boolean;
-    };
+    input: InputConfig;
     outputFile?: string;
     target: ScriptTarget;
     outputAST: boolean;
@@ -16,6 +12,16 @@ export interface Config {
         [pluginName: string]: boolean | Record<string, unknown>;
     };
 }
+
+interface InputConfig {
+    files: string[];
+    urls: string[];
+    stdin: boolean;
+}
+
+export type PartialConfig = Omit<Partial<Config>, 'input'> & {
+    input?: Partial<InputConfig>;
+};
 
 const defaultConfig: Config = {
     configFile: undefined,
@@ -32,7 +38,7 @@ const defaultConfig: Config = {
 
 let config: Config = Object.assign({}, defaultConfig);
 
-export function setConfig(input: Partial<Config>): void {
+export function setConfig(input: PartialConfig): void {
     config = Object.assign(config, input);
 }
 
