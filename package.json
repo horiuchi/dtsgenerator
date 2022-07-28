@@ -12,7 +12,7 @@
         "clean": "rimraf dist/ build/ {src,test}/**/*.{js,js.map} *.tsbuildinfo",
         "compile": "tsc -p .",
         "lint": "eslint --fix --ext ts src/ test/",
-        "format": "prettier --write 'src/**/*.ts' 'test/*.ts' 'test/core/*.ts'",
+        "format": "prettier --cache --write 'src/**/*.ts' 'test/*.ts' 'test/core/*.ts'",
         "precompile": "npm run lint && npm run format",
         "prepublishOnly": "npm run build",
         "pretest": "npm run compile",
@@ -44,14 +44,14 @@
         "node": ">= 10.0"
     },
     "dependencies": {
-        "commander": "^9.3.0",
+        "commander": "^9.4.0",
         "cross-fetch": "^3.1.5",
         "debug": "^4.3.4",
         "glob": "^8.0.3",
         "https-proxy-agent": "^5.0.1",
         "js-yaml": "^4.1.0",
         "tslib": "^2.4.0",
-        "typescript": "^4.7.3"
+        "typescript": "^4.7.4"
     },
     "devDependencies": {
         "@dtsgenerator/do-nothing": "^2.5.2",
@@ -64,21 +64,21 @@
         "@types/js-yaml": "^4.0.5",
         "@types/mkdirp": "^1.0.2",
         "@types/mocha": "^9.1.1",
-        "@types/node": "^16.11.39",
+        "@types/node": "^16.11.45",
         "cross-env": "^7.0.3",
-        "eslint": "^8.17.0",
+        "eslint": "^8.20.0",
         "husky": "^8.0.1",
-        "lint-staged": "^13.0.1",
+        "lint-staged": "^13.0.3",
         "mocha": "^10.0.0",
         "nyc": "^15.1.0",
-        "prettier": "^2.6.2",
+        "prettier": "^2.7.1",
         "rimraf": "^3.0.2",
         "source-map-support": "^0.5.21",
-        "ts-node": "^10.8.1"
+        "ts-node": "^10.9.1"
     },
     "lint-staged": {
         "**/*.ts": [
-            "prettier --write",
+            "prettier --cache --write",
             "eslint --fix"
         ]
     }
