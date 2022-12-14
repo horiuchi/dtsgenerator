@@ -86,7 +86,7 @@ export no_proxy=google.com, yahoo.com
 
 ## Migration from v2
 
-The dtsgenerator v3 has made the following braking changes from v2.
+The dtsgenerator v3 has made the following breaking changes from v2.
 
 - Support Plug-in feature. See the Plug-in section for more information.
 - Change the command line options.
