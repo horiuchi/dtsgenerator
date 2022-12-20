@@ -65,7 +65,6 @@ export function buildNamespaceNode(
         ? [ts.factory.createModifier(ts.SyntaxKind.DeclareKeyword)]
         : undefined;
     return ts.factory.createModuleDeclaration(
-        undefined,
         modifiers,
         buildTypeNameIdentifier(name),
         ts.factory.createModuleBlock(statements),
@@ -85,7 +84,6 @@ export function buildInterfaceNode(
         ? [ts.factory.createModifier(ts.SyntaxKind.DeclareKeyword)]
         : [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)];
     return ts.factory.createInterfaceDeclaration(
-        undefined,
         modifiers,
         buildTypeNameIdentifier(name),
         undefined,
@@ -104,7 +102,6 @@ export function buildTypeAliasNode(
         ? [ts.factory.createModifier(ts.SyntaxKind.DeclareKeyword)]
         : [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)];
     return ts.factory.createTypeAliasDeclaration(
-        undefined,
         modifiers,
         buildTypeNameIdentifier(name),
         undefined,
@@ -126,11 +123,9 @@ export function buildPropertySignature(
             : undefined;
     if (isPattern) {
         return ts.factory.createIndexSignature(
-            undefined,
             modifiers,
             [
                 ts.factory.createParameterDeclaration(
-                    [],
                     [],
                     undefined,
                     ts.factory.createIdentifier('pattern'),
@@ -157,10 +152,8 @@ export function buildIndexSignatureNode(
 ): ts.IndexSignatureDeclaration {
     return ts.factory.createIndexSignature(
         undefined,
-        undefined,
         [
             ts.factory.createParameterDeclaration(
-                undefined,
                 undefined,
                 undefined,
                 buildTypeNameIdentifier(name),
