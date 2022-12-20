@@ -143,6 +143,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.16.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.16.1) (2022-12-20)
+
+- fixed:
+  - Fix to remove deprecated decorators parameters for #547. Thank you @mcollina :+1:
+
 ### [v3.16.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.16.0) (2022-06-10)
 
 - features:
