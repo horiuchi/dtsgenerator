@@ -62,4 +62,5 @@ async function exec(): Promise<void> {
 }
 exec().catch((err: Error) => {
     console.error(err.stack ?? err);
+    process.exitCode = 1;
 });
