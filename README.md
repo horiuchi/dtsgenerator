@@ -143,6 +143,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.17.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.17.0) (2023-02-21)
+
+- features:
+  - Return exit code 1 when error occurs by #549. Thank you @lhotamir :+1:
+
 ### [v3.16.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.16.2) (2022-12-20)
 
 - fixed:
