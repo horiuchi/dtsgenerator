@@ -383,7 +383,7 @@ export function searchAllSubSchema(
             }
             for (const mime of Object.keys(types)) {
                 if (
-                    /^text\/|^(?:application\/x-www-form-urlencoded$|^application\/([a-z0-9-_.]+\+)?json)|^application\/octet-stream$|^application\/jwt$|^application\/vnd.apple.pkpass$|^multipart\/form-data$|^image\//.test(
+                    /^text\/|^(?:application\/x-www-form-urlencoded$|^application\/([a-z0-9-_.]+\+)?json)$|^application\/json;|^application\/octet-stream$|^application\/jwt$|^application\/vnd.apple.pkpass$|^multipart\/form-data$|^image\//.test(
                         mime
                     )
                 ) {
