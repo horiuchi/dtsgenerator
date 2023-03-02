@@ -150,6 +150,10 @@ function convertToScriptTarget(target: string): ScriptTarget {
             return ScriptTarget.ES2019;
         case 'es2020':
             return ScriptTarget.ES2020;
+        case 'es2021':
+            return ScriptTarget.ES2021;
+        case 'es2022':
+            return ScriptTarget.ES2022;
         case 'esnext':
             return ScriptTarget.ESNext;
         default:
