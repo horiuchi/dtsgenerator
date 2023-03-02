@@ -61,10 +61,10 @@ describe('root utils test', () => {
                 root: __dirname + '/..',
             });
             assert.deepStrictEqual(actual, [
-                'src/cli.ts',
-                'src/commandOptions.ts',
-                'src/jsonPointer.ts',
                 'src/utils.ts',
+                'src/jsonPointer.ts',
+                'src/commandOptions.ts',
+                'src/cli.ts',
             ]);
         });
         it('throw error on getting files', () => {
@@ -117,6 +117,8 @@ describe('root utils test', () => {
                 ['es2018', ScriptTarget.ES2018],
                 ['es2019', ScriptTarget.ES2019],
                 ['es2020', ScriptTarget.ES2020],
+                ['es2021', ScriptTarget.ES2021],
+                ['es2022', ScriptTarget.ES2022],
                 ['esnext', ScriptTarget.ESNext],
             ] as const) {
                 options.target = actual;

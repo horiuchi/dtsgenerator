@@ -11,6 +11,7 @@ import {
     JsonSchema,
     isJsonSchemaDraft04,
 } from './type';
+import { checkValidMIMEType } from './utils';
 
 type OpenApiSchema = OpenApisV2.SchemaJson | OpenApisV3.SchemaJson;
 type ParametersList =
@@ -382,11 +383,7 @@ export function searchAllSubSchema(
                 return;
             }
             for (const mime of Object.keys(types)) {
-                if (
-                    /^text\/|^(?:application\/x-www-form-urlencoded$|^application\/([a-z0-9-_.]+\+)?json)$|^application\/json;|^application\/octet-stream$|^application\/jwt$|^application\/vnd.apple.pkpass$|^multipart\/form-data$|^image\//.test(
-                        mime
-                    )
-                ) {
+                if (checkValidMIMEType(mime)) {
                     const mt = types[mime];
                     if (mt != null) {
                         setSubId(mt.schema, keys);

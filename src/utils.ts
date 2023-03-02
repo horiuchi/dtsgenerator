@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { URL } from 'url';
-import glob from 'glob';
+import glob, { GlobOptions } from 'glob';
 import proxy from 'https-proxy-agent';
 import { ScriptTarget } from 'typescript';
 import { CommandOptions, defaultConfigFile } from './commandOptions';
@@ -63,18 +63,17 @@ export function buildProxyOptions(url: string): RequestInit | undefined {
     return undefined;
 }
 
-export function globFiles(
+export async function globFiles(
     pattern: string,
-    options?: glob.IOptions
+    options?: GlobOptions
 ): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-        glob(pattern, options ?? {}, (err, matches) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(matches);
-            }
-        });
+    const res = await glob(pattern, options ?? {});
+    return res.map((r) => {
+        if (typeof r === 'string') {
+            return r;
+        } else {
+            return r.fullpath();
+        }
     });
 }
 
@@ -150,6 +149,10 @@ function convertToScriptTarget(target: string): ScriptTarget {
             return ScriptTarget.ES2019;
         case 'es2020':
             return ScriptTarget.ES2020;
+        case 'es2021':
+            return ScriptTarget.ES2021;
+        case 'es2022':
+            return ScriptTarget.ES2022;
         case 'esnext':
             return ScriptTarget.ESNext;
         default:

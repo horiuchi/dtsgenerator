@@ -55,6 +55,29 @@ export function reduceTypes(types: SimpleTypes[]): SimpleTypes[] {
     return Array.from(set.values());
 }
 
+export function checkValidMIMEType(mime: string): boolean {
+    const type = mime.toLowerCase().split(';')[0]?.trim();
+    if (type == null) {
+        return false;
+    }
+    if (
+        [
+            'application/octet-stream',
+            'application/x-www-form-urlencoded',
+            'multipart/form-data',
+
+            'application/jwt',
+            'application/vnd.apple.pkpass',
+        ].includes(type)
+    ) {
+        return true;
+    }
+    if (type.startsWith('text/') || type.startsWith('image/')) {
+        return true;
+    }
+    return /^application\/(?:[a-z0-9-_.]+\+)?json5?$/.test(type);
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function mergeSchema(a: any, b: any): boolean {
     if ('$ref' in a || '$ref' in b) {
