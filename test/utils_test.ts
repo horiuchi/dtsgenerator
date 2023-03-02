@@ -61,10 +61,10 @@ describe('root utils test', () => {
                 root: __dirname + '/..',
             });
             assert.deepStrictEqual(actual, [
-                'src/cli.ts',
-                'src/commandOptions.ts',
-                'src/jsonPointer.ts',
                 'src/utils.ts',
+                'src/jsonPointer.ts',
+                'src/commandOptions.ts',
+                'src/cli.ts',
             ]);
         });
         it('throw error on getting files', () => {
