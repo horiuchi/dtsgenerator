@@ -143,6 +143,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.18.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.18.0) (2023-03-02)
+
+- features:
+  - Support 'application/json' with parameter media type for #551. Thank you @denizkenan :+1:
+
 ### [v3.17.0](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.17.0) (2023-02-21)
 
 - features:
