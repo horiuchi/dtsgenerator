@@ -397,6 +397,28 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+    it('empty no additionalProperties schema', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: 'test/root/empty_object',
+            description: 'This is an empty object schema',
+            type: 'object',
+            additionalProperties: false,
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    namespace Root {
+        /**
+         * This is an empty object schema
+         */
+        export interface EmptyObject {
+            [name: string]: never;
+        }
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
     it('root any schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: 'test/root/root_any',

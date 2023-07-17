@@ -366,6 +366,15 @@ export default class DtsGenerator {
                 )
             );
         }
+        if (result.length === 0 && content.additionalProperties === false) {
+            result.push(
+                ast.buildIndexSignatureNode(
+                    'name',
+                    ast.buildStringKeyword(),
+                    ast.buildNeverKeyword()
+                )
+            );
+        }
         return result;
     }
     private generateTypeProperty(
