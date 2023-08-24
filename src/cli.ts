@@ -17,21 +17,21 @@ async function loadContents(): Promise<Schema[]> {
         ps.push(
             readSchemaFromStdin().then((s) => {
                 contents.push(s);
-            })
+            }),
         );
     }
     for (const pattern of config.input.files) {
         ps.push(
             readSchemasFromFile(pattern).then((ss) => {
                 contents = contents.concat(ss);
-            })
+            }),
         );
     }
     for (const url of config.input.urls) {
         ps.push(
             readSchemaFromUrl(url).then((s) => {
                 contents.push(s);
-            })
+            }),
         );
     }
     await Promise.all(ps);

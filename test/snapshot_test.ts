@@ -23,7 +23,7 @@ describe('Snapshot testing', () => {
                 const filePaths = fs.readdirSync(fixtureDir);
                 const expectedFilePath = path.join(
                     fixtureDir,
-                    expectedFileName
+                    expectedFileName,
                 );
                 const configFilePath = path.join(fixtureDir, configFileName);
                 const config: Partial<Config> = fs.existsSync(configFilePath)

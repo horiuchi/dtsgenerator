@@ -139,7 +139,7 @@ describe('json pointer test', () => {
         it('invalid format', () => {
             assert.throws(
                 () => jp.parse('hoge'),
-                /^Error: Invalid JSON-Pointer format:/
+                /^Error: Invalid JSON-Pointer format:/,
             );
         });
     });

@@ -49,7 +49,7 @@ export default class DtsGenerator {
             '',
             config.target,
             false,
-            ts.ScriptKind.TS
+            ts.ScriptKind.TS,
         );
         Object.assign(file, {
             statements: ts.factory.createNodeArray(root),
@@ -67,7 +67,7 @@ export default class DtsGenerator {
                   return printer.printNode(
                       ts.EmitHint.SourceFile,
                       transformedNodes,
-                      file
+                      file,
                   );
               })();
 
@@ -96,7 +96,7 @@ export default class DtsGenerator {
         return { pre, post };
     }
     private async getPreProcess(
-        pre: PluginConfig[]
+        pre: PluginConfig[],
     ): Promise<PreProcessHandler[]> {
         debug('load pre process plugin.');
         const result: PreProcessHandler[] = [];
@@ -112,14 +112,14 @@ export default class DtsGenerator {
                 debug(
                     '  pre process plugin:',
                     pc.plugin.meta.name,
-                    pc.plugin.meta.description
+                    pc.plugin.meta.description,
                 );
             }
         }
         return result;
     }
     private async getPostProcess(
-        post: PluginConfig[]
+        post: PluginConfig[],
     ): Promise<ts.TransformerFactory<ts.SourceFile>[]> {
         debug('load post process plugin.');
         const result: ts.TransformerFactory<ts.SourceFile>[] = [];
@@ -135,7 +135,7 @@ export default class DtsGenerator {
                 debug(
                     '  pre process plugin:',
                     pc.plugin.meta.name,
-                    pc.plugin.meta.description
+                    pc.plugin.meta.description,
                 );
             }
         }
@@ -153,13 +153,13 @@ export default class DtsGenerator {
             if (value.schema !== undefined) {
                 const schema = value.schema;
                 debug(
-                    `  walk doProcess: key=${key} schemaId=${schema.id.getAbsoluteId()}`
+                    `  walk doProcess: key=${key} schemaId=${schema.id.getAbsoluteId()}`,
                 );
                 result.push(this.walkSchema(schema, root));
             }
             if (value.children.size > 0) {
                 result.push(
-                    ast.buildNamespaceNode(key, this.walk(value, false), root)
+                    ast.buildNamespaceNode(key, this.walk(value, false), root),
                 );
             }
         }
@@ -174,16 +174,16 @@ export default class DtsGenerator {
             ast.addComment(
                 this.parseSchema(normalized, root),
                 normalized,
-                true
+                true,
             ),
             normalized,
-            true
+            true,
         );
     }
 
     private parseSchema(
         schema: NormalizedSchema,
-        root = false
+        root = false,
     ): ts.DeclarationStatement {
         const type = schema.content.type;
         switch (type) {
@@ -199,7 +199,7 @@ export default class DtsGenerator {
 
     private normalizeContent(
         schema: Schema,
-        pointer?: string
+        pointer?: string,
     ): NormalizedSchema {
         if (pointer != null) {
             schema = getSubSchema(schema, pointer);
@@ -232,7 +232,7 @@ export default class DtsGenerator {
             }
             if (
                 content.type === undefined &&
-                (content.properties || content.additionalProperties)
+                (content.properties ?? content.additionalProperties)
             ) {
                 content.type = 'object';
             }
@@ -259,14 +259,16 @@ export default class DtsGenerator {
     }
     private generateDeclareType(
         schema: NormalizedSchema,
-        root: boolean
+        root: boolean,
     ): ts.DeclarationStatement {
         const content = schema.content;
         if (
+            /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
             content.$ref ||
             content.oneOf ||
             content.anyOf ||
             content.enum ||
+            /* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
             'const' in content ||
             content.type !== 'object'
         ) {
@@ -280,19 +282,19 @@ export default class DtsGenerator {
 
     private generateAnyTypeModel(
         schema: NormalizedSchema,
-        root: boolean
+        root: boolean,
     ): ts.DeclarationStatement {
         const member = ast.buildIndexSignatureNode(
             'name',
             ast.buildStringKeyword(),
-            ast.buildAnyKeyword()
+            ast.buildAnyKeyword(),
         );
         return ast.buildInterfaceNode(schema.id, [member], root);
     }
 
     private generateTypeCollection(
         schema: NormalizedSchema,
-        root: boolean
+        root: boolean,
     ): ts.DeclarationStatement {
         const type = this.generateArrayTypeProperty(schema);
         return ast.buildTypeAliasNode(schema.id, type, root);
@@ -304,7 +306,7 @@ export default class DtsGenerator {
         if (content.additionalProperties) {
             const schema = this.normalizeContent(
                 baseSchema,
-                '/additionalProperties'
+                '/additionalProperties',
             );
             const valueType =
                 content.additionalProperties === true
@@ -313,7 +315,7 @@ export default class DtsGenerator {
             const node = ast.buildIndexSignatureNode(
                 'name',
                 ast.buildStringKeyword(),
-                valueType
+                valueType,
             );
             result.push(ast.addOptionalInformation(node, schema, true));
         }
@@ -321,21 +323,21 @@ export default class DtsGenerator {
             for (const propertyName of Object.keys(content.properties)) {
                 const schema = this.normalizeContent(
                     baseSchema,
-                    '/properties/' + tilde(propertyName)
+                    '/properties/' + tilde(propertyName),
                 );
                 const node = ast.buildPropertySignature(
                     schema,
                     propertyName,
                     this.generateTypeProperty(schema),
                     baseSchema.content.required,
-                    false
+                    false,
                 );
                 result.push(
                     ast.addOptionalInformation(
                         ast.addComment(node, schema, true),
                         schema,
-                        true
-                    )
+                        true,
+                    ),
                 );
             }
         }
@@ -350,27 +352,27 @@ export default class DtsGenerator {
                         this.generateTypeProperty(
                             this.normalizeContent(
                                 baseSchema,
-                                '/patternProperties/' + tilde(propertyName)
-                            )
+                                '/patternProperties/' + tilde(propertyName),
+                            ),
                         ),
-                    true
+                    true,
                 ),
                 baseSchema.content.required,
-                true
+                true,
             );
             result.push(
                 ts.addSyntheticTrailingComment(
                     node,
                     ts.SyntaxKind.MultiLineCommentTrivia,
-                    ` Patterns: ${properties.join(' | ')} `
-                )
+                    ` Patterns: ${properties.join(' | ')} `,
+                ),
             );
         }
         return result;
     }
     private generateTypeProperty(
         schema: NormalizedSchema,
-        terminate = true
+        terminate = true,
     ): ts.TypeNode {
         const content = schema.content;
         if (content.$ref) {
@@ -380,10 +382,10 @@ export default class DtsGenerator {
                 ast.addComment(
                     ast.buildTypeReferenceNode(refSchema, this.currentSchema),
                     refSchema,
-                    false
+                    false,
                 ),
                 refSchema,
-                false
+                false,
             );
             return node;
         }
@@ -395,7 +397,7 @@ export default class DtsGenerator {
                 content.anyOf,
                 mergeContent,
                 '/anyOf/',
-                terminate
+                terminate,
             );
         }
         if (content.oneOf) {
@@ -406,14 +408,14 @@ export default class DtsGenerator {
                 content.oneOf,
                 mergeContent,
                 '/oneOf/',
-                terminate
+                terminate,
             );
         }
         return this.generateLiteralTypeProperty(schema, terminate);
     }
     private generateLiteralTypeProperty(
         schema: NormalizedSchema,
-        terminate = true
+        terminate = true,
     ): ts.TypeNode {
         const content = schema.content;
         if (content.enum) {
@@ -422,7 +424,7 @@ export default class DtsGenerator {
                 (value) => {
                     return this.generateLiteralTypeNode(content, value);
                 },
-                terminate
+                terminate,
             );
         } else if (content.not) {
             return ast.buildVoidKeyword();
@@ -434,7 +436,7 @@ export default class DtsGenerator {
     }
     private checkExistOtherType(
         content: JsonSchemaObject,
-        base: NormalizedSchema
+        base: NormalizedSchema,
     ): ts.TypeNode | undefined {
         const schema = Object.assign({}, base, { content });
         const result = this.generateLiteralTypeProperty(schema, false);
@@ -453,7 +455,7 @@ export default class DtsGenerator {
     }
     private generateLiteralTypeNode(
         content: JsonSchemaObject,
-        value: any
+        value: any,
     ): ts.LiteralTypeNode {
         switch (content.type) {
             case 'integer':
@@ -485,13 +487,13 @@ export default class DtsGenerator {
         contents: JsonSchema[],
         mergeContent: JsonSchemaObject,
         path: string,
-        terminate: boolean
+        terminate: boolean,
     ): ts.TypeNode {
         const merged: boolean[] = [];
         const children = contents.map((_, index) => {
             const schema = this.normalizeContent(
                 baseSchema,
-                path + index.toString()
+                path + index.toString(),
             );
             merged.push(utils.mergeSchema(schema.content, mergeContent));
             return schema;
@@ -508,31 +510,31 @@ export default class DtsGenerator {
                             ? ast.addOptionalInformation(
                                   this.generateTypeProperty(schema, false),
                                   schema,
-                                  false
+                                  false,
                               )
                             : ast.addOptionalInformation(
                                   ast.buildTypeReferenceNode(
                                       schema,
-                                      this.currentSchema
+                                      this.currentSchema,
                                   ),
                                   schema,
-                                  false
+                                  false,
                               );
                         if (baseType != null && !allRef && !merged[index]) {
                             return ast.buildIntersectionTypeNode(
                                 [baseType, node],
-                                false
+                                false,
                             );
                         }
                         return node;
                     },
-                    terminate
+                    terminate,
                 ),
                 baseSchema,
-                false
+                false,
             ),
             baseSchema,
-            terminate
+            terminate,
         );
         if (baseType != null && allRef) {
             return ast.buildIntersectionTypeNode([baseType, result], terminate);
@@ -542,7 +544,7 @@ export default class DtsGenerator {
 
     private generateArrayTypeProperty(
         schema: NormalizedSchema,
-        terminate = true
+        terminate = true,
     ): ts.TypeNode {
         const items = schema.content.items;
         const minItems = schema.content.minItems;
@@ -573,13 +575,13 @@ export default class DtsGenerator {
                 maxItems === undefined
             ) {
                 return ast.buildSimpleArrayNode(
-                    ast.addOptionalInformation(node, subSchema, false)
+                    ast.addOptionalInformation(node, subSchema, false),
                 );
             } else {
                 return ast.addOptionalInformation(
                     ast.buildTupleTypeNode(node, minItems, maxItems),
                     schema,
-                    terminate
+                    terminate,
                 );
             }
         } else if (
@@ -591,9 +593,7 @@ export default class DtsGenerator {
             return additionalItemsNode === false
                 ? ast.buildTupleTypeNode([], 0, 0, additionalItemsNode)
                 : ast.buildSimpleArrayNode(
-                      additionalItemsNode === undefined
-                          ? ast.buildAnyKeyword()
-                          : additionalItemsNode
+                      additionalItemsNode ?? ast.buildAnyKeyword(),
                   );
         } else if (
             minItems != null &&
@@ -606,7 +606,7 @@ export default class DtsGenerator {
             for (let i = 0; i < items.length; i++) {
                 const type = this.normalizeContent(
                     schema,
-                    '/items/' + i.toString()
+                    '/items/' + i.toString(),
                 );
                 if (type.id.isEmpty()) {
                     types.push(this.generateTypeProperty(type, false));
@@ -615,11 +615,11 @@ export default class DtsGenerator {
                         ast.addOptionalInformation(
                             ast.buildTypeReferenceNode(
                                 type,
-                                this.currentSchema
+                                this.currentSchema,
                             ),
                             type,
-                            false
-                        )
+                            false,
+                        ),
                     );
                 }
             }
@@ -630,17 +630,17 @@ export default class DtsGenerator {
                     types,
                     minItems,
                     maxItems,
-                    additionalItemsNode
+                    additionalItemsNode,
                 ),
                 schema,
-                terminate
+                terminate,
             );
         }
     }
 
     private generateType(
         schema: NormalizedSchema,
-        terminate: boolean
+        terminate: boolean,
     ): ts.TypeNode {
         const type = schema.content.type;
         if (type == null) {
@@ -658,7 +658,7 @@ export default class DtsGenerator {
                     (t) => {
                         return this.generateTypeName(schema, t, false);
                     },
-                    terminate
+                    terminate,
                 );
             }
         }
@@ -666,7 +666,7 @@ export default class DtsGenerator {
     private generateTypeName(
         schema: NormalizedSchema,
         type: string,
-        terminate: boolean
+        terminate: boolean,
     ): ts.TypeNode {
         const tsType = utils.toTSType(type, schema.content);
         if (tsType) {

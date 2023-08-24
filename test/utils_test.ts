@@ -35,21 +35,21 @@ describe('root utils test', () => {
 
         it('success to set proxy', () => {
             const actual = buildProxyOptions(
-                'http://bar.example.com/package.json'
+                'http://bar.example.com/package.json',
             );
             assert.ok(actual);
             assert.ok((actual as any).agent);
         });
         it('success to set https proxy', () => {
             const actual = buildProxyOptions(
-                'https://bar.example.com/package.json'
+                'https://bar.example.com/package.json',
             );
             assert.ok(actual);
             assert.ok((actual as any).agent);
         });
         it('success to no set proxy', () => {
             const actual = buildProxyOptions(
-                'https://baz.example.com/package.json'
+                'https://baz.example.com/package.json',
             );
             assert.equal(actual, undefined);
         });

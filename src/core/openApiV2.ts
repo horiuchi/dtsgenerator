@@ -532,11 +532,11 @@ export namespace OpenApisV2 {
                 | Schema
                     | [
                           /* A deterministic version of a JSON Schema object. */ Schema,
-                          .../* A deterministic version of a JSON Schema object. */ Schema[]
+                          .../* A deterministic version of a JSON Schema object. */ Schema[],
                       ];
                 allOf?: [
                     /* A deterministic version of a JSON Schema object. */ Schema,
-                    .../* A deterministic version of a JSON Schema object. */ Schema[]
+                    .../* A deterministic version of a JSON Schema object. */ Schema[],
                 ];
                 properties?: {
                     [

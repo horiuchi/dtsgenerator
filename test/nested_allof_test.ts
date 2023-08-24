@@ -50,7 +50,7 @@ describe("nested 'allOf' test", () => {
         assert.strictEqual(
             result,
             expected,
-            "Nested 'allOf' definitions should result in all properties being included in the output interface."
+            "Nested 'allOf' definitions should result in all properties being included in the output interface.",
         );
     });
     it("multiple 'allOf' nestings schema", async () => {
@@ -137,7 +137,7 @@ describe("nested 'allOf' test", () => {
         assert.strictEqual(
             result,
             expected,
-            "Nested 'allOf' definitions should result in all properties being included in the output interface."
+            "Nested 'allOf' definitions should result in all properties being included in the output interface.",
         );
     });
 

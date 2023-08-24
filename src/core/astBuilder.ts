@@ -17,7 +17,7 @@ function buildPropertyNameIdentifier(name: string): ts.PropertyName {
 }
 
 export function buildKeyword(
-    kind: ts.KeywordTypeSyntaxKind
+    kind: ts.KeywordTypeSyntaxKind,
 ): ts.KeywordTypeNode {
     return ts.factory.createKeywordTypeNode(kind);
 }
@@ -41,7 +41,7 @@ export function buildSimpleArrayNode(element: ts.TypeNode): ts.ArrayTypeNode {
 }
 export function buildNullKeyword(): ts.LiteralTypeNode {
     return ts.factory.createLiteralTypeNode(
-        ts.factory.createToken(ts.SyntaxKind.NullKeyword)
+        ts.factory.createToken(ts.SyntaxKind.NullKeyword),
     );
 }
 export function buildStringLiteralTypeNode(s: string): ts.LiteralTypeNode {
@@ -52,14 +52,14 @@ export function buildNumericLiteralTypeNode(n: string): ts.LiteralTypeNode {
 }
 export function buildBooleanLiteralTypeNode(b: boolean): ts.LiteralTypeNode {
     return ts.factory.createLiteralTypeNode(
-        b ? ts.factory.createTrue() : ts.factory.createFalse()
+        b ? ts.factory.createTrue() : ts.factory.createFalse(),
     );
 }
 
 export function buildNamespaceNode(
     name: string,
     statements: ts.Statement[],
-    root: boolean
+    root: boolean,
 ): ts.ModuleDeclaration {
     const modifiers = root
         ? [ts.factory.createModifier(ts.SyntaxKind.DeclareKeyword)]
@@ -70,14 +70,14 @@ export function buildNamespaceNode(
         ts.factory.createModuleBlock(statements),
         ts.NodeFlags.Namespace |
             ts.NodeFlags.ExportContext |
-            ts.NodeFlags.ContextFlags
+            ts.NodeFlags.ContextFlags,
     );
 }
 
 export function buildInterfaceNode(
     id: SchemaId,
     members: ts.TypeElement[],
-    root: boolean
+    root: boolean,
 ): ts.InterfaceDeclaration {
     const name = getLastTypeName(id);
     const modifiers = root
@@ -88,14 +88,14 @@ export function buildInterfaceNode(
         buildTypeNameIdentifier(name),
         undefined,
         undefined,
-        members
+        members,
     );
 }
 
 export function buildTypeAliasNode(
     id: SchemaId,
     type: ts.TypeNode,
-    root: boolean
+    root: boolean,
 ): ts.TypeAliasDeclaration {
     const name = getLastTypeName(id);
     const modifiers = root
@@ -105,7 +105,7 @@ export function buildTypeAliasNode(
         modifiers,
         buildTypeNameIdentifier(name),
         undefined,
-        type
+        type,
     );
 }
 
@@ -114,7 +114,7 @@ export function buildPropertySignature(
     propertyName: string,
     valueType: ts.TypeNode,
     required: string[] | undefined,
-    isPattern: boolean | undefined
+    isPattern: boolean | undefined,
 ): ts.PropertySignature | ts.IndexSignatureDeclaration {
     const modifiers = undefined;
     const questionToken =
@@ -131,24 +131,24 @@ export function buildPropertySignature(
                     ts.factory.createIdentifier('pattern'),
                     undefined,
                     ts.factory.createTypeReferenceNode('string', []),
-                    undefined
+                    undefined,
                 ),
             ],
-            valueType
+            valueType,
         );
     }
     return ts.factory.createPropertySignature(
         modifiers,
         buildPropertyNameIdentifier(propertyName),
         questionToken,
-        valueType
+        valueType,
     );
 }
 
 export function buildIndexSignatureNode(
     name: string,
     indexType: ts.TypeNode,
-    valueType: ts.TypeNode
+    valueType: ts.TypeNode,
 ): ts.IndexSignatureDeclaration {
     return ts.factory.createIndexSignature(
         undefined,
@@ -159,10 +159,10 @@ export function buildIndexSignatureNode(
                 buildTypeNameIdentifier(name),
                 undefined,
                 indexType,
-                undefined
+                undefined,
             ),
         ],
-        valueType
+        valueType,
     );
 }
 
@@ -179,7 +179,7 @@ export function buildFreeFormObjectTypeLiteralNode(): ts.TypeNode {
 export function buildUnionTypeNode<T>(
     types: T[],
     builder: (t: T, index: number) => ts.TypeNode,
-    terminate: boolean
+    terminate: boolean,
 ): ts.TypeNode {
     const node = ts.factory.createUnionTypeNode(types.map(builder));
     if (terminate) {
@@ -190,7 +190,7 @@ export function buildUnionTypeNode<T>(
 
 export function buildIntersectionTypeNode(
     types: readonly ts.TypeNode[],
-    terminate: boolean
+    terminate: boolean,
 ): ts.TypeNode {
     const node = ts.factory.createIntersectionTypeNode(types);
     if (terminate) {
@@ -203,7 +203,7 @@ export function buildTupleTypeNode(
     types: ts.TypeNode | ts.TypeNode[],
     minItems?: number,
     maxItems?: number,
-    additionalItems?: ts.TypeNode | false
+    additionalItems?: ts.TypeNode | false,
 ): ts.TypeNode {
     function typesIsArray<T>(types: T | T[]): types is T[] {
         return Array.isArray(types);
@@ -247,9 +247,9 @@ export function buildTupleTypeNode(
                         ? additionalItems !== undefined
                             ? (additionalItems as ts.TypeNode)
                             : buildAnyKeyword()
-                        : types
-                )
-            )
+                        : types,
+                ),
+            ),
         );
     }
     return ts.factory.createTupleTypeNode(nodes);
@@ -257,7 +257,7 @@ export function buildTupleTypeNode(
 
 export function buildTypeReferenceNode(
     schema: NormalizedSchema,
-    currentSchema: Schema
+    currentSchema: Schema,
 ): ts.TypeReferenceNode {
     const typeName = getTypename(schema.id, currentSchema);
     let node: ts.EntityName | undefined;
@@ -267,7 +267,7 @@ export function buildTypeReferenceNode(
         } else {
             node = ts.factory.createQualifiedName(
                 node,
-                buildTypeNameIdentifier(name)
+                buildTypeNameIdentifier(name),
             );
         }
     }
@@ -296,7 +296,7 @@ function getTypename(id: SchemaId, baseSchema: Schema): string[] {
 export function addComment<T extends ts.Node>(
     node: T,
     schema: NormalizedSchema,
-    terminate: boolean
+    terminate: boolean,
 ): T {
     const comments = getComment(schema);
     if (comments.length === 0) {
@@ -306,7 +306,7 @@ export function addComment<T extends ts.Node>(
             node,
             ts.SyntaxKind.MultiLineCommentTrivia,
             ` ${comments[0] ?? ''} `,
-            false
+            false,
         );
     } else {
         let result = '*\n';
@@ -318,7 +318,7 @@ export function addComment<T extends ts.Node>(
             node,
             ts.SyntaxKind.MultiLineCommentTrivia,
             result,
-            true
+            true,
         );
     }
 }
@@ -363,7 +363,7 @@ function getComment(schema: NormalizedSchema): string[] {
 export function addOptionalInformation<T extends ts.Node>(
     node: T,
     schema: NormalizedSchema,
-    terminate: boolean
+    terminate: boolean,
 ): T {
     const format = schema.content.format;
     const pattern = schema.content.pattern;

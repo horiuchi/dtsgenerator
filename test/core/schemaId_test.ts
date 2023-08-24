@@ -8,7 +8,7 @@ describe('schema id parser test', () => {
         isFetchable: boolean,
         fileId: string,
         isJsonPath: boolean,
-        jsonPath: string
+        jsonPath: string,
     ): void {
         assert.strictEqual(schemaId.getAbsoluteId(), expectedId);
         assert.strictEqual(schemaId.isFetchable(), isFetchable);
@@ -24,7 +24,7 @@ describe('schema id parser test', () => {
             false,
             '/sampleId#',
             false,
-            '#'
+            '#',
         );
         test(
             new SchemaId('/sample2/path/file', []),
@@ -32,7 +32,7 @@ describe('schema id parser test', () => {
             false,
             '/sample2/path/file#',
             false,
-            '#'
+            '#',
         );
         test(
             new SchemaId('https://example.com:3000/path/to/schema/file', []),
@@ -40,7 +40,7 @@ describe('schema id parser test', () => {
             true,
             'https://example.com:3000/path/to/schema/file#',
             false,
-            '#'
+            '#',
         );
         test(
             new SchemaId('#/definitions/positiveInteger', []),
@@ -48,7 +48,7 @@ describe('schema id parser test', () => {
             false,
             '#',
             true,
-            '#/definitions/positiveInteger'
+            '#/definitions/positiveInteger',
         );
     });
     it('JSON Schema usage pattern', () => {
@@ -58,7 +58,7 @@ describe('schema id parser test', () => {
             true,
             'http://x.y.z/rootschema.json#',
             false,
-            '#'
+            '#',
         );
         test(
             new SchemaId('#foo', ['http://x.y.z/rootschema.json#']),
@@ -66,7 +66,7 @@ describe('schema id parser test', () => {
             true,
             'http://x.y.z/rootschema.json#',
             false,
-            '#'
+            '#',
         );
         test(
             new SchemaId('otherschema.json', ['http://x.y.z/rootschema.json#']),
@@ -74,7 +74,7 @@ describe('schema id parser test', () => {
             true,
             'http://x.y.z/otherschema.json#',
             false,
-            '#'
+            '#',
         );
         test(
             new SchemaId('#bar', [
@@ -85,7 +85,7 @@ describe('schema id parser test', () => {
             true,
             'http://x.y.z/otherschema.json#',
             false,
-            '#'
+            '#',
         );
         test(
             new SchemaId('t/inner.json#/json/path', [
@@ -96,7 +96,7 @@ describe('schema id parser test', () => {
             true,
             'http://x.y.z/t/inner.json#',
             true,
-            '#/json/path'
+            '#/json/path',
         );
         test(
             new SchemaId('some://where.else/completely#', [
@@ -106,7 +106,7 @@ describe('schema id parser test', () => {
             false,
             'some://where.else/completely#',
             false,
-            '#'
+            '#',
         );
     });
     it('JSON Schema Draft-07 example pattern', () => {
@@ -116,7 +116,7 @@ describe('schema id parser test', () => {
             true,
             'http://example.com/root.json#',
             false,
-            '#'
+            '#',
         );
         test(
             new SchemaId('other.json', ['http://example.com/root.json']),
@@ -124,7 +124,7 @@ describe('schema id parser test', () => {
             true,
             'http://example.com/other.json#',
             false,
-            '#'
+            '#',
         );
         test(
             new SchemaId('#bar', [
@@ -135,7 +135,7 @@ describe('schema id parser test', () => {
             true,
             'http://example.com/other.json#',
             false,
-            '#'
+            '#',
         );
         test(
             new SchemaId('t/inner.json', [
@@ -146,7 +146,7 @@ describe('schema id parser test', () => {
             true,
             'http://example.com/t/inner.json#',
             false,
-            '#'
+            '#',
         );
     });
 });

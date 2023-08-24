@@ -51,7 +51,7 @@ describe("nested 'oneOf' test", () => {
         assert.strictEqual(
             result,
             expected,
-            "Nested 'oneOf' definitions should result in all properties being included in the output interface."
+            "Nested 'oneOf' definitions should result in all properties being included in the output interface.",
         );
     });
 
@@ -145,7 +145,7 @@ describe("nested 'oneOf' test", () => {
         assert.strictEqual(
             result,
             expected,
-            "Nested 'oneOf' definitions should result in all properties being included in the output interface."
+            "Nested 'oneOf' definitions should result in all properties being included in the output interface.",
         );
     });
 

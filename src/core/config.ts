@@ -85,7 +85,7 @@ export async function showConfig(version: string, c: Config): Promise<void> {
     console.log('Plugins: count=' + plugins.length.toString());
     for (const p of plugins) {
         console.log(
-            `  ${p.meta.name}@${p.meta.version}: ${p.meta.description ?? ''}`
+            `  ${p.meta.name}@${p.meta.version}: ${p.meta.description ?? ''}`,
         );
     }
     console.log();

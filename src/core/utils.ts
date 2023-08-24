@@ -11,7 +11,7 @@ const debug = Debug('dtsgen');
 
 export function toTSType(
     type: string,
-    debugSource?: JsonSchemaObject
+    debugSource?: JsonSchemaObject,
 ): ts.KeywordTypeSyntaxKind | ts.SyntaxKind.NullKeyword | undefined {
     switch (type) {
         case 'any':
@@ -39,8 +39,8 @@ export function toTSType(
                     `toTSType: unknown type: ${JSON.stringify(
                         debugSource,
                         null,
-                        2
-                    )}`
+                        2,
+                    )}`,
                 );
             }
             throw new Error('unknown type: ' + type);

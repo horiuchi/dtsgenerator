@@ -42,7 +42,7 @@ Config:
 
 Plugins: count=0
 
-`
+`,
         );
     });
     it('full config test', async () => {
@@ -100,10 +100,10 @@ Config:
 
 Plugins: count=2
   @dtsgenerator/single-quote@${getVersion(
-      '@dtsgenerator/single-quote'
+      '@dtsgenerator/single-quote',
   )}: change all quotation mark to single
   @dtsgenerator/replace-namespace@${getVersion(
-      '@dtsgenerator/replace-namespace'
+      '@dtsgenerator/replace-namespace',
   )}: replace the namespace names
 
 `;
@@ -138,7 +138,7 @@ Config:
 
 Plugins: count=0
 
-`
+`,
             );
         }
     });

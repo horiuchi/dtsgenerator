@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import { ScriptTarget } from 'typescript';
 
 // via. https://github.com/microsoft/TypeScript/blob/v3.7.5/src/services/codefixes/importFixes.ts#L689
 export function checkInvalidCharacter(
     text: string,
-    target: ScriptTarget
+    target: ScriptTarget,
 ): boolean {
     const firstCharCode = text.charCodeAt(0);
     if (!isIdentifierStart(firstCharCode, target)) {
