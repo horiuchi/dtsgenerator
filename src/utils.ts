@@ -109,7 +109,8 @@ export function readConfig(options: CommandOptions): PartialConfig {
         pc.input.stdin = options.stdin;
     } else {
         pc.input.stdin =
-            pc.input.stdin ??
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+            pc.input.stdin ||
             (pc.input.files.length === 0 && pc.input.urls.length === 0);
     }
 

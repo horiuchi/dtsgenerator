@@ -133,7 +133,7 @@ export default class DtsGenerator {
             if (factory != null) {
                 result.push(factory);
                 debug(
-                    '  pre process plugin:',
+                    '  post process plugin:',
                     pc.plugin.meta.name,
                     pc.plugin.meta.description,
                 );

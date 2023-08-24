@@ -41,7 +41,7 @@
         "url": "https://github.com/horiuchi/dtsgenerator/issues"
     },
     "engines": {
-        "node": ">= 14.0"
+        "node": ">= 16.0"
     },
     "dependencies": {
         "commander": "^11.0.0",
