@@ -196,7 +196,7 @@ describe('config test', () => {
         assert.strictEqual(result, expected, result);
     });
 
-    it.skip('apply replace-namespace plugin test', async () => {
+    it('apply replace-namespace plugin test', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/replace-namespace',
             type: 'object',
