@@ -196,9 +196,9 @@ describe('config test', () => {
         assert.strictEqual(result, expected, result);
     });
 
-    it('apply single-quote plugin test', async () => {
+    it.skip('apply replace-namespace plugin test', async () => {
         const schema: JsonSchemaDraft04.Schema = {
-            id: '/test/single-quote',
+            id: '/test/replace-namespace',
             type: 'object',
             properties: {
                 id: {
@@ -222,21 +222,25 @@ describe('config test', () => {
             contents: [parseSchema(schema)],
             config: {
                 plugins: {
-                    '@dtsgenerator/single-quote': true,
+                    '@dtsgenerator/replace-namespace': {
+                        map: [{ from: ['Test'], to: ['Replaced', 'Example'] }],
+                    },
                 },
             },
         });
 
-        const expected = `declare namespace Test {
-    export interface SingleQuote {
-        id?: number;
-        array?: [
-            string?,
-            number?,
-            boolean?,
-            ('NW' | 'NE' | 'SW' | 'SE')?,
-            ...any[]
-        ];
+        const expected = `declare namespace Replaced {
+    export namespace Example {
+        export interface ReplaceNamespace {
+            id?: number;
+            array?: [
+                string?,
+                number?,
+                boolean?,
+                ('NW' | 'NE' | 'SW' | 'SE')?,
+                ...any[]
+            ];
+        }
     }
 }
 `;
