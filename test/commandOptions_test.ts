@@ -36,7 +36,7 @@ Examples:
   $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
   $ dtsgen -c dtsgen-test.json --info
 
-`
+`,
         );
     });
 });

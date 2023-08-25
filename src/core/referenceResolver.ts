@@ -27,7 +27,7 @@ export default class ReferenceResolver {
 
     public async resolve(): Promise<void> {
         debug(
-            `resolve reference: reference schema count=${this.referenceCache.size}.`
+            `resolve reference: reference schema count=${this.referenceCache.size}.`,
         );
         // debug('  schemaCache:');
         // debug(Array.from(this.schemaCache.keys()).join('\n'));
@@ -45,8 +45,8 @@ export default class ReferenceResolver {
                 const refSchema = this.schemaCache.get(fileId);
                 debug(
                     `get from schema cache, fileId=${fileId}, exists=${String(
-                        !!refSchema
-                    )}, ${id.getAbsoluteId()}`
+                        !!refSchema,
+                    )}, ${id.getAbsoluteId()}`,
                 );
                 if (refSchema == null && id.isFetchable()) {
                     try {
@@ -56,8 +56,8 @@ export default class ReferenceResolver {
                     } catch (e) {
                         error.push(
                             `Fail to fetch the $ref target: ${id.getAbsoluteId()}, ${String(
-                                e
-                            )}`
+                                e,
+                            )}`,
                         );
                         continue;
                     }
@@ -72,21 +72,21 @@ export default class ReferenceResolver {
                     const rootSchema = this.searchParentSchema(id);
                     if (rootSchema == null) {
                         error.push(
-                            `The $ref targets root is not found: ${id.getAbsoluteId()}`
+                            `The $ref targets root is not found: ${id.getAbsoluteId()}`,
                         );
                         continue;
                     }
                     const targetSchema = getSubSchema(
                         rootSchema,
                         id.getJsonPointerHash(),
-                        id
+                        id,
                     );
                     this.addSchema(targetSchema);
                     this.registerSchema(targetSchema);
                     this.referenceCache.set(id.getAbsoluteId(), targetSchema);
                 } else {
                     error.push(
-                        `The $ref target is not found: ${id.getAbsoluteId()}`
+                        `The $ref target is not found: ${id.getAbsoluteId()}`,
                     );
                     continue;
                 }
@@ -125,7 +125,7 @@ export default class ReferenceResolver {
             },
             (refId) => {
                 this.addReference(refId);
-            }
+            },
         );
     }
 

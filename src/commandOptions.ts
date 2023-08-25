@@ -53,17 +53,17 @@ function parse(options: CommandOptions, argv: string[]): commander.Command {
             '--url <url>',
             'input json schema from the url.',
             collectUrl,
-            []
+            [],
         )
         .option('--stdin', 'read stdin with other files or urls.')
         .option('-o, --out <file>', 'output filename.')
         .option(
             '-t, --target <version>',
-            "Specify ECMAScript target version: 'ES3', 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT' (default)."
+            "Specify ECMAScript target version: 'ES3', 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT' (default).",
         )
         .option(
             '--info',
-            'for developer mode. output loaded config and plugin details only.'
+            'for developer mode. output loaded config and plugin details only.',
         )
         .option('--output-ast', 'output TypeScript AST instead of d.ts file.')
         .addHelpText(
@@ -76,7 +76,7 @@ Examples:
   $ dtsgen -o swaggerSchema.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/schemas/v2.0/schema.json
   $ dtsgen -o petstore.d.ts --url https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
   $ dtsgen -c dtsgen-test.json --info
-`
+`,
         )
         .parse(argv);
 

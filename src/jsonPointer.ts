@@ -6,7 +6,7 @@
 export function get(
     obj: any,
     path: string[],
-    isCreateOnNotExists = false
+    isCreateOnNotExists = false,
 ): any {
     if (path.length === 0) {
         return obj;

@@ -6,7 +6,10 @@ export default class SchemaId {
     public readonly id: url.Url;
     public static readonly empty = new SchemaId('');
 
-    constructor(public readonly inputId: string, parentIds?: string[]) {
+    constructor(
+        public readonly inputId: string,
+        parentIds?: string[],
+    ) {
         let absoluteId = url.resolve('', inputId);
         if (parentIds) {
             parentIds.forEach((parent: string) => {

@@ -29,7 +29,7 @@ export type SchemaType =
     | 'Latest';
 export function isJsonSchemaDraft04(
     _content: JsonSchemaObject,
-    type: SchemaType
+    type: SchemaType,
 ): _content is JsonSchemaDraft04.Schema {
     return type === 'Draft04';
 }
@@ -77,7 +77,7 @@ export async function readSchemasFromFile(pattern: string): Promise<Schema[]> {
             });
             const content = parseFileContent(data);
             return parseSchema(content);
-        })
+        }),
     );
 }
 export async function readSchemaFromUrl(url: string): Promise<Schema> {
@@ -88,7 +88,7 @@ export async function readSchemaFromUrl(url: string): Promise<Schema> {
 
 export function parseFileContent(
     content: string,
-    filename?: string
+    filename?: string,
 ): JsonSchema {
     const ext = filename ? extname(filename).toLowerCase() : '';
     const maybeYaml = ext === '.yaml' || ext === '.yml';
@@ -126,16 +126,16 @@ export type Plugin = {
         description?: string;
     };
     preProcess?: (
-        context: PluginContext
+        context: PluginContext,
     ) => Promise<PreProcessHandler | undefined>;
     postProcess?: (
-        context: PluginContext
+        context: PluginContext,
     ) => Promise<TransformerFactory<SourceFile> | undefined>;
 };
 
 export async function loadPlugin(
     name: string,
-    option: boolean | Record<string, unknown>
+    option: boolean | Record<string, unknown>,
 ): Promise<Plugin | undefined> {
     if (!option) {
         return undefined;
@@ -144,14 +144,14 @@ export async function loadPlugin(
     const mod = (await import(name)) as { default?: Plugin };
     if (!mod.default) {
         console.warn(
-            `The plugin (${name}) is invalid module. That is not default export format.`
+            `The plugin (${name}) is invalid module. That is not default export format.`,
         );
         return undefined;
     }
     const plugin = mod.default;
     if (plugin.preProcess != null && typeof plugin.preProcess !== 'function') {
         console.warn(
-            `The plugin (${name}) is invalid module. The 'preProcess' is not a function.`
+            `The plugin (${name}) is invalid module. The 'preProcess' is not a function.`,
         );
         return undefined;
     }
@@ -160,7 +160,7 @@ export async function loadPlugin(
         typeof plugin.postProcess !== 'function'
     ) {
         console.warn(
-            `The plugin (${name}) is invalid module. The 'postProcess' is not a function.`
+            `The plugin (${name}) is invalid module. The 'postProcess' is not a function.`,
         );
         return undefined;
     }

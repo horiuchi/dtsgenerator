@@ -935,7 +935,7 @@ describe('simple schema test', () => {
 
         const result = await dtsgenerator({
             contents: [baseSchema, numberSchema, stringSchema].map((s) =>
-                parseSchema(s)
+                parseSchema(s),
             ),
         });
 
