@@ -196,7 +196,53 @@ describe('config test', () => {
         assert.strictEqual(result, expected, result);
     });
 
-    it.skip('apply replace-namespace plugin test', async () => {
+    it('apply single-quote plugin test', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/single-quote',
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'integer',
+                },
+                array: {
+                    type: 'array',
+                    items: [
+                        { type: 'string' },
+                        { type: 'integer' },
+                        { type: 'boolean' },
+                        {
+                            type: 'string',
+                            enum: ['NW', 'NE', 'SW', 'SE'],
+                        },
+                    ],
+                },
+            },
+        };
+        const result = await dtsgenerator({
+            contents: [parseSchema(schema)],
+            config: {
+                plugins: {
+                    '@dtsgenerator/single-quote': true,
+                },
+            },
+        });
+
+        const expected = `declare namespace Test {
+    export interface SingleQuote {
+        id?: number;
+        array?: [
+            string?,
+            number?,
+            boolean?,
+            ('NW' | 'NE' | 'SW' | 'SE')?,
+            ...any[]
+        ];
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
+    it('apply replace-namespace plugin test', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/replace-namespace',
             type: 'object',
@@ -230,14 +276,14 @@ describe('config test', () => {
         });
 
         const expected = `declare namespace Replaced {
-    export namespace Example {
+    namespace Example {
         export interface ReplaceNamespace {
             id?: number;
             array?: [
                 string?,
                 number?,
                 boolean?,
-                ('NW' | 'NE' | 'SW' | 'SE')?,
+                ("NW" | "NE" | "SW" | "SE")?,
                 ...any[]
             ];
         }
