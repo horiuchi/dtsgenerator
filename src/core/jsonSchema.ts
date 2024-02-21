@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import * as JsonPointer from '../jsonPointer';
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 import { OpenApisV2 } from './openApiV2';
@@ -103,7 +102,7 @@ export function searchAllSubSchema(
         });
     };
     const walkObject = (
-        obj: { [name: string]: JsonSchema } | undefined,
+        obj: Record<string, JsonSchema> | undefined,
         paths: string[],
         parentIds: string[],
     ): void => {
@@ -202,7 +201,7 @@ export function searchAllSubSchema(
         }
         function setSubIdToAnyObject<T>(
             f: (t: T, keys: string[]) => void,
-            obj: { [key: string]: T } | undefined,
+            obj: Record<string, T> | undefined,
             keys: string[],
         ): void {
             if (obj == null) {
@@ -297,7 +296,7 @@ export function searchAllSubSchema(
             const paths = keys
                 .slice(0, keys.length - 1)
                 .concat(inType + 'Parameters');
-            const properties: { [name: string]: JsonSchemaDraft04.Schema } = {};
+            const properties: Record<string, JsonSchemaDraft04.Schema> = {};
             params.forEach(([key, _]) => {
                 properties[key] = {
                     $ref: createId(keys.concat(key)),
@@ -347,7 +346,6 @@ export function searchAllSubSchema(
             }
             const operationId = ops.operationId;
             if (operationId) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 keys = [keys[0]!, convertKeyToTypeName(operationId)];
             }
             setSubIdToParameters(ops.parameters, keys.concat('parameters'));
@@ -446,7 +444,6 @@ export function searchAllSubSchema(
             }
             const operationId = ops.operationId;
             if (operationId) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 keys = [keys[0]!, convertKeyToTypeName(operationId)];
             }
             setSubIdToParameters(ops.parameters, keys.concat('parameters'));
@@ -476,7 +473,7 @@ export function searchAllSubSchema(
         }
 
         function setSubIdToObject(
-            obj: { [name: string]: JsonSchema } | undefined,
+            obj: Record<string, JsonSchema> | undefined,
             paths: string[],
         ): void {
             if (obj == null) {
@@ -558,7 +555,7 @@ export function selectSchemaType(content: JsonSchema | OpenApiSchema): {
         );
     }
     if ('$schema' in content) {
-        const schema = content['$schema'] ?? '';
+        const schema = content.$schema ?? '';
         if (/^https?:\/\/json-schema.org\/schema#?$/.test(schema)) {
             return { type: 'Latest' };
         }

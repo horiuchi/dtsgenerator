@@ -57,7 +57,7 @@ export default class DtsGenerator {
 
         const postProcess = await this.getPostProcess(plugins.post);
         const result = ts.transform(file, postProcess);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
         const transformedNodes = result.transformed[0]!;
 
         const transformedContent = config.outputAST
@@ -553,14 +553,14 @@ export default class DtsGenerator {
             const additionalItems = schema.content.additionalItems
                 ? this.normalizeContent(schema, '/additionalItems')
                 : schema.content.additionalItems === false
-                ? false
-                : undefined;
+                  ? false
+                  : undefined;
 
             return additionalItems === undefined
                 ? undefined
                 : additionalItems === false
-                ? false
-                : this.generateTypeProperty(additionalItems, false);
+                  ? false
+                  : this.generateTypeProperty(additionalItems, false);
         };
 
         if (items == null) {

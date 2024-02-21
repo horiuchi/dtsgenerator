@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-namespace */
 import { JsonSchemaDraft04 } from './jsonSchemaDraft04';
 
@@ -98,15 +96,9 @@ export namespace OpenApisV2 {
             /**
              * One or more JSON objects describing the schemas being consumed and produced by the API.
              */
-            export interface Definitions {
-                [
-                    name: string
-                ]: /* A deterministic version of a JSON Schema object. */ Schema;
-            }
+            export type Definitions = Record<string, Schema>;
             export type Enum = JsonSchemaDraft04.Schema.Properties.Enum;
-            export interface Examples {
-                [name: string]: any;
-            }
+            export type Examples = Record<string, any>;
             export type ExclusiveMaximum =
                 JsonSchemaDraft04.Schema.Properties.ExclusiveMaximum;
             export type ExclusiveMinimum =
@@ -232,9 +224,7 @@ export namespace OpenApisV2 {
                 enum?: Enum;
                 multipleOf?: MultipleOf;
             }
-            export interface Headers {
-                [name: string]: Header;
-            }
+            export type Headers = Record<string, Header>;
             /**
              * General information about the API.
              */
@@ -323,9 +313,7 @@ export namespace OpenApisV2 {
                 tokenUrl: string; // uri
                 description?: string;
             }
-            export interface Oauth2Scopes {
-                [name: string]: string;
-            }
+            export type Oauth2Scopes = Record<string, string>;
             export interface Operation {
                 tags?: string[];
                 /**
@@ -359,9 +347,7 @@ export namespace OpenApisV2 {
             /**
              * One or more JSON representations for parameters
              */
-            export interface ParameterDefinitions {
-                [name: string]: Parameter;
-            }
+            export type ParameterDefinitions = Record<string, Parameter>;
             /**
              * The parameters needed to send a valid API call.
              */
@@ -415,9 +401,7 @@ export namespace OpenApisV2 {
             /**
              * Relative paths to the individual endpoints. They must be relative to the 'basePath'.
              */
-            export interface Paths {
-                [pattern: string]: PathItem;
-            }
+            export type Paths = Record<string, PathItem>;
             export type Pattern =
                 JsonSchemaDraft04.Schema.Properties.Pattern /* regex */;
             export interface PrimitivesItems {
@@ -489,18 +473,12 @@ export namespace OpenApisV2 {
             /**
              * One or more JSON representations for responses
              */
-            export interface ResponseDefinitions {
-                [name: string]: Response;
-            }
+            export type ResponseDefinitions = Record<string, Response>;
             export type ResponseValue = Response | JsonReference;
             /**
              * Response objects names can either be any valid HTTP status code or 'default'.
              */
-            export interface Responses {
-                [
-                    pattern: string
-                ]: ResponseValue /* Patterns: ^([0-9]{3})$|^(default)$ | ^x- */;
-            }
+            export type Responses = Record<string, ResponseValue>;
             /**
              * A deterministic version of a JSON Schema object.
              */
@@ -538,11 +516,7 @@ export namespace OpenApisV2 {
                     /* A deterministic version of a JSON Schema object. */ Schema,
                     .../* A deterministic version of a JSON Schema object. */ Schema[],
                 ];
-                properties?: {
-                    [
-                        name: string
-                    ]: /* A deterministic version of a JSON Schema object. */ Schema;
-                };
+                properties?: Record<string, Schema>;
                 discriminator?: string;
                 readOnly?: boolean;
                 xml?: Xml;
@@ -554,18 +528,16 @@ export namespace OpenApisV2 {
              */
             export type SchemesList = ('http' | 'https' | 'ws' | 'wss')[];
             export type Security = SecurityRequirement[];
-            export interface SecurityDefinitions {
-                [name: string]:
-                    | BasicAuthenticationSecurity
-                    | ApiKeySecurity
-                    | Oauth2ImplicitSecurity
-                    | Oauth2PasswordSecurity
-                    | Oauth2ApplicationSecurity
-                    | Oauth2AccessCodeSecurity;
-            }
-            export interface SecurityRequirement {
-                [name: string]: string[];
-            }
+            export type SecurityDefinitions = Record<
+                string,
+                | BasicAuthenticationSecurity
+                | ApiKeySecurity
+                | Oauth2ImplicitSecurity
+                | Oauth2PasswordSecurity
+                | Oauth2ApplicationSecurity
+                | Oauth2AccessCodeSecurity
+            >;
+            export type SecurityRequirement = Record<string, string[]>;
             export interface Tag {
                 name: string;
                 description?: string;
@@ -583,5 +555,5 @@ export namespace OpenApisV2 {
         }
     }
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export import SwaggerIo = OpenApisV2;

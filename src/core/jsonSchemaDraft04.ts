@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-namespace */
 
 export namespace JsonSchemaDraft04 {
@@ -31,18 +30,10 @@ export namespace JsonSchemaDraft04 {
         minProperties?: Schema.Definitions.PositiveIntegerDefault0;
         required?: Schema.Definitions.StringArray;
         additionalProperties?: boolean | Schema;
-        definitions?: {
-            [name: string]: Schema;
-        };
-        properties?: {
-            [name: string]: Schema;
-        };
-        patternProperties?: {
-            [name: string]: Schema;
-        };
-        dependencies?: {
-            [name: string]: Schema | Schema.Definitions.StringArray;
-        };
+        definitions?: Record<string, Schema>;
+        properties?: Record<string, Schema>;
+        patternProperties?: Record<string, Schema>;
+        dependencies?: Record<string, Schema | Schema.Definitions.StringArray>;
         enum?: any[];
         type?:
             | Schema.Definitions.SimpleTypes

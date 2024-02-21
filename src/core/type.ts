@@ -12,7 +12,7 @@ import { OpenApisV3 } from './openApiV3';
 import SchemaId from './schemaId';
 
 // export `ts` for using the same version of TypeScript in all plugins.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export import ts = require('typescript');
 
 // Schema types
@@ -119,7 +119,7 @@ export interface PluginContext {
 
 export type PreProcessHandler = (contents: Schema[]) => Schema[];
 
-export type Plugin = {
+export interface Plugin {
     meta: {
         name: string;
         version: string;
@@ -131,7 +131,7 @@ export type Plugin = {
     postProcess?: (
         context: PluginContext,
     ) => Promise<TransformerFactory<SourceFile> | undefined>;
-};
+}
 
 export async function loadPlugin(
     name: string,
