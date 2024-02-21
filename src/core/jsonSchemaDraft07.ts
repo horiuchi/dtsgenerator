@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-namespace */
 
 export namespace JsonSchemaDraft07 {
-    export type SchemaObject = {
+    export interface SchemaObject {
         $id?: string; // uri-reference
         $schema?: string; // uri
         $ref?: string; // uri-reference
@@ -31,18 +30,10 @@ export namespace JsonSchemaDraft07 {
         minProperties?: Schema.Definitions.NonNegativeIntegerDefault0;
         required?: Schema.Definitions.StringArray;
         additionalProperties?: Schema;
-        definitions?: {
-            [name: string]: Schema;
-        };
-        properties?: {
-            [name: string]: Schema;
-        };
-        patternProperties?: {
-            [name: string]: Schema;
-        };
-        dependencies?: {
-            [name: string]: Schema | Schema.Definitions.StringArray;
-        };
+        definitions?: Record<string, Schema>;
+        properties?: Record<string, Schema>;
+        patternProperties?: Record<string, Schema>;
+        dependencies?: Record<string, Schema | Schema.Definitions.StringArray>;
         propertyNames?: Schema;
         const?: any;
         enum?: any[];
@@ -59,7 +50,7 @@ export namespace JsonSchemaDraft07 {
         anyOf?: Schema.Definitions.SchemaArray;
         oneOf?: Schema.Definitions.SchemaArray;
         not?: Schema;
-    };
+    }
     export type Schema = SchemaObject | boolean;
     export namespace Schema {
         export namespace Definitions {

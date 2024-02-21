@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import { ScriptTarget } from 'typescript';
 
@@ -785,16 +784,16 @@ function isUnicodeIdentifierStart(code: number, languageVersion: ScriptTarget) {
     return languageVersion >= ScriptTarget.ES2015
         ? lookupInUnicodeMap(code, unicodeESNextIdentifierStart)
         : languageVersion === ScriptTarget.ES5
-        ? lookupInUnicodeMap(code, unicodeES5IdentifierStart)
-        : lookupInUnicodeMap(code, unicodeES3IdentifierStart);
+          ? lookupInUnicodeMap(code, unicodeES5IdentifierStart)
+          : lookupInUnicodeMap(code, unicodeES3IdentifierStart);
 }
 
 function isUnicodeIdentifierPart(code: number, languageVersion: ScriptTarget) {
     return languageVersion >= ScriptTarget.ES2015
         ? lookupInUnicodeMap(code, unicodeESNextIdentifierPart)
         : languageVersion === ScriptTarget.ES5
-        ? lookupInUnicodeMap(code, unicodeES5IdentifierPart)
-        : lookupInUnicodeMap(code, unicodeES3IdentifierPart);
+          ? lookupInUnicodeMap(code, unicodeES5IdentifierPart)
+          : lookupInUnicodeMap(code, unicodeES3IdentifierPart);
 }
 
 function isIdentifierStart(ch: number, languageVersion: ScriptTarget): boolean {

@@ -78,7 +78,6 @@ export function checkValidMIMEType(mime: string): boolean {
     return /^application\/(?:[a-z0-9-_.]+\+)?json5?$/.test(type);
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function mergeSchema(a: any, b: any): boolean {
     if ('$ref' in a || '$ref' in b) {
         a.$ref = b.$ref || a.$ref;

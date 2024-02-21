@@ -223,13 +223,12 @@ export function buildTupleTypeNode(
     for (let i = 0; i < itemCount; i++) {
         let node = typesIsArray(types)
             ? i < types.length
-                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  types[i]!
+                ? types[i]!
                 : additionalItems !== undefined
-                ? additionalItems === false
-                    ? buildNeverKeyword()
-                    : additionalItems
-                : buildAnyKeyword()
+                  ? additionalItems === false
+                      ? buildNeverKeyword()
+                      : additionalItems
+                  : buildAnyKeyword()
             : types;
         if (minItems == null || i >= minItems) {
             node = ts.factory.createOptionalTypeNode(node);

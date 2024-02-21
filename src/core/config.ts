@@ -8,9 +8,7 @@ export interface Config {
     target: ScriptTarget;
     outputAST: boolean;
 
-    plugins: {
-        [pluginName: string]: boolean | Record<string, unknown>;
-    };
+    plugins: Record<string, boolean | Record<string, unknown>>;
 }
 
 interface InputConfig {
