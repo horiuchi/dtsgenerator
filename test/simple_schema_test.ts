@@ -254,6 +254,31 @@ describe('simple schema test', () => {
 `;
         assert.strictEqual(result, expected, result);
     });
+    it('positive and negative number type enum schema', async () => {
+        const schema: JsonSchemaDraft04.Schema = {
+            id: '/test/positive_negative_number_type',
+            type: 'object',
+            properties: {
+                numbers: {
+                    enum: [1, -1],
+                    example: '1',
+                },
+            },
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+
+        const expected = `declare namespace Test {
+    export interface PositiveNegativeNumberType {
+        /**
+         * example:
+         * 1
+         */
+        numbers?: 1 | -1;
+    }
+}
+`;
+        assert.strictEqual(result, expected, result);
+    });
     it('include const schema', async () => {
         const schema: JsonSchemaDraft07.Schema = {
             $id: '/test/include_const',

@@ -48,6 +48,15 @@ export function buildStringLiteralTypeNode(s: string): ts.LiteralTypeNode {
     return ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral(s));
 }
 export function buildNumericLiteralTypeNode(n: string): ts.LiteralTypeNode {
+    if (!isNaN(parseFloat(n)) && parseFloat(n) < 0) {
+        return ts.factory.createLiteralTypeNode(
+            ts.factory.createPrefixUnaryExpression(
+                ts.SyntaxKind.MinusToken,
+                ts.factory.createNumericLiteral(Math.abs(parseFloat(n))),
+            ),
+        );
+    }
+
     return ts.factory.createLiteralTypeNode(ts.factory.createNumericLiteral(n));
 }
 export function buildBooleanLiteralTypeNode(b: boolean): ts.LiteralTypeNode {
