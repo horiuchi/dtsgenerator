@@ -126,10 +126,9 @@ export function buildPropertySignature(
     isPattern: boolean | undefined,
 ): ts.PropertySignature | ts.IndexSignatureDeclaration {
     const modifiers = undefined;
-    const questionToken =
-        required == null || !required.includes(propertyName)
-            ? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
-            : undefined;
+    const questionToken = !required?.includes(propertyName)
+        ? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
+        : undefined;
     if (isPattern) {
         return ts.factory.createIndexSignature(
             modifiers,
