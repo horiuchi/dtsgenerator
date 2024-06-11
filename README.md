@@ -143,6 +143,11 @@ Output debug message by [debug](https://www.npmjs.com/package/debug) library.
 
 ## ChangeLog
 
+### [v3.19.2](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.19.2) (2024-06-11)
+
+- fixed:
+  - Support a negative number by #566. Thank you @maximebiloe :+1:
+
 ### [v3.19.1](https://github.com/horiuchi/dtsgenerator/releases/tag/v3.19.1) (2023-08-25)
 
 - features:
