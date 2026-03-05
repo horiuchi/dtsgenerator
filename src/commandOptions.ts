@@ -11,7 +11,7 @@ export class CommandOptions {
     public target?: string;
     public info?: boolean;
     public outputAST?: boolean;
-    public strictArraySize?: boolean;
+    public noStrictArraySize?: boolean;
 }
 
 const opts = new CommandOptions();
@@ -31,7 +31,7 @@ export function clear(): void {
     opts.target = undefined;
     opts.info = undefined;
     opts.outputAST = undefined;
-    opts.strictArraySize = undefined;
+    opts.noStrictArraySize = undefined;
 }
 
 function parse(options: CommandOptions, argv: string[]): commander.Command {
@@ -68,8 +68,8 @@ function parse(options: CommandOptions, argv: string[]): commander.Command {
             'for developer mode. output loaded config and plugin details only.',
         )
         .option(
-            '--strictArraySize',
-            'generate strict arrays if minItems or maxItems is set. (default: true)',
+            '--noStrictArraySize',
+            'Disables the generation of strict arrays, even if minItems or maxItems are specified.',
         )
         .option('--output-ast', 'output TypeScript AST instead of d.ts file.')
         .addHelpText(
@@ -95,7 +95,7 @@ Examples:
     options.target = opts.target as string;
     options.info = opts.info as boolean;
     options.outputAST = opts.outputAst as boolean;
-    options.strictArraySize = opts.strictArraySize as boolean;
+    options.noStrictArraySize = opts.strictArraySize as boolean;
 
     return program;
 }

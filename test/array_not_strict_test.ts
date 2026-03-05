@@ -28,7 +28,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -63,7 +63,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -96,7 +96,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -129,7 +129,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -163,7 +163,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -197,7 +197,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -231,7 +231,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -260,7 +260,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -290,7 +290,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -320,7 +320,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -350,7 +350,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
@@ -380,7 +380,7 @@ describe('array test', () => {
         };
         const result = await dtsgenerator({
             contents: [parseSchema(schema)],
-            config: { strictArraySize: false },
+            config: { noStrictArraySize: true },
         });
 
         const expected = `declare namespace Test {
