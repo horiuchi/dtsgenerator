@@ -1,20 +1,39 @@
-import * as url from 'url';
 import { toTypeName } from './validateIdentifier';
+
+function resolveUrl(base: string, relative: string): string {
+    if (!base) {
+        return relative;
+    }
+
+    try {
+        return new URL(relative, base).href;
+    } catch {
+        return relative;
+    }
+}
+
+function parseId(absoluteId: string): URL {
+    try {
+        return new URL(absoluteId);
+    } catch {
+        return new URL(absoluteId, 'file://');
+    }
+}
 
 export default class SchemaId {
     private readonly absoluteId: string;
-    public readonly id: url.Url;
+    public readonly id: URL;
     public static readonly empty = new SchemaId('');
 
     constructor(
         public readonly inputId: string,
         parentIds?: string[],
     ) {
-        let absoluteId = url.resolve('', inputId);
+        let absoluteId = resolveUrl('', inputId);
         if (parentIds) {
             parentIds.forEach((parent: string) => {
                 if (parent) {
-                    absoluteId = url.resolve(parent, absoluteId);
+                    absoluteId = resolveUrl(parent, absoluteId);
                 }
             });
         }
@@ -28,8 +47,8 @@ export default class SchemaId {
         ) {
             absoluteId = '/' + absoluteId;
         }
-        this.id = url.parse(absoluteId);
-        this.absoluteId = this.id.href;
+        this.absoluteId = absoluteId;
+        this.id = parseId(absoluteId);
     }
 
     public getAbsoluteId(): string {
