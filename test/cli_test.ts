@@ -3,7 +3,8 @@ import { spawnSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
-describe('CLI compatibility', () => {
+describe('CLI compatibility', function () {
+    this.timeout(10000); // spawning the CLI via ts-node is slow on CI runners
     it('accepts positional schema files', () => {
         const fixtureDir = path.join(
             __dirname,
