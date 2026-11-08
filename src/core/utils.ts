@@ -80,6 +80,7 @@ export function checkValidMIMEType(mime: string): boolean {
 
 export function mergeSchema(a: any, b: any): boolean {
     if ('$ref' in a || '$ref' in b) {
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         a.$ref = b.$ref || a.$ref;
         return false;
     }

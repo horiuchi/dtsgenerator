@@ -16,6 +16,8 @@ export function readStream(
         let data = '';
         stream.on('data', (chunk) => (data += chunk));
         stream.on('end', () => resolve(data));
+        // Preserve the stream's original error object for callers.
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
         stream.on('error', (error) => reject(error));
     });
 }
@@ -88,22 +90,20 @@ export function readConfig(options: CommandOptions): PartialConfig {
         }
     }
 
-    if (pc.input == null) {
-        pc.input = {
-            files: [],
-            urls: [],
-            stdin: false,
-        };
-    }
+    pc.input ??= {
+        files: [],
+        urls: [],
+        stdin: false,
+    };
     if (options.files.length > 0) {
         pc.input.files = options.files;
-    } else if (pc.input.files == null) {
-        pc.input.files = [];
+    } else {
+        pc.input.files ??= [];
     }
     if (options.urls.length > 0) {
         pc.input.urls = options.urls;
-    } else if (pc.input.urls == null) {
-        pc.input.urls = [];
+    } else {
+        pc.input.urls ??= [];
     }
     if (options.stdin != null) {
         pc.input.stdin = options.stdin;

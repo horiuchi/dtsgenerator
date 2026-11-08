@@ -13,20 +13,16 @@ import SchemaId from './schemaId';
 
 // export `ts` for using the same version of TypeScript in all plugins.
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 export import ts = require('typescript');
 
 // Schema types
 
 export type JsonSchema = JsonSchemaDraft04.Schema | JsonSchemaDraft07.Schema;
 export type JsonSchemaObject =
-    | JsonSchemaDraft04.Schema
-    | JsonSchemaDraft07.SchemaObject;
+    JsonSchemaDraft04.Schema | JsonSchemaDraft07.SchemaObject;
 export type SchemaType =
-    | 'Draft04'
-    | 'Draft07'
-    | '2019-09'
-    | '2020-12'
-    | 'Latest';
+    'Draft04' | 'Draft07' | '2019-09' | '2020-12' | 'Latest';
 export function isJsonSchemaDraft04(
     _content: JsonSchemaObject,
     type: SchemaType,

@@ -76,12 +76,10 @@ Plugins: count=0
         await showConfig('full_config', config);
 
         function getVersion(key: string): string {
-            const pkg = require('../../package.json');
-            const version: string = pkg.devDependencies[key];
-            if (/^[^\d]/.test(version)) {
-                return version.substr(1);
-            }
-            return version;
+            const pkg = require(`${key}/package.json`) as {
+                version: string;
+            };
+            return pkg.version;
         }
         const expected = `Version: full_config
 ConfigFile: test.json
