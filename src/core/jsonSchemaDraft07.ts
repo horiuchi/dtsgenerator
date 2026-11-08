@@ -38,8 +38,7 @@ export namespace JsonSchemaDraft07 {
         const?: any;
         enum?: any[];
         type?:
-            | Schema.Definitions.SimpleTypes
-            | Schema.Definitions.SimpleTypes[];
+            Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
         format?: string;
         contentMediaType?: string;
         contentEncoding?: string;

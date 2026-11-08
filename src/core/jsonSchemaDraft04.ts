@@ -36,8 +36,7 @@ export namespace JsonSchemaDraft04 {
         dependencies?: Record<string, Schema | Schema.Definitions.StringArray>;
         enum?: any[];
         type?:
-            | Schema.Definitions.SimpleTypes
-            | Schema.Definitions.SimpleTypes[];
+            Schema.Definitions.SimpleTypes | Schema.Definitions.SimpleTypes[];
         format?: string;
         allOf?: Schema.Definitions.SchemaArray;
         anyOf?: Schema.Definitions.SchemaArray;
@@ -80,8 +79,7 @@ export namespace JsonSchemaDraft04 {
             export type Required = Definitions.StringArray;
             export type Title = string;
             export type Type =
-                | Definitions.SimpleTypes
-                | Definitions.SimpleTypes[];
+                Definitions.SimpleTypes | Definitions.SimpleTypes[];
             export type UniqueItems = boolean;
         }
     }

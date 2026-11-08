@@ -263,12 +263,10 @@ export default class DtsGenerator {
     ): ts.DeclarationStatement {
         const content = schema.content;
         if (
-            /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
             content.$ref ||
             content.oneOf ||
             content.anyOf ||
             content.enum ||
-            /* eslint-enable @typescript-eslint/prefer-nullish-coalescing */
             'const' in content ||
             content.type !== 'object'
         ) {

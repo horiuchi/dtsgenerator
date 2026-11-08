@@ -322,8 +322,7 @@ export function searchAllSubSchema(
         ) => setSubIdToAnyObject(setSubIdToResponseV2, responses, keys);
         function setSubIdToResponseV2(
             response:
-                | OpenApisV2.SchemaJson.Definitions.ResponseValue
-                | undefined,
+                OpenApisV2.SchemaJson.Definitions.ResponseValue | undefined,
             keys: string[],
         ): void {
             if (response == null) {
@@ -331,10 +330,10 @@ export function searchAllSubSchema(
             }
             if ('schema' in response) {
                 const s = response.schema;
-                if (s != null && s.type === 'file') {
+                if (s?.type === 'file') {
                     return;
                 }
-                setSubId(s as JsonSchemaObject, keys);
+                setSubId(s, keys);
             }
         }
         function setSubIdToOperationV2(

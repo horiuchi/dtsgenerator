@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 
 /* eslint-disable @typescript-eslint/no-namespace */
 import { JsonSchemaDraft07 } from './jsonSchemaDraft07';
@@ -272,8 +272,7 @@ export namespace OpenApisV3 {
                 ResponseOrReference
             >;
             export type SchemaOrReference =
-                | JsonSchemaDraft07.SchemaObject
-                | Reference;
+                JsonSchemaDraft07.SchemaObject | Reference;
             export type SchemasOrReferences = Record<string, SchemaOrReference>;
             /**
              * Lists the required security schemes to execute this operation. The name used for each property MUST correspond to a security scheme declared in the Security Schemes under the Components Object.  Security Requirement Objects that contain multiple schemes require that all schemes MUST be satisfied for a request to be authorized. This enables support for scenarios where multiple query parameters or HTTP headers are required to convey security information.  When a list of Security Requirement Objects is defined on the Open API object or Operation Object, only one of Security Requirement Objects in the list needs to be satisfied to authorize the request.
@@ -318,11 +317,7 @@ export namespace OpenApisV3 {
              * Any property starting with x- is valid.
              */
             export type SpecificationExtension =
-                | null
-                | number
-                | boolean
-                | string
-                | any[];
+                null | number | boolean | string | any[];
             export type Strings = Record<string, string>;
             /**
              * Adds metadata to a single tag that is used by the Operation Object. It is not mandatory to have a Tag Object per tag defined in the Operation Object instances.

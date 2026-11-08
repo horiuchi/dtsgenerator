@@ -40,7 +40,7 @@ function parse(options: CommandOptions, argv: string[]): commander.Command {
         return memo;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment
     const pkg: { name: string; version: string } = require('../package.json');
 
     // <hoge> is required, [hoge] is optional
@@ -66,6 +66,7 @@ function parse(options: CommandOptions, argv: string[]): commander.Command {
             'for developer mode. output loaded config and plugin details only.',
         )
         .option('--output-ast', 'output TypeScript AST instead of d.ts file.')
+        .allowExcessArguments(true)
         .addHelpText(
             'afterAll',
             `

@@ -70,11 +70,7 @@ export namespace OpenApisV2 {
             }
             export type CollectionFormat = 'csv' | 'ssv' | 'tsv' | 'pipes';
             export type CollectionFormatWithMulti =
-                | 'csv'
-                | 'ssv'
-                | 'tsv'
-                | 'pipes'
-                | 'multi';
+                'csv' | 'ssv' | 'tsv' | 'pipes' | 'multi';
             /**
              * Contact information for the owners of the API.
              */
@@ -403,7 +399,7 @@ export namespace OpenApisV2 {
              */
             export type Paths = Record<string, PathItem>;
             export type Pattern =
-                JsonSchemaDraft04.Schema.Properties.Pattern /* regex */;
+                JsonSchemaDraft04.Schema.Properties.Pattern; /* regex */
             export interface PrimitivesItems {
                 type?: 'string' | 'number' | 'integer' | 'boolean' | 'array';
                 format?: string;
@@ -464,8 +460,9 @@ export namespace OpenApisV2 {
             }
             export interface Response {
                 description: string;
-                schema?: /* A deterministic version of a JSON Schema object. */
-                | Schema
+                schema?:
+                    /* A deterministic version of a JSON Schema object. */
+                    | Schema
                     | /* A deterministic version of a JSON Schema object. */ FileSchema;
                 headers?: Headers;
                 examples?: Examples;
@@ -503,11 +500,13 @@ export namespace OpenApisV2 {
                 minProperties?: JsonSchemaDraft04.Schema.Definitions.PositiveIntegerDefault0;
                 required?: JsonSchemaDraft04.Schema.Definitions.StringArray;
                 enum?: JsonSchemaDraft04.Schema.Properties.Enum;
-                additionalProperties?: /* A deterministic version of a JSON Schema object. */
-                Schema | boolean;
+                additionalProperties?:
+                    /* A deterministic version of a JSON Schema object. */
+                    Schema | boolean;
                 type?: JsonSchemaDraft04.Schema.Properties.Type;
-                items?: /* A deterministic version of a JSON Schema object. */
-                | Schema
+                items?:
+                    /* A deterministic version of a JSON Schema object. */
+                    | Schema
                     | [
                           /* A deterministic version of a JSON Schema object. */ Schema,
                           .../* A deterministic version of a JSON Schema object. */ Schema[],
