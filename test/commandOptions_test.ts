@@ -25,6 +25,7 @@ Options:
   -o, --out <file>        output filename.
   -t, --target <version>  Specify ECMAScript target version: 'ES3', 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT' (default).
   --info                  for developer mode. output loaded config and plugin details only.
+  --noStrictArraySize     Disables the generation of strict arrays, even if minItems or maxItems are specified.
   --output-ast            output TypeScript AST instead of d.ts file.
   -h, --help              display help for command
 
