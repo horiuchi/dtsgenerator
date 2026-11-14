@@ -7,6 +7,455 @@ import { OpenApisV3 } from '../src/core/openApiV3';
 import { parseSchema, JsonSchema } from '../src/core/type';
 
 describe('simple schema test', () => {
+    describe('compound const/enum literals (#573)', () => {
+        const objectType = `{
+    a: 1;
+}`;
+        const tupleType = `[
+    1,
+    2
+]`;
+        const emptyObjectType = `{
+    [key: string]: never;
+}`;
+        const emptyTupleType = `[
+]`;
+        const nestedType = `{
+    values: [
+        {
+            a: -1;
+        },
+        [
+            true,
+            null,
+            "x"
+        ]
+    ];
+}`;
+        const keywordType = `{
+    $ref: "#/missing";
+    type: "number";
+    const: {
+        "a-b": 1;
+        "": false;
+    };
+}`;
+        const cases: [string, JsonSchemaDraft07.SchemaObject, string][] = [
+            ['A: object const', { const: { a: 1 } }, objectType],
+            [
+                'B: object and array enum',
+                { enum: [{ a: 1 }, [1, 2]] },
+                `${objectType} | ${tupleType}`,
+            ],
+            [
+                'C: typed object const',
+                { type: 'object', const: { a: 1 } },
+                objectType,
+            ],
+            ['empty object const', { const: {} }, emptyObjectType],
+            ['empty object enum', { enum: [{}] }, emptyObjectType],
+            ['empty array const', { const: [] }, emptyTupleType],
+            ['empty array enum', { enum: [[]] }, emptyTupleType],
+            [
+                'nested const',
+                { const: { values: [{ a: -1 }, [true, null, 'x']] } },
+                nestedType,
+            ],
+            [
+                'nested enum',
+                { enum: [{ values: [{ a: -1 }, [true, null, 'x']] }] },
+                nestedType,
+            ],
+            [
+                'schema keywords in const are data',
+                {
+                    const: {
+                        $ref: '#/missing',
+                        type: 'number',
+                        const: { 'a-b': 1, '': false },
+                    },
+                },
+                keywordType,
+            ],
+            [
+                'schema keywords in enum are data',
+                {
+                    enum: [
+                        {
+                            $ref: '#/missing',
+                            type: 'number',
+                            const: { 'a-b': 1, '': false },
+                        },
+                    ],
+                },
+                keywordType,
+            ],
+            [
+                'mixed scalar and composite enum',
+                { enum: ['x', -1, true, null, { a: 1 }, [1, 2], {}, []] },
+                `"x" | -1 | true | null | ${objectType} | ${tupleType} | ${emptyObjectType} | ${emptyTupleType}`,
+            ],
+            [
+                'object containing an array of objects',
+                {
+                    const: {
+                        users: [
+                            { id: 1, name: 'a' },
+                            { id: 2, name: 'b' },
+                        ],
+                    },
+                },
+                `{
+    users: [
+        {
+            id: 1;
+            name: "a";
+        },
+        {
+            id: 2;
+            name: "b";
+        }
+    ];
+}`,
+            ],
+            [
+                'deeply nested objects with mixed properties',
+                {
+                    const: {
+                        app: {
+                            name: 'demo',
+                            version: 1,
+                            settings: {
+                                enabled: true,
+                                theme: {
+                                    palette: ['navy', 'white'],
+                                    contrast: 2,
+                                },
+                                routes: [
+                                    { path: '/', meta: { public: false } },
+                                ],
+                            },
+                        },
+                    },
+                },
+                `{
+    app: {
+        name: "demo";
+        version: 1;
+        settings: {
+            enabled: true;
+            theme: {
+                palette: [
+                    "navy",
+                    "white"
+                ];
+                contrast: 2;
+            };
+            routes: [
+                {
+                    path: "/";
+                    meta: {
+                        public: false;
+                    };
+                }
+            ];
+        };
+    };
+}`,
+            ],
+            [
+                'enum with differently nested composite values',
+                {
+                    enum: [
+                        {
+                            groups: [
+                                { members: [{ id: 1, roles: ['admin'] }] },
+                            ],
+                        },
+                        [[{ id: 2 }], [{ id: 3, meta: { active: true } }]],
+                        { settings: { fallback: { values: [null, false] } } },
+                    ],
+                },
+                `{
+    groups: [
+        {
+            members: [
+                {
+                    id: 1;
+                    roles: [
+                        "admin"
+                    ];
+                }
+            ];
+        }
+    ];
+} | [
+    [
+        {
+            id: 2;
+        }
+    ],
+    [
+        {
+            id: 3;
+            meta: {
+                active: true;
+            };
+        }
+    ]
+] | {
+    settings: {
+        fallback: {
+            values: [
+                null,
+                false
+            ];
+        };
+    };
+}`,
+            ],
+            [
+                'deeply nested empty composites and scalar leaves',
+                {
+                    const: {
+                        payload: [
+                            {
+                                emptyObject: {},
+                                emptyArray: [],
+                                nested: { leaves: [null, true, false] },
+                            },
+                        ],
+                    },
+                },
+                `{
+    payload: [
+        {
+            emptyObject: {
+                [key: string]: never;
+            };
+            emptyArray: [
+            ];
+            nested: {
+                leaves: [
+                    null,
+                    true,
+                    false
+                ];
+            };
+        }
+    ];
+}`,
+            ],
+        ];
+        for (const [name, schema, expectedType] of cases) {
+            it(name, async () => {
+                const result = await dtsgenerator({
+                    contents: [
+                        parseSchema({
+                            $id: '/literal',
+                            $schema: 'http://json-schema.org/draft-07/schema#',
+                            ...schema,
+                        }),
+                    ],
+                });
+                assert.strictEqual(
+                    result,
+                    `declare type Literal = ${expectedType};\n`,
+                );
+            });
+        }
+
+        for (const type of [
+            'string',
+            'integer',
+            'number',
+            'boolean',
+            'null',
+        ] as const) {
+            it(`handles composites before ${type} coercion`, async () => {
+                const result = await dtsgenerator({
+                    contents: [
+                        parseSchema({
+                            $id: '/literal',
+                            $schema: 'http://json-schema.org/draft-07/schema#',
+                            type,
+                            enum: [{ a: 1 }, [1, 2]],
+                        }),
+                    ],
+                });
+                assert.strictEqual(
+                    result,
+                    `declare type Literal = ${objectType} | ${tupleType};\n`,
+                );
+            });
+        }
+
+        it('preserves scalar coercion for const and enum properties', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'object',
+                properties: {
+                    stringConst: { type: 'string', const: 1 },
+                    stringEnum: { type: 'string', enum: [1, false] },
+                    integerConst: { type: 'integer', const: '2' },
+                    numberEnum: { type: 'number', enum: ['-3', '4.5'] },
+                    booleanConst: { type: 'boolean', const: 0 },
+                    booleanEnum: { type: 'boolean', enum: ['', 1] },
+                    nullConst: { type: 'null', const: 'x' },
+                },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare interface Literal {
+    stringConst?: "1";
+    stringEnum?: "1" | "false";
+    integerConst?: 2;
+    numberEnum?: -3 | 4.5;
+    booleanConst?: false;
+    booleanEnum?: false | true;
+    nullConst?: null;
+}
+`,
+            );
+        });
+
+        it('generates compound const/enum properties', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'object',
+                properties: {
+                    object: { type: 'object', const: { a: 1 } },
+                    array: { type: 'array', const: [1, 2] },
+                    choice: { enum: [{ a: 1 }, [1, 2]] },
+                    emptyObject: { const: {} },
+                    emptyArray: { type: 'array', enum: [[]] },
+                },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare interface Literal {
+    object?: {
+        a: 1;
+    };
+    array?: [
+        1,
+        2
+    ];
+    choice?: {
+        a: 1;
+    } | [
+        1,
+        2
+    ];
+    emptyObject?: {
+        [key: string]: never;
+    };
+    emptyArray?: [
+    ];
+}
+`,
+            );
+        });
+    });
+
+    describe('deeply nested const/enum properties (#573)', () => {
+        it('generates a deeply nested const property', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'object',
+                properties: {
+                    payload: {
+                        const: {
+                            rows: [
+                                {
+                                    cells: [
+                                        { value: 1, meta: { enabled: true } },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare interface Literal {
+    payload?: {
+        rows: [
+            {
+                cells: [
+                    {
+                        value: 1;
+                        meta: {
+                            enabled: true;
+                        };
+                    }
+                ];
+            }
+        ];
+    };
+}
+`,
+            );
+        });
+
+        it('generates a deeply nested enum property', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'object',
+                required: ['choice'],
+                properties: {
+                    choice: {
+                        enum: [
+                            { batches: [[{ id: 1 }]] },
+                            [{ meta: { flags: [false, null] } }],
+                        ],
+                    },
+                },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare interface Literal {
+    choice: {
+        batches: [
+            [
+                {
+                    id: 1;
+                }
+            ]
+        ];
+    } | [
+        {
+            meta: {
+                flags: [
+                    false,
+                    null
+                ];
+            };
+        }
+    ];
+}
+`,
+            );
+        });
+    });
+
     it('no property schema', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/no_prop',

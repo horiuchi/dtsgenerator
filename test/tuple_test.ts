@@ -2,11 +2,101 @@ import assert from 'assert';
 import dtsgenerator from '../src/core';
 import { clearToDefault } from '../src/core/config';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
+import { JsonSchemaDraft07 } from '../src/core/jsonSchemaDraft07';
 import { parseSchema } from '../src/core/type';
 
 describe('tuple test', () => {
     afterEach(() => {
         clearToDefault();
+    });
+
+    it('generates compound const/enum tuple items (#573)', async () => {
+        const schema: JsonSchemaDraft07.Schema = {
+            $id: '/literal',
+            $schema: 'http://json-schema.org/draft-07/schema#',
+            type: 'array',
+            minItems: 4,
+            additionalItems: false,
+            items: [
+                { const: { a: 1 } },
+                { type: 'array', enum: [[1, 2], [3]] },
+                { const: [] },
+                { enum: [null, {}, { nested: [false] }] },
+            ],
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        assert.strictEqual(
+            result,
+            `declare type Literal = [
+    {
+        a: 1;
+    },
+    ([
+        1,
+        2
+    ] | [
+        3
+    ]),
+    [
+    ],
+    (null | {
+        [key: string]: never;
+    } | {
+        nested: [
+            false
+        ];
+    })
+];
+`,
+        );
+    });
+
+    it('generates deeply nested const/enum tuple items (#573)', async () => {
+        const schema: JsonSchemaDraft07.Schema = {
+            $id: '/literal',
+            $schema: 'http://json-schema.org/draft-07/schema#',
+            type: 'array',
+            minItems: 2,
+            additionalItems: false,
+            items: [
+                { const: { branch: { rows: [{ value: null }] } } },
+                {
+                    type: 'array',
+                    enum: [[[{ ready: true }]], [{ meta: { flags: [false] } }]],
+                },
+            ],
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        assert.strictEqual(
+            result,
+            `declare type Literal = [
+    {
+        branch: {
+            rows: [
+                {
+                    value: null;
+                }
+            ];
+        };
+    },
+    ([
+        [
+            {
+                ready: true;
+            }
+        ]
+    ] | [
+        {
+            meta: {
+                flags: [
+                    false
+                ];
+            };
+        }
+    ])
+];
+`,
+        );
     });
 
     it('no min', async () => {

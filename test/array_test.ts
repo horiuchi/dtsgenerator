@@ -2,11 +2,280 @@ import assert from 'assert';
 import dtsgenerator from '../src/core';
 import { clearToDefault } from '../src/core/config';
 import { JsonSchemaDraft04 } from '../src/core/jsonSchemaDraft04';
+import { JsonSchemaDraft07 } from '../src/core/jsonSchemaDraft07';
 import { parseSchema } from '../src/core/type';
 
 describe('array test', () => {
     afterEach(() => {
         clearToDefault();
+    });
+
+    describe('compound const/enum literals (#573)', () => {
+        const cases: [string, JsonSchemaDraft07.SchemaObject, string][] = [
+            ['const', { const: [1, 2] }, '[\n    1,\n    2\n]'],
+            [
+                'enum',
+                { enum: [[1, 2], [3]] },
+                '[\n    1,\n    2\n] | [\n    3\n]',
+            ],
+            ['empty const', { const: [] }, '[\n]'],
+            ['empty enum', { enum: [[]] }, '[\n]'],
+            [
+                'nested array const',
+                {
+                    const: [
+                        [1, 2],
+                        [3, [4, 5]],
+                    ],
+                },
+                `[
+    [
+        1,
+        2
+    ],
+    [
+        3,
+        [
+            4,
+            5
+        ]
+    ]
+]`,
+            ],
+            [
+                'arrays of objects const',
+                {
+                    const: [
+                        [{ id: 1, profile: { name: 'a' } }],
+                        [{ id: 2 }, { id: 3 }],
+                    ],
+                },
+                `[
+    [
+        {
+            id: 1;
+            profile: {
+                name: "a";
+            };
+        }
+    ],
+    [
+        {
+            id: 2;
+        },
+        {
+            id: 3;
+        }
+    ]
+]`,
+            ],
+            [
+                'objects with array and object properties const',
+                {
+                    const: [
+                        {
+                            tags: ['a', 'b'],
+                            meta: {
+                                flags: [true, false],
+                                owner: { id: 1 },
+                            },
+                        },
+                        { tags: [], meta: { flags: [null], owner: {} } },
+                    ],
+                },
+                `[
+    {
+        tags: [
+            "a",
+            "b"
+        ];
+        meta: {
+            flags: [
+                true,
+                false
+            ];
+            owner: {
+                id: 1;
+            };
+        };
+    },
+    {
+        tags: [
+        ];
+        meta: {
+            flags: [
+                null
+            ];
+            owner: {
+                [key: string]: never;
+            };
+        };
+    }
+]`,
+            ],
+        ];
+        for (const [name, literal, expectedType] of cases) {
+            it(`generates top-level typed array ${name}`, async () => {
+                const result = await dtsgenerator({
+                    contents: [
+                        parseSchema({
+                            $id: '/literal',
+                            $schema: 'http://json-schema.org/draft-07/schema#',
+                            type: 'array',
+                            ...literal,
+                        }),
+                    ],
+                });
+                assert.strictEqual(
+                    result,
+                    `declare type Literal = ${expectedType};\n`,
+                );
+            });
+        }
+
+        it('generates compound const items', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'array',
+                items: { const: { values: [1, {}] } },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare type Literal = {
+    values: [
+        1,
+        {
+            [key: string]: never;
+        }
+    ];
+}[];
+`,
+            );
+        });
+
+        it('generates mixed scalar and composite enum items', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'array',
+                items: { enum: [false, { a: 1 }, [1, 2], []] },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare type Literal = (false | {
+    a: 1;
+} | [
+    1,
+    2
+] | [
+])[];
+`,
+            );
+        });
+
+        it('generates typed array const items as tuples', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'array',
+                items: { type: 'array', const: [1, 2] },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare type Literal = [
+    1,
+    2
+][];
+`,
+            );
+        });
+    });
+
+    describe('deeply nested const/enum items (#573)', () => {
+        it('generates deeply nested typed array const items', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'array',
+                items: {
+                    type: 'array',
+                    const: [[{ id: 1, flags: [true, null] }], []],
+                },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare type Literal = [
+    [
+        {
+            id: 1;
+            flags: [
+                true,
+                null
+            ];
+        }
+    ],
+    [
+    ]
+][];
+`,
+            );
+        });
+
+        it('generates deeply nested composite enum items', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'array',
+                items: {
+                    enum: [
+                        { tree: { children: [{ value: 1 }] } },
+                        [[{ enabled: false }]],
+                        { empty: {}, values: [] },
+                    ],
+                },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare type Literal = ({
+    tree: {
+        children: [
+            {
+                value: 1;
+            }
+        ];
+    };
+} | [
+    [
+        {
+            enabled: false;
+        }
+    ]
+] | {
+    empty: {
+        [key: string]: never;
+    };
+    values: [
+    ];
+})[];
+`,
+            );
+        });
     });
 
     it('no min', async () => {
