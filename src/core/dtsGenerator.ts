@@ -294,7 +294,7 @@ export default class DtsGenerator {
         schema: NormalizedSchema,
         root: boolean,
     ): ts.DeclarationStatement {
-        const type = this.generateArrayTypeProperty(schema);
+        const type = this.generateTypeProperty(schema);
         return ast.buildTypeAliasNode(schema.id, type, root);
     }
 
@@ -454,7 +454,37 @@ export default class DtsGenerator {
     private generateLiteralTypeNode(
         content: JsonSchemaObject,
         value: any,
-    ): ts.LiteralTypeNode {
+    ): ts.TypeNode {
+        if (Array.isArray(value)) {
+            return ast.buildTupleTypeNode(
+                value.map((item) => this.generateLiteralTypeNode({}, item)),
+                value.length,
+                value.length,
+            );
+        }
+        if (value !== null && typeof value === 'object') {
+            const object = value as Record<string, unknown>;
+            const keys = Object.keys(object);
+            return ast.buildTypeLiteralNode(
+                keys.length === 0
+                    ? [
+                          ast.buildIndexSignatureNode(
+                              'key',
+                              ast.buildStringKeyword(),
+                              ast.buildNeverKeyword(),
+                          ),
+                      ]
+                    : keys.map((key) =>
+                          ast.buildPropertySignature(
+                              this.currentSchema,
+                              key,
+                              this.generateLiteralTypeNode({}, object[key]),
+                              keys,
+                              false,
+                          ),
+                      ),
+            );
+        }
         switch (content.type) {
             case 'integer':
             case 'number':
