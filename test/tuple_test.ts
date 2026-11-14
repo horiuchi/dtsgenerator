@@ -51,6 +51,54 @@ describe('tuple test', () => {
         );
     });
 
+    it('generates deeply nested const/enum tuple items (#573)', async () => {
+        const schema: JsonSchemaDraft07.Schema = {
+            $id: '/literal',
+            $schema: 'http://json-schema.org/draft-07/schema#',
+            type: 'array',
+            minItems: 2,
+            additionalItems: false,
+            items: [
+                { const: { branch: { rows: [{ value: null }] } } },
+                {
+                    type: 'array',
+                    enum: [[[{ ready: true }]], [{ meta: { flags: [false] } }]],
+                },
+            ],
+        };
+        const result = await dtsgenerator({ contents: [parseSchema(schema)] });
+        assert.strictEqual(
+            result,
+            `declare type Literal = [
+    {
+        branch: {
+            rows: [
+                {
+                    value: null;
+                }
+            ];
+        };
+    },
+    ([
+        [
+            {
+                ready: true;
+            }
+        ]
+    ] | [
+        {
+            meta: {
+                flags: [
+                    false
+                ];
+            };
+        }
+    ])
+];
+`,
+        );
+    });
+
     it('no min', async () => {
         const schema: JsonSchemaDraft04.Schema = {
             id: '/test/inc_tuple_no_min',

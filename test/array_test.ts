@@ -20,6 +20,99 @@ describe('array test', () => {
             ],
             ['empty const', { const: [] }, '[\n]'],
             ['empty enum', { enum: [[]] }, '[\n]'],
+            [
+                'nested array const',
+                {
+                    const: [
+                        [1, 2],
+                        [3, [4, 5]],
+                    ],
+                },
+                `[
+    [
+        1,
+        2
+    ],
+    [
+        3,
+        [
+            4,
+            5
+        ]
+    ]
+]`,
+            ],
+            [
+                'arrays of objects const',
+                {
+                    const: [
+                        [{ id: 1, profile: { name: 'a' } }],
+                        [{ id: 2 }, { id: 3 }],
+                    ],
+                },
+                `[
+    [
+        {
+            id: 1;
+            profile: {
+                name: "a";
+            };
+        }
+    ],
+    [
+        {
+            id: 2;
+        },
+        {
+            id: 3;
+        }
+    ]
+]`,
+            ],
+            [
+                'objects with array and object properties const',
+                {
+                    const: [
+                        {
+                            tags: ['a', 'b'],
+                            meta: {
+                                flags: [true, false],
+                                owner: { id: 1 },
+                            },
+                        },
+                        { tags: [], meta: { flags: [null], owner: {} } },
+                    ],
+                },
+                `[
+    {
+        tags: [
+            "a",
+            "b"
+        ];
+        meta: {
+            flags: [
+                true,
+                false
+            ];
+            owner: {
+                id: 1;
+            };
+        };
+    },
+    {
+        tags: [
+        ];
+        meta: {
+            flags: [
+                null
+            ];
+            owner: {
+                [key: string]: never;
+            };
+        };
+    }
+]`,
+            ],
         ];
         for (const [name, literal, expectedType] of cases) {
             it(`generates top-level typed array ${name}`, async () => {
@@ -103,6 +196,83 @@ describe('array test', () => {
     1,
     2
 ][];
+`,
+            );
+        });
+    });
+
+    describe('deeply nested const/enum items (#573)', () => {
+        it('generates deeply nested typed array const items', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'array',
+                items: {
+                    type: 'array',
+                    const: [[{ id: 1, flags: [true, null] }], []],
+                },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare type Literal = [
+    [
+        {
+            id: 1;
+            flags: [
+                true,
+                null
+            ];
+        }
+    ],
+    [
+    ]
+][];
+`,
+            );
+        });
+
+        it('generates deeply nested composite enum items', async () => {
+            const schema: JsonSchemaDraft07.Schema = {
+                $id: '/literal',
+                $schema: 'http://json-schema.org/draft-07/schema#',
+                type: 'array',
+                items: {
+                    enum: [
+                        { tree: { children: [{ value: 1 }] } },
+                        [[{ enabled: false }]],
+                        { empty: {}, values: [] },
+                    ],
+                },
+            };
+            const result = await dtsgenerator({
+                contents: [parseSchema(schema)],
+            });
+            assert.strictEqual(
+                result,
+                `declare type Literal = ({
+    tree: {
+        children: [
+            {
+                value: 1;
+            }
+        ];
+    };
+} | [
+    [
+        {
+            enabled: false;
+        }
+    ]
+] | {
+    empty: {
+        [key: string]: never;
+    };
+    values: [
+    ];
+})[];
 `,
             );
         });
